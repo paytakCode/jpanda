@@ -1,0 +1,26 @@
+#Server Port
+server : 
+  port : 8888
+
+spring :
+  #Oracle Setting
+  datasource : 
+    driver-class-name : oracle.jdbc.driver.OracleDriver
+    url : jdbc:oracle:thin:@localhost:1521/xe
+    username : jpanda
+    password : jpanda
+  #View Resolver
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+    hiddenmethod:
+      filter:
+        enabled: true
+
+#myBatis
+mybatis: 
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/*.xml
+
+
