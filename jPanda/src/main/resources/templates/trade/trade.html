@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="/trade/sellList" method="get">
+		<input type="hidden"  name=memberId value="${ memberId }">
+		<button type="submit">판매</button>
+	</form><br><br>
+	<form action="/trade/buyList" method="get">
+		<input type="hidden"  name=memberId value="${ memberId }">
+		<button type="submit">구매</button>
+	</form><p />
+	
+	<th:each="list : ${list}">
+		<div style="border: 1px solid;">
+			<th:if="${listType == 'sell'}">
+			물품상태 : ${list.status}<br>
+			물품제목 : ${list.title}<br>
+			물품가격 : ${list.saleBamboo}<br>
+			등록일 : ${list.regDate}<br>
+			판매수 : ${list.sellCount}<br>
+			</th:if>
+			<th:if="${listType == 'buy'}">
+			물품상태 : 구매완료<br>
+			물품제목 : ${list.title}<br>
+			물품가격 : ${ list.saleBamboo }<br>
+				<th:if test="${ list.refundableDate > 7 }">
+					
+				</th:if>
+				<th:if test="${ list.refundableDate <= 7 }">
+					환불가능일 : ${ 7 - list.refundableDate }<br>
+				</th:if>
+			</th:if>
+		</div>
+	</th:each><p />
+</body>
+</html>

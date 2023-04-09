@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberDao">
+	<insert id="insertMember" parameterType="MemberJoinDto">
+		insert into member (ID, ACCOUNT, BIRTH, EMAIL, GENDER, NAME, PASSWORD, TEL, GRADE)
+		values (#{id}, #{account}, sysdate, #{email}, #{gender}, #{name}, #{password}, #{tel}, 'bronze')
+	</insert>
+	<insert id="insertTalent" parameterType="TalentDto">
+		insert into talent (talent_no, seller_Id, upper_category_no, lower_category_no, main_Img, title, content, bamboo, sale_bamboo, summary, status, view_count, reg_Date)
+		values (#{talentNo}, #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, #{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, #{status}, #{viewCount}, sysdate)
+	</insert>
+	<insert id="insertBamboo" parameterType="BambooUseDto">
+		insert into bamboo_use (purchase_No, buyer_Id, talent_No, purchase_Date, use_Bamboo)
+		values (#{purchaseNo}, #{buyerId}, #{talentNo}, sysdate, #{useBamboo})
+	</insert>
+	<insert id="insertTalentRefund" parameterType="TalentRefundDto">
+		insert into talent_refund (purchase_No, status, issue, submit_Date, approve_Date, refund_Bamboo)
+		values (#{purchaseNo}, #{status}, #{issue}, sysdate, sysdate, #{refundBamboo})
+	</insert>
+</mapper>
+

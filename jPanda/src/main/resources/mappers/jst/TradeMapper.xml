@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TradeDao">
+	<select id="selectSellList" parameterType="String" resultType="SellListDto">
+		SELECT 
+			t.status, t.title, t.sale_bamboo, 
+			t.reg_date, 
+			(SELECT count(*) FROM bamboo_use bu WHERE bu.talent_no = t.talent_no) AS sell_Count
+		FROM talent t
+		WHERE t.seller_id = #{memberId}
+		ORDER BY t.reg_date desc
+	</select>
+	<select id="selectBuyList" parameterType="String" resultType="BuyListDto">
+		SELECT
+		    t.title, t.sale_bamboo, b.purchase_date,
+		    TRUNC(sysdate) - TRUNC(b.purchase_date) as "REFUNDABLE_DATE"
+		FROM talent t
+		INNER JOIN bamboo_use b
+		    ON t.talent_no = b.talent_no
+		WHERE b.buyer_id = #{memberId}
+	</select>
+</mapper>

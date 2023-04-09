@@ -5,4 +5,15 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+  	<!-- typeAliases -->
+  	<typeAliases>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.BuyListDto" alias="BuyListDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.SellListDto" alias="SellListDto"/>
+  		<!-- 더미데이터용 -->
+		<typeAlias alias="MemberJoinDto" type="com.kakao.jPanda.jst.domain.MemberJoinDto"/>
+		<typeAlias alias="BambooUseDto" type="com.kakao.jPanda.jst.domain.BambooUseDto"/>
+		<typeAlias alias="TalentDto" type="com.kakao.jPanda.jst.domain.TalentDto"/>
+		<typeAlias alias="TalentRefundDto" type="com.kakao.jPanda.jst.domain.TalentRefundDto"/>
+	</typeAliases>
+  	
 </configuration>
