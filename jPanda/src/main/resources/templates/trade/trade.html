@@ -6,11 +6,11 @@
 </head>
 <body>
 	<form action="/trade/sellList" method="get">
-		<input type="hidden"  name=memberId value="${ memberId }">
+		<input type="hidden"  name=memberId th:value="${ memberId }">
 		<button type="submit">판매</button>
 	</form><br><br>
 	<form action="/trade/buyList" method="get">
-		<input type="hidden"  name=memberId value="${ memberId }">
+		<input type="hidden"  name=memberId th:value="${ memberId }">
 		<button type="submit">구매</button>
 	</form><p />
 	
