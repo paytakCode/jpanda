@@ -6,7 +6,7 @@ spring :
   #Oracle Setting
   datasource : 
     driver-class-name : oracle.jdbc.driver.OracleDriver
-    url : jdbc:oracle:thin:@localhost:1521/orcl
+    url : jdbc:oracle:thin:@localhost:1521/xe
     username : jpanda
     password : jpanda
  
@@ -18,7 +18,7 @@ spring :
 
 #myBatis
 mybatis: 
-  config-location: classpath:configuration.xml
+  config-location: classpath:configuration/*.xml
   mapper-locations: classpath:mappers/**/*.xml
 
 

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kakao.jPanda.jst.domain.BambooUseDto;
@@ -37,7 +36,6 @@ public class TradeController {
 	
 	
 	/**
-	 * 
 	 * @return trade페이지 url 매핑
 	 */
 	@GetMapping("/trade")
@@ -75,11 +73,10 @@ public class TradeController {
 	}
 	
 	/**
-	 * 
 	 * @param login정보
 	 * @return login정보수집용 임시 페이지
 	 */
-	@RequestMapping("/")
+	@GetMapping("/")
 	public String loginForm(Model model) {
 		log.info("loginForm called");
 		return "trade/loginForm";
