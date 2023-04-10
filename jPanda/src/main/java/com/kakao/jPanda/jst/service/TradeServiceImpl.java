@@ -9,13 +9,13 @@ import org.springframework.ui.Model;
 
 import com.kakao.jPanda.jst.dao.TradeDao;
 import com.kakao.jPanda.jst.domain.BuyListDto;
+import com.kakao.jPanda.jst.domain.RefundListDto;
 import com.kakao.jPanda.jst.domain.SellListDto;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
-@Slf4j
 public class TradeServiceImpl implements TradeService{
 	
 	private final TradeDao tradeDao;
@@ -26,19 +26,22 @@ public class TradeServiceImpl implements TradeService{
 	}
 	
 	@Override
-	public List<SellListDto> getSellList(Model model) {
+	public List<SellListDto> getSellList(String memberId) {
 		List<SellListDto> sellList;
-		log.info("serviceImpl id check : " + model.getAttribute("memberId"));
-		String memberId = (String)model.getAttribute("memberId");
 		sellList = tradeDao.getSellListById(memberId);
 		return sellList;
 	}
 
 	@Override
-	public List<BuyListDto> getBuyList(Model model) {
-		String memberId = (String)model.getAttribute("memberId");
+	public List<BuyListDto> getBuyList(String memberId) {
 		List<BuyListDto> buyList = tradeDao.getBuyListById(memberId);
 		return buyList;
+	}
+
+	@Override
+	public List<RefundListDto> getRefundList(String memberId) {
+		List<RefundListDto> refundList = tradeDao.getRefundListById(memberId);
+		return refundList;
 	}
 
 }

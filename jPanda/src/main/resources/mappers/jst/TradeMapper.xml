@@ -10,6 +10,7 @@
 		WHERE t.seller_id = #{memberId}
 		ORDER BY t.reg_date desc
 	</select>
+	
 	<select id="selectBuyList" parameterType="String" resultType="BuyListDto">
 		SELECT
 		    t.title, t.sale_bamboo, b.purchase_date,
@@ -18,5 +19,19 @@
 		INNER JOIN bamboo_use b
 		    ON t.talent_no = b.talent_no
 		WHERE b.buyer_id = #{memberId}
+		ORDER BY b.purchase_date desc
+	</select>
+	
+	<select id="selectRefundList" parameterType="String" resultType="RefundListDto">
+		SELECT
+			r.status, t.title, t.sale_bamboo,
+			r.submit_date, r.approve_date
+		FROM talent_refund r
+		INNER JOIN bamboo_use b
+		ON r.purchase_no = b.purchase_no
+		INNER JOIN talent t
+		ON b.talent_no = t.talent_no
+		WHERE b.buyer_id = #{memberId}
+		ORDER BY r.submit_date desc
 	</select>
 </mapper>

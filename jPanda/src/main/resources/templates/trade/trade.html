@@ -3,38 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css" >
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: Arial, sans-serif;
+	}
+	
+	.container {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px;
+	}
+	
+	.filter-buttons {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 20px;
+	}
+	
+	.filter-buttons button {
+		background-color: #333;
+		color: white;
+		border: none;
+		padding: 10px 20px;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+	
+	.filter-buttons button:hover {
+		background-color: gray;
+	}
+	
+	nav {
+	  background-color: #333;
+	  color: #fff;
+	  border-radius: 10px;
+	  padding: 10px;
+	  margin-bottom: 5%;
+	}
+	
+	.nav-links {
+	  display: flex;
+	  justify-content: space-between;
+	  list-style: none;
+	  margin: 0;
+	  padding: 0;
+	}
+	
+	.nav-links li {
+	  padding: 10px;
+	}
+	
+	.nav-links a {
+	  color: #fff;
+	  text-decoration: none;
+	  font-weight: bold;
+	}
+	
+	.nav-links a:hover {
+	  text-decoration: underline;
+	}
+	
+	.page-title {
+		font-size: 22px;
+		font-weight: bold;
+		text-transform: uppercase;
+		color: #fff;
+		background-color: #333;
+		padding: 20px;
+		border-radius: 10px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		text-align: center;
+		margin-bottom: 5%;
+	}
+
+</style>
 </head>
 <body>
-	<form action="/trade/sellList" method="get">
-		<input type="hidden"  name=memberId th:value="${ memberId }">
-		<button type="submit">판매</button>
-	</form><br><br>
-	<form action="/trade/buyList" method="get">
-		<input type="hidden"  name=memberId th:value="${ memberId }">
-		<button type="submit">구매</button>
-	</form><p />
-	
-	<div th:each="list : ${list}">
-		<div style="border: 1px solid;">
-			<div th:if="${listType == 'sell'}">
-			물품상태 : ${list.status}<br>
-			물품제목 : ${list.title}<br>
-			물품가격 : ${list.saleBamboo}<br>
-			등록일 : ${list.regDate}<br>
-			판매수 : ${list.sellCount}<br>
-			</div>
-			<div th:if="${listType == 'buy'}">
-			물품상태 : 구매완료<br>
-			물품제목 : ${ list.title }<br>
-			물품가격 : ${ list.saleBamboo }<br>
-				<div th:if="${ list.refundableDate > 7 }">
-					
-				</div>
-				<div th:if="${ list.refundableDate <= 7 }">
-					환불가능일 : ${ 7 - list.refundableDate }<br>
-				</div>
-			</div>
+	<div class="container">
+		<!-- nav bar -->
+		<nav>
+		  <ul class="nav-links">
+		    <li><a href="#">재능판매</a></li>
+		    <li><a href="#">재능구매</a></li>
+		    <li><a href="#">거래관리</a></li>
+		    <li><a href="#">충전/내역</a></li>
+		    <li><a href="#">마이페이지</a></li>
+		  </ul>
+		</nav>
+		
+		<!-- title bar -->
+		<div class="page-title">
+			거래관리
 		</div>
-	</div><p />
+		
+		<!-- buttons -->
+		<div class="filter-buttons">
+			<form action="/trade/sellList" method="get">
+				<button type="submit">판매</button>
+			</form><p />
+			<form action="/trade/buyList" method="get">
+				<button  type="submit">구매</button>
+			</form><p />
+			<form action="/trade/refundList" method="get">
+				<button  type="submit">환불</button>
+			</form>
+		</div>
+		
+		<!-- list print -->
+		<div th:each="list : ${list}">
+			<div style="border: 1px solid;">
+				<div th:if="${listType == 'sell'}">
+					물품상태 : <span th:text="${list.status}"></span><br>
+					물품제목 : <span th:text="${list.title}"></span><br>
+					물품가격 : <span th:text="${list.saleBamboo}"></span><br>
+					등록일 : <span th:text="${list.regDate}"></span><br>
+					판매수 : <span th:text="${list.sellCount}"></span><br>
+					<div th:if="${list.status == '게시중'}">
+					<form action="#" method="get">
+						<button  type="submit">판매종료</button>
+					</form><p />
+					</div>
+					<div th:if="${list.status == '판매종료'}">
+					<form action="#" method="get">
+						<button  type="submit">환전하기</button>
+					</form><p />
+					<form action="#" method="get">
+						<button  type="submit">재등록</button>
+					</form><p />
+					</div>
+				</div>
+				<div th:if="${listType == 'buy'}">
+					물품상태 : 구매완료<br>
+					물품제목 : <span th:text="${ list.title }"></span><br>
+					물품가격 : <span th:text="${ list.saleBamboo }"></span><br>
+						<div th:if="${ list.refundableDate > 7 }">
+							
+						</div>
+						<div th:if="${ list.refundableDate <= 7 }">
+							환불가능일 : <span th:text="${ 7 - list.refundableDate }"></span><br>
+							<form action="#" method="get">
+								<button  type="submit">환불신청</button>
+							</form><p />
+						</div>
+				</div>
+				<div th:if="${listType == 'refund'}">
+					물품상태 : <span th:text="${list.status}"></span><br>
+					물품제목 : <span th:text="${list.title}"></span><br>
+					물품가격 : <span th:text="${list.saleBamboo}"></span><br>
+						<div th:if="${list.status == '검토중'}">
+							신청일 : <span th:text="${list.submitDate}"></span><br>
+							<form action="#" method="get">
+								<button  type="submit">신청취소</button>
+							</form><p />
+						</div>
+						<div th:if="${list.status == '환불완료'}">
+							승인일 : <span th:text="${list.approveDate}"></span><br>
+						</div>
+						<div th:if="${list.status == '반려'}">
+							반려일 : <span th:text="${list.approveDate}"></span><br>
+						</div>
+				</div>
+				
+				
+			</div>
+		</div><p />
+	</div>
 </body>
 </html>

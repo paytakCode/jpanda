@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kakao.jPanda.jst.domain.BuyListDto;
+import com.kakao.jPanda.jst.domain.RefundListDto;
 import com.kakao.jPanda.jst.domain.SellListDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,13 @@ public class TradeDaoImpl implements TradeDao{
 		List<BuyListDto> buyList = sqlSession.selectList("selectBuyList", memberId);
 		log.info("buyList.size : " + buyList.size());
 		return buyList;
+	}
+
+	@Override
+	public List<RefundListDto> getRefundListById(String memberId) {
+		log.info("TradeDao getRefundListById memberId check : " + memberId);
+		List<RefundListDto> refundList = sqlSession.selectList("selectRefundList", memberId);
+		return refundList;
 	}
 
 }

@@ -6,7 +6,7 @@ spring :
   #Oracle Setting
   datasource : 
     driver-class-name : oracle.jdbc.driver.OracleDriver
-    url : jdbc:oracle:thin:@localhost:1521/xe
+    url : jdbc:oracle:thin:@localhost:1521/orcl
     username : jpanda
     password : jpanda
  
