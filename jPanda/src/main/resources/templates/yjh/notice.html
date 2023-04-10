@@ -6,19 +6,27 @@
 </head>
 <body>
 	<form action="/notice" method="post">
-	<!-- <input type="hidden" name="_method" value="put, delete, fectch"> -->
+		<!-- <input type="hidden" name="_method" value="put, delete, fectch"> -->
 		<table border="1">
 			<tr>
 				<th>제목</th>
+				<td><input type="text" name="title"></td>
 			</tr>
 			<tr>
 				<th>내용</th>
+				<td><textarea rows="50" cols="50" name="content"></textarea></td>
+
 			</tr>
 			<tr>
 				<th>게시일</th>
+				<td><input type="date" name="regDate"></td>
 			</tr>
 			<tr>
 				<th>게시글 번호</th>
+				<td><input type="number" name="noticeNo"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><button type="submit" value="적용">적용</button></td>
 			</tr>
 		</table>
 	</form>
