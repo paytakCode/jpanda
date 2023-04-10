@@ -9,4 +9,9 @@ public class NoticeController {
 	public String home() {
 		return "yjh/home";
 	}
+	
+	@GetMapping(value = "/notice")
+	public String notice() {
+		return "yjh/notice";
+	}
 }
