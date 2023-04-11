@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.jst.domain.BuyListDto;
 import com.kakao.jPanda.jst.domain.RefundListDto;
@@ -39,7 +40,39 @@ public class TradeController {
 		session.setAttribute("memberId", memberId);
 		return "redirect:/trade";
 	}
+	
+	/**
+	 * trade페이지에서의 ajax요청 처리
+	 * status에 따른 다른 service 호출
+	 * @param session
+	 * @param model
+	 * @param status
+	 * @return 
+	 */
+	@GetMapping("/trade/list")
+	@ResponseBody
+	public List<?> tradeList(HttpSession session, Model model, @RequestParam(name = "status") String status) {
+		List<?> list = null;
+		String memberId = (String)session.getAttribute("memberId");
+		log.info("tradeSell id check : " + memberId);
+		log.info("TradeController tradeList status check : " + status);
+		switch (status) {
+		case "sell":
+			list = tradeService.getSellList(memberId);
+			break;
 
+		case "buy":
+			list = tradeService.getBuyList(memberId);			
+			break;
+
+		case "refund":
+			list = tradeService.getRefundList(memberId);
+			break;
+		}
+		
+		return list;
+	}
+	
 	/**
 	 * Model에 statDto setting
 	 * @param session
@@ -52,53 +85,6 @@ public class TradeController {
 		log.info("trade id check : " + memberId);
 		StatDto stat = tradeService.getStat(memberId);
 		model.addAttribute("stat", stat);
-		return "trade/trade";
-	}
-	
-	/**
-	 * ID를 통한 판매리스트 조회
-	 * @param memberId
-	 * @param model
-	 * @return 거래관리 페이지
-	 */
-	@GetMapping("/trade/sellList")
-	public String tradeSellList(HttpSession session, Model model) {
-		String memberId = (String)session.getAttribute("memberId");
-		log.info("tradeSell id check : " + memberId);
-		List<SellListDto> sellList = tradeService.getSellList(memberId);
-		model.addAttribute("listType", "sell");
-		model.addAttribute("list", sellList);
-		return "trade/trade";
-	}
-	
-	/**
-	 * ID를 통한 구매리스트 조회
-	 * @param memberId
-	 * @param model
-	 * @return 거래관리 페이지
-	 */
-	@GetMapping("/trade/buyList")
-	public String tradeBuyList(HttpSession session, Model model) {
-		String memberId = (String)session.getAttribute("memberId");
-		List<BuyListDto> buyList = tradeService.getBuyList(memberId);
-		model.addAttribute("listType", "buy");
-		model.addAttribute("list", buyList);
-		return "trade/trade";
-	}
-	
-	/**
-	 * ID를 통한 환불리스트 조회
-	 * @param memberId
-	 * @param model
-	 * @return 거래관리 페이지
-	 */	
-	@GetMapping("/trade/refundList")
-	public String tradeRegfundList(HttpSession session, Model model) {
-		String memberId = (String)session.getAttribute("memberId");
-		List<RefundListDto> refundList = tradeService.getRefundList(memberId);
-		model.addAttribute("listType", "refund");
-		model.addAttribute("list", refundList);
-		
 		return "trade/trade";
 	}
 	

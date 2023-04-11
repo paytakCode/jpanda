@@ -11,21 +11,28 @@
 	}
 	
 	.container {
-		max-width: 800px;
+		max-width: 80%;
 		margin: 0 auto;
 		padding: 20px;
 	}
 	
-	.filter-buttons {
+	.content{
+		width : 100%;
 		display: flex;
+		gap : 5%;
 		justify-content: space-between;
-		align-items: center;
+		align-items: baseline;
+	}
+	
+	.filter-buttons {
+		width : 80%;
 		margin-bottom: 20px;
 	}
 	
 	.filter-buttons button {
 		background-color: #333;
 		color: white;
+		margin-right : 10px;
 		border: none;
 		padding: 10px 20px;
 		border-radius: 5px;
@@ -37,36 +44,38 @@
 	}
 	
 	nav {
-	  background-color: #333;
-	  color: #fff;
-	  border-radius: 10px;
-	  padding: 10px;
-	  margin-bottom: 5%;
+		background-color: #333;
+		color: #fff;
+		border-radius: 10px;
+		padding: 10px;
+		margin-bottom: 5%;
 	}
 	
 	.nav-links {
-	  display: flex;
-	  justify-content: space-between;
-	  list-style: none;
-	  margin: 0;
-	  padding: 0;
+		display: flex;
+		justify-content: space-between;
+		list-style: none;
+		margin: 0;
+		padding: 0;
 	}
 	
 	.nav-links li {
-	  padding: 10px;
+		padding: 10px;
 	}
 	
 	.nav-links a {
-	  color: #fff;
-	  text-decoration: none;
-	  font-weight: bold;
+		color: #fff;
+		text-decoration: none;
+		font-weight: bold;
 	}
 	
 	.nav-links a:hover {
-	  text-decoration: underline;
+		text-decoration: underline;
 	}
 	
 	.page-title {
+		margin : 0 auto;
+		width : 80%;
 		font-size: 22px;
 		font-weight: bold;
 		text-transform: uppercase;
@@ -78,10 +87,26 @@
 		text-align: center;
 		margin-bottom: 5%;
 	}
+	
+	#list-print{
+		width: 80%; 
+	}
+	
+	.trade-list{
+		flex : 5;
+		border: 1px solid;
+		margin-bottom: 2px;
+		background-color: #8FBC8F;
+	}
+	
+	.sidebar{
+		flex : 1;
+	}
 
 </style>
 </head>
 <body>
+	<!-- container -->
 	<div class="container">
 		<!-- nav bar -->
 		<nav>
@@ -92,94 +117,148 @@
 		    <li><a href="#">충전/내역</a></li>
 		    <li><a href="#">마이페이지</a></li>
 		  </ul>
-		</nav>
+		</nav> <!-- /nav bar -->
 		
-		<!-- title bar -->
-		<div class="page-title">
-			거래관리
-		</div>
+			<!-- title bar -->
+			<div class="page-title">
+				거래관리
+			</div><!-- /title bar -->
+			
+			<!-- filter-buttons -->
+			<div class="filter-buttons">
+				<button class="filter-button" value="sell">판매</button>
+				<button class="filter-button" value="buy">구매</button>
+				<button class="filter-button" value="refund">환불</button>
+			</div> <!-- /filter-buttons -->
+			
+		<!-- content -->
+		<div class = "content">			
+			<!-- list print -->
+			<div id="list-print"> 
+			</div> <!-- /list print -->
 		
-		<!-- buttons -->
-		<div class="filter-buttons">
-			<form action="/trade/sellList" method="get">
-				<button type="submit">판매</button>
-			</form><p />
-			<form action="/trade/buyList" method="get">
-				<button  type="submit">구매</button>
-			</form><p />
-			<form action="/trade/refundList" method="get">
-				<button  type="submit">환불</button>
-			</form>
-		</div>
 		
-		<!-- list print -->
-		<div th:each="list : ${list}">
-			<div style="border: 1px solid;">
-				<div th:if="${listType == 'sell'}">
-					물품상태 : <span th:text="${list.status}"></span><br>
-					물품제목 : <span th:text="${list.title}"></span><br>
-					물품가격 : <span th:text="${list.saleBamboo}"></span><br>
-					등록일 : <span th:text="${list.regDate}"></span><br>
-					판매수 : <span th:text="${list.sellCount}"></span><br>
-					<div th:if="${list.status == '게시중'}">
-					<form action="#" method="get">
-						<button  type="submit">판매종료</button>
-					</form><p />
-					</div>
-					<div th:if="${list.status == '판매종료'}">
-					<form action="#" method="get">
-						<button  type="submit">환전하기</button>
-					</form><p />
-					<form action="#" method="get">
-						<button  type="submit">재등록</button>
-					</form><p />
-					</div>
-				</div>
-				<div th:if="${listType == 'buy'}">
-					물품상태 : 구매완료<br>
-					물품제목 : <span th:text="${ list.title }"></span><br>
-					물품가격 : <span th:text="${ list.saleBamboo }"></span><br>
-						<div th:if="${ list.refundableDate > 7 }">
-							
-						</div>
-						<div th:if="${ list.refundableDate <= 7 }">
-							환불가능일 : <span th:text="${ 7 - list.refundableDate }"></span><br>
-							<form action="#" method="get">
-								<button  type="submit">환불신청</button>
-							</form><p />
-						</div>
-				</div>
-				<div th:if="${listType == 'refund'}">
-					물품상태 : <span th:text="${list.status}"></span><br>
-					물품제목 : <span th:text="${list.title}"></span><br>
-					물품가격 : <span th:text="${list.saleBamboo}"></span><br>
-						<div th:if="${list.status == '검토중'}">
-							신청일 : <span th:text="${list.submitDate}"></span><br>
-							<form action="#" method="get">
-								<button  type="submit">신청취소</button>
-							</form><p />
-						</div>
-						<div th:if="${list.status == '환불완료'}">
-							승인일 : <span th:text="${list.approveDate}"></span><br>
-						</div>
-						<div th:if="${list.status == '반려'}">
-							반려일 : <span th:text="${list.approveDate}"></span><br>
-						</div>
-				</div>
-				
+			<!-- sidebar -->
+			<div class="sidebar" style="border: 1px solid">
+				판매중 : <span th:text="${stat.sellCount}"> 건</span><br> 
+				판매완료 : <span th:text="${stat.soldCount}"> 건</span><br>
+				구매완료 : <span th:text="${stat.buyCount}"> 건</span><br>
+				환불신청 : <span th:text="${stat.refundSubmitCount}"> 건</span><br>
+				환불완료 : <span th:text="${stat.refundApproveCount}"> 건</span><br>
+				환불반려 : <span th:text="${stat.refundRejectCount}"> 건</span><br>
+			</div> <!-- /sidebar -->
+		</div> <!-- /content -->
+	</div><!-- container -->
+<script type="text/javascript" src="/static/js/jquery.js" ></script>
+<script type="text/javascript">
+/**
+ * trade페이지 로드 완료시
+ * sidebar statDto Ajax 통신
+ */
 
+
+/**
+ * list-print tradeList Ajax 통신
+ */
+function getSellList(list){
+	$.each(list, function(index, item){
+		let text =  '<div class = "trade-list">' + 
+						'물품상태 : ' + item.status + '<br>' + 
+						'물품제목 : ' + item.title + '<br>' +
+						'물품가격 : ' + item.saleBamboo + '<br>' +
+						'등록일 : ' + item.regDate + '<br>' +
+						'판매수 : ' + item.sellCount + '<br>';
+					
+		if(item.status === '게시중'){
+			text += '<form action="#" method="get"> <button type="submit">판매종료</button> </form><br>' + 
+				'</div>';
+		} else if(item.status === '판매종료'){
+			text += '<form action="#" method="get"> <button type="submit">환전하기</button> </form><br>' + 
+				'<form action="#" method="get"> <button type="submit">재등록</button> </form><br>' + 
+				'</div>';
+		} else {
+			text += '</div>';
+		}
 				
-			</div>
-		</div><p /> <!-- list print -->
-				<!-- sidebar -->
-		<div class="sidebar" style="border: 1px solid">
-			판매중 : <span th:text="${stat.sellCount}"> 건</span><br> 
-			판매완료 : <span th:text="${stat.soldCount}"> 건</span><br>
-			구매완료 : <span th:text="${stat.buyCount}"> 건</span><br>
-			환불신청 : <span th:text="${stat.refundSubmitCount}"> 건</span><br>
-			환불완료 : <span th:text="${stat.refundApproveCount}"> 건</span><br>
-			환불반려 : <span th:text="${stat.refundRejectCount}"> 건</span><br>
-		</div>
-	</div>
+		$('#list-print').append(text);
+	});
+}
+
+function getBuyList(list){
+	$.each(list, function(index, item){
+		let text =  '<div class = "trade-list">' + 
+						'물품상태 : ' + item.status + '<br>' + 
+						'물품제목 : ' + item.title + '<br>' +
+						'물품가격 : ' + item.saleBamboo + '<br>';
+					
+		if(item.refundableDate > 7){
+			text += '구매확정' + '</div>';
+		} else if(item.refundableDate <= 7){
+			text += '환불가능일' + (7 - item.refundableDate) + '일' + 
+				'<form action="#" method="get"> <button type="submit">환불신청</button> </form><br>' + 
+				'</div>';
+		} else {
+			test += '</div>';	
+		}
+				
+		$('#list-print').append(text);		
+	})
+}
+
+function getRefundList(list){
+	$.each(list, function(index, item){
+		let text =  '<div class = "trade-list">' + 
+						'물품상태 : ' + item.status + '<br>' + 
+						'물품제목 : ' + item.title + '<br>' +
+						'물품가격 : ' + item.saleBamboo + '<br>';
+				
+		if(item.status === '검토중'){
+		text += '신청일 : ' + item.submitDate + '<br>' + 
+				'<form action="#" method="get"> <button type="submit">신청취소</button> </form><br>' + 
+				'</div>';
+		} else if(list.status === '환불완료'){
+			text += '승인일 : ' + item.approveDate + '<br>' + 
+					'</div>';
+		} else if(list.status === '반려'){
+			text += '반려일 : ' + item.approveDate + '<br>'  + 
+					'</div>';
+		} else{
+			text += '</div>';
+		}
+		
+		$('#list-print').append(text);		
+	});
+	
+}
+
+	$('.filter-button').on("click", function(){
+		let status = this.value;
+		console.log(status);
+		$.ajax(
+				{
+					type : "get",
+					url : "/trade/list",
+					dataType : "Json",
+					data : {'status' : status },
+					success : function(list){
+						$('#list-print').empty();
+						if(list[0].status === '게시중' || list[0].status === '판매종료'){
+							getSellList(list);
+						}
+						if(list[0].status === '검토중' || list[0].status === '환불완료' || list[0].status === '반려'){
+							getRefundList(list);
+						}
+						if(list[0].status === '구매완료'){
+							getBuyList(list);
+						}
+						
+					},
+					error : function(){
+						console.log("error");
+					}
+				}		
+		);
+	});
+</script>
 </body>
 </html>

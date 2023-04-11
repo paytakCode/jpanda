@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class BuyListDto {
+	private String status;
 	private String title;
 	private Long saleBamboo;
 	private String regDate;
