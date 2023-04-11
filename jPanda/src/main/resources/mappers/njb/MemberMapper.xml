@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kakkao.jPanda.mappers.njb.MemberMapper">
+	<insert id="insertMember" parameterType="Member">
+        INSERT INTO Member
+            (id, password, name, tel, email, gender, account)
+        VALUES (#{id},#{password}, #{name},#{tel}, #{email}, #{gender},#{account})
+    </insert>
+</mapper>

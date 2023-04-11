@@ -20,5 +20,5 @@ spring :
 mybatis: 
   config-location: classpath:configuration/njb.xml
   mapper-locations: classpath:mappers/**/*.xml
-
+ 
 
