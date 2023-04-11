@@ -32,6 +32,6 @@ public class NoticeController {
 		noticeService.insertNotice(notice);
 		System.out.println("=====notice controller insertNotice() end=====");
 		
-		return "redirect:/notice";
+		return "redirect:/";
 	}
 }

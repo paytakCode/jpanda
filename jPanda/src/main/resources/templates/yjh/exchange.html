@@ -3,27 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link th:href="@{/css/board.css}" rel="stylesheet" />
 </head>
 <body>
 	<h1>환전 관리</h1>
-	<form action="/exchange" method="get">
+	<form action="/exchange" method="post">
+	<input type="hidden" name="_method" value="put">
 		<table border="1">
 			<tr>
+				<th>선택</th>
 				<th>신청번호</th>
-				<th>이름</th>
+				<th>재능번호</th>
 				<th>아이디</th>
 				<th>신청일</th>
 				<th>총금액</th>
 				<th>상태</th>
 			</tr>
-			
-			<tr th:each=" : ${}">
-					<td th:text="${}"></td>
-					<td th:text="${}"></td>
-					<td th:text="${}"></td>
-					<td th:text="${}"></td>
-					<td th:text="${}"></td>
-					<td th:text="${}"></td>
+			<tr th:each="exchange : ${exList}">
+				<td><input type="checkbox" name="excheckedList" value="${exList}"></td>
+				<td th:text="${exchange.exchangeNo}"></td>
+				<td th:text="${exchange.talentNo}"></td>
+				<td th:text="${exchange.id}"></td>
+				<td th:text="${exchange.submitDate}"></td>
+				<td th:text="${exchange.total}"></td>
+				<td th:text="${exchange.status}"></td>
+			</tr>
+			<tr>
+				<td colspan="7"><button type="submit" value="적용">적용</button></td>
 			</tr>
 		</table>
 	</form>

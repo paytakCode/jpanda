@@ -1,5 +1,7 @@
 package com.kakao.jPanda.yjh.domain;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,7 +14,7 @@ public class Exchange {
 	private String id;
 	private Long talentNo;
 	private Long sales;
-	private String submitDate;
+	private Date submitDate;
 	private String approveDate;
 	private Long total;
 	private String grade;
