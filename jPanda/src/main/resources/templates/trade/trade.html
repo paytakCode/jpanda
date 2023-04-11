@@ -167,9 +167,19 @@
 						</div>
 				</div>
 				
+
 				
 			</div>
-		</div><p />
+		</div><p /> <!-- list print -->
+				<!-- sidebar -->
+		<div class="sidebar" style="border: 1px solid">
+			판매중 : <span th:text="${stat.sellCount}"> 건</span><br> 
+			판매완료 : <span th:text="${stat.soldCount}"> 건</span><br>
+			구매완료 : <span th:text="${stat.buyCount}"> 건</span><br>
+			환불신청 : <span th:text="${stat.refundSubmitCount}"> 건</span><br>
+			환불완료 : <span th:text="${stat.refundApproveCount}"> 건</span><br>
+			환불반려 : <span th:text="${stat.refundRejectCount}"> 건</span><br>
+		</div>
 	</div>
 </body>
 </html>

@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.kakao.jPanda.jst.domain.BuyListDto;
 import com.kakao.jPanda.jst.domain.RefundListDto;
 import com.kakao.jPanda.jst.domain.SellListDto;
+import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,21 +31,27 @@ public class TradeController {
 		this.tradeService = tradeService;
 	}
 	
-	
-	/**
-	 * @return trade페이지 url 매핑
-	 */
-	@GetMapping("/trade")
-	public String trade() {
-		return "trade/trade";
-	}
-	
 	@PostMapping("/login")
 	public String login(@RequestParam(name = "memberId") String memberId,
 						HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		log.info("TradeController memberId check : " + memberId);
 		session.setAttribute("memberId", memberId);
+		return "redirect:/trade";
+	}
+
+	/**
+	 * Model에 statDto setting
+	 * @param session
+	 * @param model
+	 * @return trade페이지 url 매핑
+	 */
+	@GetMapping("/trade")
+	public String trade(HttpSession session, Model model) {
+		String memberId = (String)session.getAttribute("memberId");
+		log.info("trade id check : " + memberId);
+		StatDto stat = tradeService.getStat(memberId);
+		model.addAttribute("stat", stat);
 		return "trade/trade";
 	}
 	
@@ -80,7 +86,12 @@ public class TradeController {
 		return "trade/trade";
 	}
 	
-	
+	/**
+	 * ID를 통한 환불리스트 조회
+	 * @param memberId
+	 * @param model
+	 * @return 거래관리 페이지
+	 */	
 	@GetMapping("/trade/refundList")
 	public String tradeRegfundList(HttpSession session, Model model) {
 		String memberId = (String)session.getAttribute("memberId");

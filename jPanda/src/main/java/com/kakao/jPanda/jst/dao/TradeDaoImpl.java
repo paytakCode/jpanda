@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.kakao.jPanda.jst.domain.BuyListDto;
 import com.kakao.jPanda.jst.domain.RefundListDto;
 import com.kakao.jPanda.jst.domain.SellListDto;
+import com.kakao.jPanda.jst.domain.StatDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +44,16 @@ public class TradeDaoImpl implements TradeDao{
 	public List<RefundListDto> getRefundListById(String memberId) {
 		log.info("TradeDao getRefundListById memberId check : " + memberId);
 		List<RefundListDto> refundList = sqlSession.selectList("selectRefundList", memberId);
+		log.info("refundList.size : " + refundList.size());
 		return refundList;
+	}
+
+	@Override
+	public StatDto getStatById(String memberId) {
+		log.info("TradeDao getStatById Stat check : " + memberId);
+		StatDto stat = sqlSession.selectOne("selectStat", memberId);
+		log.info("stat.toString : " + stat.toString());
+		return stat;
 	}
 
 }

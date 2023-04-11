@@ -11,6 +11,7 @@ import com.kakao.jPanda.jst.dao.TradeDao;
 import com.kakao.jPanda.jst.domain.BuyListDto;
 import com.kakao.jPanda.jst.domain.RefundListDto;
 import com.kakao.jPanda.jst.domain.SellListDto;
+import com.kakao.jPanda.jst.domain.StatDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,21 +28,22 @@ public class TradeServiceImpl implements TradeService{
 	
 	@Override
 	public List<SellListDto> getSellList(String memberId) {
-		List<SellListDto> sellList;
-		sellList = tradeDao.getSellListById(memberId);
-		return sellList;
+		return tradeDao.getSellListById(memberId);
 	}
 
 	@Override
 	public List<BuyListDto> getBuyList(String memberId) {
-		List<BuyListDto> buyList = tradeDao.getBuyListById(memberId);
-		return buyList;
+		return tradeDao.getBuyListById(memberId);
 	}
 
 	@Override
 	public List<RefundListDto> getRefundList(String memberId) {
-		List<RefundListDto> refundList = tradeDao.getRefundListById(memberId);
-		return refundList;
+		return tradeDao.getRefundListById(memberId);
+	}
+
+	@Override
+	public StatDto getStat(String memberId) {
+		return tradeDao.getStatById(memberId);
 	}
 
 }
