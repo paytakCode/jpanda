@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+		
+	.navigation-menu ul {
+	  padding: 10px;
+	  margin-left: 10%;
+	  margin-right: 10%;
+	  margin-bottom: 20%;
+	}
+	ul {   
+	    padding: 0;
+	    overflow: hidden;
+	    background-color: #4B4B4B;
+	    text-align: center;
+	}
+	li a {
+	    display: inline-block;
+	    color: white;
+	    text-align: center;
+	    padding: 10px 20px;
+	    text-decoration: none;
+	}
+	li a:hover {
+	    background-color: #111;
+	}
+	
+	#navigation ul
+	{
+		font-size: 1.2em;
+	}
+	#navigation ul li
+	{
+	    display: inline;
+		color:white;
+	}
+	#navigation li:not(:first-child):before {
+	    content: " | ";
+	}
+	
+	
+</style>
 </head>
 <body>
-
+	<div class="navigation-menu">
+		<nav id="navigation">
+		  <ul>
+		    <li><a href="#sell">재능판매</a></li>
+		    <li><a href="#pruchase">재능구매</a></li>
+		    <li><a href="#tradeManage">거래관리</a></li>
+		    <li><a href="#charge">충전/내역</a></li>
+		    <li><a href="#myPage">마이페이지</a></li>
+		    <li><a href="#regist">회원가입</a></li>
+		    <li><a href="#login">로그인</a></li>
+		  </ul>
+		</nav>
+	</div>
 </body>
 </html>
