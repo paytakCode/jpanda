@@ -1,5 +1,6 @@
 package com.kakao.jPanda.yjh.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,13 +31,21 @@ public class ExchangeController {
 	@PutMapping(value = "/exchange")
 	public String exchangeUpdate(@RequestParam(name = "exchangeNo") String[] exchangeNo) {
 		System.out.println("===== ExchangeController exchangeUpdate start =====");
+		
 		Long[] longExn = new Long[exchangeNo.length];
 		
 		for(int i = 0; i < exchangeNo.length; i++) {
 			longExn[i] = Long.parseLong(exchangeNo[i]);
+			System.out.println(longExn[i]);
+		} 
+		
+		List<Long> listExn = new ArrayList<Long>();
+		for(Long lastExn : longExn) {
+			listExn.add(lastExn);
+			System.out.println(listExn);
 		}
 		
-		exchangeService.exchangedUpdate(longExn);
+		exchangeService.exchangedUpdate(listExn);
 //		exchangeService.changeStatus(exchangeNo);
 		return "redirect:/";
 	}

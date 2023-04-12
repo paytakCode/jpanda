@@ -29,14 +29,8 @@ public class ExchangeDaoImpl implements ExchangeDao {
 	}
 
 	@Override
-	public void exchangedUpdate(Long[] exchangeNo) {
+	public void exchangedUpdate(List<Long> listExn) {
 		System.out.println("===== Exchange repository exchangedUpdate() start =====");
-		
-		List<Long> listExn = new ArrayList<Long>();
-		for(Long a : exchangeNo) {
-			listExn.add(a);
-		}
-		
 		System.out.println(listExn);
 		
 		sqlSession.update("ExchangedUpdate", listExn);

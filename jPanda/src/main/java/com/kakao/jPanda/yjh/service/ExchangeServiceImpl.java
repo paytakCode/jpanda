@@ -22,9 +22,9 @@ public class ExchangeServiceImpl implements ExchangeService {
 	}
 
 	@Override
-	public void exchangedUpdate(Long[] exchangeNo) {
+	public void exchangedUpdate(List<Long> listExn) {
 		System.out.println("===== Exchange Service exchangedUpdate() start =====");
-		exchangeDao.exchangedUpdate(exchangeNo);
+		exchangeDao.exchangedUpdate(listExn);
 	}
 
 }
