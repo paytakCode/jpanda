@@ -8,5 +8,5 @@ public class SellListDto {
 	private String title;
 	private Long saleBamboo;
 	private String regDate;
-	private long sellCount;
+	private Long sellCount;
 }

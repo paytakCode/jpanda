@@ -7,6 +7,6 @@ public class BuyListDto {
 	private String status;
 	private String title;
 	private Long saleBamboo;
-	private String regDate;
-	private int refundableDate;
+	private String purchaseDate;
+	private Long refundableDate;
 }

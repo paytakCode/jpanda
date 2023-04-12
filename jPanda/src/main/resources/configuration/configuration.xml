@@ -11,5 +11,6 @@
   		<typeAlias type="com.kakao.jPanda.jst.domain.SellListDto" alias="SellListDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.RefundListDto" alias="RefundListDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeListDto" alias="TradeListDto"/>
 	</typeAliases>
 </configuration>

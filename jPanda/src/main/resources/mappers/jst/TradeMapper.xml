@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="TradeDao">
-	<select id="selectSellList" parameterType="String" resultType="SellListDto">
+<!-- 	<select id="selectSellList" parameterType="String" resultType="SellListDto">
 		SELECT 
 			t.status, t.title, t.sale_bamboo, 
 			t.reg_date, 
@@ -20,7 +20,7 @@
 		    ON t.talent_no = u.talent_no
 		LEFT OUTER JOIN talent_refund r
 		    ON r.purchase_no = u.purchase_no  
-		WHERE u.buyer_id = 'test'
+		WHERE u.buyer_id = #{memberId}
 		AND r.status IS null
 		ORDER BY u.purchase_date DESC
 	</select>
@@ -38,6 +38,31 @@
 		ORDER BY r.submit_date desc
 	</select>
 	
+	<select id="selectAllList" parameterType="String" resultType="TradeListDto">
+		SELECT
+		    t.status, 
+		    t.title, 
+		    t.sale_bamboo, 
+		    t.reg_date, 
+		    (SELECT count(*) FROM bamboo_use bu WHERE bu.talent_no = t.talent_no) AS sell_Count,
+		    u.purchase_date, 
+		    TRUNC(sysdate) - TRUNC(u.purchase_date) AS "REFUNDABLE_DATE",
+		    r.status AS refund_status, 
+		    r.submit_date, 
+		    r.approve_date,
+		    u.buyer_id,
+		    t.seller_id
+		FROM talent t
+		LEFT JOIN bamboo_use u ON t.talent_no = u.talent_no
+		LEFT JOIN talent_refund r ON u.purchase_no = r.purchase_no
+		WHERE u.buyer_id = #{memberId}
+		AND r.status IS NULL
+		OR u.buyer_id = #{memberId}
+		AND r.status IS NOT NULL
+		OR t.seller_id = #{memberId}
+		ORDER BY reg_date DESC
+	</select> -->
+
 	<select id="selectStat" parameterType="String" resultType="StatDto">
 		SELECT
 			(SELECT count(*) FROM talent WHERE status = '검토중' AND seller_id = #{memberID}) AS submit_count,
@@ -49,5 +74,45 @@
 		    (SELECT count(*) FROM talent_refund t INNER JOIN bamboo_use b ON b.purchase_no = t.purchase_no WHERE t.status = '반려' AND b.buyer_id = #{memberID}) AS refund_reject_count
 		FROM 
 		    dual
+	</select>
+		
+	<select id="selectTradeList" resultType="TradeListDto" parameterType="Map">
+		SELECT
+		    t.status, 
+		    t.title, 
+		    t.sale_bamboo, 
+		    t.reg_date, 
+		    (SELECT count(*) FROM bamboo_use u WHERE u.talent_no = t.talent_no) AS sell_Count,
+		    u.purchase_date, 
+		    TRUNC(sysdate) - TRUNC(u.purchase_date) AS "REFUNDABLE_DATE",
+		    r.status AS refund_status, 
+		    r.submit_date, 
+		    r.approve_date,
+		    u.buyer_id,
+		    t.seller_id
+		FROM talent t
+		LEFT JOIN bamboo_use u ON t.talent_no = u.talent_no
+		LEFT JOIN talent_refund r ON u.purchase_no = r.purchase_no
+		<choose>
+			<when test="tradeListDto.listType == 'buy'">
+				WHERE u.buyer_id = #{memberId}
+				AND r.status IS NULL
+			</when>
+			<when test="tradeListDto.listType == 'refund'">
+				WHERE u.buyer_id = #{memberId}
+				AND r.status IS NOT NULL
+			</when>
+			<when test="tradeListDto.listType == 'sell'">
+				WHERE t.seller_id = #{memberId}
+			</when>
+			<when test="tradeListDto.listType == 'all'">
+				WHERE u.buyer_id = #{memberId}
+				AND r.status IS NULL
+				OR u.buyer_id = #{memberId}
+				AND r.status IS NOT NULL
+				OR t.seller_id = #{memberId}
+			</when>
+		</choose>
+		ORDER BY reg_date DESC	
 	</select>
 </mapper>

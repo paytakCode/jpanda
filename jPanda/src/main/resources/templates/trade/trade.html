@@ -37,10 +37,18 @@
 		padding: 10px 20px;
 		border-radius: 5px;
 		cursor: pointer;
+		line-height: 1;
 	}
 	
 	.filter-buttons button:hover {
 		background-color: gray;
+	}
+	
+	.filter-buttons button:active {
+		background-color: #555;
+		color: #fff;
+		position: relative;
+		top: 1px;
 	}
 	
 	nav {
@@ -132,6 +140,7 @@
 			
 			<!-- filter-buttons -->
 			<div class="filter-buttons">
+				<button class="filter-button" value="all">전체</button>
 				<button class="filter-button" value="sell">판매</button>
 				<button class="filter-button" value="buy">구매</button>
 				<button class="filter-button" value="refund">환불</button>
@@ -163,10 +172,12 @@
 <script type="text/javascript">
 /**
  * trade페이지 로드 완료시
- * sidebar statDto Ajax 통신
+ * 전체 버튼 클릭
  */
-
-
+$(function() {
+	$(".filter-button[value='all']").click();
+});
+ 
 /**
  * list-print tradeList Ajax 통신
  */
@@ -196,7 +207,8 @@ function getBuyList(item){
 	let text =  '<div class = "trade-list">' + 
 					'물품상태 : ' + item.status + '<br>' + 
 					'물품제목 : ' + item.title + '<br>' +
-					'물품가격 : ' + item.saleBamboo + '<br>';
+					'물품가격 : ' + item.saleBamboo + '<br>' +
+					'구매일 : ' + item.purchaseDate + '<br>';
 				
 	if(item.refundableDate > 7){
 		text += '구매확정' + '</div>';
@@ -217,18 +229,18 @@ function getBuyList(item){
 
 function getRefundList(item){
 	let text =  '<div class = "trade-list">' + 
-					'물품상태 : ' + item.status + '<br>' + 
+					'물품상태 : ' + item.refundStatus + '<br>' + 
 					'물품제목 : ' + item.title + '<br>' +
 					'물품가격 : ' + item.saleBamboo + '<br>';
 			
-	if(item.status === '검토중'){
+	if(item.refundStatus === '검토중'){
 	text += '신청일 : ' + item.submitDate + '<br>' + 
 			'<form action="#" method="get"> <button type="submit">신청취소</button> </form><br>' + 
 			'</div>';
-	} else if(item.status === '환불완료'){
+	} else if(item.refundStatus === '환불완료'){
 		text += '승인일 : ' + item.approveDate + '<br>' + 
 				'</div>';
-	} else if(item.status === '반려'){
+	} else if(item.refundStatus === '반려'){
 		text += '반려일 : ' + item.approveDate + '<br>'  + 
 				'</div>';
 	} else{
@@ -239,24 +251,25 @@ function getRefundList(item){
 }
 
 $('.filter-button').on("click", function(){
-	let status = this.value;
+	let listType = this.value;
 	console.log(status);
 	$.ajax(
 			{
-				type : "get",
+				type : "post",
 				url : "/trade/list",
+				contentType: 'application/json',
 				dataType : "Json",
-				data : {'status' : status },
+				data : JSON.stringify({'listType' : listType }),
 				success : function(list){
 					$('#list-print').empty();
 					$.each(list, function(index, item){
-						if(item.status === '게시중' || item.status === '판매종료'){
+						if(item.listType === 'sell'){
 							getSellList(item);
 						}
-						if(item.status === '검토중' || item.status === '환불완료' || item.status === '반려'){
+						if(item.listType === 'refund'){
 							getRefundList(item);
 						}
-						if(item.status === '구매완료'){
+						if(item.listType === 'buy'){
 							getBuyList(item);
 						}	
 					});

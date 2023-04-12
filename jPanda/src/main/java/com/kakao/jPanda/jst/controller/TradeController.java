@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kakao.jPanda.jst.domain.TradeListDto;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
@@ -39,38 +41,6 @@ public class TradeController {
 	}
 	
 	/**
-	 * trade페이지에서의 ajax요청 처리
-	 * status에 따른 다른 service 호출
-	 * @param session
-	 * @param model
-	 * @param status
-	 * @return 
-	 */
-	@GetMapping("/trade/list")
-	@ResponseBody
-	public List<?> tradeList(HttpSession session, Model model, @RequestParam(name = "status") String status) {
-		List<?> list = null;
-		String memberId = (String)session.getAttribute("memberId");
-		log.info("tradeSell id check : " + memberId);
-		log.info("TradeController tradeList status check : " + status);
-		switch (status) {
-		case "sell":
-			list = tradeService.getSellList(memberId);
-			break;
-
-		case "buy":
-			list = tradeService.getBuyList(memberId);			
-			break;
-
-		case "refund":
-			list = tradeService.getRefundList(memberId);
-			break;
-		}
-		
-		return list;
-	}
-	
-	/**
 	 * Model에 statDto setting
 	 * @param session
 	 * @param model
@@ -94,5 +64,49 @@ public class TradeController {
 		log.info("loginForm called");
 		return "trade/loginForm";
 	}
+	
+	/**
+	 * trade페이지에서의 ajax요청 처리
+	 * status에 따른 다른 service 호출
+	 * @param session
+	 * @param model
+	 * @param status
+	 * @return 
+	 */
+	@PostMapping("/trade/list")
+	@ResponseBody
+	public List<?> tradeList(HttpSession session, Model model, @RequestBody TradeListDto tradeListDto) {
+		List<?> list = null;
+		String memberId = (String)session.getAttribute("memberId");
+		log.info("tradeSell id check : " + memberId);
+		log.info("TradeController tradeList status listDto.getListType() : " + tradeListDto.getListType());
+		list = tradeService.getTradeList(memberId, tradeListDto);
+		
+		return list;
+	}
+
+//이전 코드
+//		switch (status) {
+//		
+//			case "all":
+//				list = tradeService.getAllList(memberId);
+//				break;
+//				
+//			case "sell":
+//				list = tradeService.getSellList(memberId);
+//				break;
+//	
+//			case "buy":
+//				list = tradeService.getBuyList(memberId);			
+//				break;
+//	
+//			case "refund":
+//				list = tradeService.getRefundList(memberId);
+//				break;
+//		}
+		
+
+	
+
 
 }//end class
