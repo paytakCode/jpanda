@@ -13,13 +13,16 @@
 	
 	<select id="selectBuyList" parameterType="String" resultType="BuyListDto">
 		SELECT
-		    t.title, t.sale_bamboo, b.purchase_date,
-		    TRUNC(sysdate) - TRUNC(b.purchase_date) as "REFUNDABLE_DATE"
+			t.title, t.sale_bamboo, u.purchase_date,
+		    TRUNC(sysdate) - TRUNC(u.purchase_date) as "REFUNDABLE_DATE"
 		FROM talent t
-		INNER JOIN bamboo_use b
-		    ON t.talent_no = b.talent_no
-		WHERE b.buyer_id = #{memberId}
-		ORDER BY b.purchase_date desc
+		INNER JOIN bamboo_use u
+		    ON t.talent_no = u.talent_no
+		LEFT OUTER JOIN talent_refund r
+		    ON r.purchase_no = u.purchase_no  
+		WHERE u.buyer_id = 'test'
+		AND r.status IS null
+		ORDER BY u.purchase_date DESC
 	</select>
 	
 	<select id="selectRefundList" parameterType="String" resultType="RefundListDto">
@@ -37,9 +40,10 @@
 	
 	<select id="selectStat" parameterType="String" resultType="StatDto">
 		SELECT
+			(SELECT count(*) FROM talent WHERE status = '검토중' AND seller_id = #{memberID}) AS submit_count,
 		    (SELECT count(*) FROM talent WHERE status = '게시중' AND seller_id = #{memberID}) AS sell_count,
 		    (SELECT count(*) FROM talent WHERE status = '판매종료' AND seller_id = #{memberID}) AS sold_count,
-		    (SELECT count(*) FROM bamboo_use WHERE buyer_id = #{memberID}) AS buy_count,
+		    (SELECT count(*) FROM bamboo_use u LEFT OUTER JOIN talent_refund r ON u.purchase_no = r.purchase_no WHERE buyer_id = #{memberID} AND r.status IS NULL) AS buy_count,
 		    (SELECT count(*) FROM talent_refund t INNER JOIN bamboo_use b ON b.purchase_no = t.purchase_no WHERE t.status = '검토중' AND b.buyer_id = #{memberID}) AS refund_submit_count,
 		    (SELECT count(*) FROM talent_refund t INNER JOIN bamboo_use b ON b.purchase_no = t.purchase_no WHERE t.status = '환불완료' AND b.buyer_id = #{memberID}) AS refund_approve_count,
 		    (SELECT count(*) FROM talent_refund t INNER JOIN bamboo_use b ON b.purchase_no = t.purchase_no WHERE t.status = '반려' AND b.buyer_id = #{memberID}) AS refund_reject_count

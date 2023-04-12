@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class StatDto {
+	private Long submitCount;
 	private Long sellCount;
 	private Long soldCount;
 	private Long buyCount;

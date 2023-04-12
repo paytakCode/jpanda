@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kakao.jPanda.jst.domain.BuyListDto;
-import com.kakao.jPanda.jst.domain.RefundListDto;
-import com.kakao.jPanda.jst.domain.SellListDto;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.service.TradeService;
 

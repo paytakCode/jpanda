@@ -15,8 +15,6 @@ spring :
     hiddenmethod:
       filter:
         enabled: true
-    #Static Root Setting    
-    static-path-pattern : /static/**
 
 #myBatis
 mybatis: 

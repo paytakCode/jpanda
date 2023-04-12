@@ -101,6 +101,12 @@
 	
 	.sidebar{
 		flex : 1;
+		background-color: #000;
+    	color: #fff;
+    	border-radius: 20px;
+    	padding: 10px;
+    	box-sizing: border-box;
+    	font-family: sans-serif;
 	}
 
 </style>
@@ -139,17 +145,21 @@
 		
 		
 			<!-- sidebar -->
-			<div class="sidebar" style="border: 1px solid">
+			<div class="sidebar">
+				★ 판매 ★<br>
+				검토중 : <span th:text="${stat.submitCount}"> 건</span><br>
 				판매중 : <span th:text="${stat.sellCount}"> 건</span><br> 
 				판매완료 : <span th:text="${stat.soldCount}"> 건</span><br>
+				★ 구매 ★<br>
 				구매완료 : <span th:text="${stat.buyCount}"> 건</span><br>
+				★ 환불 ★<br>
 				환불신청 : <span th:text="${stat.refundSubmitCount}"> 건</span><br>
 				환불완료 : <span th:text="${stat.refundApproveCount}"> 건</span><br>
 				환불반려 : <span th:text="${stat.refundRejectCount}"> 건</span><br>
 			</div> <!-- /sidebar -->
 		</div> <!-- /content -->
 	</div><!-- container -->
-<script type="text/javascript" src="/static/js/jquery.js" ></script>
+<script type="text/javascript" src="/js/jquery.js" ></script>
 <script type="text/javascript">
 /**
  * trade페이지 로드 완료시
@@ -160,105 +170,104 @@
 /**
  * list-print tradeList Ajax 통신
  */
-function getSellList(list){
-	$.each(list, function(index, item){
-		let text =  '<div class = "trade-list">' + 
-						'물품상태 : ' + item.status + '<br>' + 
-						'물품제목 : ' + item.title + '<br>' +
-						'물품가격 : ' + item.saleBamboo + '<br>' +
-						'등록일 : ' + item.regDate + '<br>' +
-						'판매수 : ' + item.sellCount + '<br>';
-					
-		if(item.status === '게시중'){
-			text += '<form action="#" method="get"> <button type="submit">판매종료</button> </form><br>' + 
-				'</div>';
-		} else if(item.status === '판매종료'){
-			text += '<form action="#" method="get"> <button type="submit">환전하기</button> </form><br>' + 
-				'<form action="#" method="get"> <button type="submit">재등록</button> </form><br>' + 
-				'</div>';
-		} else {
-			text += '</div>';
-		}
+function getSellList(item){
+	let text =  '<div class = "trade-list">' + 
+					'물품상태 : ' + item.status + '<br>' + 
+					'물품제목 : ' + item.title + '<br>' +
+					'물품가격 : ' + item.saleBamboo + '<br>' +
+					'등록일 : ' + item.regDate + '<br>' +
+					'판매수 : ' + item.sellCount + '<br>';
 				
-		$('#list-print').append(text);
-	});
+	if(item.status === '게시중'){
+		text += '<form action="#" method="get"> <button type="submit">판매종료</button> </form><br>' + 
+			'</div>';
+	} else if(item.status === '판매종료'){
+		text += '<form action="#" method="get"> <button type="submit">환전하기</button> </form><br>' + 
+			'<form action="#" method="get"> <button type="submit">재등록</button> </form><br>' + 
+			'</div>';
+	} else {
+		text += '</div>';
+	}
+			
+	$('#list-print').append(text);
 }
 
-function getBuyList(list){
-	$.each(list, function(index, item){
-		let text =  '<div class = "trade-list">' + 
-						'물품상태 : ' + item.status + '<br>' + 
-						'물품제목 : ' + item.title + '<br>' +
-						'물품가격 : ' + item.saleBamboo + '<br>';
-					
-		if(item.refundableDate > 7){
-			text += '구매확정' + '</div>';
-		} else if(item.refundableDate <= 7){
-			text += '환불가능일' + (7 - item.refundableDate) + '일' + 
+function getBuyList(item){
+	let text =  '<div class = "trade-list">' + 
+					'물품상태 : ' + item.status + '<br>' + 
+					'물품제목 : ' + item.title + '<br>' +
+					'물품가격 : ' + item.saleBamboo + '<br>';
+				
+	if(item.refundableDate > 7){
+		text += '구매확정' + '</div>';
+	} else if(item.refundableDate < 7){
+		text += '환불가능일' + (7 - item.refundableDate) + '일' + 
+			'<form action="#" method="get"> <button type="submit">환불신청</button> </form><br>' + 
+			'</div>';
+	} else if(item.refundableDate === 7){
+		text += '환불가능 마지막 날입니다!' + 
 				'<form action="#" method="get"> <button type="submit">환불신청</button> </form><br>' + 
 				'</div>';
-		} else {
-			test += '</div>';	
-		}
-				
-		$('#list-print').append(text);		
-	})
+	}else {
+		test += '</div>';	
+	}
+			
+	$('#list-print').append(text);		
 }
 
-function getRefundList(list){
-	$.each(list, function(index, item){
-		let text =  '<div class = "trade-list">' + 
-						'물품상태 : ' + item.status + '<br>' + 
-						'물품제목 : ' + item.title + '<br>' +
-						'물품가격 : ' + item.saleBamboo + '<br>';
-				
-		if(item.status === '검토중'){
-		text += '신청일 : ' + item.submitDate + '<br>' + 
-				'<form action="#" method="get"> <button type="submit">신청취소</button> </form><br>' + 
+function getRefundList(item){
+	let text =  '<div class = "trade-list">' + 
+					'물품상태 : ' + item.status + '<br>' + 
+					'물품제목 : ' + item.title + '<br>' +
+					'물품가격 : ' + item.saleBamboo + '<br>';
+			
+	if(item.status === '검토중'){
+	text += '신청일 : ' + item.submitDate + '<br>' + 
+			'<form action="#" method="get"> <button type="submit">신청취소</button> </form><br>' + 
+			'</div>';
+	} else if(item.status === '환불완료'){
+		text += '승인일 : ' + item.approveDate + '<br>' + 
 				'</div>';
-		} else if(list.status === '환불완료'){
-			text += '승인일 : ' + item.approveDate + '<br>' + 
-					'</div>';
-		} else if(list.status === '반려'){
-			text += '반려일 : ' + item.approveDate + '<br>'  + 
-					'</div>';
-		} else{
-			text += '</div>';
-		}
-		
-		$('#list-print').append(text);		
-	});
+	} else if(item.status === '반려'){
+		text += '반려일 : ' + item.approveDate + '<br>'  + 
+				'</div>';
+	} else{
+		text += '</div>';
+	}
 	
+	$('#list-print').append(text);		
 }
 
-	$('.filter-button').on("click", function(){
-		let status = this.value;
-		console.log(status);
-		$.ajax(
-				{
-					type : "get",
-					url : "/trade/list",
-					dataType : "Json",
-					data : {'status' : status },
-					success : function(list){
-						$('#list-print').empty();
-						if(list[0].status === '게시중' || list[0].status === '판매종료'){
-							getSellList(list);
+$('.filter-button').on("click", function(){
+	let status = this.value;
+	console.log(status);
+	$.ajax(
+			{
+				type : "get",
+				url : "/trade/list",
+				dataType : "Json",
+				data : {'status' : status },
+				success : function(list){
+					$('#list-print').empty();
+					$.each(list, function(index, item){
+						if(item.status === '게시중' || item.status === '판매종료'){
+							getSellList(item);
 						}
-						if(list[0].status === '검토중' || list[0].status === '환불완료' || list[0].status === '반려'){
-							getRefundList(list);
+						if(item.status === '검토중' || item.status === '환불완료' || item.status === '반려'){
+							getRefundList(item);
 						}
-						if(list[0].status === '구매완료'){
-							getBuyList(list);
-						}
-						
-					},
-					error : function(){
-						console.log("error");
-					}
-				}		
-		);
-	});
+						if(item.status === '구매완료'){
+							getBuyList(item);
+						}	
+					});
+					
+				},
+				error : function(){
+					console.log("error");
+				}
+			}		
+	);
+});
 </script>
 </body>
 </html>
