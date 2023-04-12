@@ -8,11 +8,14 @@
 		where status = '검토중'
 	</select>
 	
-	<update id="ExchangedUpdate" parameterType="Exchange">
-		update exchange
-		set status = '환전완료',
-			approve_date = sysdate,
-			total = 0
-		where status = '검토중'
+	<update id="ExchangedUpdate" parameterType="java.util.List">
+ 		update exchange
+  		set status = '환전완료',
+      	approve_date = sysdate,
+      	total = 0
+  		where exchange_No in
+  			<foreach collection="list" item="listExn" open="(" close=")" separator=",">
+    			#{listExn}
+  			</foreach>
 	</update>
 </mapper>

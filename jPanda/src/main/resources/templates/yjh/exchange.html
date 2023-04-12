@@ -19,15 +19,15 @@
 				<th>총금액</th>
 				<th>상태</th>
 			</tr>
-			<tr th:each="exchange : ${exList}">
-				<td><input type="checkbox" name="excheckedList" value="${exList}"></td>
-				<td th:text="${exchange.exchangeNo}"></td>
-				<td th:text="${exchange.talentNo}"></td>
-				<td th:text="${exchange.id}"></td>
-				<td th:text="${exchange.submitDate}"></td>
-				<td th:text="${exchange.total}"></td>
-				<td th:text="${exchange.status}"></td>
-			</tr>
+        	<tr th:each="exchange : ${exList}">
+            	<td><input type="checkbox" th:name="exchangeNo" th:value="${exchange.exchangeNo}"></td>
+            	<td th:text="${exchange.exchangeNo}"></td>
+           	 	<td th:text="${exchange.talentNo}"></td>
+            	<td th:text="${exchange.id}"></td>
+            	<td th:text="${exchange.submitDate}"></td>
+           		<td th:text="${exchange.total}"></td>
+            	<td th:text="${exchange.status}"></td>
+       		</tr>
 			<tr>
 				<td colspan="7"><button type="submit" value="적용">적용</button></td>
 			</tr>

@@ -1,5 +1,7 @@
 package com.kakao.jPanda.yjh.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -27,9 +29,16 @@ public class ExchangeDaoImpl implements ExchangeDao {
 	}
 
 	@Override
-	public void exchangedUpdate(Exchange exchange) {
+	public void exchangedUpdate(Long[] exchangeNo) {
 		System.out.println("===== Exchange repository exchangedUpdate() start =====");
-		sqlSession.update("ExchangedUpdate", exchange);
+		
+		List<Long> listExn = new ArrayList<Long>();
+		for(Long a : exchangeNo) {
+			listExn.add(a);
+		}
+		
+		System.out.println(listExn);
+		
+		sqlSession.update("ExchangedUpdate", listExn);
 	}
-
 }
