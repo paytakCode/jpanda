@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.kakao.jPanda.bsm.domain.Category;
+import com.kakao.jPanda.bsm.domain.Talent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,8 +20,17 @@ public class TalentDaoImpl implements TalentDao{
 		try {
 			categoryList = session.selectList("CategoryList");
 		} catch (Exception e) {
+			System.out.println("TalentDaoImpl categoryList e.getMessage() ->" + e.getMessage());
 		}
 		return categoryList;
 	}
-
+	@Override
+	public void talentUpload(Talent talent) {
+		try {
+			session.insert("talentUpload", talent);
+		} catch (Exception e) {
+			System.out.println("TalentDaoImpl talentUpload e.getMessage() ->" + e.getMessage());
+		}
+	}
+	
 }

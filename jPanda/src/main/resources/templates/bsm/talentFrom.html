@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+/* Set font family and size */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+/* Center the form and set its max width */
+form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Set width and margin of the CKEditor */
+.ck.ck-editor {
+  width: 80%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Set height of the CKEditor */
+.ck-editor__editable {
+  height: 80vh;
+}
+
+/* Style the category section */
+.category {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.category h4 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.category p {
+  margin-top: 10px;
+}
+
+/* Style the select elements */
+select {
+  width: 200px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin: 10px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+/* Style the submit button */
+button[type=submit] {
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button[type=submit]:hover {
+  background-color: #0069d9;
+}
+form {
+	text-align: center;
+}
+</style>
+<!-- CKEditor5 사용 -->
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+<script src="/js/jquery.js"></script>
+	
+</head>
+<body>
+	
+	<div class="container">
+		<form action="/talentUp" method="post" name="frm" onsubmit="check()">
+		<h1>재능 등록</h1>
+		<hr>
+	<!-- 임시 아이디 설정 PK라 INSERT시 MEMBER 테이블에 ID가 존재해야함 -->
+	<input type="hidden" name="sellerId" value="ftcxbgksj5p">
+	<div class="category">
+		<h4>카테고리</h4>
+		<p>강의하실 분야를 선택해 주세요.</p>
+		
+		<!-- 상위 카테고리 선택 영역 -->
+		<select id="upperCategoryNo" name="upperCategoryNo" onchange="onCategory1Changed()">
+		</select>
+
+		<!-- 하위 카테고리 선택 영역 -->
+		<select id="lowerCategoryNo" name="lowerCategoryNo">
+		</select>
+		<script th:inline="javascript">
+		
+			// model로 밭은 categoryList 값 가져오기
+		  	var categoryList = /*[[${categoryList}]]*/ [];
+		 	// select 요소를 가져온다
+		 	// 상위 카테고리 변수 선언
+		 	var selectElement = $('#upperCategoryNo')[0];
+		  
+		  	// 카테고리 리스트를 순회하면서 option 요소를 동적으로 생성한다
+		  	// categoryList에서 상위 카테고리 값이 없는 카테고리만 상위 카테고리 옵션 추가
+		  	categoryList.forEach(function(category) {
+		    	if(category.upperCategoryNo === null) {
+		    		// 만들어진 <option> 요소를 상위 카테고리에 추가
+		      		$('#upperCategoryNo').append($("<option>")
+		                     .val(category.categoryNo)
+		                     .text(category.item));
+		    	}
+		 	});
+		  
+		  	// select 요소에 change 이벤트 리스너를 추가한다
+		  	// 상위 카테고리가 변경되면
+			$('#upperCategoryNo').on("change", function() {
+				// 상위 카테고리의 값 category.category_no을 가져온다
+		  		var selectedCategoryNo = parseInt(this.value);
+				// 하위 카테고리 변수 선언
+		    	var category2SelectElement = $('#lowerCategoryNo')[0];
+				// 하위 카테고리 초기화
+		    	$('#lowerCategoryNo').html('');
+		    	// categoryList에서 상위 카테고리 값이 선택한 상위 카테고리 값과 같은 카테고리만 하위 카테고리 옵션 추가
+		    	categoryList.forEach(function(category) {
+		      	if (category.upperCategoryNo === selectedCategoryNo) {
+		        	// 만들어진 <option> 요소를 하위 카테고리에 추가
+		        	$('#lowerCategoryNo').append($("<option>")
+		                     .val(category.categoryNo)
+		                     .text(category.item));
+		      	}
+		   		});
+		  	});
+		</script>
+		</div>
+		
+		
+		<div class="MAIN_IMG">
+			<h4>대표 이미지</h4>
+			<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
+			<!-- 이미지를 표시할 img 태그 -->
+				<img id="imagePreview" src="/image/jpandaMainImageLabel.jpg" onclick="document.getElementById('chooseFile').click();" width="auto" height="250" />
+				
+				<!-- 파일 선택을 위한 input 태그 (display:none으로 숨겨줍니다.) -->
+				<input type="file" id="chooseFile" accept="image/*" style="display:none;" />
+				
+				<!-- 메인 이미지 서버 업로드 경로 -->
+				<input type="hidden" id="mainImg" name="mainImg" >
+				<script>
+				// 파일 선택 후 미리보기 기능 구현
+				$('#chooseFile').on('change', function() {
+				    var file = this.files[0];
+				    var formData = new FormData();
+				    formData.append('upload', file);
+					var reader = new FileReader();
+				    reader.onload = function(e) {
+				    	$('#imagePreview').attr('src', e.target.result);
+				    }
+				    reader.readAsDataURL(this.files[0]);
+				    
+				    var form = new FormData();
+			        form.append( "upload", $("#chooseFile")[0].files[0] );
+			        
+			         $.ajax({
+			             url : "/mainImage/upload"
+			           , type : "POST"
+			           , processData : false
+			           , contentType : false
+			           , data : form
+			           , dataType: 'json'
+			           , success:function(response) {
+			               console.log(response);
+			               $('#mainImg').val(response.url);
+			           }
+			           ,error: function (jqXHR) 
+			           { 
+			               alert(jqXHR.responseText); 
+			           }
+			       });
+				      
+				});
+				
+				</script>
+		</div>
+		<div class="title">
+			<h4>제목</h4>
+			<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>한글을 30자 이하, 영어는 40자 이하를 권장합니다.</p>
+			<input type="text" id="title" name="TITLE" class="title">
+			<button type="button" class="resetButton title">다시 작성</button>
+		</div>
+		<div class="content">
+			<h4>강의 소개</h4>
+			<p>강의에 대한 소개를 작성해주세요.</p>
+				<textarea id ="content" name = "content" class="content"></textarea>
+				<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
+			<script>		
+			ClassicEditor
+			.create(document.querySelector('#content'), {
+				ckfinder: {
+					uploadUrl : '/contentImage/upload'
+				}
+			})
+			.then(editor => {
+				console.log('Editor was initialized');
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	</script>
+		<div class="bamboo">
+			<h4>가격</h4>
+			<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
+			<div>
+				<h3>정상 밤부</h3>
+				<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000"><p>밤부</p>
+			</div>
+			<div>
+				<h3>할인 밤부</h3>
+				<input type="number" id="saleBamboo" name="saleBamboo" class="bamboo" placeholder="900"><p>밤부</p>
+			</div>
+			<div>
+				<h3>할인율</h3>
+				<input type="text" id="discountBamboo" class="bamboo" placeholder="10" readonly><p>%</p>
+			</div>
+				<button type="button" class="resetButton bamboo">다시 작성</button>
+				<script>
+			    	// bamboo와 sale_bamboo 입력값이 변경될 때마다 할인율 계산
+			   		//document.getElementsByName("BAMBOO")[0].addEventListener("input", calculateDiscount);
+			   		$('#bamboo').on("input", calculateDiscount);
+			  		//document.getElementsByName("SALE_BAMBOO")[0].addEventListener("input", calculateDiscount);
+			   		$('#saleBamboo').on("input", calculateDiscount);
+			  
+					  function calculateDiscount() {
+					    // 입력된 값 가져오기
+					    var bambooPrice = $('#bamboo').val();
+					    var saleBambooPrice = $('#saleBamboo').val();
+					    
+					    // 할인율 계산
+					    var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
+					    if (isNaN(discountPercent) || discountPercent === Infinity) {
+					      discountPercent = 0;
+					    }
+					    
+					    // 할인율 입력값에 할당
+					    $('#discountBamboo').val(discountPercent);
+						}
+					  
+				</script>			
+			</div>
+			<div class="summary">
+			<h4>요약 설명</h4>
+			<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
+			<input type="text" id="summary" name="SUMMARY" class="summary">
+			<button type="button" class="resetButton summary">다시 작성</button>
+			</div>
+		</div>	
+		<input type="submit" value="등록하기">
+		</form>
+		
+		<script>
+		// 모든 reset 버튼을 선택
+		const resetButtons = document.querySelectorAll('.resetButton');
+
+		// 각각의 reset 버튼에 클릭 이벤트를 등록
+		resetButtons.forEach(button => {
+		  button.addEventListener('click', () => {
+		    // 해당 버튼이 속한 구역을 찾음
+		    const area = button.closest('div');
+		    // 해당 구역 내의 모든 input 태그를 찾음
+		    const inputs = area.querySelectorAll(`input[class="${area.className}"]`);
+		    // 각 input 태그의 값을 초기화함
+		    inputs.forEach(input => {
+		      input.value = '';
+		    });
+		  });
+		});
+</script>
+	</div> <!-- container -->
+</body>
+</html>

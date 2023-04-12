@@ -5,4 +5,8 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+  	<typeAliases>
+    	<typeAlias alias="Category" type="com.kakao.jPanda.bsm.domain.Category"/>
+    	<typeAlias alias="Talent" type="com.kakao.jPanda.bsm.domain.Talent"/>
+    </typeAliases>
 </configuration>

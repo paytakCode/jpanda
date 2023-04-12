@@ -17,4 +17,5 @@ public class Talent {
 	private String 	status;
 	private int  	viewCount;
 	private String 	regDate;
+	private String 	statusDate;
 }

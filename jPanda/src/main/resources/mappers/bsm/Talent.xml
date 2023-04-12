@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.ProjectTest.TalentMapper">
+	<insert id="talentUpload" parameterType="Talent">
+	<selectKey keyProperty="talentNoSeq" resultType="java.lang.Integer" order="BEFORE">
+		<!-- 더미 테이터 떄문에 시퀀스x MAX사용 -->
+		<!-- SELECT talent_seq.NEXTVAL FROM dual -->
+		SELECT MAX(talent_no)+1 FROM talent
+	</selectKey>
+		INSERT INTO talent VALUES((SELECT MAX(talent_no)+1 FROM talent), #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
+					#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
+	</insert>
+</mapper>
