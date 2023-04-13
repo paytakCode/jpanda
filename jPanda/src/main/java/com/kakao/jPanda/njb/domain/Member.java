@@ -17,6 +17,5 @@ public class Member {
 	private String gender;
 	private String status;
 	private String grade;
-	private String account;
-	
+	private String account;	
 }

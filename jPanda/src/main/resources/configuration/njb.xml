@@ -7,5 +7,7 @@
   	</settings>
   	<typeAliases>
   		<typeAlias type="com.kakao.jPanda.njb.domain.Member" alias="Member"/>
+  		<typeAlias type="com.kakao.jPanda.njb.domain.Bank" alias="Bank"/>
+  		<typeAlias type="com.kakao.jPanda.njb.domain.JoinDto" alias="JoinDto"/>
   	</typeAliases>
 </configuration>

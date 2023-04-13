@@ -1,22 +1,48 @@
 <!DOCTYPE html>
 <html lnag="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>JPANDA 회원가입</title>
-<script type="text/javascript">
-$(function(){
-    //직접입력 인풋박스 기존에는 숨어있다가
-$("#signup-accountDirect").hide();
-$("#signup-account").change(function() {
-        //직접입력을 누를 때 나타남
-      if($("#signup-accountDirect").val() == "direct") {
-          $("#signup-accountDirect").show();
-      }  else {
-          $("#signup-accountDirect").hide();
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // 비밀번호 확인 함수
+    function checkPassword() {
+      var password = $("#signup-pw").val(); // 비밀번호 입력값
+      var confirmPassword = $("#signup-pwchk").val(); // 비밀번호 확인 입력값
+
+      if (password !== confirmPassword) {
+        // 비밀번호와 비밀번호 확인이 일치하지 않을 때
+        $("#passwordError").text("비밀번호가 일치하지 않습니다.");
+      } else {
+        $("#passwordError").text(""); // 에러 메시지 초기화
       }
-  }) 
-});​
+    }
+
+    // Ajax를 이용한 비밀번호 확인
+    $(document).ready(function() {
+      $("#signup-pwchk").on("blur", function() {
+        checkPassword(); // 비밀번호 확인 함수 호출
+      });
+    });
+  </script>
+​<script type="text/javascript">
+	function addBirth() {
+    	const year = document.getElementById('signup-birth-yy').value;
+    	const month = document.getElementById('signup-birth-mm').value;
+    	let day = document.getElementById('signup-birth-dd').value;
+    	console.log(year + month + day);
+
+    	// 생일 일자가 1에서 9 사이인 경우, 앞에 0을 추가하여 2자리 숫자로 변환
+    	if (day >= 1 && day <= 9) {
+        	day = "0" + day;
+    }
+
+    	const birth = document.getElementById('birth');
+    	console.log(birth);
+    	const birthText = year + month + day;
+    	birth.value = birthText;
+	}
+
 </script>
 <style type="text/css">
 .main-signup{
@@ -49,7 +75,7 @@ h3{
 .signup-input-c input{
     background: #f5f6f7;
 }
-#signup-id, #signup-pw, #signup-pww{
+#signup-id, #signup-pw, #signup-pwchk{
     height: 29px;
     border: none;
     outline:none;
@@ -73,7 +99,7 @@ h3{
     background-size: 125px 75px;
     cursor: pointer;
 }
-.pww-lock{
+.pwchk-lock{
     /* content: ''; */
     /* display: inline-block; */
     top: 50%;
@@ -214,19 +240,20 @@ h3{
                     	<button id="id-check" >중복체크</button>
                 	</span>
                 	</div>
-                	</form>
+                	
 
                 <h3>비밀번호</h3>
                 <span class="signup-input">
-                    <input id="signup-pw" type="text" name="password"></input>
+                    <input id="signup-pw" type="password" name="password"></input>
                     <span class="pw-lock"></span>
                 </span>
 
                 <h3>비밀번호 재확인</h3>
                 <span class="signup-input">
-                    <input id="signup-pww" type="text" name="pwchk"></input>
-                    <span class="pww-lock"></span>
+                    <input id="signup-pwchk" type="password" name="pwchk"></input>
+                    <span class="pwchk-lock"></span>
                 </span>
+                <div id="passwordError" style="color: red;"></div>
 
 
             <div style="margin-top: 35px;">
@@ -236,37 +263,39 @@ h3{
                     <input id="signup-name" type="text" name="name"></input>
                 </span>
 
-<!--                 <h3>생년월일</h3>
+                 <h3>생년월일</h3>
                 <span style="display: flex;">
                     <span class="signup-input-birth">
-                        <input id="signup-birth-yy" type="text" placeholder="년(4자)"></input>
+                        <input id="signup-birth-yy"  type="text" name="year" placeholder="년(4자)" onchange="addBirth()"></input>
                     </span>
                     <span class="signup-input-birth" style="margin-left: 10px;">
-                        <select id="signup-birth-mm" class="selectbox" name="month" onchange="">
+                        <select id="signup-birth-mm" class="selectbox" name="month" onchange="addBirth()">
                             <option value="month">월</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
+                            <option value="01">1</option>
+                            <option value="02">2</option>
+                            <option value="03">3</option>
+                            <option value="04">4</option>
+                            <option value="05">5</option>
+                            <option value="06">6</option>
+                            <option value="07">7</option>
+                            <option value="08">8</option>
+                            <option value="09">9</option>
                             <option value="10">10</option>
                             <option value="11">11</option>
                             <option value="12">12</option>
                         </select>
                     </span>
                     <span class="signup-input-birth" style="margin-left: 10px;">
-                        <input id="signup-birth-dd" type="text" placeholder="일"></input>
+                        <input id="signup-birth-dd" type="number" name="day" placeholder="일" min="1" max="31" onchange="addBirth()"></input>
+                        <input id="birth" type="hidden" name="birth" ></input>
                     </span>
                 </span>
- -->
+                
+ 
  				</div>
                 <h3>성별</h3>
                 <span class="signup-input">
-                    <select id="signup-gender" class="selectbox" name="gender" onchange="">
+                    <select id="signup-gender" class="selectbox" name="gender" >
                         <option value="gender">성별</option>
                         <option value="남">남자</option>
                         <option value="여">여자</option>
@@ -295,17 +324,16 @@ h3{
                 <span class="signup-input">
                     <input id="signup-phone" type="text" placeholder="전화번호입력" name="tel"></input>
                 </span>
-
             </div>
             <div>
                 <span class="choice">
                     <h3>계좌번호</h3>
                 </span>
-                    <select id="signup-account" class="selectbox" onchange="">
-                        <option value="account">은행선택</option>
-                        <option value="001">한국은행</option>
-                        <option value="002">산업은행</option>
-                    	</select>
+                    <select id="signup-account" class="selectbox" name="code" >
+						<option value="">은행을 선택하세요</option>
+        				<option th:each="bank : ${bankList}" th:value="${bank.code}" th:text="${bank.name + ' (' + bank.code + ')'}"></option>
+                    </select>
+                
                 <span class="signup-input">
                 </span>
                 <span class="signup-input">
@@ -318,12 +346,12 @@ h3{
                 <div class="signup-btn-wrap">
                     <button type="submit" id="signup-btn">가입하기</button>
                 </div>
-                </div>
-                </form>
+            </div>
+            </form>
         </section>
         
     </div>
-    
-</body>
+
+ </body>
 
 </html>
