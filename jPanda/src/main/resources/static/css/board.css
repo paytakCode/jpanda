@@ -75,19 +75,34 @@ li:hover {
   background-color: #f2f2f2;
 }
 
-/* 푸터 */
-footer {
-   background-color: #333;
-  color: #fff;
-  padding: 20px;
-  margin-top: 20px;
-  text-align: center;
-}
-
 /* 검색 */
 .search {
-  display: flex;
+  display: inline-block;
   justify-content: center;
   align-items: center;
   margin: 10px 0;
+  text-align: center;
+}
+
+/* 사이드바 카테고리*/
+#category1 {
+	float: left;
+	width: 200px;
+	border: solid 1px;
+	margin-left: 20px;
+
+	}
+
+/*카테고리2*/
+#cotegory2 {
+	width: 200px;
+	border: solid 1px;
+}
+	
+/* 로고 */
+#logo {
+	float: left;
+	width: 200px;
+	border: solid 1px;
+	margin-left: 20px;
 }
