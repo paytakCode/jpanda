@@ -102,6 +102,19 @@ public class TradeController {
 		
 	}
 	
+	@PutMapping("/trade/refund/status/{purchaseNo}")
+	@ResponseBody
+	public String refundCancle(@PathVariable String purchaseNo) {
+		log.info("purchaseNo : " + purchaseNo);
+		int result = tradeService.cancleRefund(purchaseNo);
+		
+		if (result > 0) {
+			return "success";
+		} else {
+			return "fail";
+		}
+	}
+	
 	
 	
 	

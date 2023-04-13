@@ -25,6 +25,8 @@ public interface TradeDao {
 
 	int updateTalentStatus(String talentNo);
 
+	int updateRefundStatus(String purchaseNo);
+
 
 
 }

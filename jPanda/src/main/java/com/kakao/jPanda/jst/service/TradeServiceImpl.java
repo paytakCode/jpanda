@@ -63,6 +63,11 @@ public class TradeServiceImpl implements TradeService{
 		return tradeDao.updateTalentStatus(talentNo);
 	}
 
+	@Override
+	public int cancleRefund(String purchaseNo) {
+		return tradeDao.updateRefundStatus(purchaseNo);
+	}
+
 }//end class
 
 //이전코드

@@ -21,5 +21,6 @@ public class TradeListDto {
 	private String sellerId;
 	private String listType;
 	private String talentNo;
+	private String purchaseNo;
 	
 }

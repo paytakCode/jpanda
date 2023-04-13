@@ -40,9 +40,14 @@ public class TradeDaoImpl implements TradeDao{
 
 	@Override
 	public int updateTalentStatus(String talentNo) {
-		
 		int result = sqlSession.update("updateTalentStatus", talentNo);
 		log.info("result : " + result);
+		return result;
+	}
+
+	@Override
+	public int updateRefundStatus(String purchaseNo) {
+		int result = sqlSession.update("updateRefundStatus", purchaseNo);
 		return result;
 	}
 

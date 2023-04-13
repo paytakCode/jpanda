@@ -193,12 +193,38 @@ $(document).on("click", ".end-sell-btn", function(){
 			success : function(result){
 				if(result === 'success'){
 					confirm("판매를 종료하시겠습니까?");
-					alert("판매리스트로 이동합니다.");
+					alert("판매가 종료되었습니다.");
 					$(".filter-button[value='sell']").click();
 				}
 			},
 			error : function(){
-				console.log("error");
+				alert("통신 실패");
+			},
+		}		
+	);	 
+});
+
+/**
+ * 환불취소 버튼 Ajax 통신 function
+ */
+$(document).on("click", ".refund-cancle-btn", function(){
+	let purchaseNo = $(this).attr('id');
+	console.log('purchaseNo : ' + purchaseNo);
+	$.ajax(
+		{
+			type : "PUT",
+			url : "/trade/refund/status/"+ purchaseNo,
+			contentType: 'application/json',
+			dataType : 'text',
+			success : function(result){
+				if(result === 'success'){
+					confirm("환불을 취소하시겠습니까?");
+					alert("환불이 취소되었습니다.");
+					$(".filter-button[value='refund']").click();
+				}
+			},
+			error : function(){
+				alert("통신 실패");
 			},
 		}		
 	);	 
@@ -260,8 +286,8 @@ function getRefundList(item){
 					'물품가격 : ' + item.saleBamboo + '<br>';
 			
 	if(item.refundStatus === '검토중'){
-	text += '신청일 : ' + item.submitDate + '<br>' + 
-			'<form action="#" method="get"> <button type="submit">신청취소</button> </form><br>' + 
+		text += '신청일 : ' + item.submitDate + '<br>' + 
+			'<button class="refund-cancle-btn" id="' + item.purchaseNo + '">신청취소</button> <br>' + 
 			'</div>';
 	} else if(item.refundStatus === '환불완료'){
 		text += '승인일 : ' + item.approveDate + '<br>' + 

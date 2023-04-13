@@ -24,4 +24,6 @@ public interface TradeService {
 
 	int endSell(String talentNo);
 
+	int cancleRefund(String purchaseNo);
+
 }
