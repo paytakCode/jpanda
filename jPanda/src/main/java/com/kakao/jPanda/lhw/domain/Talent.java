@@ -7,18 +7,18 @@ import lombok.Data;
 @Data
 public class Talent {
 	// 판매 게시판
-	private int talentNo; //talent_no
+	private Long talentNo; //talent_no
 	private String sellerId;
-	private int upperCategoryNo;
-	private int lowerCategoryNo;
+	private Long upperCategoryNo;
+	private Long lowerCategoryNo;
 	private String mainImg;
 	private String title;
 	private String content;
-	private int bamboo;
-	private int saleBamboo;
+	private Long bamboo;
+	private Long saleBamboo;
 	private String summary;
 	private String status;
-	private int viewCount;
+	private Long viewCount;
 	private Date regDate;
 	private Date statusDate;
 }
