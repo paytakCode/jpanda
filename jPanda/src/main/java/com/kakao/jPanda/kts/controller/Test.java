@@ -8,6 +8,6 @@ public class Test {
 	
 	@GetMapping("/test")
 	public String footerTest() {
-		return "/kts/sample";
+		return "common/sample";
 	}
 }
