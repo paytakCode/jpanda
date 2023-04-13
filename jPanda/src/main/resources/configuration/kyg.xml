@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
-	<!-- mapUnderscoreToCamelCase Setting -->
+	<typeAliases>
+		<typeAlias alias="chargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
+	</typeAliases>
+</configuration>
+
+
+
+<!-- 
+<configuration>
+	mapUnderscoreToCamelCase Setting
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+  	<typeAliases>
+  		<typeAlias alias="BambooChargeDto" type="com.kakao.jPanda.kyg.domain.BambooChargeDto"/>
+  	</typeAliases>
 </configuration>
+	 -->

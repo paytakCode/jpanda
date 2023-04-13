@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kakao.jPanda.kyg.chargeMapper">
+	<insert id="chargeInsert" parameterType="chargeDto">
+		insert into bamboo_charge (
+			charge_no,
+			coupon_no,
+			payment_amount
+		)
+		values (
+			(SELECT MAX(charge_no)+1 FROM bamboo_charge),
+			#{couponNo},
+			#{chargeMoney} - 1000
+		)
+	</insert>
+	
+	<select id="couponCheck" resultType="boolean">
+		SELECT coupon_no
+		FROM coupon
+		WHERE coupon_no = #{coupon_no}
+	
+	</select>
+
+</mapper>
+
+
+
+<!-- 
+
+insert into bamboo_charge(
+    charge_no,
+    coupon_no,
+    payment_amount    
+)
+values (
+    charge_seq.nextval
+    '26L9PH',
+    4000-2000
+);
+
+<mapper namespace="jpanda">
+	<insert id="insertCharge" parameterType="BambooChargeDto">
+		insert into bamboo_charge(
+		    charge_no,
+		    coupon_no,
+		    payment_amount    
+		)
+		values (
+		    102,
+		    #{couponNo},
+		    #{pay}-2000
+		)
+	</insert>
+	
+	
+	
+	<select id="insertCharge" parameterType="String">
+		select coupon_no
+		from coupon
+		where coupon_no = #{couponNo}
+	</select>
+</mapper>
+ -->
