@@ -18,7 +18,7 @@ public class ExchangeController {
 	private final ExchangeService exchangeService;
 	
 	@GetMapping(value = "/exchange")
-	public String exchange(Exchange exchange, Model model) {
+	public String getExchangeList(Exchange exchange, Model model) {
 		System.out.println("===== ExchangeController exchange start =====");
 		List<Exchange> exList = exchangeService.exchangedList(exchange);
 		
@@ -28,18 +28,20 @@ public class ExchangeController {
 	}
 	
 	@PutMapping(value = "/exchange")
-	public String exchangeUpdate(@RequestParam(name = "exchangeNo") String[] exchangeNo) {
-		System.out.println("===== ExchangeController exchangeUpdate start =====");
+	public String exchangeStatusUpdate(@RequestParam(name = "exchangeNo") String[] exchangeNo) {
+		System.out.println("===== ExchangeController exchangeUpdate start =====");	
 		Long[] longExn = new Long[exchangeNo.length];
 		
 		for(int i = 0; i < exchangeNo.length; i++) {
 			longExn[i] = Long.parseLong(exchangeNo[i]);
 		}
 		
-		exchangeService.exchangedUpdate(longExn);
+		if(longExn != null) {
+			exchangeService.exchangedUpdate(longExn);		
+		}
+			return "redirect:/";
+		
 //		exchangeService.changeStatus(exchangeNo);
-		return "redirect:/";
 	}
-	
 	
 }

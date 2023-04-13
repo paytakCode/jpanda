@@ -3,11 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="/js/jquery.js"></script>
 <link th:href="@{/css/board.css}" rel="stylesheet" />
+<script type="text/javascript">
+	function chk() {
+		var checkbox = $('.checkbox')
+		for(var i = 0; i < checkbox.length; i++) {
+			if(checkbox[i].checked) {
+				return true
+			} 
+				
+			
+			
+		}
+		alert("이젠진짜 꺼져")
+		return false;
+		
+	}
+</script>
 </head>
 <body>
 	<h1>환전 관리</h1>
-	<form action="/exchange" method="post">
+	<form action="/exchange" method="post" onsubmit="return chk()">
 	<input type="hidden" name="_method" value="put">
 		<table border="1">
 			<tr>
@@ -20,7 +37,7 @@
 				<th>상태</th>
 			</tr>
         	<tr th:each="exchange : ${exList}">
-            	<td><input type="checkbox" th:name="exchangeNo" th:value="${exchange.exchangeNo}"></td>
+            	<td><input type="checkbox" class="checkbox" th:name="exchangeNo" th:value="${exchange.exchangeNo}"></td>
             	<td th:text="${exchange.exchangeNo}"></td>
            	 	<td th:text="${exchange.talentNo}"></td>
             	<td th:text="${exchange.id}"></td>
@@ -29,7 +46,7 @@
             	<td th:text="${exchange.status}"></td>
        		</tr>
 			<tr>
-				<td colspan="7"><button type="submit" value="적용">적용</button></td>
+				<td colspan="7"><input type="submit" value="적용"></td>
 			</tr>
 		</table>
 	</form>

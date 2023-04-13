@@ -11,8 +11,7 @@
 	<update id="ExchangedUpdate" parameterType="java.util.List">
  		update exchange
   		set status = '환전완료',
-      	approve_date = sysdate,
-      	total = 0
+      	approve_date = sysdate
   		where exchange_No in
   			<foreach collection="list" item="listExn" open="(" close=")" separator=",">
     			#{listExn}
