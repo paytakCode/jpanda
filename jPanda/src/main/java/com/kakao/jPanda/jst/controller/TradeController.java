@@ -1,6 +1,7 @@
 package com.kakao.jPanda.jst.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -9,13 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kakao.jPanda.jst.domain.TradeListDto;
 import com.kakao.jPanda.jst.domain.StatDto;
+import com.kakao.jPanda.jst.domain.TradeListDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -84,6 +87,28 @@ public class TradeController {
 		
 		return list;
 	}
+	
+	@PutMapping("/trade/talent/status/{talentNo}")
+	@ResponseBody
+	public String tradeEndSell(@PathVariable String talentNo) {
+		log.info("talentNo : " + talentNo);
+		int result = tradeService.endSell(talentNo);
+		
+		if (result > 0) {
+			return "success";
+		} else {
+			return "fail";
+		}
+		
+	}
+	
+	
+	
+	
+	
+}//end class
+
+
 
 //이전 코드
 //		switch (status) {
@@ -109,4 +134,4 @@ public class TradeController {
 	
 
 
-}//end class
+

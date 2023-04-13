@@ -23,6 +23,8 @@ public interface TradeDao {
 
 	List<TradeListDto> getTradeList(Map<String, Object> paraMap);
 
+	int updateTalentStatus(String talentNo);
+
 
 
 }

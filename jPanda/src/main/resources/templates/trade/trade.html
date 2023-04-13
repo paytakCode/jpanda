@@ -177,7 +177,33 @@
 $(function() {
 	$(".filter-button[value='all']").click();
 });
- 
+
+/**
+ * 판매종료 버튼 Ajax 통신 function
+ */
+$(document).on("click", ".end-sell-btn", function(){
+	let talentNo = $(this).attr('id');
+	console.log('talentNo : ' + talentNo);
+	$.ajax(
+		{
+			type : "PUT",
+			url : "/trade/talent/status/"+ talentNo,
+			contentType: 'application/json',
+			dataType : 'text',
+			success : function(result){
+				if(result === 'success'){
+					confirm("판매를 종료하시겠습니까?");
+					alert("판매리스트로 이동합니다.");
+					$(".filter-button[value='sell']").click();
+				}
+			},
+			error : function(){
+				console.log("error");
+			},
+		}		
+	);	 
+});
+	 
 /**
  * list-print tradeList Ajax 통신
  */
@@ -190,7 +216,7 @@ function getSellList(item){
 					'판매수 : ' + item.sellCount + '<br>';
 				
 	if(item.status === '게시중'){
-		text += '<form action="#" method="get"> <button type="submit">판매종료</button> </form><br>' + 
+		text += '<button class="end-sell-btn" id="' + item.talentNo + '">판매종료</button> <br>' + 
 			'</div>';
 	} else if(item.status === '판매종료'){
 		text += '<form action="#" method="get"> <button type="submit">환전하기</button> </form><br>' + 

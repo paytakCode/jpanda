@@ -89,7 +89,8 @@
 		    r.submit_date, 
 		    r.approve_date,
 		    u.buyer_id,
-		    t.seller_id
+		    t.seller_id,
+		    t.talent_no
 		FROM talent t
 		LEFT JOIN bamboo_use u ON t.talent_no = u.talent_no
 		LEFT JOIN talent_refund r ON u.purchase_no = r.purchase_no
@@ -115,4 +116,12 @@
 		</choose>
 		ORDER BY reg_date DESC	
 	</select>
+	
+	<update id="updateTalentStatus" parameterType="String">
+		update talent
+		set status = '판매종료'
+		where talent_no = #{talentNo}
+	</update>
+	
+	
 </mapper>

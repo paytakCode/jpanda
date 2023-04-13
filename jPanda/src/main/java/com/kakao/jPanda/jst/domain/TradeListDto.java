@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TradeListDto {
 	
-	private String listType;
 	private String status;
 	private String title;
 	private Long saleBamboo;
@@ -20,5 +19,7 @@ public class TradeListDto {
 	private String approveDate;
 	private String buyerId;
 	private String sellerId;
+	private String listType;
+	private String talentNo;
 	
 }

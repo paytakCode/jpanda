@@ -22,4 +22,6 @@ public interface TradeService {
 
 	List<TradeListDto> getTradeList(String memberId, TradeListDto tradeListDto);
 
+	int endSell(String talentNo);
+
 }
