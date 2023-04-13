@@ -3,13 +3,18 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.oracle.ProjectTest.TalentMapper">
-	<insert id="talentUpload" parameterType="Talent">
-	<selectKey keyProperty="talentNoSeq" resultType="java.lang.Integer" order="BEFORE">
+	<insert id="talentWrite" parameterType="Talent">
 		<!-- 더미 테이터 떄문에 시퀀스x MAX사용 -->
 		<!-- SELECT talent_seq.NEXTVAL FROM dual -->
-		SELECT MAX(talent_no)+1 FROM talent
-	</selectKey>
 		INSERT INTO talent VALUES((SELECT MAX(talent_no)+1 FROM talent), #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
 					#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
 	</insert>
+	<select id="getTalent" resultType="Talent" parameterType="int">
+		SELECT * FROM talent WHERE talent_no = #{talentNo}
+	</select>
+	<update id="updateTalent" parameterType="Talent">
+		UPDATE talent SET upper_category_no = #{upperCategoryNo}, lower_category_no = #{lowerCategoryNo}, main_img = #{mainImg},
+					title = #{title}, content = #{content}, bamboo = #{bamboo}, sale_bamboo = #{saleBamboo}, summary = #{summary}
+					WHERE talent_no = #{talentNo}
+	</update>
 </mapper>

@@ -14,8 +14,10 @@ import com.kakao.jPanda.bsm.domain.Talent;
 public interface TalentService {
 
 	List<Category> 	categoryList();
-	void 			talentUpload(Talent talent);
+	void 			talentWrite(Talent talent);
 	ModelAndView 	contentImageUpload(MultipartHttpServletRequest request);
 	ModelAndView 	mainImageUpload(MultipartFile file, HttpServletRequest request);
+	Talent 			getTalent(int talentNo);
+	void 			talentUpdate(Talent talent);
 	
 }

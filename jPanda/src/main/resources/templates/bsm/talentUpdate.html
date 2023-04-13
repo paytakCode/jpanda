@@ -81,17 +81,19 @@ form {
 <body>
 	
 	<div class="container">
-		<form action="/talent" method="post" name="frm" onsubmit="check()">
+		<form action="/talent" method="post" name="frm">
+		 <input type="hidden" name="_method" value="put">
 		<h1>재능 등록</h1>
 		<hr>
 	<!-- 임시 아이디 설정 PK라 INSERT시 MEMBER 테이블에 ID가 존재해야함 -->
 	<input type="hidden" name="sellerId" value="ftcxbgksj5p">
+	<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
 	<div class="category">
 		<h4>카테고리</h4>
 		<p>강의하실 분야를 선택해 주세요.</p>
 		
 		<!-- 상위 카테고리 선택 영역 -->
-		<select id="upperCategoryNo" name="upperCategoryNo" onchange="onCategory1Changed()">
+		<select id="upperCategoryNo" name="upperCategoryNo">
 		</select>
 
 		<!-- 하위 카테고리 선택 영역 -->
@@ -101,21 +103,38 @@ form {
 		
 			// model로 밭은 categoryList 값 가져오기
 		  	var categoryList = /*[[${categoryList}]]*/ [];
-		 	// select 요소를 가져온다
+		 	var upperCatgoryNo = [[${talent.upperCategoryNo}]];
+		 	var lowerCatgoryNo = [[${talent.lowerCategoryNo}]];
+			
+			// select 요소를 가져온다
 		 	// 상위 카테고리 변수 선언
 		 	var selectElement = $('#upperCategoryNo')[0];
-		  
+		  	
 		  	// 카테고리 리스트를 순회하면서 option 요소를 동적으로 생성한다
 		  	// categoryList에서 상위 카테고리 값이 없는 카테고리만 상위 카테고리 옵션 추가
 		  	categoryList.forEach(function(category) {
-		    	if(category.upperCategoryNo === null) {
+		  		if(category.categoryNo === upperCatgoryNo){
+		  			$('#upperCategoryNo').append($("<option selected='selected'>")
+		                     .val(category.categoryNo)
+		                     .text(category.item));
+		  		}else if(category.upperCategoryNo === null) {
 		    		// 만들어진 <option> 요소를 상위 카테고리에 추가
 		      		$('#upperCategoryNo').append($("<option>")
 		                     .val(category.categoryNo)
 		                     .text(category.item));
+		  			
+		    	}else if(category.categoryNo === lowerCatgoryNo){
+		    		$('#lowerCategoryNo').append($("<option selected='selected'>")
+		                     .val(category.categoryNo)
+		                     .text(category.item));
+		    	}else if(category.upperCategoryNo === upperCatgoryNo){
+		    		$('#lowerCategoryNo').append($("<option>")
+		                     .val(category.categoryNo)
+		                     .text(category.item));
 		    	}
 		 	});
-		  
+		  	
+		  	
 		  	// select 요소에 change 이벤트 리스너를 추가한다
 		  	// 상위 카테고리가 변경되면
 			$('#upperCategoryNo').on("change", function() {
@@ -143,14 +162,17 @@ form {
 			<h4>대표 이미지</h4>
 			<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
 			<!-- 이미지를 표시할 img 태그 -->
-				<img id="imagePreview" src="/image/jpandaMainImageLabel.jpg" onclick="document.getElementById('chooseFile').click();" width="auto" height="250" />
+				<img id="imagePreview" onclick="document.getElementById('chooseFile').click();" width="auto" height="250" />
 				
 				<!-- 파일 선택을 위한 input 태그 (display:none으로 숨겨줍니다.) -->
 				<input type="file" id="chooseFile" accept="image/*" style="display:none;" />
 				
 				<!-- 메인 이미지 서버 업로드 경로 -->
-				<input type="hidden" id="mainImg" name="mainImg" >
+				<input type="hidden" id="mainImg" name="mainImg" th:value="${talent.mainImg}">
 				<script>
+				$(function(){
+					$('#imagePreview').attr('src', $('#mainImg').val());
+				})
 				// 파일 선택 후 미리보기 기능 구현
 				$('#chooseFile').on('change', function() {
 				    var file = this.files[0];
@@ -189,13 +211,13 @@ form {
 		<div class="title">
 			<h4>제목</h4>
 			<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>한글을 30자 이하, 영어는 40자 이하를 권장합니다.</p>
-			<input type="text" id="title" name="title" class="title">
+			<input type="text" id="title" name="title" class="title" th:value="${talent.title}">
 			<button type="button" class="resetButton title">다시 작성</button>
 		</div>
 		<div class="content">
 			<h4>강의 소개</h4>
 			<p>강의에 대한 소개를 작성해주세요.</p>
-				<textarea id ="content" name = "content" class="content"></textarea>
+				<textarea id ="content" name = "content" class="content" th:text="${talent.content}"></textarea>
 				<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
 			<script>		
 			ClassicEditor
@@ -216,11 +238,11 @@ form {
 			<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
 			<div>
 				<h3>정상 밤부</h3>
-				<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000"><p>밤부</p>
+				<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000" th:value="${talent.bamboo}"><p>밤부</p>
 			</div>
 			<div>
 				<h3>할인 밤부</h3>
-				<input type="number" id="saleBamboo" name="saleBamboo" class="bamboo" placeholder="900"><p>밤부</p>
+				<input type="number" id="saleBamboo" name="saleBamboo" class="bamboo" placeholder="900" th:value="${talent.saleBamboo}"><p>밤부</p>
 			</div>
 			<div>
 				<h3>할인율</h3>
@@ -248,17 +270,19 @@ form {
 					    // 할인율 입력값에 할당
 					    $('#discountBamboo').val(discountPercent);
 						}
+					  // 페이지 로딩 후 바로 값을 받아 할인율 출력
+					  $(calculateDiscount());
 					  
 				</script>			
 			</div>
 			<div class="summary">
 			<h4>요약 설명</h4>
 			<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
-			<input type="text" id="summary" name="summary" class="summary">
+			<input type="text" id="summary" name="summary" class="summary" th:value="${talent.summary}">
 			<button type="button" class="resetButton summary">다시 작성</button>
 			</div>
 		</div>	
-		<input type="submit" value="등록하기">
+		<input type="submit" value="수정하기">
 		</form>
 		
 		<script>
@@ -273,7 +297,7 @@ form {
 		    // 해당 구역 내의 모든 input 태그를 찾음
 		    const inputs = area.querySelectorAll(`input[class="${area.className}"]`);
 		    // 각 input 태그의 값을 초기화함
-		    inputs.forEach(input => {
+		    inputs.forEach(input => { 
 		      input.value = '';
 		    });
 		  });

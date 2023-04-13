@@ -6,16 +6,16 @@ import lombok.Data;
 public class Talent {
 	private Long 	talentNo;
 	private String 	sellerId;
-	private int 	upperCategoryNo;
-	private int 	lowerCategoryNo;
+	private Long 	upperCategoryNo;
+	private Long 	lowerCategoryNo;
 	private String 	mainImg;
 	private String 	title;
 	private String  content;
-	private int  	bamboo;
-	private int  	saleBamboo;
+	private Long  	bamboo;
+	private Long  	saleBamboo;
 	private String 	summary;
 	private String 	status;
-	private int  	viewCount;
+	private Long  	viewCount;
 	private String 	regDate;
 	private String 	statusDate;
 }

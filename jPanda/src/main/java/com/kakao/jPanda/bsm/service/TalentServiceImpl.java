@@ -31,8 +31,8 @@ public class TalentServiceImpl implements TalentService{
 	}
 	
 	@Override
-	public void talentUpload(Talent talent) {
-		dao.talentUpload(talent);
+	public void talentWrite(Talent talent) {
+		dao.talentWrite(talent);
 	}
 	
 	@Override
@@ -153,6 +153,20 @@ public class TalentServiceImpl implements TalentService{
         mav.addObject("url", uploadPath); // 업로드 파일의 경로 // 일단 절대경로
 
         return mav;
+	}
+
+	@Override
+	public Talent getTalent(int talentNo) {
+		// dto 새로 만들 것
+		Talent talent = dao.getTalent(talentNo);
+		
+		return talent;
+	}
+
+	@Override
+	public void talentUpdate(Talent talent) {
+		dao.talentUpdate(talent);
+		
 	}
 	
 }
