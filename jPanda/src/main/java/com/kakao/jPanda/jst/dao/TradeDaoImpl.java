@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kakao.jPanda.jst.domain.StatDto;
+import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeListDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,20 @@ public class TradeDaoImpl implements TradeDao{
 	@Override
 	public int updateRefundStatus(String purchaseNo) {
 		int result = sqlSession.update("updateRefundStatus", purchaseNo);
+		return result;
+	}
+
+	@Override
+	public TalentDto selectTalent(String talentNo) {
+		TalentDto talentDto = sqlSession.selectOne("selectTalent", talentNo);
+		log.info("talentDto getTitle() : " + talentDto.getTitle());
+		return talentDto;
+	}
+
+	@Override
+	public int insertExchange(TalentDto talentDto) {
+		int result = sqlSession.insert("insertExchange", talentDto);
+		log.info("result : " + result);
 		return result;
 	}
 

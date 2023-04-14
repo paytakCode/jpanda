@@ -22,5 +22,5 @@ public class TradeListDto {
 	private String listType;
 	private String talentNo;
 	private String purchaseNo;
-	
+	private String exchangeStatus;
 }

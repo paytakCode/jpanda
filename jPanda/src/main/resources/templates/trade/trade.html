@@ -198,7 +198,33 @@ $(document).on("click", ".end-sell-btn", function(){
 				}
 			},
 			error : function(){
-				alert("통신 실패");
+				alert("end-sell-btn function() error");
+			},
+		}		
+	);	 
+});
+
+/**
+ * 환전하기 버튼 Ajax 통신 function
+ */
+$(document).on("click", ".exchange-btn", function(){
+	let $this = $(this);
+	let talentNo = $this.attr('id');
+	console.log('talentNo : ' + talentNo);
+	$.ajax(
+		{
+			type : "POST",
+			url : "/trade/exchange/"+ talentNo,
+			contentType: 'application/json',
+			dataType : 'text',
+			success : function(message){
+				console.log(message);
+				alert("환전 신청이 완료되었습니다.");
+				$('#' + talentNo).remove();
+				$(".filter-button[value='sell']").click();	
+			},
+			error : function(){
+				alert("exchange-btn function() error");
 			},
 		}		
 	);	 
@@ -216,20 +242,18 @@ $(document).on("click", ".refund-cancle-btn", function(){
 			url : "/trade/refund/status/"+ purchaseNo,
 			contentType: 'application/json',
 			dataType : 'text',
-			success : function(result){
-				if(result === 'success'){
-					confirm("환불을 취소하시겠습니까?");
-					alert("환불이 취소되었습니다.");
-					$(".filter-button[value='refund']").click();
-				}
+			success : function(message){
+				console.log(message);
+				alert("환불이 취소되었습니다.");
+				$(".filter-button[value='refund']").click();
 			},
 			error : function(){
-				alert("통신 실패");
+				alert("refund-cancle-btn function() error");
 			},
 		}		
 	);	 
 });
-	 
+
 /**
  * list-print tradeList Ajax 통신
  */
@@ -245,7 +269,7 @@ function getSellList(item){
 		text += '<button class="end-sell-btn" id="' + item.talentNo + '">판매종료</button> <br>' + 
 			'</div>';
 	} else if(item.status === '판매종료'){
-		text += '<form action="#" method="get"> <button type="submit">환전하기</button> </form><br>' + 
+		text += '<div><button class="exchange-btn" id="' + item.talentNo + '">환전하기</button></div> <br>' + 
 			'<form action="#" method="get"> <button type="submit">재등록</button> </form><br>' + 
 			'</div>';
 	} else {
@@ -328,7 +352,7 @@ $('.filter-button').on("click", function(){
 					
 				},
 				error : function(){
-					console.log("error");
+					console.log("filter-button on click function error");
 				}
 			}		
 	);

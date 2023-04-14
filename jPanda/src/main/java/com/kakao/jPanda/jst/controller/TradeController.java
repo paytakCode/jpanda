@@ -1,7 +1,6 @@
 package com.kakao.jPanda.jst.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.jst.domain.StatDto;
+import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeListDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
@@ -95,26 +95,44 @@ public class TradeController {
 		int result = tradeService.endSell(talentNo);
 		
 		if (result > 0) {
-			return "success";
+			return "success endSell talentNo : " + talentNo;
 		} else {
-			return "fail";
+			return "fail endSell talentNo : " + talentNo;
 		}
 		
 	}
 	
 	@PutMapping("/trade/refund/status/{purchaseNo}")
 	@ResponseBody
-	public String refundCancle(@PathVariable String purchaseNo) {
+	public String tradeCancleRefund(@PathVariable String purchaseNo) {
 		log.info("purchaseNo : " + purchaseNo);
 		int result = tradeService.cancleRefund(purchaseNo);
 		
 		if (result > 0) {
-			return "success";
+			return "success cancleRefund purchaseNo : " + purchaseNo;
 		} else {
-			return "fail";
+			return "fail cancleRefund purchaseNo : " + purchaseNo;
 		}
 	}
 	
+	@PostMapping("/trade/exchange/{talentNo}")
+	@ResponseBody
+	public String tradeSubmitExchange(@PathVariable String talentNo) {
+		log.info("purchaseNo : " + talentNo);
+		TalentDto talentDto = tradeService.getTalentByTalentNo(talentNo);
+		
+		if ( talentDto != null) {
+			int submitResult = tradeService.submitExchange(talentDto);
+			if (submitResult > 0) {
+				return "success submitResult : " + submitResult;
+			} else {
+				return "fail submitResult : " + submitResult;
+			}
+			
+		} else {
+			return "fail submitExchange talentDto : null";
+		}
+	}
 	
 	
 	

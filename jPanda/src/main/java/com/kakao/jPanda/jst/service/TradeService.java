@@ -7,6 +7,7 @@ import com.kakao.jPanda.jst.domain.BuyListDto;
 import com.kakao.jPanda.jst.domain.RefundListDto;
 import com.kakao.jPanda.jst.domain.SellListDto;
 import com.kakao.jPanda.jst.domain.StatDto;
+import com.kakao.jPanda.jst.domain.TalentDto;
 
 public interface TradeService {
 	
@@ -25,5 +26,9 @@ public interface TradeService {
 	int endSell(String talentNo);
 
 	int cancleRefund(String purchaseNo);
+
+	TalentDto getTalentByTalentNo(String talentNo);
+
+	int submitExchange(TalentDto talentDto);
 
 }

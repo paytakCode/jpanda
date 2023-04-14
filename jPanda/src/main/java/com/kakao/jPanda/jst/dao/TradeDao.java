@@ -7,6 +7,7 @@ import com.kakao.jPanda.jst.domain.BuyListDto;
 import com.kakao.jPanda.jst.domain.RefundListDto;
 import com.kakao.jPanda.jst.domain.SellListDto;
 import com.kakao.jPanda.jst.domain.StatDto;
+import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeListDto;
 
 public interface TradeDao {
@@ -26,6 +27,10 @@ public interface TradeDao {
 	int updateTalentStatus(String talentNo);
 
 	int updateRefundStatus(String purchaseNo);
+
+	TalentDto selectTalent(String talentNo);
+
+	int insertExchange(TalentDto talentDto);
 
 
 

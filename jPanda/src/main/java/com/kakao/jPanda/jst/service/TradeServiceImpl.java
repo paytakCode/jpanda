@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kakao.jPanda.jst.dao.TradeDao;
 import com.kakao.jPanda.jst.domain.StatDto;
+import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeListDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +67,17 @@ public class TradeServiceImpl implements TradeService{
 	@Override
 	public int cancleRefund(String purchaseNo) {
 		return tradeDao.updateRefundStatus(purchaseNo);
+	}
+
+	@Override
+	public TalentDto getTalentByTalentNo(String talentNo) {
+		return tradeDao.selectTalent(talentNo);
+	}
+
+	@Override
+	public int submitExchange(TalentDto talentDto) {
+		
+		return tradeDao.insertExchange(talentDto);
 	}
 
 }//end class

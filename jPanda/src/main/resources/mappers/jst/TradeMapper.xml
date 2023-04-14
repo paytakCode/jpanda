@@ -29,10 +29,12 @@
 		    u.buyer_id,
 		    t.seller_id,
 		    t.talent_no,
-		    r.purchase_no
+		    r.purchase_no,
+		    e.status as exchange_status
 		FROM talent t
 		LEFT JOIN bamboo_use u ON t.talent_no = u.talent_no
 		LEFT JOIN talent_refund r ON u.purchase_no = r.purchase_no
+		LEFT JOIN exchange e on e.talent_no = t.talent_no
 		<choose>
 			<when test="tradeListDto.listType == 'buy'">
 				WHERE u.buyer_id = #{memberId}
@@ -44,6 +46,7 @@
 			</when>
 			<when test="tradeListDto.listType == 'sell'">
 				WHERE t.seller_id = #{memberId}
+				AND e.status IS NULL
 			</when>
 			<when test="tradeListDto.listType == 'all'">
 				WHERE u.buyer_id = #{memberId}
@@ -57,16 +60,41 @@
 	</select>
 	
 	<update id="updateTalentStatus" parameterType="String">
-		update talent
-		set status = '판매종료'
-		where talent_no = #{talentNo}
+		UPDATE talent
+		SET status = '판매종료'
+		WHERE talent_no = #{talentNo}
 	</update>
 	
 	<update id="updateRefundStatus" parameterType="String">
-		update talent_refund
-		set status = null
-		where purchase_no = #{purchaseNo}
+		UPDATE talent_refund
+		SET status = null
+		WHERE purchase_no = #{purchaseNo}
 	</update>
+	
+	<select id="selectTalent" parameterType="String" resultType="TalentDto">
+		SELECT *
+		FROM talent
+		WHERE talent_no = #{talentNo} 
+	</select>
+	
+	<insert id="insertExchange" parameterType="TalentDto">
+		INSERT INTO exchange(
+		    exchange_no, id, talent_no, sales, submit_date,
+		    approve_date, total, grade, ratio, status
+		)
+		VALUES (
+		    exchange_seq.nextval,
+		    #{sellerId},
+		    #{talentNo},
+		    (SELECT COUNT(*) FROM bamboo_use u INNER JOIN talent t ON u.talent_no = t.talent_no WHERE t.talent_no = #{talentNo}),
+		    SYSDATE,
+		    NULL,
+		    (SELECT t.sale_bamboo * (SELECT COUNT(*) FROM bamboo_use u INNER JOIN talent t ON u.talent_no = t.talent_no WHERE t.talent_no = #{talentNo}) FROM talent t WHERE talent_no = #{talentNo}),
+		    (SELECT grade FROM member WHERE id = #{sellerId}),
+		    (SELECT ratio FROM member_grade WHERE grade = (SELECT grade FROM member WHERE id = #{sellerId})),
+		    '검토중'
+		)
+	</insert>
 	
 	
 </mapper>

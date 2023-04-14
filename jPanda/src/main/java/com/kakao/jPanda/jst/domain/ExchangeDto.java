@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ExchangeDto {
-	private String exchangeNo;
 	//sellerId
 	private String id;
 	//talentNo
