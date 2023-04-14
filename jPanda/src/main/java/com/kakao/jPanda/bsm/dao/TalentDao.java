@@ -9,7 +9,7 @@ public interface TalentDao {
 
 	List<Category> 	categoryList();
 	void		 	talentWrite(Talent talent);
-	Talent getTalent(int talentNo);
+	Talent getTalent(Long talentNo);
 	void talentUpdate(Talent talent);
 
 }

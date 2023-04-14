@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class TalentController {
 	private final TalentService service;
 	
-	// Test 페이지
+	// Test Main 페이지 이동
 	@GetMapping("/")
 	public String talentTest() {
 		return "bsm/talentTest";
@@ -48,6 +48,13 @@ public class TalentController {
 		return "bsm/talentTest";
 	}
 	
+	// 재능 수정 Update
+	@PutMapping("/talent")
+	public String talentUpdate(Talent talent) {
+		service.talentUpdate(talent);
+		return "bsm/talentTest";
+	}
+	
 	// 상세정보 이미지 서버 저장 후 상대 경로 반환
 	@PostMapping(value = "/contentImage/upload")
 	public ModelAndView contentImageUpload(MultipartHttpServletRequest request) {
@@ -57,16 +64,17 @@ public class TalentController {
 	}
 	
 	// 대표 이미지 서버 저장 후 상대 경로 반환
-	@PostMapping("/mainImage/upload")
 	@ResponseBody
+	@PostMapping("/mainImage/upload")
 	public ModelAndView uploadImage(@RequestParam("upload") MultipartFile file, HttpServletRequest request) throws Exception {
 		 ModelAndView modelAndView = service.mainImageUpload(file, request);
 	 	
 		return modelAndView;
 	}
-	 
+	
+	// 수정 페이지 이동
 	@GetMapping("/talentUpdate")
-	public String talentUpdateFrom(int talentNo, Model model) {
+	public String talentUpdateFrom(Long talentNo, Model model) {
 		// dto 새로 만들 것
 		System.out.println(talentNo);
 		Talent talent = service.getTalent(talentNo);
@@ -76,9 +84,4 @@ public class TalentController {
 		return "bsm/talentUpdate";
 	}
 	
-	@PutMapping("/talent")
-	public String talentUpdate(Talent talent) {
-		service.talentUpdate(talent);
-		return "bsm/talentTest";
-	}
 }

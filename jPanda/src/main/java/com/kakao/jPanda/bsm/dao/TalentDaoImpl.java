@@ -37,7 +37,7 @@ public class TalentDaoImpl implements TalentDao{
 		}
 	}
 	@Override
-	public Talent getTalent(int talentNo) {
+	public Talent getTalent(Long talentNo) {
 		Talent talent = null;
 		try {
 			talent = session.selectOne("getTalent", talentNo);

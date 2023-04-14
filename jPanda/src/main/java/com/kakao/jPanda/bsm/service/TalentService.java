@@ -17,7 +17,7 @@ public interface TalentService {
 	void 			talentWrite(Talent talent);
 	ModelAndView 	contentImageUpload(MultipartHttpServletRequest request);
 	ModelAndView 	mainImageUpload(MultipartFile file, HttpServletRequest request);
-	Talent 			getTalent(int talentNo);
+	Talent 			getTalent(Long talentNo);
 	void 			talentUpdate(Talent talent);
 	
 }

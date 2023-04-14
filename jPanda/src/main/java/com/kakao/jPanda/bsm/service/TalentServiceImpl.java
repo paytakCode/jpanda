@@ -156,7 +156,7 @@ public class TalentServiceImpl implements TalentService{
 	}
 
 	@Override
-	public Talent getTalent(int talentNo) {
+	public Talent getTalent(Long talentNo) {
 		// dto 새로 만들 것
 		Talent talent = dao.getTalent(talentNo);
 		

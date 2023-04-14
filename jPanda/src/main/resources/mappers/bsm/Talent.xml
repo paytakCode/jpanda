@@ -9,7 +9,7 @@
 		INSERT INTO talent VALUES((SELECT MAX(talent_no)+1 FROM talent), #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
 					#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
 	</insert>
-	<select id="getTalent" resultType="Talent" parameterType="int">
+	<select id="getTalent" resultType="Talent" parameterType="Long">
 		SELECT * FROM talent WHERE talent_no = #{talentNo}
 	</select>
 	<update id="updateTalent" parameterType="Talent">

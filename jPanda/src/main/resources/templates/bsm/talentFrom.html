@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
@@ -72,6 +72,9 @@ button[type=submit]:hover {
 form {
 	text-align: center;
 }
+table {
+  border : 1px solid black;
+}
 </style>
 <!-- CKEditor5 사용 -->
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
@@ -79,7 +82,22 @@ form {
 	
 </head>
 <body>
+	<div id="side">
+		<table id="writeCheck">
+			<tr>
+				<td>카테고리</td><td>체크 이미지</td>
+			<tr>
+				<td>대표 이미지</td><td>체크 이미지<img src=""></td>
+			<tr>	<td>제목</td><td>체크 이미지<img src=""></td>
+			<tr>	<td>강의 소개</td><td>체크 이미지<img src=""></td>
+			<tr>	<td>가격</td><td>체크 이미지<img src=""></td>
+			<tr>	<td>요약 설명</td><td>체크 이미지<img src=""></td>
+			</tr>
+		</table>
+	</div>
+	<script>
 	
+	</script>
 	<div class="container">
 		<form action="/talent" method="post" name="frm" onsubmit="check()">
 		<h1>재능 등록</h1>
