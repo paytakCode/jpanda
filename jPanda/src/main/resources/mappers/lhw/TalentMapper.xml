@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="talentMapper">
+	<select id="talentList" resultType="TalentForBoard">
+		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		FROM talent t, review r
+		WHERE t.talent_no = r.talent_no
+		AND   status = '게시중'
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo
+		ORDER BY t.talent_no DESC
+	</select>
+	
+	<select id="noticeList" resultType="Notice">
+		SELECT *
+		FROM notice
+	</select>
+
+	<select id="getAllCategory" resultType="TalentForBoard" parameterType="Long">
+		SELECT talent_no, seller_id, main_img, title, summary, bamboo, sale_bamboo
+		FROM talent 
+		WHERE upper_category_no = #{categoryNo}
+	</select>
+	
+	<select id="getCategoryNo" resultType="Category" >
+		SELECT *
+		FROM category
+		WHERE upper_category_no IS null
+	</select>
+	
+	<select id="getTalentView" resultType="Talent" parameterType="Long">
+		SELECT *
+		FROM talent
+		WHERE talent_no = #{talentNo}
+	</select>
+	
+	<select id="getUpperCategoryList" resultType="TalentForBoard" parameterType="Long">
+		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		FROM talent t, review r
+		WHERE t.talent_no = r.talent_no
+		AND   status = '게시중'
+		AND   upper_category_no = #{upperCategoryNo}
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo
+		ORDER BY t.talent_no DESC
+	</select>
+
+</mapper>
+
+
+
+

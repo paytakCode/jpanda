@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시판 페이지</title>
+    <link rel="stylesheet" type="text/css" href="/css/board.css">
+</head>
+<body>
+    <header>
+        <div id="logo">로고</div>
+        
+        <div class="search">
+                <input type="text" placeholder="검색어를 입력하세요">
+                <button>검색</button>
+            </div>
+        <nav>
+            <ul>
+                <li><a href="#">판매 등록</a></li>
+                <li><a href="#">판매 게시판</a></li>
+                <li><a href="#">거래 관리</a></li>
+                <li><a href="#">충전 및 내역</a></li>
+                <li><a href="#">문의</a></li>
+                <li><a href="#">마이 페이지</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div id="category1">
+    	<h2>대분류 카테고리</h2>
+    	<ul th:each="category : ${getCategoryNo}">	
+    		<li th:text="${category.item}" th:onclick="onFilter([[${category.categoryNo}]])"></li>
+    	</ul>
+    </div>
+    
+    <div id="category2">
+    	<h2>중분류 카테고리</h2>
+    	<label for="category">카테고리:</label>
+			<select name="category" id="category">
+  				<option value="option1">옵션 1</option>
+  				<option value="option2">옵션 2</option>
+  				<option value="option3">옵션 3</option>
+			</select>
+    </div>
+    
+   <div>
+    <h2>공지사항 리스트</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>게시 날짜</th>
+            </tr>
+        </thead>
+        <tbody>
+            	<tr th:each="notice : ${noticeList}">
+                <td th:text="${notice.noticeNo}"></td>
+                <td th:text="${notice.title}"></td>
+                <td th:text="${notice.regDate}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+     
+     <div>
+        <h2>판매 게시판 리스트</h2>
+        <ul id="defalutList">
+            <li th:each="talent : ${talentList}" th:onclick="|location.href='@{TalentView
+            												(talentNo=${talent.talentNo})}'|">
+                이미지: <img th:src="${talent.mainImg}">
+                판매글: <span th:text="${talent.title}"></span>
+                <span th:text="${talent.summary}"></span>
+                <span th:text="${talent.sellerId}"></span>
+                <span th:text="${talent.bamboo}"></span>
+                <span th:text="${talent.saleBamboo}"></span>
+           평균 리뷰:  <span th:text="${talent.bambooScore}"></span>
+                <!-- <span th:text="${talent.bambooScore}"></span> -->
+            </li>
+        </ul>
+    </div>
+    
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script>
+	function onFilter(categoryNo){
+		alert("sesdfsefse");
+		$.ajax({
+				url:"/getAjaxUpperList",
+				data:{upperCategoryNo : categoryNo},
+				dataType:'json',
+				success:function(data){
+					$('#defalutList').empty();
+					console.log(data);
+					data.forEach( function(data2){
+						const li = $('#defalutList').append($("<li>"));
+						li.append($("<img>").attr('src', data.mainImg));
+						li.append($("<span>").text(data.title));
+						li.append($("<span>").text(data.summary));
+						li.append($("<span>").text(data.sellerId));
+						li.append($("<span>").text(data.bamboo));
+						li.append($("<span>").text(data.saleBamboo));
+						li.append($("<span>").text(data.bambooScore));
+					});
+				}
+		});
+	} 
+</script>
+</body>
+</html>

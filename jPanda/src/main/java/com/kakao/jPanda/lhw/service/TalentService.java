@@ -1,4 +1,4 @@
-package com.kakao.jPanda.lhw.dao;
+package com.kakao.jPanda.lhw.service;
 
 import java.util.List;
 
@@ -7,16 +7,14 @@ import com.kakao.jPanda.lhw.domain.Notice;
 import com.kakao.jPanda.lhw.domain.Talent;
 import com.kakao.jPanda.lhw.domain.TalentForBoard;
 
-public interface TalentDao {
+public interface TalentService {
 
 	List<TalentForBoard> getTalentList();
 
 	List<Notice> getNoticeList();
 
 	List<Category> getCategory();
-
-	Talent getTalentView(Long talentNo);
-
+	
 	List<Talent> getUpperCategoryList(Long upperCategoryNo);
 
 }

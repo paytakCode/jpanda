@@ -2,12 +2,14 @@ package com.kakao.jPanda.lhw.domain;
 
 import java.util.Date;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Talent {
 	// 판매 게시판
-	private Long talentNo; //talent_no
+	private Long talentNo; 
 	private String sellerId;
 	private Long upperCategoryNo;
 	private Long lowerCategoryNo;
