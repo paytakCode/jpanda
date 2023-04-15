@@ -51,10 +51,13 @@ public class TradeController {
 	 */
 	@GetMapping("/trade")
 	public String trade(HttpSession session, Model model) {
+		if (session.getAttribute("memberId") == null) {
+			return "redirect:/";
+		}
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("trade id check : " + memberId);
-		StatDto stat = tradeService.getStat(memberId);
-		model.addAttribute("stat", stat);
+		List<StatDto> statList = tradeService.getStatList(memberId);
+		model.addAttribute("statList", statList);
 		return "trade/trade";
 	}
 	

@@ -1,31 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="TradeDao">
-	<select id="selectStat" parameterType="String" resultType="StatDto">
+	<select id="selectSellCount" parameterType="String" resultType="StatDto">
 		SELECT
-			(SELECT count(*) FROM talent WHERE status = '검토중' AND seller_id = #{memberID}) AS submit_count,
-		    (SELECT count(*) FROM talent WHERE status = '게시중' AND seller_id = #{memberID}) AS sell_count,
-		    (SELECT count(*) FROM talent WHERE status = '판매종료' AND seller_id = #{memberID}) AS sold_count,
-		    (SELECT count(*) FROM bamboo_use u LEFT OUTER JOIN talent_refund r ON u.purchase_no = r.purchase_no WHERE buyer_id = #{memberID} AND r.status IS NULL) AS buy_count,
-		    (SELECT count(*) FROM talent_refund t INNER JOIN bamboo_use b ON b.purchase_no = t.purchase_no WHERE t.status = '검토중' AND b.buyer_id = #{memberID}) AS refund_submit_count,
-		    (SELECT count(*) FROM talent_refund t INNER JOIN bamboo_use b ON b.purchase_no = t.purchase_no WHERE t.status = '환불완료' AND b.buyer_id = #{memberID}) AS refund_approve_count,
-		    (SELECT count(*) FROM talent_refund t INNER JOIN bamboo_use b ON b.purchase_no = t.purchase_no WHERE t.status = '반려' AND b.buyer_id = #{memberID}) AS refund_reject_count
-		FROM 
-		    dual
+			count(CASE WHEN status = '검토중' THEN 1 END) AS submit_count,
+			count(CASE WHEN status = '게시중' THEN 1 END) AS sell_count,
+			count(CASE WHEN status = '판매종료' THEN 1 END) AS sold_count
+		FROM talent
+		WHERE seller_id = #{memberId}
 	</select>
-		
+	
+	<select id="selectBuyCount" parameterType="String" resultType="StatDto">
+		SELECT
+			count(*) AS buy_count
+		FROM bamboo_use u
+		LEFT OUTER JOIN talent_refund r 
+		ON u.purchase_no = r.purchase_no
+		WHERE u.buyer_id = #{memberId}
+		AND r.status IS NULL
+	</select>
+			
+	<select id="selectRefundCount" parameterType="String" resultType="StatDto">
+		SELECT
+			count(CASE WHEN r.status = '검토중' THEN 1 END) AS refund_submit_count,
+			count(CASE WHEN r.status = '환불완료' THEN 1 END) AS refund_approve_count,
+			count(CASE WHEN r.status = '반려' THEN 1 END) AS refund_reject_count
+		FROM talent_refund r
+		INNER JOIN bamboo_use u
+		ON u.purchase_no = r.purchase_no
+		AND u.buyer_id = #{memberId}	
+	</select>
+	
 	<select id="selectTradeList" resultType="TradeListDto" parameterType="Map">
 		SELECT
 		    t.status, 
 		    t.title, 
 		    t.sale_bamboo, 
-		    t.reg_date, 
+		    TO_CHAR(t.reg_date,'yy-mm-dd') as REG_DATE,
 		    (SELECT count(*) FROM bamboo_use u WHERE u.talent_no = t.talent_no) AS sell_Count,
-		    u.purchase_date, 
+		    TO_CHAR(u.purchase_date,'yy-mm-dd') as PURCHASE_DATE,
 		    TRUNC(sysdate) - TRUNC(u.purchase_date) AS "REFUNDABLE_DATE",
 		    r.status AS refund_status, 
-		    r.submit_date, 
-		    r.approve_date,
+		    TO_CHAR(r.submit_date,'yy-mm-dd') as SUBMIT_DATE, 
+		    TO_CHAR(r.approve_date,'yy-mm-dd') as APPROVE_DATE,
 		    u.buyer_id,
 		    t.seller_id,
 		    t.talent_no,
@@ -46,7 +63,6 @@
 			</when>
 			<when test="tradeListDto.listType == 'sell'">
 				WHERE t.seller_id = #{memberId}
-				AND e.status IS NULL
 			</when>
 			<when test="tradeListDto.listType == 'all'">
 				WHERE u.buyer_id = #{memberId}

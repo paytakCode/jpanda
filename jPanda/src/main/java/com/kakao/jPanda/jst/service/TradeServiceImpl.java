@@ -1,5 +1,6 @@
 package com.kakao.jPanda.jst.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,21 @@ public class TradeServiceImpl implements TradeService{
 	}
 	
 	@Override
-	public StatDto getStat(String memberId) {
-		return tradeDao.getStatById(memberId);
+	public List<StatDto> getStatList(String memberId) {
+		List<StatDto> statList = new ArrayList<StatDto>();
+		StatDto buyStatDto = tradeDao.selectBuyStat(memberId); 
+		StatDto sellStatDto = tradeDao.selectSellStat(memberId); 
+		StatDto refundStatDto = tradeDao.selectRefundStat(memberId);
+		
+		buyStatDto.setStatType("buy");
+		sellStatDto.setStatType("sell");
+		refundStatDto.setStatType("refund");
+		
+		statList.add(buyStatDto);
+		statList.add(sellStatDto);
+		statList.add(refundStatDto);
+		
+		return statList;
 	}
 	
 	@Override
@@ -81,6 +95,7 @@ public class TradeServiceImpl implements TradeService{
 	}
 
 }//end class
+
 
 //이전코드
 

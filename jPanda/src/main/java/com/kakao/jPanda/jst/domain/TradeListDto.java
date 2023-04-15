@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TradeListDto {
-	
 	private String status;
 	private String title;
 	private Long saleBamboo;

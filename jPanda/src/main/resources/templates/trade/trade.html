@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 <style type="text/css" >
 	body {
 		margin: 0;
@@ -149,27 +151,59 @@
 		<!-- content -->
 		<div class = "content">			
 			<!-- list print -->
-			<div id="list-print"> 
+			<div id="list-print">
 			</div> <!-- /list print -->
 		
 		
 			<!-- sidebar -->
 			<div class="sidebar">
+				
 				★ 판매 ★<br>
-				검토중 : <span th:text="${stat.submitCount}"> 건</span><br>
-				판매중 : <span th:text="${stat.sellCount}"> 건</span><br> 
-				판매완료 : <span th:text="${stat.soldCount}"> 건</span><br>
+				검토중 : <span id="sidebar-submit-count"> 건</span><br>
+				판매중 : <span id="sidebar-sell-count"> 건</span><br> 
+				판매완료 : <span id="sidebar-sold-count"> 건</span><br>
 				★ 구매 ★<br>
-				구매완료 : <span th:text="${stat.buyCount}"> 건</span><br>
+				구매완료 : <span id="sidebar-buy-count"> 건</span><br>
 				★ 환불 ★<br>
-				환불신청 : <span th:text="${stat.refundSubmitCount}"> 건</span><br>
-				환불완료 : <span th:text="${stat.refundApproveCount}"> 건</span><br>
-				환불반려 : <span th:text="${stat.refundRejectCount}"> 건</span><br>
+				환불신청 : <span id="sidebar-refund-submit-count"> 건</span><br>
+				환불완료 : <span id="sidebar-refund-approve-count"> 건</span><br>
+				환불반려 : <span id="sidebar-refund-reject-count"> 건</span><br>
 			</div> <!-- /sidebar -->
 		</div> <!-- /content -->
 	</div><!-- container -->
 <script type="text/javascript" src="/js/jquery.js" ></script>
+<script th:inline="javascript">
+/**
+ * statList 가공
+ */
+ $(function(){
+	 let statList = [[${statList}]];
+	 $.each(statList, function(index, stat){
+		 console.log(stat);
+		 switch(stat.statType){
+		 	case 'sell' : 
+		 		$('#sidebar-submit-count').prepend(stat.submitCount);
+		 		$('#sidebar-sell-count').prepend(stat.sellCount);
+		 		$('#sidebar-sold-count').prepend(stat.soldCount);
+		 	break;
+		 	
+		 	case 'buy' : 
+		 		$('#sidebar-buy-count').prepend(stat.buyCount);
+		 	break;
+		 	
+		 	case 'refund' : 
+		 		$('#sidebar-refund-submit-count').prepend(stat.refundSubmitCount);
+		 		$('#sidebar-refund-approve-count').prepend(stat.refundApproveCount);
+		 		$('#sidebar-refund-reject-count').prepend(stat.refundRejectCount);
+		 	break;
+		 }
+		 
+	 })
+	 
+ });
+</script>
 <script type="text/javascript">
+
 /**
  * trade페이지 로드 완료시
  * 전체 버튼 클릭
@@ -220,7 +254,6 @@ $(document).on("click", ".exchange-btn", function(){
 			success : function(message){
 				console.log(message);
 				alert("환전 신청이 완료되었습니다.");
-				$('#' + talentNo).remove();
 				$(".filter-button[value='sell']").click();	
 			},
 			error : function(){
@@ -258,69 +291,76 @@ $(document).on("click", ".refund-cancle-btn", function(){
  * list-print tradeList Ajax 통신
  */
 function getSellList(item){
-	let text =  '<div class = "trade-list">' + 
-					'물품상태 : ' + item.status + '<br>' + 
-					'물품제목 : ' + item.title + '<br>' +
-					'물품가격 : ' + item.saleBamboo + '<br>' +
-					'등록일 : ' + item.regDate + '<br>' +
-					'판매수 : ' + item.sellCount + '<br>';
+	console.log(item.exchangeStatus);
+	let text =  '<div style = "margin-bottom : 3%;" class = "card text-center">' + 
+					'<div class = "card-header">' + item.status + '</div>' + 
+					'<div class = "card-body">' +  
+					'<div class = "card-title">' + item.title + '</div><br>' +
+					'<div style = "color : yellowgreen;" class = "card-text">' + item.saleBamboo + '밤부</div>' +
+					'<div class = "card-text">' + item.sellCount + '명이 재능을 구매했어요</div>';
 				
-	if(item.status === '게시중'){
-		text += '<button class="end-sell-btn" id="' + item.talentNo + '">판매종료</button> <br>' + 
-			'</div>';
-	} else if(item.status === '판매종료'){
-		text += '<div><button class="exchange-btn" id="' + item.talentNo + '">환전하기</button></div> <br>' + 
-			'<form action="#" method="get"> <button type="submit">재등록</button> </form><br>' + 
-			'</div>';
+	if(item.status === '게시중' && item.exchangeStatus === null){
+		text += '<div class = "card-text">' + 
+				'<button class="end-sell-btn btn btn-success" id="' + item.talentNo + '">판매종료</button></div>';
+	} else if(item.status === '판매종료' && item.exchangeStatus === null){
+		text += '<div class = "card-text">' + 
+				'<button style = "float : right; margin-right : 1%;" class="exchange-btn btn btn-dark" id="' + item.talentNo + '">환전하기</button>' + 
+				'<button style = "float : right; margin-right : 1%;" class="repost-btn btn btn-dark" id="' + item.talentNo + '">재등록</button></div>';
+	} else if(item.exchangeStatus != null){
+		text += '<div class = "card-text">' + 
+				'환전신청이 완료된 물품입니다.</div>';
 	} else {
-		text += '</div>';
+		text += '';
 	}
+	
+	text += '</div><div class = "card-footer text-muted">' + item.regDate + '</div></div>';
 			
 	$('#list-print').append(text);
 }
 
 function getBuyList(item){
-	let text =  '<div class = "trade-list">' + 
-					'물품상태 : ' + item.status + '<br>' + 
-					'물품제목 : ' + item.title + '<br>' +
-					'물품가격 : ' + item.saleBamboo + '<br>' +
-					'구매일 : ' + item.purchaseDate + '<br>';
+	let text = '<div style = "margin-bottom : 3%;" class = "card text-center">' +  
+					'<div class = "card-header">' + item.status + '</div>' +
+					'<div class = "card-body">' + 
+						'<div class = "card-title">' + item.title + '</div><br>' +
+						'<div style = "color : yellowgreen;" class = "card-text">' + item.saleBamboo + '밤부</div>';
 				
 	if(item.refundableDate > 7){
-		text += '구매확정' + '</div>';
+		text += '<div class = "card-text">재능 구매가 확정되었어요</div>';
 	} else if(item.refundableDate < 7){
-		text += '환불가능일' + (7 - item.refundableDate) + '일' + 
-			'<form action="#" method="get"> <button type="submit">환불신청</button> </form><br>' + 
-			'</div>';
+		text += '<div class = "card-text">환불 가능일이 ' + (7 - item.refundableDate) + '일 남았어요</div>' + 
+				'<div class = "card-text"><button style = "float : right; margin-right : 1%;" class="refund-btn btn btn-dark" id="' + item.talentNo + '">환불신청</button></div>';
 	} else if(item.refundableDate === 7){
-		text += '환불가능 마지막 날입니다!' + 
-				'<form action="#" method="get"> <button type="submit">환불신청</button> </form><br>' + 
-				'</div>';
+		text += '<div class = "card-text">' 
+				'환불가능 마지막 날입니다!</div>' + 
+				'<div class = "card-text"><button style = "float : right; margin-right : 1%;" class="refund-btn btn btn-dark" id="' + item.talentNo + '">환불신청</button></div>'; 
 	}else {
-		test += '</div>';	
+		text += '';	
 	}
+	
+	text += '</div><div class = "card-footer text-muted">' + item.purchaseDate + '</div></div>';
 			
 	$('#list-print').append(text);		
 }
 
 function getRefundList(item){
-	let text =  '<div class = "trade-list">' + 
-					'물품상태 : ' + item.refundStatus + '<br>' + 
-					'물품제목 : ' + item.title + '<br>' +
-					'물품가격 : ' + item.saleBamboo + '<br>';
+	let text =  '<div style = "margin-bottom : 3%;" class = "card text-center">' +  
+					'<div class = "card-header">' + item.refundStatus + '</div>' +
+					'<div class = "card-body">' + 
+						'<div class = "card-text">' + item.title + '</div>' +
+						'<div style = "color : yellowgreen;" class = "card-text">' + item.saleBamboo + '밤부</div>';
 			
 	if(item.refundStatus === '검토중'){
-		text += '신청일 : ' + item.submitDate + '<br>' + 
-			'<button class="refund-cancle-btn" id="' + item.purchaseNo + '">신청취소</button> <br>' + 
+		text += '<div class = "card-text"><button style = "float : right; margin-right : 1%;" class="refund-cancle-btn btn btn-dark" id="' + item.purchaseNo + '">신청취소</button> </div>' +
+				'</div><div class = "card-footer text-muted">환불신청날짜 → ' + item.submitDate + '</div></div>'; 
+			 
 			'</div>';
 	} else if(item.refundStatus === '환불완료'){
-		text += '승인일 : ' + item.approveDate + '<br>' + 
-				'</div>';
+		text += '</div><div class = "card-footer text-muted">승인날짜 → ' + item.approveDate + '</div></div>';
 	} else if(item.refundStatus === '반려'){
-		text += '반려일 : ' + item.approveDate + '<br>'  + 
-				'</div>';
+		text += '</div><div class = "card-footer text-muted">반려날짜 → ' + item.approveDate + '</div></div>';
 	} else{
-		text += '</div>';
+		text += '</div></div>';
 	}
 	
 	$('#list-print').append(text);		

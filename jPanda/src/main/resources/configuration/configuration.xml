@@ -7,9 +7,6 @@
   	</settings>
   	<!-- typeAliases -->
   	<typeAliases>
-  		<typeAlias type="com.kakao.jPanda.jst.domain.BuyListDto" alias="BuyListDto"/>
-  		<typeAlias type="com.kakao.jPanda.jst.domain.SellListDto" alias="SellListDto"/>
-  		<typeAlias type="com.kakao.jPanda.jst.domain.RefundListDto" alias="RefundListDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.TradeListDto" alias="TradeListDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.TalentDto" alias="TalentDto"/>

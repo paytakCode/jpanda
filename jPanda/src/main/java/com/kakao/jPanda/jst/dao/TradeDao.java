@@ -3,9 +3,6 @@ package com.kakao.jPanda.jst.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.kakao.jPanda.jst.domain.BuyListDto;
-import com.kakao.jPanda.jst.domain.RefundListDto;
-import com.kakao.jPanda.jst.domain.SellListDto;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeListDto;
@@ -20,7 +17,7 @@ public interface TradeDao {
 //
 //	List<TradeListDto> getAllListById(String memberId);
 //	
-	StatDto getStatById(String memberId);
+	
 
 	List<TradeListDto> getTradeList(Map<String, Object> paraMap);
 
@@ -31,7 +28,11 @@ public interface TradeDao {
 	TalentDto selectTalent(String talentNo);
 
 	int insertExchange(TalentDto talentDto);
-
-
+	
+	StatDto selectSellStat(String memberId);
+	
+	StatDto selectBuyStat(String memberId);
+	
+	StatDto selectRefundStat(String memberId);
 
 }

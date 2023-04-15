@@ -1,5 +1,6 @@
 package com.kakao.jPanda.jst.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,14 +25,6 @@ public class TradeDaoImpl implements TradeDao{
 		this.sqlSession = sqlSession;
 	}
 	
-	@Override
-	public StatDto getStatById(String memberId) {
-		log.info("TradeDao getStatById memberId check : " + memberId);
-		StatDto stat = sqlSession.selectOne("selectStat", memberId);
-		log.info("stat.toString : " + stat.toString());
-		return stat;
-	}
-
 	@Override
 	public List<TradeListDto> getTradeList(Map<String, Object> paraMap) {
 		List<TradeListDto> tradeList = sqlSession.selectList("selectTradeList", paraMap);
@@ -65,7 +58,31 @@ public class TradeDaoImpl implements TradeDao{
 		log.info("result : " + result);
 		return result;
 	}
+	
+	@Override
+	public StatDto selectSellStat(String memberId) {
+		log.info("selectSellStat memberId check : " + memberId);
+		StatDto statDto = sqlSession.selectOne("selectSellCount", memberId);
+		log.info("selectSellStat statDto : " + statDto.toString());
+		return statDto;
+	}
 
+	@Override
+	public StatDto selectBuyStat(String memberId) {
+		log.info("selectBuyStat memberId check : " + memberId);
+		StatDto statDto = sqlSession.selectOne("selectBuyCount", memberId);
+		log.info("selectBuyStat statDto : " + statDto.toString());
+		return statDto;
+	}
+
+	@Override
+	public StatDto selectRefundStat(String memberId) {
+		log.info("selectRefundStat memberId check : " + memberId);
+		StatDto statDto = sqlSession.selectOne("selectRefundCount", memberId);
+		log.info("selectRefundStat statDto : " + statDto.toString());
+		return statDto;
+	}
+	
 }//end class
 
 //이전코드
