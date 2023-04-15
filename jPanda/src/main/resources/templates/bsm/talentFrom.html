@@ -21,6 +21,7 @@ form {
   width: 80%;
   max-width: 800px;
   margin: 0 auto;
+  height: 500px;
 }
 
 /* Set height of the CKEditor */
@@ -75,6 +76,18 @@ form {
 table {
   border : 1px solid black;
 }
+
+#side {
+  position: fixed;
+  top: 50px; /* 원하는 만큼 조절 가능 */
+  left: 50px;
+}
+
+.write {
+	border: 1px solid gray;
+	margin: 20px;
+	padding: 20px;
+}
 </style>
 <!-- CKEditor5 사용 -->
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
@@ -104,7 +117,7 @@ table {
 		<hr>
 	<!-- 임시 아이디 설정 PK라 INSERT시 MEMBER 테이블에 ID가 존재해야함 -->
 	<input type="hidden" name="sellerId" value="ftcxbgksj5p">
-	<div class="category">
+	<div class="category write">
 		<h4>카테고리</h4>
 		<p>강의하실 분야를 선택해 주세요.</p>
 		
@@ -157,7 +170,7 @@ table {
 		</div>
 		
 		
-		<div class="MAIN_IMG">
+		<div class="MAIN_IMG write">
 			<h4>대표 이미지</h4>
 			<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
 			<!-- 이미지를 표시할 img 태그 -->
@@ -204,13 +217,13 @@ table {
 				
 				</script>
 		</div>
-		<div class="title">
+		<div class="title write">
 			<h4>제목</h4>
 			<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>한글을 30자 이하, 영어는 40자 이하를 권장합니다.</p>
 			<input type="text" id="title" name="title" class="title">
 			<button type="button" class="resetButton title">다시 작성</button>
 		</div>
-		<div class="content">
+		<div class="content write">
 			<h4>강의 소개</h4>
 			<p>강의에 대한 소개를 작성해주세요.</p>
 				<textarea id ="content" name = "content" class="content"></textarea>
@@ -229,21 +242,19 @@ table {
 				console.error(error);
 			});
 	</script>
-		<div class="bamboo">
+		</div>
+		<div class="bamboo write">
 			<h4>가격</h4>
 			<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
-			<div>
+			
 				<h3>정상 밤부</h3>
 				<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000"><p>밤부</p>
-			</div>
-			<div>
+			
 				<h3>할인 밤부</h3>
 				<input type="number" id="saleBamboo" name="saleBamboo" class="bamboo" placeholder="900"><p>밤부</p>
-			</div>
-			<div>
+			
 				<h3>할인율</h3>
 				<input type="text" id="discountBamboo" class="bamboo" placeholder="10" readonly><p>%</p>
-			</div>
 				<button type="button" class="resetButton bamboo">다시 작성</button>
 				<script>
 			    	// bamboo와 sale_bamboo 입력값이 변경될 때마다 할인율 계산
@@ -269,13 +280,12 @@ table {
 					  
 				</script>			
 			</div>
-			<div class="summary">
+			<div class="summary write">
 			<h4>요약 설명</h4>
 			<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
 			<input type="text" id="summary" name="summary" class="summary">
 			<button type="button" class="resetButton summary">다시 작성</button>
 			</div>
-		</div>	
 		<input type="submit" value="등록하기">
 		</form>
 		
