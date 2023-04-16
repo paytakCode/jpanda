@@ -21,12 +21,11 @@ form {
   width: 80%;
   max-width: 800px;
   margin: 0 auto;
-  height: 500px;
 }
 
 /* Set height of the CKEditor */
 .ck-editor__editable {
-  height: 80vh;
+  height: 500px	;
 }
 
 /* Style the category section */
@@ -84,7 +83,7 @@ table {
 }
 
 .write {
-	border: 1px solid gray;
+	border: 1px solid #EAEAEA;
 	margin: 20px;
 	padding: 20px;
 }
@@ -97,14 +96,12 @@ table {
 <body>
 	<div id="side">
 		<table id="writeCheck">
-			<tr>
-				<td>카테고리</td><td>체크 이미지</td>
-			<tr>
-				<td>대표 이미지</td><td>체크 이미지<img src=""></td>
-			<tr>	<td>제목</td><td>체크 이미지<img src=""></td>
-			<tr>	<td>강의 소개</td><td>체크 이미지<img src=""></td>
-			<tr>	<td>가격</td><td>체크 이미지<img src=""></td>
-			<tr>	<td>요약 설명</td><td>체크 이미지<img src=""></td>
+			<tr><td>카테고리</td><td>체크 이미지<img id="categoryChk" width="20" height="20" src=""></td>
+			<tr><td>대표 이미지</td><td>체크 이미지<img id="mainImgChk" width="20" height="20" src=""></td>
+			<tr><td>제목</td><td>체크 이미지<img id="titleChk" width="20" height="20" src=""></td>
+			<tr><td>강의 소개</td><td>체크 이미지<img id="contentChk" width="20" height="20" src=""></td>
+			<tr><td>가격</td><td>체크 이미지<img id="bambooChk" width="20" height="20" src=""></td>
+			<tr><td>요약 설명</td><td>체크 이미지<img id="summaryChk" width="20" height="20" src=""></td>
 			</tr>
 		</table>
 	</div>
@@ -170,11 +167,11 @@ table {
 		</div>
 		
 		
-		<div class="MAIN_IMG write">
+		<div id="mainImgChk" class="mainImg write">
 			<h4>대표 이미지</h4>
 			<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
 			<!-- 이미지를 표시할 img 태그 -->
-				<img id="imagePreview" src="/image/jpandaMainImageLabel.jpg" onclick="document.getElementById('chooseFile').click();" width="auto" height="250" />
+				<img id="imagePreview" src="/image/jpandaMainImageLabel.jpg" onclick="$('#chooseFile').click();" width="auto" height="250" />
 				
 				<!-- 파일 선택을 위한 input 태그 (display:none으로 숨겨줍니다.) -->
 				<input type="file" id="chooseFile" accept="image/*" style="display:none;" />
@@ -217,13 +214,12 @@ table {
 				
 				</script>
 		</div>
-		<div class="title write">
+		<div id="titleChk" class="title write">
 			<h4>제목</h4>
 			<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>한글을 30자 이하, 영어는 40자 이하를 권장합니다.</p>
 			<input type="text" id="title" name="title" class="title">
-			<button type="button" class="resetButton title">다시 작성</button>
 		</div>
-		<div class="content write">
+		<div id ="contentChk" class="content write">
 			<h4>강의 소개</h4>
 			<p>강의에 대한 소개를 작성해주세요.</p>
 				<textarea id ="content" name = "content" class="content"></textarea>
@@ -243,7 +239,7 @@ table {
 			});
 	</script>
 		</div>
-		<div class="bamboo write">
+		<div id="bambooChk" class="bamboo write">
 			<h4>가격</h4>
 			<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
 			
@@ -255,16 +251,15 @@ table {
 			
 				<h3>할인율</h3>
 				<input type="text" id="discountBamboo" class="bamboo" placeholder="10" readonly><p>%</p>
-				<button type="button" class="resetButton bamboo">다시 작성</button>
-				<script>
+					<script>
 			    	// bamboo와 sale_bamboo 입력값이 변경될 때마다 할인율 계산
 			   		//document.getElementsByName("BAMBOO")[0].addEventListener("input", calculateDiscount);
 			   		$('#bamboo').on("input", calculateDiscount);
 			  		//document.getElementsByName("SALE_BAMBOO")[0].addEventListener("input", calculateDiscount);
 			   		$('#saleBamboo').on("input", calculateDiscount);
 			  
-					  function calculateDiscount() {
-					    // 입력된 값 가져오기
+					function calculateDiscount() {
+						// 입력된 값 가져오기
 					    var bambooPrice = $('#bamboo').val();
 					    var saleBambooPrice = $('#saleBamboo').val();
 					    
@@ -280,31 +275,27 @@ table {
 					  
 				</script>			
 			</div>
-			<div class="summary write">
+			<div id="summaryChk" class="summary write">
 			<h4>요약 설명</h4>
 			<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
 			<input type="text" id="summary" name="summary" class="summary">
-			<button type="button" class="resetButton summary">다시 작성</button>
 			</div>
 		<input type="submit" value="등록하기">
 		</form>
 		
 		<script>
-		// 모든 reset 버튼을 선택
-		const resetButtons = document.querySelectorAll('.resetButton');
-
-		// 각각의 reset 버튼에 클릭 이벤트를 등록
-		resetButtons.forEach(button => {
-		  button.addEventListener('click', () => {
-		    // 해당 버튼이 속한 구역을 찾음
-		    const area = button.closest('div');
-		    // 해당 구역 내의 모든 input 태그를 찾음
-		    const inputs = area.querySelectorAll(`input[class="${area.className}"]`);
-		    // 각 input 태그의 값을 초기화함
-		    inputs.forEach(input => {
-		      input.value = '';
-		    });
-		  });
+		$('.write').on('input', function(){
+			var id = $(this).attr("id");
+				var check = '#' + $(this).attr('id');
+			    console.log(check);
+			if($(this).find('input').val() !== '' && $(this).find('input').val() !== null){
+			    console.log('ififififififiififfifiif');
+				$(check).attr('src', '/image/check.png');
+			}else {
+			    console.log('elseelseelseelseelse');
+				$(check).attr('src', '');
+			}
+			
 		});
 </script>
 	</div> <!-- container -->
