@@ -69,48 +69,64 @@
 		float: right;
 		margin-bottom: 20px;
 	}	
+	/* 쿠폰중복 */	
+	.id_ok{
+	color:#008000;
+	display: none;
+	}
+	
+	.id_already{
+	color:#6A82FB; 
+	display: none;
+	}
 	
 	
 </style>
-<script type="text/javascript">
-	 
-	function couponNoDupchk(){
-		console.log(couponNoDupchk);
-		var couponNo = document.getElementById("couponNo").value;
-		// alert("vDeptno -> " + vDeptno);
-		// 행동강령 : Ajax로 부서번호 보내고 부서명 받음
-		//var couponNo = $('#couponNo').val();
-		
-		$.ajax({
-			url:"<%=context%>/chargePage",		
-			data: {couponNo : couponNo},
-			dataType:'json',
-			success:function(data){	 
-				if(data === true){
-					out.print("사용가능")
-				} else{
-					out.print("사용 불가능")
-				}
-			}
-			
-		});
-		
-	}
 
-	
-	
-
-</script>
 <script type="text/javascript">
+
+//	금액 미입력시 Null Insert 처리
 	function couponNoChargemoneyNull(){
-		alert("입력해 영광이형");
+		//alert("입력해 영광이형");
 		if($('#chargeMoney').val() === null || $('#chargeMoney').val() === '') {	// === 는 변수 타입과 값이 똑같아야한다
-		alert("입력해 영광이형");
+		alert("금액을 입력해주세요");
 		return false;
 	} 
 	return true;
-	
 	}
+	
+//	사용 가능한 쿠폰 입력 처리(중복처리 아님)
+//	couponNoDupChk 라는 함수가 실행
+	$(function(){
+	    
+	    $("#checkCoupon").click(function(){
+	    
+	        let couponNo = $("#couponNo").val();
+	         
+	        $.ajax({
+	            type:'GET', //ㅎㄷㅅ 형식으로 controller 에 보내기위함!!
+	            url:"/checkCoupon", // 컨트롤러로 가는 mapping 입력
+	            data: {"couponNo":couponNo}, // 원하는 값을 중복확인하기위해서  JSON 형태로 DATA 전송
+	            dataType: "json",
+	            success: function(data){ 
+	                if(data == "YES"){ // 만약 성공할시
+	                    result = "사용 가능한 쿠폰입니다.";
+	                    $("#result_checkCoupon").html(result).css("color", "green");
+	                 
+	             }else{ // 만약 실패할시
+	                 result="사용이 불가능한 쿠폰입니다.";
+	                     $("#result_checkCoupon").html(result).css("color","red");
+	                     $("#couponNo").val("").trigger("focus");
+	             }
+	                 
+	         },
+	            error : function(error){alert(error);}
+	        });
+	        
+	    });
+	    
+	});
+		
 
 </script>
 				
@@ -134,22 +150,27 @@
 
 		<div id="contents">
 			<form action="/chargePage" method="post" onsubmit="return couponNoChargemoneyNull()">
-				쿠폰 입력 :	<input type="text" id = "couponNo" name="couponNo">  
-				<input type="button" value="중복확인" onclick="couponNoDupChk()">
-				<p/>
-				충전 금액 : <input type="text" id = "chargeMoney" name="chargeMoney"><p/>
+				
+				
+				충전 금액 : <input type="text" id = "chargeMoney" name="chargeMoney" required="required"><p/>
+				
+				쿠폰 입력 :	<input type="text" id = "couponNo" name="couponNo"  placeholder="쿠폰입력">  
+				 <input type="button" id="checkCoupon" value="중복검사"><br/>
+    			 <div><span id="result_checkCoupon" style="font-size:12px;"></span></div>
+				
+				
+				<!-- 확인버튼 -->
 				<!-- 아래 submit은 추후 결제확인으로 대체예정, 테스트용 버튼 -->
 				<input type="submit" value="확인">
 				
 				
-
-		<!-- 	<div>
-			 	<th th:if="${chargeFailMsg != null}">
-			 		 <td th:text="${chargeFailMsg}"></td>
-			 	</th>
-			 </div> -->
+				<!-- <input type="text"  id = "couponNoDupChk" name ="couponNoDupChk" oninput="couponNoDupChk()">
+				id ajax 중복체크
+				<span class="coupon_ok">사용 가능한 쿠폰입니다.</span>
+				<span class="coupon_already">사용 불가능한 쿠폰입니다.</span>
+				<p/> -->
+		
 			<table>
-			  <!-- <tr th:if="${chargeFailMsg != null and (param.couponNo == null or param.chargeMoney == null)}"> -->
 			  <tr th:if="${chargeFailMsg != null}">
 			    <td th:text="${chargeFailMsg}"></td>
 			  </tr>
@@ -159,13 +180,6 @@
 			
 			
 			
-			<!-- 
-			<form action="/charge" method="post">
-				쿠폰 입력 : <input type="text" name="couponNo"><p />
-				충전 금액 : <input type="text" name="pay"><p />
-				<input type="submit" value="확인"><p />
-			</form>
-			 -->
 		</div>
 		<div id="right-sidebar">
 			<h2>사이드바 Right</h2>

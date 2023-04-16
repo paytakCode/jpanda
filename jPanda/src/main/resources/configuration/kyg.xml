@@ -6,6 +6,8 @@
 	<typeAliases>
 		<typeAlias alias="chargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
 	</typeAliases>
+	
+	
 </configuration>
 
 

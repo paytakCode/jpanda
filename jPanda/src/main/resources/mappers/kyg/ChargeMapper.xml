@@ -4,22 +4,31 @@
 
 <mapper namespace="com.kakao.jPanda.kyg.chargeMapper">
 	<insert id="chargeInsert" parameterType="chargeDto">
-		insert into bamboo_charge (
-			charge_no,
-			coupon_no,
-			payment_amount
-		)
-		values (
-			(SELECT MAX(charge_no)+1 FROM bamboo_charge),
-			#{couponNo},
-			#{chargeMoney} - 1000
-		)
+	
+	INSERT INTO bamboo_charge (
+	  charge_no,
+	  coupon_no,
+	  payment_amount
+	)
+	VALUES (
+	  bamboo_charge_SEQ.NEXTVAL,
+	  #{couponNo},
+	  #{chargeMoney} - COALESCE(
+	  							(
+	  							SELECT coupon_value 
+	  							FROM coupon 
+	  							WHERE coupon_no = #{couponNo}), 0
+	  							)
+								)
+	
+	<!-- (SELECT MAX(charge_no) + 1 FROM bamboo_charge) -->
+
 	</insert>
 	
-	<select id="couponCheck" resultType="boolean">
-		SELECT coupon_no
+	<select id="couponCheck" parameterType="java.lang.String" resultType="int">
+		SELECT count(*) 
 		FROM coupon
-		WHERE coupon_no = #{coupon_no}
+		WHERE coupon_no = #{couponNo}
 	
 	</select>
 

@@ -1,7 +1,6 @@
 package com.kakao.jPanda.kyg.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +27,7 @@ public class ChargeController {
 	
 //	private final ChargeService chargeService;
 	
-	@GetMapping("/chargePage")
+	@GetMapping("/charge")
 	public String chargePage() {
 		return "kyg/chargePage";
 	}
@@ -62,39 +61,31 @@ public class ChargeController {
 	
 //	쿠폰 중복 확인
 //	시큐리티 에러
-	/*
-	@GetMapping("/chargePage")
+	
+//	사용 가능한 쿠폰 입력 처리(중복처리 아님)	
+	@GetMapping("/checkCoupon")
 	@ResponseBody
-	public boolean couponNoDupchk(@RequestParam(value = "couponNo") String couponNo) {
-		log.info("ChargeContoller couponNoDupchk() Start...");
+	public String checkCoupon(@RequestParam(value = "couponNo") String couponNo) {
+
+		log.info("ChargeContoller checkCoupon() Start...");
 		
-		boolean isAvailableCoupon = chargeService.couponCheck(couponNo);
-		log.info("ChargeContoller couponNoDupchk() isAvailableCoupon {}", isAvailableCoupon);
+		String result= null;
+		
+		int flag = chargeService.checkCoupon(couponNo);
+        
+//		0보다 크면 사용 가능한 쿠폰
+        if(flag > 0) {
+        	result ="YES"; 
+        }; 
+        
+        //쿠폰이 있을시 YES 으로 client 로 보냄
 		
 		
-		return isAvailableCoupon;
+		return result; 
 	}
 	
-	*/
 	
 	
-	
-	
-	
-	
-	
-	
-	/*
-	쿠폰 적용가능 체크 로직
-	@GetMapping("/chargeCheck")
-	@ResponseBody
-	public boolean chrgeCheck(@RequestParam(value = "couponNo") String couponNo){
-		//쿠폰이 있으면 false
-		//쿠폰이 없으면 true
-		boolean result = chargeService.couponCheck(couponNo);
-		return result;
-	}
-	*/
 	
 }
 	

@@ -28,19 +28,15 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 
 //	시큐리티 에러
-	/*
+	
 	@Override
-	public boolean couponCheck(String couponNo) {
-		log.info("ChargeServiceImpl couponCheck() Start...");
-		boolean isAvailableCoupon = chargeDao.couponCheck(couponNo);
-		log.info("ChargeServiceImpl insertCharge() DAO에서 반환받은 resultCharge-> " + isAvailableCoupon);
+	public int checkCoupon(String couponNo) {
+		log.info("ChargeServiceImpl checkCoupon() Start...");
 		
-		return isAvailableCoupon;
+		int result = chargeDao.checkCoupon(couponNo);
+		
+		return result;
 	}
-	*/
-	
-	
-	
 	
 	
 	

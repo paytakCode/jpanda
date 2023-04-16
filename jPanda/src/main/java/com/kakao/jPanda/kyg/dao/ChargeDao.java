@@ -7,9 +7,9 @@ public interface ChargeDao {
 	int insertCharge(ChargeDto chargeDto);
 
 //	시큐리티 에러
-	/*
-	boolean couponCheck(String couponNo);
-*/
+	
+	int checkCoupon(String couponNo);
+
 	
 	
 	

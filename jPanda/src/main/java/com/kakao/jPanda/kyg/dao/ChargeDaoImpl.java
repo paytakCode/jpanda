@@ -8,6 +8,7 @@ import com.kakao.jPanda.kyg.domain.ChargeDto;
 
 import lombok.extern.slf4j.Slf4j;
 
+
 @Repository
 @Slf4j
 public class ChargeDaoImpl implements ChargeDao {
@@ -23,7 +24,6 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	@Override
 	public int insertCharge(ChargeDto chargeDto) {
-		
 		log.info("ChargeDaoImpl insertCharge() Start...");
 		
 		System.out.println("chargeDto.toString -> " + chargeDto.toString());
@@ -41,24 +41,27 @@ public class ChargeDaoImpl implements ChargeDao {
 
 
 //	시큐리티 에러
-	/*
+	
 	@Override
-	public boolean couponCheck(String couponNo) {
+	public int checkCoupon(String couponNo) {
 		
-		log.info("ChargeDaoImpl couponCheck() Start...");
-		boolean couponCheckResult = false;
-		System.out.println("couponNo.toString -> " + couponNo.toString());
+		log.info("ChargeDaoImpl getcouponCheck() Start...");
+		int checkCouponResult = 0;
+		System.out.println("couponNo.toString -> " + couponNo);
 		try {
-			couponCheckResult = sqlSession.selectOne("couponCheck", couponNo);
-			System.out.println("ChargeDaoImpl ChargeDaoImpl couponCheckResult ->" + couponCheckResult);
+			checkCouponResult = sqlSession.selectOne("couponCheck", couponNo);
+			System.out.println("ChargeDaoImpl ChargeDaoImpl couponCheckResult ->" + checkCouponResult);
 		} catch (Exception e) {
+			log.error("ChargeDaoImpl getcouponCheck() Exception -> {}", e.getMessage(), e);
+//			throw new RuntimeException("Failed to check coupon", e);
 			System.out.println("ChargeDaoImpl couponCheck() Exception -> " + e.getMessage());
+			
 		}
 		
-		
-		return couponCheckResult;
+		return checkCouponResult;
 	}
-	*/
+
+
 	
 	
 	
