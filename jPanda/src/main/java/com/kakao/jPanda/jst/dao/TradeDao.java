@@ -23,7 +23,7 @@ public interface TradeDao {
 
 	int updateTalentStatus(String talentNo);
 
-	int updateRefundStatus(String purchaseNo);
+	int deleteRefund(String purchaseNo);
 
 	TalentDto selectTalent(String talentNo);
 
@@ -34,5 +34,7 @@ public interface TradeDao {
 	StatDto selectBuyStat(String memberId);
 	
 	StatDto selectRefundStat(String memberId);
+
+	void insertTalentRefund(TradeListDto tradeListDto);
 
 }

@@ -1,6 +1,5 @@
 package com.kakao.jPanda.jst.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class TradeDaoImpl implements TradeDao{
 	}
 
 	@Override
-	public int updateRefundStatus(String purchaseNo) {
+	public int deleteRefund(String purchaseNo) {
 		int result = sqlSession.update("updateRefundStatus", purchaseNo);
 		return result;
 	}
@@ -82,6 +81,18 @@ public class TradeDaoImpl implements TradeDao{
 		log.info("selectRefundStat statDto : " + statDto.toString());
 		return statDto;
 	}
+
+	@Override
+	public void insertTalentRefund(TradeListDto tradeListDto) {
+		log.info("insertTalentRefund tradeListDto check : " + tradeListDto.toString());
+		if (sqlSession.insert("insertTalentRefund", tradeListDto) > 0) {
+			log.info("insertTalentRefund insert success");
+		} else {
+			log.info("insertTalentRefund insert fail");
+		}
+		
+	}
+
 	
 }//end class
 

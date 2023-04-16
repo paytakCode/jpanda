@@ -22,4 +22,8 @@ public class TradeListDto {
 	private String talentNo;
 	private String purchaseNo;
 	private String exchangeStatus;
+	
+	//재능 환불
+	private String issue;
+	private Long refundBamboo;
 }

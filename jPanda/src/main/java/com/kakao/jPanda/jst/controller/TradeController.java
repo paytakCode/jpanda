@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -105,7 +106,7 @@ public class TradeController {
 		
 	}
 	
-	@PutMapping("/trade/refund/status/{purchaseNo}")
+	@DeleteMapping("/trade/refund/{purchaseNo}")
 	@ResponseBody
 	public String tradeCancleRefund(@PathVariable String purchaseNo) {
 		log.info("purchaseNo : " + purchaseNo);
@@ -136,6 +137,17 @@ public class TradeController {
 			return "fail submitExchange talentDto : null";
 		}
 	}
+	
+	@PostMapping("/trade/refund")
+	@ResponseBody
+	public String tradeTalentRefund(HttpSession session, @RequestBody TradeListDto tradeListDto) {
+		tradeListDto.setBuyerId((String)session.getAttribute("memberId"));
+		log.info("tradeTalentRefund talentNo, buyerId : " + tradeListDto.getTalentNo() + ", " + tradeListDto.getBuyerId() + ", " + tradeListDto.getRefundBamboo());
+		tradeService.submitTalentRefund(tradeListDto);
+		
+		return "success";
+	}
+	
 	
 	
 	

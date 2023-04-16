@@ -28,4 +28,6 @@ public interface TradeService {
 
 	int submitExchange(TalentDto talentDto);
 
+	void submitTalentRefund(TradeListDto tradeListDto);
+
 }

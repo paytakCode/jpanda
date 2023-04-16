@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <style type="text/css" >
 	body {
 		margin: 0;
@@ -118,7 +119,34 @@
     	box-sizing: border-box;
     	font-family: sans-serif;
 	}
-
+	
+	.card.text-center{
+		margin-bottom: 3%;
+	}
+	
+	.card-header{
+		font-weight: bold;
+	}
+	
+	.card-title{
+		font-weight: bold;
+		font-size: x-large;
+	}
+	
+	.refund-btn, .exchange-btn, .repost-btn, .repost-btn, .end-sell-btn, .refund-cancle-btn{
+		float: right;
+		margin-right: 1%;
+	}
+	
+	.card-text-bamboo{
+		color : yellowgreen;
+	}
+	
+	.text-center{
+		text-align: center;
+	}
+	
+	
 </style>
 </head>
 <body>
@@ -135,29 +163,53 @@
 		  </ul>
 		</nav> <!-- /nav bar -->
 		
-			<!-- title bar -->
-			<div class="page-title">
-				거래관리
-			</div><!-- /title bar -->
-			
-			<!-- filter-buttons -->
-			<div class="filter-buttons">
-				<button class="filter-button" value="all">전체</button>
-				<button class="filter-button" value="sell">판매</button>
-				<button class="filter-button" value="buy">구매</button>
-				<button class="filter-button" value="refund">환불</button>
-			</div> <!-- /filter-buttons -->
-			
+		<!-- title bar -->
+		<div class="page-title">
+			거래관리
+		</div><!-- /title bar -->
+		
+		<!-- filter-buttons -->
+		<div class="filter-buttons">
+			<button class="filter-button" value="all">전체</button>
+			<button class="filter-button" value="sell">판매</button>
+			<button class="filter-button" value="buy">구매</button>
+			<button class="filter-button" value="refund">환불</button>
+		</div> <!-- /filter-buttons -->
+			<div class = "content">
 		<!-- content -->
-		<div class = "content">			
+		
 			<!-- list print -->
 			<div id="list-print">
 			</div> <!-- /list print -->
-		
+			<!-- 환불신청 Modal page -->
+			<div id="refund-modal" class="modal" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">재능 환불 신청</h4>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" id="refund-talentNo">
+							<input type="hidden" id="refund-refundBamboo">
+							환불 가능 밤부는 <span id="span-refund-refundBamboo"></span> 입니다.<p />
+							환불 사유를 선택해 주세요<p />
+							<input type="radio" name="issue" value="단순 변심" checked="checked">단순 변심<br>
+						    <input type="radio" name="issue" value="실수">실수<br>
+						    <input type="radio" name="issue" value="재능 수준 낮음">재능 수준 낮음<br>
+						    <input type="radio" name="issue" value="기타">기타<br>
+						    	<input type="text" id="custom-issue-input" placeholder="사유를 입력해주세요.">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+							<button type="button" id="refund-submit-btn" class="btn btn-success">제출</button>
+						</div>
+					</div>	
+				</div>
+			</div> <!-- 환불신청 Modal page -->	
 		
 			<!-- sidebar -->
 			<div class="sidebar">
-				
 				★ 판매 ★<br>
 				검토중 : <span id="sidebar-submit-count"> 건</span><br>
 				판매중 : <span id="sidebar-sell-count"> 건</span><br> 
@@ -171,7 +223,7 @@
 			</div> <!-- /sidebar -->
 		</div> <!-- /content -->
 	</div><!-- container -->
-<script type="text/javascript" src="/js/jquery.js" ></script>
+	
 <script th:inline="javascript">
 /**
  * statList 가공
@@ -201,6 +253,7 @@
 	 })
 	 
  });
+ 
 </script>
 <script type="text/javascript">
 
@@ -271,8 +324,8 @@ $(document).on("click", ".refund-cancle-btn", function(){
 	console.log('purchaseNo : ' + purchaseNo);
 	$.ajax(
 		{
-			type : "PUT",
-			url : "/trade/refund/status/"+ purchaseNo,
+			type : "DELETE",
+			url : "/trade/refund/"+ purchaseNo,
 			contentType: 'application/json',
 			dataType : 'text',
 			success : function(message){
@@ -288,15 +341,74 @@ $(document).on("click", ".refund-cancle-btn", function(){
 });
 
 /**
+ * 재능환불 신청 버튼
+ * 팝업창구현 : bootstrap - modal
+ */
+$(document).on('show.bs.modal', '#refund-modal', function (event) {
+	// modal로 값 가져오기
+	let talentNo = $(event.relatedTarget).data('refund-talentno');
+	let saleBamboo = $(event.relatedTarget).data('refund-salebamboo');
+	console.log(talentNo + ' , ' + saleBamboo);
+	//modal 해당요소에 값 할당
+	$('#refund-modal').find('#refund-talentNo').val(talentNo);
+	$('#refund-modal').find('#refund-refundBamboo').val(saleBamboo);
+	$('#refund-modal').find('#span-refund-refundBamboo').text(saleBamboo);
+	
+	//사유 기타 선택시 text 노출
+	$('#custom-issue-input').hide();
+	$("input[name=issue]").change(function() {
+        //기타를 선택하면 등장
+		if($("input[name=issue]:checked").val() === "기타") {
+		    $("#custom-issue-input").show();
+		}  else {
+		    $("#custom-issue-input").hide();
+		}
+	});
+	
+	$('#refund-submit-btn').on('click', function(){
+		if(confirm('환불 신청을 하시겠습니까?')){
+			if($('input[name=issue]:checked').val() === '기타'){
+			    $('input[name=issue]').val($('#custom-issue-input').val());
+			}		
+		}
+		var talentNo = $("#refund-talentNo").val();
+		var refundBamboo = $("#refund-refundBamboo").val();
+		var issue = $('input[name="issue"]:checked').val();
+		
+		$.ajax({
+		    type: "POST",
+		    url: "/trade/refund",
+		    data: JSON.stringify({
+		    		'talentNo' : talentNo,
+		           	'refundBamboo' : refundBamboo,
+		           	'issue' : issue
+		    	  }),
+		    contentType: 'application/json',
+		    success: function(result){
+		        alert("환불신청이 완료되었습니다.");
+		        location.reload();
+		    },
+		    error: function(xhr, status, error){
+		        alert("환불 처리 중 오류가 발생하였습니다.");
+		    }
+		});
+			
+	});
+	
+});
+/**
+ * 재등록버튼 Ajax 통신
+ */
+
+/**
  * list-print tradeList Ajax 통신
  */
 function getSellList(item){
-	console.log(item.exchangeStatus);
-	let text =  '<div style = "margin-bottom : 3%;" class = "card text-center">' + 
-					'<div class = "card-header">' + item.status + '</div>' + 
+	let text =  '<div class = "card text-center sell-card">' + 
+					'<div class = "card-header badge text-bg-primary">' + item.status + '</div>' + 
 					'<div class = "card-body">' +  
 					'<div class = "card-title">' + item.title + '</div><br>' +
-					'<div style = "color : yellowgreen;" class = "card-text">' + item.saleBamboo + '밤부</div>' +
+					'<div class = "card-text card-text-bamboo">' + item.saleBamboo + '밤부</div>' +
 					'<div class = "card-text">' + item.sellCount + '명이 재능을 구매했어요</div>';
 				
 	if(item.status === '게시중' && item.exchangeStatus === null){
@@ -304,8 +416,8 @@ function getSellList(item){
 				'<button class="end-sell-btn btn btn-success" id="' + item.talentNo + '">판매종료</button></div>';
 	} else if(item.status === '판매종료' && item.exchangeStatus === null){
 		text += '<div class = "card-text">' + 
-				'<button style = "float : right; margin-right : 1%;" class="exchange-btn btn btn-dark" id="' + item.talentNo + '">환전하기</button>' + 
-				'<button style = "float : right; margin-right : 1%;" class="repost-btn btn btn-dark" id="' + item.talentNo + '">재등록</button></div>';
+				'<button class="exchange-btn btn btn-dark" id="' + item.talentNo + '">환전하기</button>' + 
+				'<button class="repost-btn btn btn-dark" id="' + item.talentNo + '">재등록</button></div>';
 	} else if(item.exchangeStatus != null){
 		text += '<div class = "card-text">' + 
 				'환전신청이 완료된 물품입니다.</div>';
@@ -313,52 +425,59 @@ function getSellList(item){
 		text += '';
 	}
 	
-	text += '</div><div class = "card-footer text-muted">' + item.regDate + '</div></div>';
+	text += '</div><div class = "card-footer text-muted">판매등록날짜 : ' + item.regDate + '</div></div>';
 			
 	$('#list-print').append(text);
 }
 
 function getBuyList(item){
-	let text = '<div style = "margin-bottom : 3%;" class = "card text-center">' +  
-					'<div class = "card-header">' + item.status + '</div>' +
+	let text = '<div class = "card text-center buy-card">' +  
+					'<div class = "card-header badge text-bg-success">' + item.status + '</div>' +
 					'<div class = "card-body">' + 
 						'<div class = "card-title">' + item.title + '</div><br>' +
-						'<div style = "color : yellowgreen;" class = "card-text">' + item.saleBamboo + '밤부</div>';
+						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + '밤부</div>';
 				
 	if(item.refundableDate > 7){
 		text += '<div class = "card-text">재능 구매가 확정되었어요</div>';
 	} else if(item.refundableDate < 7){
 		text += '<div class = "card-text">환불 가능일이 ' + (7 - item.refundableDate) + '일 남았어요</div>' + 
-				'<div class = "card-text"><button style = "float : right; margin-right : 1%;" class="refund-btn btn btn-dark" id="' + item.talentNo + '">환불신청</button></div>';
+				'<div class = "card-text">' + 
+					'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
+					'data-refund-talentno = ' + item.talentNo + 
+					' data-refund-salebamboo = ' + item.saleBamboo + 
+					'>환불신청</button></div>';
 	} else if(item.refundableDate === 7){
-		text += '<div class = "card-text">' 
-				'환불가능 마지막 날입니다!</div>' + 
-				'<div class = "card-text"><button style = "float : right; margin-right : 1%;" class="refund-btn btn btn-dark" id="' + item.talentNo + '">환불신청</button></div>'; 
-	}else {
+		text += '<div class = "card-text"> 환불가능 마지막 날입니다!</div>' + 
+				'<div class = "card-text">'+ 
+				'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
+				'data-refund-talentno = ' + item.talentNo + 
+				' data-refund-salebamboo = ' + item.saleBamboo + 
+				'>환불신청</button></div>'; 
+	} else {
 		text += '';	
 	}
 	
-	text += '</div><div class = "card-footer text-muted">' + item.purchaseDate + '</div></div>';
+	text += '</div><div class = "card-footer text-muted">구매날짜 : ' + item.purchaseDate + '</div></div>';
 			
 	$('#list-print').append(text);		
 }
 
 function getRefundList(item){
-	let text =  '<div style = "margin-bottom : 3%;" class = "card text-center">' +  
-					'<div class = "card-header">' + item.refundStatus + '</div>' +
-					'<div class = "card-body">' + 
-						'<div class = "card-text">' + item.title + '</div>' +
-						'<div style = "color : yellowgreen;" class = "card-text">' + item.saleBamboo + '밤부</div>';
+	let text =  '<div class = "card text-center refund-card">' +  
+					'<div class = "card-header badge text-bg-danger">' + item.refundStatus + '</div>' +
+					'<div class = "card-body">' +
+						'<div class = "card-title">' + item.title + '</div>' +
+						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + '밤부</div>';
 			
 	if(item.refundStatus === '검토중'){
-		text += '<div class = "card-text"><button style = "float : right; margin-right : 1%;" class="refund-cancle-btn btn btn-dark" id="' + item.purchaseNo + '">신청취소</button> </div>' +
-				'</div><div class = "card-footer text-muted">환불신청날짜 → ' + item.submitDate + '</div></div>'; 
+		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="' + item.purchaseNo + '">신청취소</button> </div>' +
+				'</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.submitDate + '</div></div>'; 
 			 
 			'</div>';
 	} else if(item.refundStatus === '환불완료'){
-		text += '</div><div class = "card-footer text-muted">승인날짜 → ' + item.approveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">승인날짜 : ' + item.approveDate + '</div></div>';
 	} else if(item.refundStatus === '반려'){
-		text += '</div><div class = "card-footer text-muted">반려날짜 → ' + item.approveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">반려날짜 : ' + item.approveDate + '</div></div>';
 	} else{
 		text += '</div></div>';
 	}

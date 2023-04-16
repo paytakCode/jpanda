@@ -81,11 +81,11 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
-	<update id="updateRefundStatus" parameterType="String">
-		UPDATE talent_refund
-		SET status = null
+	<delete id="updateRefundStatus" parameterType="String">
+		DELETE
+		from talent_refund
 		WHERE purchase_no = #{purchaseNo}
-	</update>
+	</delete>
 	
 	<select id="selectTalent" parameterType="String" resultType="TalentDto">
 		SELECT *
@@ -110,6 +110,26 @@
 		    (SELECT ratio FROM member_grade WHERE grade = (SELECT grade FROM member WHERE id = #{sellerId})),
 		    '검토중'
 		)
+	</insert>
+	
+	<insert id="insertTalentRefund" parameterType="TradeListDto">
+		INSERT INTO talent_refund(
+			purchase_no,
+			status,
+			issue,
+			submit_date,
+			approve_date,
+			refund_bamboo
+		)
+		VALUES(
+			(SELECT purchase_no FROM bamboo_use WHERE buyer_id = #{buyerId} AND talent_no = #{talentNo}),
+			'검토중',
+			#{issue},
+			sysdate,
+			null,
+			#{refundBamboo}
+		)
+		
 	</insert>
 	
 	

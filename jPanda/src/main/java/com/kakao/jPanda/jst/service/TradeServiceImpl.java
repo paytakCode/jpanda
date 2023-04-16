@@ -80,7 +80,7 @@ public class TradeServiceImpl implements TradeService{
 
 	@Override
 	public int cancleRefund(String purchaseNo) {
-		return tradeDao.updateRefundStatus(purchaseNo);
+		return tradeDao.deleteRefund(purchaseNo);
 	}
 
 	@Override
@@ -92,6 +92,11 @@ public class TradeServiceImpl implements TradeService{
 	public int submitExchange(TalentDto talentDto) {
 		
 		return tradeDao.insertExchange(talentDto);
+	}
+
+	@Override
+	public void submitTalentRefund(TradeListDto tradeListDto) {
+		tradeDao.insertTalentRefund(tradeListDto);
 	}
 
 }//end class
