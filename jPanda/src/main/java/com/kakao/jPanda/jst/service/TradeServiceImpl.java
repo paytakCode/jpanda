@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kakao.jPanda.jst.dao.TradeDao;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
-import com.kakao.jPanda.jst.domain.TradeListDto;
+import com.kakao.jPanda.jst.domain.TradeDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,11 +31,11 @@ public class TradeServiceImpl implements TradeService{
 	}
 	
 	@Override
-	public List<StatDto> getStatList(String memberId) {
+	public List<StatDto> findStatListByMemberId(String memberId) {
 		List<StatDto> statList = new ArrayList<StatDto>();
-		StatDto buyStatDto = tradeDao.selectBuyStat(memberId); 
-		StatDto sellStatDto = tradeDao.selectSellStat(memberId); 
-		StatDto refundStatDto = tradeDao.selectRefundStat(memberId);
+		StatDto buyStatDto = tradeDao.selectBuyStatByMemberId(memberId); 
+		StatDto sellStatDto = tradeDao.selectSellStatByMemberId(memberId); 
+		StatDto refundStatDto = tradeDao.selectRefundStatByMemberId(memberId);
 		
 		buyStatDto.setStatType("buy");
 		sellStatDto.setStatType("sell");
@@ -47,19 +49,22 @@ public class TradeServiceImpl implements TradeService{
 	}
 	
 	@Override
-	public List<TradeListDto> getTradeList(String memberId, TradeListDto tradeListDto) {
+	public List<TradeDto> findTradeListByMemberId(String memberId, String listType) {
 		Map<String, Object> paraMap = new HashMap<>();
-		paraMap.put("memberId", memberId);
-		paraMap.put("tradeListDto", tradeListDto);
+		TradeDto tradeDto = new TradeDto();
+		tradeDto.setListType(listType);
 		
-		List<TradeListDto> tradeList = tradeDao.getTradeList(paraMap);
+		paraMap.put("memberId", memberId);
+		paraMap.put("tradeListDto", tradeDto);
+		
+		List<TradeDto> tradeList = tradeDao.selectTradeListByParaMap(paraMap);
 		
 		tradeList.stream()
 				 .filter(DeduplicationUtils.distinctByKey(e -> e.getTalentNo()))
 				 .forEach(e -> {
 					 if (memberId.equals(e.getBuyerId()) && e.getRefundStatus() == null) {
  						 e.setListType("buy");
-						 e.setStatus("구매완료");
+						 e.setTalentStatus("구매완료");
 					 } else if (memberId.equals(e.getBuyerId()) && e.getRefundStatus() != null) {
 					 	 e.setListType("refund");
 					 } else if (memberId.equals(e.getSellerId())) {
@@ -67,36 +72,77 @@ public class TradeServiceImpl implements TradeService{
 					 } 
 				 });
 		
-		log.info("getTradeList tradeList.size() : " + tradeList.size());
+		log.info("findTradeListByMemberId tradeList.size() : " + tradeList.size());
 		
 		return tradeList;
 	}
 
 	@Override
-	public int endSell(String talentNo) {
+	public int modifyTalentStatusByTalentNo(String talentNo) {
+		int result = 0;
 		
-		return tradeDao.updateTalentStatus(talentNo);
-	}
-
-	@Override
-	public int cancleRefund(String purchaseNo) {
-		return tradeDao.deleteRefund(purchaseNo);
-	}
-
-	@Override
-	public TalentDto getTalentByTalentNo(String talentNo) {
-		return tradeDao.selectTalent(talentNo);
-	}
-
-	@Override
-	public int submitExchange(TalentDto talentDto) {
+		try {
+			result = tradeDao.updateTalentStatusByTalentNo(talentNo);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
 		
-		return tradeDao.insertExchange(talentDto);
+		return result;
 	}
 
 	@Override
-	public void submitTalentRefund(TradeListDto tradeListDto) {
-		tradeDao.insertTalentRefund(tradeListDto);
+	public int removeRefundByrefundPurchaseNo(String purchaseNo) {
+		int result = 0;
+		
+		try {
+			result = tradeDao.deleteRefundByrefundPurchaseNo(purchaseNo);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	@Override
+	public TalentDto findTalentByTalentNo(String talentNo) {
+		TalentDto talentDto = null;
+		
+		try {
+			talentDto = tradeDao.selectTalentByTalentNo(talentNo);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		
+		return talentDto;
+	}
+
+	@Override
+	public int addExchangeByTalentNo(TalentDto talentDto) {
+		int result = 0;
+		
+		try {
+			result = tradeDao.insertExchangeByTalentNo(talentDto);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int addRefund(HttpSession session, TradeDto tradeDto) {
+		int result = 0;
+		tradeDto.setBuyerId((String)session.getAttribute("memberId"));
+		log.info("addRefund tradeDto.getBuyerId() : " + tradeDto.getBuyerId());
+		
+		try {
+			result = tradeDao.insertTalentRefund(tradeDto);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		
+		return result; 
+		
 	}
 
 }//end class

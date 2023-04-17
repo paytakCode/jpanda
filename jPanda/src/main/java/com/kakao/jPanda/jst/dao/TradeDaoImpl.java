@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
-import com.kakao.jPanda.jst.domain.TradeListDto;
+import com.kakao.jPanda.jst.domain.TradeDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,75 +25,78 @@ public class TradeDaoImpl implements TradeDao{
 	}
 	
 	@Override
-	public List<TradeListDto> getTradeList(Map<String, Object> paraMap) {
-		List<TradeListDto> tradeList = sqlSession.selectList("selectTradeList", paraMap);
-		log.info("TradeDao getTradeList tradeList.size() : " + tradeList.size());
+	public List<TradeDto> selectTradeListByParaMap(Map<String, Object> paraMap) {
+		List<TradeDto> tradeList = sqlSession.selectList("selectTradeListByParaMap", paraMap);
+		log.info("selectTradeListByParaMap tradeList.size() : " + tradeList.size());
 		return tradeList;
 	}
 
 	@Override
-	public int updateTalentStatus(String talentNo) {
-		int result = sqlSession.update("updateTalentStatus", talentNo);
-		log.info("result : " + result);
+	public int updateTalentStatusByTalentNo(String talentNo) {
+		log.info("updateTalentStatusByTalentNo talentNo : " + talentNo);
+		int result = sqlSession.update("updateTalentStatusByTalentNo", talentNo);
+		log.info("updateTalentStatusByTalentNo result : " + result);
 		return result;
 	}
 
 	@Override
-	public int deleteRefund(String purchaseNo) {
-		int result = sqlSession.update("updateRefundStatus", purchaseNo);
+	public int deleteRefundByrefundPurchaseNo(String refundPurchaseNo) {
+		log.info("deleteRefundByrefundPurchaseNo refundPurchaseNo : " + refundPurchaseNo);
+		int result = sqlSession.update("deleteRefundByrefundPurchaseNo", refundPurchaseNo);
+		log.info("deleteRefundByPurchaseNo result : " + result);
 		return result;
 	}
 
 	@Override
-	public TalentDto selectTalent(String talentNo) {
-		TalentDto talentDto = sqlSession.selectOne("selectTalent", talentNo);
-		log.info("talentDto getTitle() : " + talentDto.getTitle());
+	public TalentDto selectTalentByTalentNo(String talentNo) {
+		log.info("selectTalentByTalentNo talentNo : " + talentNo);
+		TalentDto talentDto = sqlSession.selectOne("selectTalentByTalentNo", talentNo);
+		log.info("selectTalentByTalentNo talentDto.getTalentNo() : " + talentDto.getTalentNo());
 		return talentDto;
 	}
 
 	@Override
-	public int insertExchange(TalentDto talentDto) {
-		int result = sqlSession.insert("insertExchange", talentDto);
-		log.info("result : " + result);
+	public int insertExchangeByTalentNo(TalentDto talentDto) {
+		log.info("insertExchangeByTalentNo talentDto : " + talentDto.toString());
+		int result = sqlSession.insert("insertExchangeByTalentNo", talentDto);
+		log.info("insertExchangeByTalentNo result : " + result);
 		return result;
 	}
 	
 	@Override
-	public StatDto selectSellStat(String memberId) {
+	public StatDto selectSellStatByMemberId(String memberId) {
 		log.info("selectSellStat memberId check : " + memberId);
-		StatDto statDto = sqlSession.selectOne("selectSellCount", memberId);
+		StatDto statDto = sqlSession.selectOne("selectSellStatByMemberId", memberId);
 		log.info("selectSellStat statDto : " + statDto.toString());
 		return statDto;
 	}
 
 	@Override
-	public StatDto selectBuyStat(String memberId) {
+	public StatDto selectBuyStatByMemberId(String memberId) {
 		log.info("selectBuyStat memberId check : " + memberId);
-		StatDto statDto = sqlSession.selectOne("selectBuyCount", memberId);
+		StatDto statDto = sqlSession.selectOne("selectBuyStatByMemberId", memberId);
 		log.info("selectBuyStat statDto : " + statDto.toString());
 		return statDto;
 	}
 
 	@Override
-	public StatDto selectRefundStat(String memberId) {
+	public StatDto selectRefundStatByMemberId(String memberId) {
 		log.info("selectRefundStat memberId check : " + memberId);
-		StatDto statDto = sqlSession.selectOne("selectRefundCount", memberId);
+		StatDto statDto = sqlSession.selectOne("selectRefundStatByMemberId", memberId);
 		log.info("selectRefundStat statDto : " + statDto.toString());
 		return statDto;
 	}
 
 	@Override
-	public void insertTalentRefund(TradeListDto tradeListDto) {
-		log.info("insertTalentRefund tradeListDto check : " + tradeListDto.toString());
-		if (sqlSession.insert("insertTalentRefund", tradeListDto) > 0) {
-			log.info("insertTalentRefund insert success");
-		} else {
-			log.info("insertTalentRefund insert fail");
-		}
+	public int insertTalentRefund(TradeDto tradeDto) {
+		int result = 0;
+		log.info("insertTalentRefund tradeDto : " + tradeDto.toString());
+		result = sqlSession.insert("insertTalentRefund", tradeDto);
+		log.info("insertTalentRefund result : " + result);
+		return result;
 		
 	}
 
-	
 }//end class
 
 //이전코드

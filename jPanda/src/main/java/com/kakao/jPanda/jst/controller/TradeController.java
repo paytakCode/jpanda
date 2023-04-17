@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
-import com.kakao.jPanda.jst.domain.TradeListDto;
+import com.kakao.jPanda.jst.domain.TradeDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -53,13 +53,13 @@ public class TradeController {
 	 * @return trade페이지 url 매핑
 	 */
 	@GetMapping("/")
-	public String tradeList(HttpSession session, Model model) {
+	public String statList(HttpSession session, Model model) {
 		if (session.getAttribute("memberId") == null) {
 			return "redirect:/trade/loginForm";
 		}
 		String memberId = (String)session.getAttribute("memberId");
-		log.info("trade id check : " + memberId);
-		List<StatDto> statList = tradeService.getStatList(memberId);
+		log.info("statList id check : " + memberId);
+		List<StatDto> statList = tradeService.findStatListByMemberId(memberId);
 		model.addAttribute("statList", statList);
 		return "trade/trade";
 	}
@@ -82,57 +82,57 @@ public class TradeController {
 	 * @param status
 	 * @return 
 	 */
-	@PostMapping("/list")
+	@GetMapping("/trade-list/{listType}")
 	@ResponseBody
-	public List<?> tradeSave(HttpSession session, Model model, @RequestBody TradeListDto tradeListDto) {
+	public List<?> tradeList(HttpSession session, Model model, @PathVariable String listType) {
 		List<?> list = null;
 		String memberId = (String)session.getAttribute("memberId");
-		log.info("tradeSell id check : " + memberId);
-		log.info("TradeController tradeList status listDto.getListType() : " + tradeListDto.getListType());
-		list = tradeService.getTradeList(memberId, tradeListDto);
+		log.info("tradeList id check : " + memberId);
+		log.info("tradeList listType : " + listType);
+		list = tradeService.findTradeListByMemberId(memberId, listType);
 		
 		return list;
 	}
 	
 	@PutMapping("/talent/status/{talentNo}")
 	@ResponseBody
-	public String tradeEndSell(@PathVariable String talentNo) {
-		log.info("talentNo : " + talentNo);
-		int result = tradeService.endSell(talentNo);
+	public String tradeStatusModifyByTalentNo(@PathVariable String talentNo) {
+		log.info("tradeModifyStatusByTalentNo talentNo : " + talentNo);
+		int result = tradeService.modifyTalentStatusByTalentNo(talentNo);
 		
 		if (result > 0) {
-			return "success endSell talentNo : " + talentNo;
+			return "판매 종료 요청이 완료되었습니다.";
 		} else {
-			return "fail endSell talentNo : " + talentNo;
+			return "판매 종료 요청에 실패하였습니다.";
 		}
 		
 	}
 	
-	@DeleteMapping("/refund/{purchaseNo}")
+	@DeleteMapping("/refund/{refundPurchaseNo}")
 	@ResponseBody
-	public String tradeCancleRefund(@PathVariable String purchaseNo) {
-		log.info("purchaseNo : " + purchaseNo);
-		int result = tradeService.cancleRefund(purchaseNo);
+	public String refundRemoveByrefundPurchaseNo(@PathVariable String refundPurchaseNo) {
+		log.info("refundRemoveByrefundPurchaseNo purchaseNo : " + refundPurchaseNo);
+		int result = tradeService.removeRefundByrefundPurchaseNo(refundPurchaseNo);
 		
 		if (result > 0) {
-			return "success cancleRefund purchaseNo : " + purchaseNo;
+			return "환불 취소 요청이 완료되었습니다.";
 		} else {
-			return "fail cancleRefund purchaseNo : " + purchaseNo;
+			return "환불 취소 요청에 실패하였습니다.";
 		}
 	}
 	
 	@PostMapping("/exchange/{talentNo}")
 	@ResponseBody
-	public String tradeSubmitExchange(@PathVariable String talentNo) {
-		log.info("purchaseNo : " + talentNo);
-		TalentDto talentDto = tradeService.getTalentByTalentNo(talentNo);
+	public String exchangeAddByTalentNo(@PathVariable String talentNo) {
+		log.info("exchangeAddByTalentNo purchaseNo : " + talentNo);
+		TalentDto talentDto = tradeService.findTalentByTalentNo(talentNo);
 		
 		if ( talentDto != null) {
-			int submitResult = tradeService.submitExchange(talentDto);
+			int submitResult = tradeService.addExchangeByTalentNo(talentDto);
 			if (submitResult > 0) {
-				return "success submitResult : " + submitResult;
+				return "환전 신청이 완료되었습니다.";
 			} else {
-				return "fail submitResult : " + submitResult;
+				return "환전 신청에 실패하였습니다.";
 			}
 			
 		} else {
@@ -142,12 +142,16 @@ public class TradeController {
 	
 	@PostMapping("/refund")
 	@ResponseBody
-	public String tradeTalentRefund(HttpSession session, @RequestBody TradeListDto tradeListDto) {
-		tradeListDto.setBuyerId((String)session.getAttribute("memberId"));
-		log.info("tradeTalentRefund talentNo, buyerId : " + tradeListDto.getTalentNo() + ", " + tradeListDto.getBuyerId() + ", " + tradeListDto.getRefundBamboo());
-		tradeService.submitTalentRefund(tradeListDto);
+	public String refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
+		log.info("refundAdd tradeListDto : " + tradeDto.toString());
+		int result = tradeService.addRefund(session, tradeDto);
 		
-		return "success";
+		if (result > 0) {
+			return "환불 신청이 완료되었습니다.";
+		} else {
+			return "환불 신청에 실패하였습니다.";
+		}
+		
 	}
 	
 	

@@ -139,11 +139,18 @@
 	}
 	
 	.card-text-bamboo{
-		color : yellowgreen;
+		color : rgb(25, 135, 84);
+		font-weight: bold;
 	}
 	
 	.text-center{
 		text-align: center;
+	}
+	
+	.bamboo-icon{
+		width: 25px;
+		height: 25px;
+		
 	}
 	
 	
@@ -177,7 +184,6 @@
 		</div> <!-- /filter-buttons -->
 			<div class = "content">
 		<!-- content -->
-		
 			<!-- list print -->
 			<div id="list-print">
 			</div> <!-- /list print -->
@@ -192,7 +198,7 @@
 						<div class="modal-body">
 							<input type="hidden" id="refund-talentNo">
 							<input type="hidden" id="refund-refundBamboo">
-							환불 가능 밤부는 <span id="span-refund-refundBamboo"></span> 입니다.<p />
+							환불 가능 밤부 : <span id="span-refund-refundBamboo"></span> <img src="/image/common/bamboo-icon.png" class="bamboo-icon"><p />
 							환불 사유를 선택해 주세요<p />
 							<input type="radio" name="issue" value="단순 변심" checked="checked">단순 변심<br>
 						    <input type="radio" name="issue" value="실수">실수<br>
@@ -270,7 +276,8 @@ $(function() {
  */
 $(document).on("click", ".end-sell-btn", function(){
 	let talentNo = $(this).attr('id');
-	console.log('talentNo : ' + talentNo);
+	console.log('판매종료 talentNo : ' + talentNo);
+	confirm("판매를 종료하시겠습니까?");
 	$.ajax(
 		{
 			type : "PUT",
@@ -278,11 +285,8 @@ $(document).on("click", ".end-sell-btn", function(){
 			contentType: 'application/json',
 			dataType : 'text',
 			success : function(result){
-				if(result === 'success'){
-					confirm("판매를 종료하시겠습니까?");
-					alert("판매가 종료되었습니다.");
-					$(".filter-button[value='sell']").click();
-				}
+				alert(result);
+				$(".filter-button[value='all']").click();
 			},
 			error : function(){
 				alert("end-sell-btn function() error");
@@ -298,6 +302,7 @@ $(document).on("click", ".exchange-btn", function(){
 	let $this = $(this);
 	let talentNo = $this.attr('id');
 	console.log('talentNo : ' + talentNo);
+	confirm('환전을 신청하시겠습니까?');
 	$.ajax(
 		{
 			type : "POST",
@@ -305,9 +310,8 @@ $(document).on("click", ".exchange-btn", function(){
 			contentType: 'application/json',
 			dataType : 'text',
 			success : function(message){
-				console.log(message);
-				alert("환전 신청이 완료되었습니다.");
-				$(".filter-button[value='sell']").click();	
+				alert(message);
+				$(".filter-button[value='all']").click();	
 			},
 			error : function(){
 				alert("exchange-btn function() error");
@@ -320,18 +324,18 @@ $(document).on("click", ".exchange-btn", function(){
  * 환불취소 버튼 Ajax 통신 function
  */
 $(document).on("click", ".refund-cancle-btn", function(){
-	let purchaseNo = $(this).attr('id');
-	console.log('purchaseNo : ' + purchaseNo);
+	let refundPurchaseNo = $(this).attr('id');
+	console.log('refundPurchaseNo : ' + refundPurchaseNo);
+	confirm('환불을 취소하시겠습니까?')
 	$.ajax(
 		{
 			type : "DELETE",
-			url : "/trade/refund/"+ purchaseNo,
+			url : "/trade/refund/"+ refundPurchaseNo,
 			contentType: 'application/json',
 			dataType : 'text',
 			success : function(message){
-				console.log(message);
-				alert("환불이 취소되었습니다.");
-				$(".filter-button[value='refund']").click();
+				alert(message);
+				$(".filter-button[value='all']").click();
 			},
 			error : function(){
 				alert("refund-cancle-btn function() error");
@@ -385,7 +389,7 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
 		    	  }),
 		    contentType: 'application/json',
 		    success: function(result){
-		        alert("환불신청이 완료되었습니다.");
+		        alert(result);
 		        location.reload();
 		    },
 		    error: function(xhr, status, error){
@@ -405,16 +409,16 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
  */
 function getSellList(item){
 	let text =  '<div class = "card text-center sell-card">' + 
-					'<div class = "card-header badge text-bg-primary">' + item.status + '</div>' + 
+					'<div class = "card-header badge text-bg-primary">' + item.talentStatus + '</div>' + 
 					'<div class = "card-body">' +  
 					'<div class = "card-title">' + item.title + '</div><br>' +
-					'<div class = "card-text card-text-bamboo">' + item.saleBamboo + '밤부</div>' +
+					'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>' +
 					'<div class = "card-text">' + item.sellCount + '명이 재능을 구매했어요</div>';
 				
-	if(item.status === '게시중' && item.exchangeStatus === null){
+	if(item.talentStatus === '게시중' && item.exchangeStatus === null){
 		text += '<div class = "card-text">' + 
-				'<button class="end-sell-btn btn btn-success" id="' + item.talentNo + '">판매종료</button></div>';
-	} else if(item.status === '판매종료' && item.exchangeStatus === null){
+				'<button class="end-sell-btn btn btn-dark" id="' + item.talentNo + '">판매종료</button></div>';
+	} else if(item.talentStatus === '판매종료' && item.exchangeStatus === null){
 		text += '<div class = "card-text">' + 
 				'<button class="exchange-btn btn btn-dark" id="' + item.talentNo + '">환전하기</button>' + 
 				'<button class="repost-btn btn btn-dark" id="' + item.talentNo + '">재등록</button></div>';
@@ -432,10 +436,10 @@ function getSellList(item){
 
 function getBuyList(item){
 	let text = '<div class = "card text-center buy-card">' +  
-					'<div class = "card-header badge text-bg-success">' + item.status + '</div>' +
+					'<div class = "card-header badge text-bg-success">' + item.talentStatus + '</div>' +
 					'<div class = "card-body">' + 
 						'<div class = "card-title">' + item.title + '</div><br>' +
-						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + '밤부</div>';
+						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
 				
 	if(item.refundableDate > 7){
 		text += '<div class = "card-text">재능 구매가 확정되었어요</div>';
@@ -446,7 +450,7 @@ function getBuyList(item){
 					'data-refund-talentno = ' + item.talentNo + 
 					' data-refund-salebamboo = ' + item.saleBamboo + 
 					'>환불신청</button></div>';
-	} else if(item.refundableDate === 7){
+	} else if(item.refundableDate == 7){
 		text += '<div class = "card-text"> 환불가능 마지막 날입니다!</div>' + 
 				'<div class = "card-text">'+ 
 				'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
@@ -467,17 +471,17 @@ function getRefundList(item){
 					'<div class = "card-header badge text-bg-danger">' + item.refundStatus + '</div>' +
 					'<div class = "card-body">' +
 						'<div class = "card-title">' + item.title + '</div>' +
-						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + '밤부</div>';
+						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
 			
 	if(item.refundStatus === '검토중'){
-		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="' + item.purchaseNo + '">신청취소</button> </div>' +
-				'</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.submitDate + '</div></div>'; 
+		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="' + item.refundPurchaseNo + '">신청취소</button> </div>' +
+				'</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.refundSubmitDate + '</div></div>'; 
 			 
 			'</div>';
 	} else if(item.refundStatus === '환불완료'){
-		text += '</div><div class = "card-footer text-muted">승인날짜 : ' + item.approveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">승인날짜 : ' + item.refundApproveDate + '</div></div>';
 	} else if(item.refundStatus === '반려'){
-		text += '</div><div class = "card-footer text-muted">반려날짜 : ' + item.approveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">반려날짜 : ' + item.refundApproveDate + '</div></div>';
 	} else{
 		text += '</div></div>';
 	}
@@ -490,11 +494,8 @@ $('.filter-button').on("click", function(){
 	console.log(status);
 	$.ajax(
 			{
-				type : "post",
-				url : "/trade/list",
-				contentType: 'application/json',
-				dataType : "Json",
-				data : JSON.stringify({'listType' : listType }),
+				type : "GET",
+				url : "/trade/trade-list/" + listType,
 				success : function(list){
 					$('#list-print').empty();
 					$.each(list, function(index, item){

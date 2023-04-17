@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
-import com.kakao.jPanda.jst.domain.TradeListDto;
+import com.kakao.jPanda.jst.domain.TradeDto;
 
 public interface TradeDao {
 
@@ -19,22 +19,22 @@ public interface TradeDao {
 //	
 	
 
-	List<TradeListDto> getTradeList(Map<String, Object> paraMap);
+	List<TradeDto> selectTradeListByParaMap(Map<String, Object> paraMap);
 
-	int updateTalentStatus(String talentNo);
+	int updateTalentStatusByTalentNo(String talentNo);
 
-	int deleteRefund(String purchaseNo);
+	int deleteRefundByrefundPurchaseNo(String purchaseNo);
 
-	TalentDto selectTalent(String talentNo);
+	TalentDto selectTalentByTalentNo(String talentNo);
 
-	int insertExchange(TalentDto talentDto);
+	int insertExchangeByTalentNo(TalentDto talentDto);
 	
-	StatDto selectSellStat(String memberId);
+	StatDto selectSellStatByMemberId(String memberId);
 	
-	StatDto selectBuyStat(String memberId);
+	StatDto selectBuyStatByMemberId(String memberId);
 	
-	StatDto selectRefundStat(String memberId);
+	StatDto selectRefundStatByMemberId(String memberId);
 
-	void insertTalentRefund(TradeListDto tradeListDto);
+	int insertTalentRefund(TradeDto tradeDto);
 
 }

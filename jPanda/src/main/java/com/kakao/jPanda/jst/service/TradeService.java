@@ -2,32 +2,37 @@ package com.kakao.jPanda.jst.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
-import com.kakao.jPanda.jst.domain.TradeListDto;
+import com.kakao.jPanda.jst.domain.TradeDto;
 
 public interface TradeService {
 	
-//	List<SellListDto> getSellList(String memberId);
-//	
-//	List<BuyListDto> getBuyList(String memberId);
-//	
-//	List<RefundListDto> getRefundList(String memberId);
-//	
-//	List<TradeListDto> getAllList(String memberId);
-//	
-	List<StatDto> getStatList(String memberId);
+	List<StatDto> findStatListByMemberId(String memberId);
 
-	List<TradeListDto> getTradeList(String memberId, TradeListDto tradeListDto);
+	List<TradeDto> findTradeListByMemberId(String memberId, String tradeDto);
 
-	int endSell(String talentNo);
+	int modifyTalentStatusByTalentNo(String talentNo);
 
-	int cancleRefund(String purchaseNo);
+	int removeRefundByrefundPurchaseNo(String refundPurchaseNo);
 
-	TalentDto getTalentByTalentNo(String talentNo);
+	TalentDto findTalentByTalentNo(String talentNo);
 
-	int submitExchange(TalentDto talentDto);
+	int addExchangeByTalentNo(TalentDto talentDto);
 
-	void submitTalentRefund(TradeListDto tradeListDto);
+	int addRefund(HttpSession session ,TradeDto tradeDto);
 
 }
+
+//이전 코드
+
+//List<SellListDto> getSellList(String memberId);
+//
+//List<BuyListDto> getBuyList(String memberId);
+//
+//List<RefundListDto> getRefundList(String memberId);
+//
+//List<TradeListDto> getAllList(String memberId);
+//

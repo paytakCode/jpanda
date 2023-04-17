@@ -8,7 +8,7 @@
   	<!-- typeAliases -->
   	<typeAliases>
   		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>
-  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeListDto" alias="TradeListDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.TalentDto" alias="TalentDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeDto" alias="TradeDto"/>
 	</typeAliases>
 </configuration>
