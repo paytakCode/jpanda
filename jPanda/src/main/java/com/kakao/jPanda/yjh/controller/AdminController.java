@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kakao.jPanda.yjh.domain.Coupon;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping(value = "/admin")
 public class AdminController {
 	private final NoticeService noticeService;
 	private final ExchangeService exchangeService;
@@ -38,18 +40,18 @@ public class AdminController {
 	}
 	
 	@PostMapping(value = "/notice")
-	public String insertNotice(Notice notice) {
-		System.out.println("=====notice controller insertNotice() start=====");
-		noticeService.insertNotice(notice);
-		System.out.println("=====notice controller insertNotice() end=====");
+	public String noticeAdd(Notice notice) {
+		System.out.println("=====notice controller noticeAdd() start=====");
+		noticeService.addNotice(notice);
+		System.out.println("=====notice controller noticeAdd() end=====");
 		
-		return "redirect:/";
+		return "redirect:/admin/";
 	}
 	
 	@GetMapping(value = "/exchange")
-	public String getExchangeList(Exchange exchange, Model model) {
-		System.out.println("===== ExchangeController getExchangeList start =====");
-		List<Exchange> exList = exchangeService.exchangedList(exchange);
+	public String exchangeListByStatus(Exchange exchange, Model model) {
+		System.out.println("===== ExchangeController exchangeList() start =====");
+		List<Exchange> exList = exchangeService.findExchangeByStatus(exchange);
 		
 		model.addAttribute("exList", exList);
 				
@@ -77,7 +79,7 @@ public class AdminController {
 		if(longExn != null) {
 			exchangeService.exchangedUpdate(listExn);
 		}
-			return "redirect:/";
+			return "redirect:/admin/";
 	}
 	
 	@PutMapping(value = "/exchange/companion")
@@ -98,7 +100,7 @@ public class AdminController {
 		
 		exchangeService.exchangedUpdateToCompanion(longListExhangeNo);
 		
-		return "redirect:/";
+		return "redirect:/admin/";
 	}
 	
 	@GetMapping(value = "/coupons")
@@ -131,6 +133,7 @@ public class AdminController {
 		
 		couponService.insertCouponData(coupon);
 		
-		return "redirect:/";
+		return "redirect:/admin/";
 	}
-}
+	
+}	

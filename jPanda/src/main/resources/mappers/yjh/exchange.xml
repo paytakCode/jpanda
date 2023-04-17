@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kakao.jPanda.yjh.ExchangeMapper">
-	<select id="ExchangedList" parameterType="Exchange" resultType="Exchange">
+	<select id="selectExchangeByStatus" parameterType="Exchange" resultType="Exchange">
 		select exchange_No, talent_No, id, submit_Date, total, status
 		from exchange
 		where status = '검토중'

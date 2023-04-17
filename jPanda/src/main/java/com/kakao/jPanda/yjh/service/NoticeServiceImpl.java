@@ -13,8 +13,8 @@ public class NoticeServiceImpl implements NoticeService {
 	private final NoticeDao noticeDao;
 	
 	@Override
-	public void insertNotice(Notice notice) {
-		System.out.println("=====notice service insertNotice() start=====");
+	public void addNotice(Notice notice) {
+		System.out.println("===== NoticeService addNotice() start =====");
 		noticeDao.insertNotice(notice);
 
 	}

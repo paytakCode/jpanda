@@ -15,9 +15,9 @@ public class ExchangeServiceImpl implements ExchangeService {
 	private final ExchangeDao exchangeDao;
 
 	@Override
-	public List<Exchange> exchangedList(Exchange exchange) {
+	public List<Exchange> findExchangeByStatus(Exchange exchange) {
 		System.out.println("===== Exchage Service exchangedList() start =====");
-		List<Exchange> exList = exchangeDao.exchangedList(exchange);
+		List<Exchange> exList = exchangeDao.selectExchangeByStatus(exchange);
 		return exList;
 	}
 

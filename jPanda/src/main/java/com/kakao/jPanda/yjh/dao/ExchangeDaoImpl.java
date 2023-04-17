@@ -12,11 +12,11 @@ public class ExchangeDaoImpl implements ExchangeDao {
 	private final SqlSession sqlSession;
 	
 	@Override
-	public List<Exchange> exchangedList(Exchange exchange) {
+	public List<Exchange> selectExchangeByStatus(Exchange exchange) {
 		System.out.println("===== Exchange repository exchangedList start =====");
 		List<Exchange> exList = null;
 		try {
-			exList = sqlSession.selectList("ExchangedList", exchange);
+			exList = sqlSession.selectList("selectExchangeByStatus", exchange);
 		} catch(Exception e) {
 			System.out.println("Exchange repository exchangedList exception : "+e.getMessage());
 			e.printStackTrace();

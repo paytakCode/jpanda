@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kakao.jPanda.yjh.NoticeMapper">
-	<insert id="noticeInsert" parameterType="Notice">
+	<insert id="insertNotice" parameterType="Notice">
 		insert 
 		into notice
 		values (#{noticeNo}, #{title}, #{content}, #{regDate})

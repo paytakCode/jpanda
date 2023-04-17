@@ -14,8 +14,8 @@ public class NoticeDaoImpl implements NoticeDao {
 	
 	@Override
 	public void insertNotice(Notice notice) {
-		System.out.println("=====notice repository insertNorice() start=====");
-		sqlSession.insert("noticeInsert", notice);
+		System.out.println("===== NoticeRepository insertNorice() start =====");
+		sqlSession.insert("insertNotice", notice);
 	}
 
 }

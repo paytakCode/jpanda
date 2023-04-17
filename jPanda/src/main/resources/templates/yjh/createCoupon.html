@@ -7,9 +7,9 @@
 <link th:href="@{/css/board.css}" rel="stylesheet"/>
 </head>
 <body>
-	<form action="/coupons" method="post">
+	<form action="/admin/coupons" method="post">
 		<input type="text" th:name="couponNo" th:value="${couponNo}">
-		<input type="submit" value="생성하기" onclick="javascript: form.action='/coupons/coupons-id'"><p>
+		<input type="submit" value="생성하기" formaction="/admin/coupons/coupons-id"><p>
 		<select  th:name="couponValue">
 			<option>-- 쿠폰 값을 선택해주세요 --</option>
 			<option th:value="1000">1,000원</option>
