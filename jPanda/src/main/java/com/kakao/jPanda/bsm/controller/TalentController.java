@@ -34,8 +34,8 @@ public class TalentController {
 	
 	// 재능 등록 페이지 이동
 	@GetMapping("/talent")
-	public String talentFrom(Model model) {
-		List<Category> categoryList = service.categoryList();
+	public String talentForm(Model model) {
+		List<Category> categoryList = service.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		
 		return "bsm/talentFrom";
@@ -43,15 +43,15 @@ public class TalentController {
 	
 	// 재능 DB Insert
 	@PostMapping("/talent")
-	public String talentWrite(Talent talent, Model model) {
-		service.talentWrite(talent);
+	public String talentAdd(Talent talent) {
+		service.talentAdd(talent);
 		return "bsm/talentTest";
 	}
 	
 	// 재능 수정 Update
 	@PutMapping("/talent")
-	public String talentUpdate(Talent talent) {
-		service.talentUpdate(talent);
+	public String talentModify(Talent talent) {
+		service.talentModify(talent);
 		return "bsm/talentTest";
 	}
 	
@@ -78,7 +78,7 @@ public class TalentController {
 		// dto 새로 만들 것
 		System.out.println(talentNo);
 		Talent talent = service.getTalent(talentNo);
-		List<Category> categoryList = service.categoryList();
+		List<Category> categoryList = service.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("talent", talent);
 		return "bsm/talentUpdate";

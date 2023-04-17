@@ -1,7 +1,6 @@
 package com.kakao.jPanda.bsm.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,15 +23,15 @@ public class TalentServiceImpl implements TalentService{
 	private final TalentDao dao;
 	
 	@Override
-	public List<Category> categoryList() {
-		List<Category> categoryList = dao.categoryList();
+	public List<Category> findCategorys() {
+		List<Category> categoryList = dao.selectCategorys();
 		System.out.println("TalentDao.categoryList() categoryList.size() -> " + categoryList.size());
 		return categoryList;
 	}
 	
 	@Override
-	public void talentWrite(Talent talent) {
-		dao.talentWrite(talent);
+	public void talentAdd(Talent talent) {
+		dao.talentAdd(talent);
 	}
 	
 	@Override
@@ -102,11 +101,6 @@ public class TalentServiceImpl implements TalentService{
 	
 	@Override
 	public ModelAndView mainImageUpload(MultipartFile file, HttpServletRequest request) {
-		 // 이미지 업로드시 10mb이하 크기만 업로드 가능
-        long maxFileSize = 10 * 1024 * 1024; // 10mb
-        if (file.getSize() > maxFileSize) {
-            return null;
-        }
         
         ModelAndView mav = new ModelAndView("jsonView");
 
@@ -164,8 +158,8 @@ public class TalentServiceImpl implements TalentService{
 	}
 
 	@Override
-	public void talentUpdate(Talent talent) {
-		dao.talentUpdate(talent);
+	public void talentModify(Talent talent) {
+		dao.talentModify(talent);
 		
 	}
 	

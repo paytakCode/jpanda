@@ -7,9 +7,9 @@ import com.kakao.jPanda.bsm.domain.Talent;
 
 public interface TalentDao {
 
-	List<Category> 	categoryList();
-	void		 	talentWrite(Talent talent);
-	Talent getTalent(Long talentNo);
-	void talentUpdate(Talent talent);
+	List<Category> 	selectCategorys();
+	void		 	talentAdd(Talent talent);
+	Talent 			getTalent(Long talentNo);
+	void 			talentModify(Talent talent);
 
 }

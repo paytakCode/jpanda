@@ -73,12 +73,12 @@ form {
 	text-align: center;
 }
 table {
-  border : 1px solid black;
+  border : 1px solid #EAEAEA;
 }
 
 #side {
   position: fixed;
-  top: 50px; /* 원하는 만큼 조절 가능 */
+  top: 200px;
   left: 50px;
 }
 
@@ -96,34 +96,31 @@ table {
 <body>
 	<div id="side">
 		<table id="writeCheck">
-			<tr><td>카테고리</td><td>체크 이미지<img id="categoryChk" width="20" height="20" src=""></td>
-			<tr><td>대표 이미지</td><td>체크 이미지<img id="mainImgChk" width="20" height="20" src=""></td>
-			<tr><td>제목</td><td>체크 이미지<img id="titleChk" width="20" height="20" src=""></td>
-			<tr><td>강의 소개</td><td>체크 이미지<img id="contentChk" width="20" height="20" src=""></td>
-			<tr><td>가격</td><td>체크 이미지<img id="bambooChk" width="20" height="20" src=""></td>
-			<tr><td>요약 설명</td><td>체크 이미지<img id="summaryChk" width="20" height="20" src=""></td>
-			</tr>
+			<tr onclick="location.href='#category'"><td>카테고리</td><td><img id="category-chk" width="20" height="20" src="/image/white.png"></td></tr>
+			<tr onclick="location.href='#mainImg'"><td>대표 이미지</td><td><img id="main-image-chk" width="20" height="20" src="/image/white.png"></td></tr>
+			<tr onclick="location.href='#title'"><td>제목</td><td><img id="title-chk" width="20" height="20" src="/image/white.png"></td></tr>
+			<tr onclick="location.href='#content'"><td>강의 소개</td><td><img id="content-chk" width="20" height="20" src="/image/white.png"></td></tr>
+			<tr onclick="location.href='#bamboo'"><td>가격</td><td><img id="price-chk" width="20" height="20" src="/image/white.png"></td></tr>
+			<tr onclick="location.href='#summary'"><td>요약 설명</td><td><img id="summary-chk" width="20" height="20" src="/image/white.png"></td></tr>
 		</table>
 	</div>
-	<script>
 	
-	</script>
 	<div class="container">
 		<form action="/talent" method="post" name="frm" onsubmit="check()">
 		<h1>재능 등록</h1>
 		<hr>
 	<!-- 임시 아이디 설정 PK라 INSERT시 MEMBER 테이블에 ID가 존재해야함 -->
 	<input type="hidden" name="sellerId" value="ftcxbgksj5p">
-	<div class="category write">
+	<div id="category" class="category write">
 		<h4>카테고리</h4>
 		<p>강의하실 분야를 선택해 주세요.</p>
 		
 		<!-- 상위 카테고리 선택 영역 -->
-		<select id="upperCategoryNo" name="upperCategoryNo" onchange="onCategory1Changed()">
+		<select id="upper-category-no" name="upperCategoryNo">
 		</select>
 
 		<!-- 하위 카테고리 선택 영역 -->
-		<select id="lowerCategoryNo" name="lowerCategoryNo">
+		<select id="lower-category-no" name="lowerCategoryNo">
 		</select>
 		<script th:inline="javascript">
 		
@@ -131,14 +128,14 @@ table {
 		  	var categoryList = /*[[${categoryList}]]*/ [];
 		 	// select 요소를 가져온다
 		 	// 상위 카테고리 변수 선언
-		 	var selectElement = $('#upperCategoryNo')[0];
+		 	var selectElement = $('#upper-category-no')[0];
 		  
 		  	// 카테고리 리스트를 순회하면서 option 요소를 동적으로 생성한다
 		  	// categoryList에서 상위 카테고리 값이 없는 카테고리만 상위 카테고리 옵션 추가
 		  	categoryList.forEach(function(category) {
 		    	if(category.upperCategoryNo === null) {
 		    		// 만들어진 <option> 요소를 상위 카테고리에 추가
-		      		$('#upperCategoryNo').append($("<option>")
+		      		$('#upper-category-no').append($("<option>")
 		                     .val(category.categoryNo)
 		                     .text(category.item));
 		    	}
@@ -146,122 +143,138 @@ table {
 		  
 		  	// select 요소에 change 이벤트 리스너를 추가한다
 		  	// 상위 카테고리가 변경되면
-			$('#upperCategoryNo').on("change", function() {
+			$('#upper-category-no').on("change", function() {
 				// 상위 카테고리의 값 category.category_no을 가져온다
 		  		var selectedCategoryNo = parseInt(this.value);
 				// 하위 카테고리 변수 선언
-		    	var category2SelectElement = $('#lowerCategoryNo')[0];
+		    	var category2SelectElement = $('#lower-category-no')[0];
 				// 하위 카테고리 초기화
-		    	$('#lowerCategoryNo').html('');
+		    	$('#lower-category-no').html('');
+	  			$('#category-chk').attr('src', '/image/white.png');
 		    	// categoryList에서 상위 카테고리 값이 선택한 상위 카테고리 값과 같은 카테고리만 하위 카테고리 옵션 추가
 		    	categoryList.forEach(function(category) {
 		      	if (category.upperCategoryNo === selectedCategoryNo) {
 		        	// 만들어진 <option> 요소를 하위 카테고리에 추가
-		        	$('#lowerCategoryNo').append($("<option>")
+		        	$('#lower-category-no').append($("<option>")
 		                     .val(category.categoryNo)
 		                     .text(category.item));
 		      	}
 		   		});
 		  	});
+		 /*  	$('#lowerCategoryNo').on('change', function(){
+		  		if($(this).val() !== null){
+		  			$('#categoryChk').attr('src', '/image/check.png');
+		  		}else {
+		  			$('#categoryChk').attr('src', '/image/white.png');
+		  		}
+		  		
+		  	}); */
 		</script>
 		</div>
-		
-		
-		<div id="mainImgChk" class="mainImg write">
+		<div id="main-image" class="main-img write">
 			<h4>대표 이미지</h4>
 			<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
 			<!-- 이미지를 표시할 img 태그 -->
-				<img id="imagePreview" src="/image/jpandaMainImageLabel.jpg" onclick="$('#chooseFile').click();" width="auto" height="250" />
+				<img id="image-preview" src="/image/jpandaMainImageLabel.jpg" onclick="$('#choose-file').click();" width="auto" height="250" />
 				
 				<!-- 파일 선택을 위한 input 태그 (display:none으로 숨겨줍니다.) -->
-				<input type="file" id="chooseFile" accept="image/*" style="display:none;" />
+				<input type="file" id="choose-file" accept="image/*" style="display:none;" />
 				
 				<!-- 메인 이미지 서버 업로드 경로 -->
-				<input type="hidden" id="mainImg" name="mainImg" >
+				<input type="hidden" id="main-img" name="mainImg" >
 				<script>
 				// 파일 선택 후 미리보기 기능 구현
-				$('#chooseFile').on('change', function() {
+				$('#choose-file').on('change', function() {
 				    var file = this.files[0];
 				    var formData = new FormData();
 				    formData.append('upload', file);
-					var reader = new FileReader();
+				    var reader = new FileReader();
 				    reader.onload = function(e) {
-				    	$('#imagePreview').attr('src', e.target.result);
+				        $('#image-preview').attr('src', e.target.result);
 				    }
 				    reader.readAsDataURL(this.files[0]);
-				    
+
 				    var form = new FormData();
-			        form.append( "upload", $("#chooseFile")[0].files[0] );
-			        
-			         $.ajax({
-			             url : "/mainImage/upload"
-			           , type : "POST"
-			           , processData : false
-			           , contentType : false
-			           , data : form
-			           , dataType: 'json'
-			           , success:function(response) {
-			               console.log(response);
-			               $('#mainImg').val(response.url);
-			           }
-			           ,error: function (jqXHR) 
-			           { 
-			               alert(jqXHR.responseText); 
-			           }
-			       });
-				      
+				    form.append( "upload", $("#choose-file")[0].files[0] );
+				    
+				    $.ajax({
+				        url : "/mainImage/upload"
+				        , type : "POST"
+				        , processData : false
+				        , contentType : false
+				        , data : form
+				        , dataType: 'json'
+				        , success:function(response) {
+				            console.log(response);
+				            $('#main-img').val(response.url);
+				            $('#main-img').trigger('input');
+				        }
+				        ,error: function (jqXHR) 
+				        { 
+				            alert(jqXHR.responseText); 
+				        }
+				    });
 				});
-				
 				</script>
 		</div>
-		<div id="titleChk" class="title write">
+		<div id="title" class="title write">
 			<h4>제목</h4>
 			<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>한글을 30자 이하, 영어는 40자 이하를 권장합니다.</p>
 			<input type="text" id="title" name="title" class="title">
 		</div>
-		<div id ="contentChk" class="content write">
+		<div id ="content" class="content write">
 			<h4>강의 소개</h4>
 			<p>강의에 대한 소개를 작성해주세요.</p>
-				<textarea id ="content" name = "content" class="content"></textarea>
+				<textarea id ="content-area" name = "content" class="content"></textarea>
 				<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
 			<script>		
 			ClassicEditor
-			.create(document.querySelector('#content'), {
+			.create(document.querySelector('#content-area'), {
 				ckfinder: {
 					uploadUrl : '/contentImage/upload'
 				}
 			})
 			.then(editor => {
 				console.log('Editor was initialized');
+				
+				editor.model.document.on('change:data', () => {
+		            if (editor.getData().trim()) {
+		                // 내용이 있는 경우 처리할 작업
+		                $('#content-area').attr('src', '/image/check.png');
+		            } else {
+		                // 내용이 없는 경우 처리할 작업
+		                $('#content-chk').attr('src', '/image/white.png');
+		            }
+		        });
 			})
 			.catch(error => {
 				console.error(error);
 			});
 	</script>
 		</div>
-		<div id="bambooChk" class="bamboo write">
+		<div id="price" class="bamboo write">
 			<h4>가격</h4>
 			<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
 			
-				<h3>정상 밤부</h3>
+				<h3>정상 가격</h3>
 				<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000"><p>밤부</p>
 			
-				<h3>할인 밤부</h3>
-				<input type="number" id="saleBamboo" name="saleBamboo" class="bamboo" placeholder="900"><p>밤부</p>
+				<h3>판매 가격</h3>
+				<input type="number" id="sale-bamboo" name="saleBamboo" class="bamboo" placeholder="900"><p>밤부</p>
 			
 				<h3>할인율</h3>
-				<input type="text" id="discountBamboo" class="bamboo" placeholder="10" readonly><p>%</p>
+				<input type="text" id="discount-bamboo" class="bamboo" placeholder="10" readonly><p>%</p>
 					<script>
 			    	// bamboo와 sale_bamboo 입력값이 변경될 때마다 할인율 계산
 			   		//document.getElementsByName("BAMBOO")[0].addEventListener("input", calculateDiscount);
 			   		$('#bamboo').on("input", calculateDiscount);
 			  		//document.getElementsByName("SALE_BAMBOO")[0].addEventListener("input", calculateDiscount);
-			   		$('#saleBamboo').on("input", calculateDiscount);
+			   		$('#sale-bamboo').on("input", calculateDiscount);
 			  
 					function calculateDiscount() {
 						// 입력된 값 가져오기
 					    var bambooPrice = $('#bamboo').val();
-					    var saleBambooPrice = $('#saleBamboo').val();
+					    var saleBambooPrice = $('#sale-bamboo').val();
 					    
 					    // 할인율 계산
 					    var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
@@ -270,12 +283,12 @@ table {
 					    }
 					    
 					    // 할인율 입력값에 할당
-					    $('#discountBamboo').val(discountPercent);
+					    $('#discount-bamboo').val(discountPercent);
 						}
 					  
 				</script>			
 			</div>
-			<div id="summaryChk" class="summary write">
+			<div id="summary" class="summary write">
 			<h4>요약 설명</h4>
 			<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
 			<input type="text" id="summary" name="summary" class="summary">
@@ -285,19 +298,30 @@ table {
 		
 		<script>
 		$('.write').on('input', function(){
-			var id = $(this).attr("id");
-				var check = '#' + $(this).attr('id');
-			    console.log(check);
-			if($(this).find('input').val() !== '' && $(this).find('input').val() !== null){
+			var check = '#' + $(this).attr('id') + "-chk";
+		    console.log(check);
+			var count = 0;
+			var each = 0;
+			var allFilled = false;
+		    $(this).find('input').each(function() {
+		    	each++;
+		   	 	console.log(each);
+		        if($(this).val() !== '' && $(this).val() !== null) {
+		            count++;
+		        }
+		    });
+		   	 	console.log(count);
+		   	 	console.log(each);
+			if(count === each){
 			    console.log('ififififififiififfifiif');
 				$(check).attr('src', '/image/check.png');
 			}else {
 			    console.log('elseelseelseelseelse');
-				$(check).attr('src', '');
+				$(check).attr('src', '/image/white.png');
 			}
 			
 		});
-</script>
+		</script>
 	</div> <!-- container -->
 </body>
 </html>

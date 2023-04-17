@@ -1,6 +1,5 @@
 package com.kakao.jPanda.bsm.dao;
 
-import static org.hamcrest.CoreMatchers.nullValue;
 
 import java.util.List;
 
@@ -19,19 +18,19 @@ import lombok.RequiredArgsConstructor;
 public class TalentDaoImpl implements TalentDao{
 	private final SqlSession session;
 	@Override
-	public List<Category> categoryList() {
+	public List<Category> selectCategorys() {
 		List<Category> categoryList = null;
 		try {
-			categoryList = session.selectList("CategoryList");
+			categoryList = session.selectList("selectCategorys");
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl categoryList e.getMessage() ->" + e.getMessage());
 		}
 		return categoryList;
 	}
 	@Override
-	public void talentWrite(Talent talent) {
+	public void talentAdd(Talent talent) {
 		try {
-			session.insert("talentWrite", talent);
+			session.insert("talentAdd", talent);
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl talentWrite e.getMessage() ->" + e.getMessage());
 		}
@@ -47,9 +46,9 @@ public class TalentDaoImpl implements TalentDao{
 		return talent;
 	}
 	@Override
-	public void talentUpdate(Talent talent) {
+	public void talentModify(Talent talent) {
 		try {
-			session.update("updateTalent", talent);
+			session.update("talentModify", talent);
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl talentUpdate e.getMessage() ->" + e.getMessage());
 		}
