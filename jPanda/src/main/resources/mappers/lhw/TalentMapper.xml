@@ -47,6 +47,23 @@
 		ORDER BY t.talent_no DESC
 	</select>
 
+	<select id="getLowerCategory" resultType="Category" parameterType="Long">
+		SELECT *
+		FROM category
+		WHERE upper_category_no = #{upperCategoryNo}
+	</select>
+	
+	<select id="realGetAjaxLowerList" resultType="TalentForBoard" parameterType="Long">
+		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		FROM talent t, review r
+		WHERE t.talent_no = r.talent_no
+		AND   status = '게시중'
+		AND   lower_category_no = #{lowerCategoryOne}
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo
+		ORDER BY t.talent_no DESC
+	</select>
+	
 </mapper>
 
 

@@ -19,4 +19,6 @@ public interface TalentDao {
 
 	List<Talent> getUpperCategoryList(Long upperCategoryNo);
 
+	List<TalentForBoard> realGetAjaxLowerList(Long lowerCategoryOne);
+
 }

@@ -1,8 +1,119 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<style type="text/css">
+/* 페이지 전체 레이아웃 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* 공통 스타일 */
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 헤더 */
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+
+/* 메뉴 */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+nav li {
+  margin: 0 10px;
+}
+
+nav a {
+  color: #fff;
+}
+
+/* 게시판 리스트 */
+#list-container {
+  margin: 80px auto;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* 게시글 목록 */
+li {
+  border: 1px solid #ccc;
+  margin: 20px 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: center;
+  flex-basis: 48%;
+}
+
+li:hover {
+  background-color: #f2f2f2;
+}
+
+/* 검색 */
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 사이드바 대분류 카테고리 */
+#top-category {
+  position: absolute;
+  float: left;
+  left: 20px;
+  top: 200px;
+  width: 200px;
+  border: solid 1px;
+  margin-left: 20px;
+}
+
+/* 중분류 카테고리 */
+#lower-category {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+/* 로고 */
+#logo {
+  float: left;
+  width: 200px;
+  border: solid 1px;
+  margin-left: 20px;
+}
+
+/* 공지사항 */
+#notice {
+  margin-bottom: 20px;
+}
+
+</style>
+
     <title>게시판 페이지</title>
-    <link rel="stylesheet" type="text/css" href="/css/board.css">
 </head>
 <body>
     <header>
@@ -12,6 +123,7 @@
                 <input type="text" placeholder="검색어를 입력하세요">
                 <button>검색</button>
             </div>
+            
         <nav>
             <ul>
                 <li><a href="#">판매 등록</a></li>
@@ -24,84 +136,145 @@
         </nav>
     </header>
     
-    <div id="category1">
+    <div id="top-category">
     	<h2>대분류 카테고리</h2>
     	<ul th:each="category : ${getCategoryNo}">	
     		<li th:text="${category.item}" th:onclick="onFilter([[${category.categoryNo}]])"></li>
     	</ul>
     </div>
     
-    <div id="category2">
+    <div id="lower-category">
     	<h2>중분류 카테고리</h2>
-    	<label for="category">카테고리:</label>
-			<select name="category" id="category">
-  				<option value="option1">옵션 1</option>
-  				<option value="option2">옵션 2</option>
-  				<option value="option3">옵션 3</option>
-			</select>
+			<select id="lower-category-list">
+  				<option>==대분류 먼저 선택==</option>
+			</select> <br>
+			
+			<input type="checkbox" id="checkbox1" name="group" value="value1">
+			<label for="checkbox1">최신순</label>
+			
+			<input type="checkbox" id="checkbox2" name="group" value="value2">
+			<label for="checkbox2">인기순</label><br>
+			
+			<input type="checkbox" id="checkbox3" name="group" value="value3">
+			<label for="checkbox3">평점순</label>
+			
+			<input type="checkbox" id="checkbox4" name="group" value="value4">
+			<label for="checkbox4">높은 가격순</label><br>
+			
+			<input type="checkbox" id="checkbox5" name="group" value="value5">
+			<label for="checkbox5">낮은 가격순</label><br>
+			<button onclick="applyChanges()">적용</button>
     </div>
     
-   <div>
-    <h2>공지사항 리스트</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>게시 날짜</th>
-            </tr>
-        </thead>
-        <tbody>
-            	<tr th:each="notice : ${noticeList}">
-                <td th:text="${notice.noticeNo}"></td>
-                <td th:text="${notice.title}"></td>
-                <td th:text="${notice.regDate}"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div id="list-container">
+   	<div class="list">
+   		<h2>공지사항 리스트</h2>
+   		 <ul id="notice-list">
+        	<li th:each="notice : ${noticeList}">
+                <span th:text="${notice.noticeNo}"></span>
+                <span th:text="${notice.title}"></span>
+                <span th:text="${notice.regDate}"></span>
+        	</li>
+         </ul>
+	</div>
      
-     <div>
+     <div class="list">
         <h2>판매 게시판 리스트</h2>
-        <ul id="defalutList">
-            <li th:each="talent : ${talentList}" th:onclick="|location.href='@{TalentView
-            												(talentNo=${talent.talentNo})}'|">
-                이미지: <img th:src="${talent.mainImg}">
-                판매글: <span th:text="${talent.title}"></span>
-                <span th:text="${talent.summary}"></span>
-                <span th:text="${talent.sellerId}"></span>
-                <span th:text="${talent.bamboo}"></span>
-                <span th:text="${talent.saleBamboo}"></span>
-           평균 리뷰:  <span th:text="${talent.bambooScore}"></span>
-                <!-- <span th:text="${talent.bambooScore}"></span> -->
-            </li>
-        </ul>
-    </div>
-    
+        	<ul id="defalut-list">
+            	<li th:each="talent : ${talentList}" th:onclick="|location.href='@{TalentView
+            													(talentNo=${talent.talentNo})}'|">
+               		이미지:	<img th:src="${talent.mainImg}">
+                	제목:		<span th:text="${talent.title}"></span><p>
+                	요약설명:	<span th:text="${talent.summary}"></span><p>
+                	강사:		<span th:text="${talent.sellerId}"></span>
+                	정상 가격:	<span th:text="${talent.bamboo}"></span><p>
+                	판매 가격:	<span th:text="${talent.saleBamboo}"></span><p>
+           		   	평균 별점: <span th:text="${talent.bambooScore}"></span>
+            	</li>
+        	</ul>
+     </div>
+</div>
+
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script>
-	function onFilter(categoryNo){
-		alert("sesdfsefse");
+function onFilter(categoryNo){
+    $.ajax({
+        url:"/Board/getAjaxUpperList",
+        data:{upperCategoryNo : categoryNo},
+        dataType:'json',
+        success:function(data){
+            $('#defalut-list').empty();
+            console.log(data);
+            data.forEach(function(data2){
+                const li = $('<li>').appendTo('#defalut-list');
+                $('<img>').attr('src', data2.mainImg).appendTo(li);
+                $('<span>').addClass('title').text(data2.title).appendTo(li);
+                $('<span>').text(data2.summary).appendTo(li);
+                $('<span>').text(data2.sellerId).appendTo(li);
+                $('<span>').text(data2.bamboo).appendTo(li);
+                $('<span>').text(data2.saleBamboo).appendTo(li);
+                $('<span>').text(data2.bambooScore).appendTo(li);
+                li.click(function() {
+                    location.href = '/Board/TalentView?talentNo=' + data2.talentNo;
+                });
+            });
+        }
+    });
+    
+    $.ajax({
+    	url:"/Board/getAjaxLowerList",
+    	data:{upperCategoryNo : categoryNo},
+    	dataType:'json',
+    	success:function(data3){
+    		console.log(data3);
+    		$('#lower-category-list').empty();
+    		$('#lower-category-list').append($('<option>').text('==중분류 선택=='));
+    		data3.forEach(function(data){
+    			$('#lower-category-list').append($('<option>').val(data.categoryNo).text(data.item));
+    		});
+    	}
+    });
+}
+	$('#lower-category-list').on('change', function() { 
+		var lowerCategoryOnes = $(this).val();
 		$.ajax({
-				url:"/getAjaxUpperList",
-				data:{upperCategoryNo : categoryNo},
-				dataType:'json',
-				success:function(data){
-					$('#defalutList').empty();
-					console.log(data);
-					data.forEach( function(data2){
-						const li = $('#defalutList').append($("<li>"));
-						li.append($("<img>").attr('src', data.mainImg));
-						li.append($("<span>").text(data.title));
-						li.append($("<span>").text(data.summary));
-						li.append($("<span>").text(data.sellerId));
-						li.append($("<span>").text(data.bamboo));
-						li.append($("<span>").text(data.saleBamboo));
-						li.append($("<span>").text(data.bambooScore));
-					});
-				}
+			url:"/Board/getAjaxLowerOnes",
+			data:{lowerCategoryOne : lowerCategoryOnes},
+			dataType:'json',
+			success:function(data){
+	            $('#defalut-list').empty();
+	            console.log(data);
+	            data.forEach(function(data2){
+	                const li = $('<li>').appendTo('#defalut-list');
+	                $('<img>').attr('src', data2.mainImg).appendTo(li);
+	                $('<span>').addClass('title').text(data2.title).appendTo(li);
+	                $('<span>').text(data2.summary).appendTo(li);
+	                $('<span>').text(data2.sellerId).appendTo(li);
+	                $('<span>').text(data2.bamboo).appendTo(li);
+	                $('<span>').text(data2.saleBamboo).appendTo(li);
+	                $('<span>').text(data2.bambooScore).appendTo(li);
+	                li.click(function() {
+	                    location.href = '/Board/TalentView?talentNo=' + data2.talentNo;
+	                });
+	            });
+	        }
 		});
-	} 
-</script>
+	});
+
+const checkboxes = document.querySelectorAll('input[name=group]');
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function() {
+      checkboxes.forEach((c) => {
+        if (c !== this) {
+          c.checked = false;
+        }
+      });
+    });
+  });
+
+  function applyChanges() {
+    // 체크박스가 선택된 상태에서 적용 버튼을 눌렀을 때의 동작
+  }
+</script> 
 </body>
 </html>

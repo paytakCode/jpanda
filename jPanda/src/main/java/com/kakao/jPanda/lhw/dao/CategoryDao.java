@@ -8,4 +8,6 @@ public interface CategoryDao {
 
 	List<Category> getCategory(Long categoryNo);
 
+	List<Category> getLowerCategory(Long upperCategoryNo);
+
 }

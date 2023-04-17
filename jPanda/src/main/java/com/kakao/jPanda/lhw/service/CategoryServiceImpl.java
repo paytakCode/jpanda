@@ -19,4 +19,9 @@ public class CategoryServiceImpl implements CategoryService {
 		return categoryDao.getCategory(categoryNo);
 	}
 
+	@Override
+	public List<Category> getLowerCategory(Long upperCategoryNo) {
+		return categoryDao.getLowerCategory(upperCategoryNo);
+	}
+
 }

@@ -20,4 +20,9 @@ public class CategoryDaoImpl implements CategoryDao {
 		return sqlSession.selectList("getAllCategory", categoryNo);
 	}
 
+	@Override
+	public List<Category> getLowerCategory(Long upperCategoryNo) {
+		return sqlSession.selectList("getLowerCategory", upperCategoryNo);
+	}
+
 }

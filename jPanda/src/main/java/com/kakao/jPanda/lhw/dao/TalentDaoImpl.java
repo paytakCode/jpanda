@@ -43,4 +43,9 @@ public class TalentDaoImpl implements TalentDao {
 	public List<Talent> getUpperCategoryList(Long upperCategoryNo) {
 		return sqlSession.selectList("getUpperCategoryList", upperCategoryNo);
 	}
+
+	@Override
+	public List<TalentForBoard> realGetAjaxLowerList(Long lowerCategoryOne) {
+		return sqlSession.selectList("realGetAjaxLowerList", lowerCategoryOne);
+	}
 }
