@@ -9,5 +9,6 @@
   	<typeAliases>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.Notice" alias="Notice"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.Exchange" alias="Exchange"/>
+  		<typeAlias type="com.kakao.jPanda.yjh.domain.Coupon" alias="Coupon"/>
   	</typeAliases>
 </configuration>

@@ -3,6 +3,8 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.NoticeMapper">
 	<insert id="noticeInsert" parameterType="Notice">
-		insert into notice values(#{noticeNo}, #{title}, #{content}, #{regDate})
+		insert 
+		into notice
+		values (#{noticeNo}, #{title}, #{content}, #{regDate})
 	</insert>
 </mapper>

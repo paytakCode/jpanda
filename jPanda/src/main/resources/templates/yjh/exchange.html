@@ -10,15 +10,12 @@
 		var checkbox = $('.checkbox')
 		for(var i = 0; i < checkbox.length; i++) {
 			if(checkbox[i].checked) {
-				return true
-			} 
-				
-			
+				return true;
+			}
 			
 		}
-		alert("이젠진짜 꺼져")
+		alert("하나 이상의 데이터를 체크해주세요");
 		return false;
-		
 	}
 </script>
 </head>
@@ -46,7 +43,10 @@
             	<td th:text="${exchange.status}"></td>
        		</tr>
 			<tr>
-				<td colspan="7"><input type="submit" value="적용"></td>
+				<td colspan="7">
+					<input type="submit" value="환불 승인">
+					<input type="submit" value="반려" onclick="javascript: form.action='/exchange/companion'">
+				</td>
 			</tr>
 		</table>
 	</form>

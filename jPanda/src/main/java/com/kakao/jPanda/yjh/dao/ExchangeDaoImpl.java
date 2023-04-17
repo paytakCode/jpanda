@@ -1,9 +1,6 @@
 package com.kakao.jPanda.yjh.dao;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import com.kakao.jPanda.yjh.domain.Exchange;
@@ -29,16 +26,18 @@ public class ExchangeDaoImpl implements ExchangeDao {
 	}
 
 	@Override
-	public void exchangedUpdate(Long[] exchangeNo) {
+	public void exchangedUpdate(List<Long> listExn) {
 		System.out.println("===== Exchange repository exchangedUpdate() start =====");
-		
-		List<Long> listExn = new ArrayList<Long>();
-		for(Long a : exchangeNo) {
-			listExn.add(a);
-		}
-		
 		System.out.println(listExn);
 		
 		sqlSession.update("ExchangedUpdate", listExn);
 	}
+
+	@Override
+	public void exchangedUpdateToCompanion(List<Long> longListExhangeNo) {
+		System.out.println("===== Exchange repository exchangeUpdateToCompanion() start =====");
+		
+		sqlSession.update("ExchangeUpdateToCompanion", longListExhangeNo);
+	}
+
 }

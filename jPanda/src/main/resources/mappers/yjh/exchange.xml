@@ -17,4 +17,14 @@
     			#{listExn}
   			</foreach>
 	</update>
+	
+	<update id="ExchangeUpdateToCompanion" parameterType="java.util.List">
+		update exchange
+  		set status = '반려',
+      	approve_date = sysdate
+  		where exchange_No in
+  			<foreach collection="list" item="longListExhangeNo" open="(" close=")" separator=",">
+    			#{longListExhangeNo}
+  			</foreach>
+	</update>
 </mapper>

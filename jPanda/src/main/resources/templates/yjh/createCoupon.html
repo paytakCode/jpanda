@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="/js/jquery.js"></script>
+<link th:href="@{/css/board.css}" rel="stylesheet"/>
+</head>
+<body>
+	<form action="/coupons" method="post">
+		<input type="text" th:name="couponNo" th:value="${couponNo}">
+		<input type="submit" value="생성하기" onclick="javascript: form.action='/coupons/coupons-id'"><p>
+		<select  th:name="couponValue">
+			<option>-- 쿠폰 값을 선택해주세요 --</option>
+			<option th:value="1000">1,000원</option>
+			<option th:value="3000">3,000원</option>
+			<option th:value="5000">5,000원</option>
+			<option th:value="7000">7,000원</option>
+			<option th:value="10000">10,000원</option>
+		</select>
+		<input type="submit" value="적용">
+	</form>
+</body>
+</html>
