@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
+@RequestMapping("/trade")
 public class TradeController {
 	
 	private TradeService tradeService;
@@ -41,7 +43,7 @@ public class TradeController {
 		HttpSession session = request.getSession();
 		log.info("TradeController memberId check : " + memberId);
 		session.setAttribute("memberId", memberId);
-		return "redirect:/trade";
+		return "redirect:/trade/";
 	}
 	
 	/**
@@ -50,10 +52,10 @@ public class TradeController {
 	 * @param model
 	 * @return trade페이지 url 매핑
 	 */
-	@GetMapping("/trade")
-	public String trade(HttpSession session, Model model) {
+	@GetMapping("/")
+	public String tradeList(HttpSession session, Model model) {
 		if (session.getAttribute("memberId") == null) {
-			return "redirect:/";
+			return "redirect:/trade/loginForm";
 		}
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("trade id check : " + memberId);
@@ -66,7 +68,7 @@ public class TradeController {
 	 * @param login정보
 	 * @return login정보수집용 임시 페이지
 	 */
-	@GetMapping("/")
+	@GetMapping("/loginForm")
 	public String loginForm(Model model) {
 		log.info("loginForm called");
 		return "trade/loginForm";
@@ -80,9 +82,9 @@ public class TradeController {
 	 * @param status
 	 * @return 
 	 */
-	@PostMapping("/trade/list")
+	@PostMapping("/list")
 	@ResponseBody
-	public List<?> tradeList(HttpSession session, Model model, @RequestBody TradeListDto tradeListDto) {
+	public List<?> tradeSave(HttpSession session, Model model, @RequestBody TradeListDto tradeListDto) {
 		List<?> list = null;
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("tradeSell id check : " + memberId);
@@ -92,7 +94,7 @@ public class TradeController {
 		return list;
 	}
 	
-	@PutMapping("/trade/talent/status/{talentNo}")
+	@PutMapping("/talent/status/{talentNo}")
 	@ResponseBody
 	public String tradeEndSell(@PathVariable String talentNo) {
 		log.info("talentNo : " + talentNo);
@@ -106,7 +108,7 @@ public class TradeController {
 		
 	}
 	
-	@DeleteMapping("/trade/refund/{purchaseNo}")
+	@DeleteMapping("/refund/{purchaseNo}")
 	@ResponseBody
 	public String tradeCancleRefund(@PathVariable String purchaseNo) {
 		log.info("purchaseNo : " + purchaseNo);
@@ -119,7 +121,7 @@ public class TradeController {
 		}
 	}
 	
-	@PostMapping("/trade/exchange/{talentNo}")
+	@PostMapping("/exchange/{talentNo}")
 	@ResponseBody
 	public String tradeSubmitExchange(@PathVariable String talentNo) {
 		log.info("purchaseNo : " + talentNo);
@@ -138,7 +140,7 @@ public class TradeController {
 		}
 	}
 	
-	@PostMapping("/trade/refund")
+	@PostMapping("/refund")
 	@ResponseBody
 	public String tradeTalentRefund(HttpSession session, @RequestBody TradeListDto tradeListDto) {
 		tradeListDto.setBuyerId((String)session.getAttribute("memberId"));
