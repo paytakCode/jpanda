@@ -97,6 +97,30 @@ public class TradeDaoImpl implements TradeDao{
 		
 	}
 
+	@Override
+	public List<TradeDto> selectTradeSellListByMemberId(String memberId) {
+		log.info("selectTradeSellListByMemberId memberId : " + memberId);
+		List<TradeDto> tradeList = sqlSession.selectList("selectTradeSellListByMemberId", memberId);
+		log.info("selectTradeSellListByMemberId tradeList.size() : " + tradeList.size());
+		return tradeList;
+	}
+
+	@Override
+	public List<TradeDto> selectTradeBuyListByMemberId(String memberId) {
+		log.info("selectTradeBuyListByMemberId memberId : " + memberId);
+		List<TradeDto> tradeList = sqlSession.selectList("selectTradeBuyListByMemberId", memberId);
+		log.info("selectTradeBuyListByMemberId tradeList.size() : " + tradeList.size());
+		return tradeList;
+	}
+
+	@Override
+	public List<TradeDto> selectTradeRefundListByMemberId(String memberId) {
+		log.info("selectTradeRefundListByMemberId memberId : " + memberId);
+		List<TradeDto> tradeList = sqlSession.selectList("selectTradeRefundListByMemberId", memberId);
+		log.info("selectTradeRefundListByMemberId tradeList.size() : " + tradeList.size());
+		return tradeList;
+	}
+
 }//end class
 
 //이전코드

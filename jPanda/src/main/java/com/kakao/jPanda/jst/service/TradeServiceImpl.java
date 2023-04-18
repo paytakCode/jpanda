@@ -1,9 +1,9 @@
 package com.kakao.jPanda.jst.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -50,27 +50,80 @@ public class TradeServiceImpl implements TradeService{
 	
 	@Override
 	public List<TradeDto> findTradeListByMemberId(String memberId, String listType) {
-		Map<String, Object> paraMap = new HashMap<>();
-		TradeDto tradeDto = new TradeDto();
-		tradeDto.setListType(listType);
-		
-		paraMap.put("memberId", memberId);
-		paraMap.put("tradeListDto", tradeDto);
-		
-		List<TradeDto> tradeList = tradeDao.selectTradeListByParaMap(paraMap);
-		
-		tradeList.stream()
-				 .filter(DeduplicationUtils.distinctByKey(e -> e.getTalentNo()))
-				 .forEach(e -> {
-					 if (memberId.equals(e.getBuyerId()) && e.getRefundStatus() == null) {
- 						 e.setListType("buy");
-						 e.setTalentStatus("구매완료");
-					 } else if (memberId.equals(e.getBuyerId()) && e.getRefundStatus() != null) {
-					 	 e.setListType("refund");
-					 } else if (memberId.equals(e.getSellerId())) {
-						 e.setListType("sell");
-					 } 
-				 });
+		List<TradeDto> tradeList = new ArrayList<TradeDto>();
+	
+		switch (listType) {
+			case "sell":
+				tradeList = tradeDao.selectTradeSellListByMemberId(memberId);
+				//리스트 출력을 위한 listType set
+				tradeList.forEach(e -> e.setListType("sell"));
+				break;
+			case "buy":
+				tradeList = tradeDao.selectTradeBuyListByMemberId(memberId);
+				//리스트 출력을 위한 listType set
+				tradeList.forEach(e -> e.setListType("buy"));
+				break;
+				
+			case "refund":
+				tradeList = tradeDao.selectTradeRefundListByMemberId(memberId);
+				//리스트 출력을 위한 listType set
+				tradeList.forEach(e -> e.setListType("refund"));
+				break;
+				
+			case "all":
+				List<TradeDto> tempList = tradeDao.selectTradeSellListByMemberId(memberId);
+				//리스트 출력을 위한 listType set
+				tempList.forEach(e -> e.setListType("sell"));
+				tradeList.addAll(tempList);
+				
+				tempList = tradeDao.selectTradeBuyListByMemberId(memberId);
+				tempList.forEach(e -> e.setListType("buy"));
+				tradeList.addAll(tempList);
+				
+				tempList = tradeDao.selectTradeRefundListByMemberId(memberId);
+				tempList.forEach(e -> e.setListType("refund"));
+				tradeList.addAll(tempList);
+				
+				//RegDate, SubmitDate, PurchaseDate 서로비교, 오름차순 정렬
+				Collections.sort(tradeList, new Comparator<TradeDto>() {
+				    @Override
+				    public int compare(TradeDto o1, TradeDto o2) {
+				        // RegDate 비교
+				        if (o1.getRegDate() != null && o2.getRegDate() != null) {
+				            return o1.getRegDate().compareTo(o2.getRegDate());
+				        } else if (o1.getRegDate() != null) {
+				            return 1;
+				        } else if (o2.getRegDate() != null) {
+				            return -1;
+				        }
+				        
+				        // SubmitDate 비교
+				        if (o1.getRefundSubmitDate() != null && o2.getRefundSubmitDate() != null) {
+				            return o1.getRefundSubmitDate().compareTo(o2.getRefundSubmitDate());
+				        } else if (o1.getRefundSubmitDate() != null) {
+				            return 1;
+				        } else if (o2.getRefundSubmitDate() != null) {
+				            return -1;
+				        }
+				        
+				        // PurchaseDate 비교
+				        if (o1.getPurchaseDate() != null && o2.getPurchaseDate() != null) {
+				            return o1.getPurchaseDate().compareTo(o2.getPurchaseDate());
+				        } else if (o1.getPurchaseDate() != null) {
+				            return 1;
+				        } else if (o2.getPurchaseDate() != null) {
+				            return -1;
+				        }
+				        
+				        // 모든 필드 값이 null 인 경우
+				        return 0;
+				    }
+				});
+
+
+				break;
+
+		}
 		
 		log.info("findTradeListByMemberId tradeList.size() : " + tradeList.size());
 		
@@ -149,7 +202,20 @@ public class TradeServiceImpl implements TradeService{
 
 
 //이전코드
-
+//List<TradeDto> tradeList = tradeDao.selectTradeListByParaMap(paraMap);
+//
+//tradeList.stream()
+//		 .filter(DeduplicationUtils.distinctByKey(e -> e.getTalentNo()))
+//		 .forEach(e -> {
+//			 if (memberId.equals(e.getBuyerId()) && e.getRefundStatus() == null) {
+//					 e.setListType("buy");
+//				 e.setTalentStatus("구매완료");
+//			 } else if (memberId.equals(e.getBuyerId()) && e.getRefundStatus() != null) {
+//			 	 e.setListType("refund");
+//			 } else if (memberId.equals(e.getSellerId())) {
+//				 e.setListType("sell");
+//			 } 
+//		 });
 //@Override
 //public List<SellListDto> getSellList(String memberId) {
 //	return tradeDao.getSellListById(memberId);

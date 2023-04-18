@@ -404,6 +404,11 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
  * 재등록버튼 Ajax 통신
  */
 
+ /**
+ * 환전 재신청 버틴 Ajax 통신
+ *
+ /
+ 
 /**
  * list-print tradeList Ajax 통신
  */
@@ -415,16 +420,30 @@ function getSellList(item){
 					'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>' +
 					'<div class = "card-text">' + item.sellCount + '명이 재능을 구매했어요</div>';
 				
-	if(item.talentStatus === '게시중' && item.exchangeStatus === null){
+	if(item.talentStatus === '게시중' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
 				'<button class="end-sell-btn btn btn-dark" id="' + item.talentNo + '">판매종료</button></div>';
-	} else if(item.talentStatus === '판매종료' && item.exchangeStatus === null){
+	} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
 				'<button class="exchange-btn btn btn-dark" id="' + item.talentNo + '">환전하기</button>' + 
 				'<button class="repost-btn btn btn-dark" id="' + item.talentNo + '">재등록</button></div>';
 	} else if(item.exchangeStatus != null){
-		text += '<div class = "card-text">' + 
-				'환전신청이 완료된 물품입니다.</div>';
+		switch(item.exchangeStatus){
+			case '검토중':
+				text += '<div class = "card-text">' + 
+				'환전심사가 진행중인 물품입니다.</div>';
+				break;
+			case '환전완료':
+				text += '<div class = "card-text">' + 
+				'환전이 완료된 물품입니다.</div>';
+				break;
+			case '반려':
+				text += '<div class = "card-text">' + 
+				'환전 신청이 반려되었습니다.</div>' + 
+				'<button class="re-exchange-btn btn btn-dark" id="' + item.talentNo + '">재신청</button>';
+				break;
+		}
+
 	} else {
 		text += '';
 	}
@@ -439,23 +458,23 @@ function getBuyList(item){
 					'<div class = "card-header badge text-bg-success">' + item.talentStatus + '</div>' +
 					'<div class = "card-body">' + 
 						'<div class = "card-title">' + item.title + '</div><br>' +
-						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
+						'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
 				
-	if(item.refundableDate > 7){
+	if(item.refundableDate < 0){
 		text += '<div class = "card-text">재능 구매가 확정되었어요</div>';
-	} else if(item.refundableDate < 7){
-		text += '<div class = "card-text">환불 가능일이 ' + (7 - item.refundableDate) + '일 남았어요</div>' + 
+	} else if(item.refundableDate > 0){
+		text += '<div class = "card-text">환불 가능일이 ' + item.refundableDate + '일 남았어요</div>' + 
 				'<div class = "card-text">' + 
 					'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
 					'data-refund-talentno = ' + item.talentNo + 
-					' data-refund-salebamboo = ' + item.saleBamboo + 
+					' data-refund-salebamboo = ' + item.useBamboo + 
 					'>환불신청</button></div>';
-	} else if(item.refundableDate == 7){
+	} else if(item.refundableDate == 0){
 		text += '<div class = "card-text"> 환불가능 마지막 날입니다!</div>' + 
 				'<div class = "card-text">'+ 
 				'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
 				'data-refund-talentno = ' + item.talentNo + 
-				' data-refund-salebamboo = ' + item.saleBamboo + 
+				' data-refund-salebamboo = ' + item.useBamboo + 
 				'>환불신청</button></div>'; 
 	} else {
 		text += '';	
@@ -471,7 +490,7 @@ function getRefundList(item){
 					'<div class = "card-header badge text-bg-danger">' + item.refundStatus + '</div>' +
 					'<div class = "card-body">' +
 						'<div class = "card-title">' + item.title + '</div>' +
-						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
+						'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
 			
 	if(item.refundStatus === '검토중'){
 		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="' + item.refundPurchaseNo + '">신청취소</button> </div>' +

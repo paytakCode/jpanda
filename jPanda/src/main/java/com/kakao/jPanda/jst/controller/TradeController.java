@@ -84,8 +84,8 @@ public class TradeController {
 	 */
 	@GetMapping("/trade-list/{listType}")
 	@ResponseBody
-	public List<?> tradeList(HttpSession session, Model model, @PathVariable String listType) {
-		List<?> list = null;
+	public List<TradeDto> tradeList(HttpSession session, Model model, @PathVariable String listType) {
+		List<TradeDto> list = null;
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("tradeList id check : " + memberId);
 		log.info("tradeList listType : " + listType);

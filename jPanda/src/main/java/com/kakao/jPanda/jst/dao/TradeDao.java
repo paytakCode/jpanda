@@ -37,4 +37,10 @@ public interface TradeDao {
 
 	int insertTalentRefund(TradeDto tradeDto);
 
+	List<TradeDto> selectTradeSellListByMemberId(String memberId);
+
+	List<TradeDto> selectTradeBuyListByMemberId(String memberId);
+
+	List<TradeDto> selectTradeRefundListByMemberId(String memberId);
+
 }
