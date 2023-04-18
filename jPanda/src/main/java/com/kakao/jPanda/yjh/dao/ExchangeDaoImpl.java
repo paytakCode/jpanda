@@ -12,13 +12,13 @@ public class ExchangeDaoImpl implements ExchangeDao {
 	private final SqlSession sqlSession;
 	
 	@Override
-	public List<Exchange> selectExchangeByStatus(Exchange exchange) {
-		System.out.println("===== Exchange repository exchangedList start =====");
+	public List<Exchange> selectExchange() {
+		System.out.println("===== Exchangerepository selectExchangeByStatus() start =====");
 		List<Exchange> exList = null;
 		try {
-			exList = sqlSession.selectList("selectExchangeByStatus", exchange);
+			exList = sqlSession.selectList("selectExchange");
 		} catch(Exception e) {
-			System.out.println("Exchange repository exchangedList exception : "+e.getMessage());
+			System.out.println("Exchangerepository selectExchangeByStatus() exception : "+e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -26,18 +26,51 @@ public class ExchangeDaoImpl implements ExchangeDao {
 	}
 
 	@Override
-	public void exchangedUpdate(List<Long> listExn) {
-		System.out.println("===== Exchange repository exchangedUpdate() start =====");
-		System.out.println(listExn);
+	public Exchange selectExchangeByExchangeNo(Long exchangeNo) {
+		Exchange exchange = null;
 		
-		sqlSession.update("ExchangedUpdate", listExn);
+		try {
+			exchange = sqlSession.selectOne("selectExchangeByExchangeNo", exchangeNo);
+			
+		} catch(Exception e) {
+			System.out.println("ExchangeRepository selectExchangeByExchangeNo Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return exchange;
 	}
 
 	@Override
-	public void exchangedUpdateToCompanion(List<Long> longListExhangeNo) {
-		System.out.println("===== Exchange repository exchangeUpdateToCompanion() start =====");
+	public void updateExchange(Exchange exchange) {
+		sqlSession.update("updateExchange", exchange);
 		
-		sqlSession.update("ExchangeUpdateToCompanion", longListExhangeNo);
 	}
+
+//	@Override
+//	public void updateExchangeByExchangeNos(List<Long> listExchangeNo) {
+//		System.out.println("===== ExchangeRepository updateExchangeByExchangeNos() start =====");
+//		System.out.println(listExchangeNo.toString());
+//		
+//		try {
+//			sqlSession.update("updateExchangeByExchangeNos", listExchangeNo);
+//			
+//		} catch(Exception e) {
+//			System.out.println("Exchangerepository updateExchangeByExchangeNos() exception : "+e.getMessage());
+//			e.printStackTrace();
+//		}
+//		
+//	}
+//
+//	@Override
+//	public void updateExchangeByExchangeNosToCompanion(List<Long> listExchangeNo) {
+//		System.out.println("===== ExchangeRepository updateExchangeByExchangeNosToCompanion() start =====");
+//		try {
+//			sqlSession.update("updateExchangeByExchangeNosToCompanion", listExchangeNo);
+//			
+//		} catch(Exception e) {
+//			System.out.println("Exchangerepository updateExchangeByExchangeNosToCompanion() exception : "+e.getMessage());
+//			e.printStackTrace();
+//		}
+//		
+//	}
 
 }

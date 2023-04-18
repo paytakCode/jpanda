@@ -8,10 +8,10 @@
 </head>
 <body>
 	<form action="/admin/coupons" method="post">
-		<input type="text" th:name="couponNo" th:value="${couponNo}">
-		<input type="submit" value="생성하기" formaction="/admin/coupons/coupons-id"><p>
+		<input type="text" id="couponNo" th:name="couponNo">
+		<input type="button" id="create-coupon" value="생성하기"><p>
 		<select  th:name="couponValue">
-			<option>-- 쿠폰 값을 선택해주세요 --</option>
+			<option disabled="disabled">-- 쿠폰 값을 선택해주세요 --</option>
 			<option th:value="1000">1,000원</option>
 			<option th:value="3000">3,000원</option>
 			<option th:value="5000">5,000원</option>
@@ -20,5 +20,18 @@
 		</select>
 		<input type="submit" value="적용">
 	</form>
+<script type="text/javascript">
+	$("#create-coupon").click(function(){
+		$.ajax({
+			type : "POST",
+			url : "/admin/coupons/coupons-no",
+			dataType : "text",
+			success : function(data) {
+					  console.log(data);
+					  $("#couponNo").val(data);
+			}
+		});
+	});
+</script>
 </body>
 </html>

@@ -21,7 +21,7 @@
 </head>
 <body>
 	<h1>환전 관리</h1>
-	<form action="/exchange" method="post" onsubmit="return chk()">
+	<form action="/admin/exchange" method="post" onsubmit="return chk()">
 	<input type="hidden" name="_method" value="put">
 		<table border="1">
 			<tr>
@@ -44,8 +44,8 @@
        		</tr>
 			<tr>
 				<td colspan="7">
-					<input type="submit" value="환불 승인">
-					<input type="submit" value="반려" onclick="javascript: form.action='/exchange/companion'">
+					<input type="submit" th:name="status" value="환전완료">
+					<input type="submit" th:name="status" value="반려">
 				</td>
 			</tr>
 		</table>

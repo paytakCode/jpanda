@@ -1,8 +1,6 @@
 package com.kakao.jPanda.yjh.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,13 +9,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kakao.jPanda.yjh.domain.Coupon;
 import com.kakao.jPanda.yjh.domain.Exchange;
 import com.kakao.jPanda.yjh.domain.Notice;
+import com.kakao.jPanda.yjh.domain.Talent;
 import com.kakao.jPanda.yjh.service.CouponService;
 import com.kakao.jPanda.yjh.service.ExchangeService;
 import com.kakao.jPanda.yjh.service.NoticeService;
+import com.kakao.jPanda.yjh.service.TalentService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,14 +28,15 @@ public class AdminController {
 	private final NoticeService noticeService;
 	private final ExchangeService exchangeService;
 	private final CouponService couponService;
+	private final TalentService talentService;
 	
-	@GetMapping(value = "/")
+	@GetMapping(value = "")
 	public String home() {
 		return "yjh/home";
 	}
 	
-	@GetMapping(value = "/notice")
-	public String notice() {
+	@GetMapping(value = "/notice-form")
+	public String noticeForm() {
 		return "yjh/notice";
 	}
 	
@@ -45,13 +46,13 @@ public class AdminController {
 		noticeService.addNotice(notice);
 		System.out.println("=====notice controller noticeAdd() end=====");
 		
-		return "redirect:/admin/";
+		return "redirect:/admin";
 	}
 	
 	@GetMapping(value = "/exchange")
-	public String exchangeListByStatus(Exchange exchange, Model model) {
-		System.out.println("===== ExchangeController exchangeList() start =====");
-		List<Exchange> exList = exchangeService.findExchangeByStatus(exchange);
+	public String exchangeList(Model model) {
+		System.out.println("===== ExchangeController exchangeListByStatus() start =====");
+		List<Exchange> exList = exchangeService.findExchange();
 		
 		model.addAttribute("exList", exList);
 				
@@ -59,81 +60,48 @@ public class AdminController {
 	}
 	
 	@PutMapping(value = "/exchange")
-	public String exchangeStatusUpdateToComplete(@RequestParam(name = "exchangeNo") String[] exchangeNo) {
-		System.out.println("===== ExchangeController exchangeUpdateToComplete() start =====");	
-
-		Long[] longExn = new Long[exchangeNo.length];
+	public String exchangeModifyByExchangeNos(@RequestParam(name = "exchangeNo") String[] exchangeNoArray, @RequestParam String status) {
+		System.out.println("===== ExchangeController exchangeUpdateToComplete() start =====");
 		
-		for(int i = 0; i < exchangeNo.length; i++) {
-			longExn[i] = Long.parseLong(exchangeNo[i]);
-			System.out.println(longExn[i]);
-		} 
-		
-		List<Long> listExn = new ArrayList<Long>();
-		
-		for(Long lastExn : longExn) {
-			listExn.add(lastExn);
-			System.out.println(listExn);
+		for(int i = 0; i < exchangeNoArray.length; i++) {
+			System.out.println("exchangeNo"+exchangeNoArray[i].toString());
 		}
+//		exchangeService.modifyExchangeByExchangeNos(exchangeNo, status);
+		exchangeService.modifyExchangeStatusByExchangeNos(exchangeNoArray, status);
 		
-		if(longExn != null) {
-			exchangeService.exchangedUpdate(listExn);
-		}
-			return "redirect:/admin/";
+		return "redirect:/admin";
 	}
 	
-	@PutMapping(value = "/exchange/companion")
-	public String exchangeStatusUpdateToCompanion(@RequestParam(name = "exchangeNo") String[] exchangeNo) {
-		System.out.println("===== ExchangeController exchangeStatusUpdateToCompanion start =====");
-		
-		Long[] longExchangeNo = new Long[exchangeNo.length];
-		
-		for(int i = 0; i < exchangeNo.length; i++) {
-			longExchangeNo[i] =  Long.parseLong(exchangeNo[i]);
-		}
-		
-		List<Long> longListExhangeNo = new ArrayList<Long>();
-		
-		for(Long parameteList : longExchangeNo) {
-			longListExhangeNo.add(parameteList);
-		}
-		
-		exchangeService.exchangedUpdateToCompanion(longListExhangeNo);
-		
-		return "redirect:/admin/";
-	}
-	
-	@GetMapping(value = "/coupons")
-	public String coupons() {
-		System.out.println("Controller coupons() start");
-		
+	@GetMapping(value = "/coupons-form")
+	public String couponsForm() {
+		System.out.println("===== Controller couponsForm() start =====");
 		return "yjh/createCoupon";
 	}
 	
-	@PostMapping(value = "/coupons/coupons-id")
-	public String createCouponId(Model model) {
-		UUID uuid = UUID.randomUUID();
-		String couponNo = uuid.toString().substring(0, 6);
-		System.out.println(couponNo);
-		
-		model.addAttribute("couponNo", couponNo);
-		return "yjh/createCoupon";
+	@ResponseBody
+	@PostMapping(value = "/coupons/coupons-no")
+	public String genetateCouponNo() {
+		System.out.println("===== Controller genetateCouponNo() start =====");
+		return couponService.generateCouponNo();
 	}
 	
+		
 	@PostMapping(value = "/coupons")
-	public String insertCouponData(@RequestParam(name = "couponValue") String couponValue, @RequestParam(name = "couponNo") String couponNo) {
-		System.out.println("===== Controller insertCouponData() start =====");	
-		Long longCouponValue = Long.parseLong(couponValue);
+	public String couponAdd(@RequestParam(name = "couponValue") String couponValue, @RequestParam(name = "couponNo") String couponNo) {
+		System.out.println("===== Controller couponAdd() start =====");	
+		couponService.addCoupon(couponValue, couponNo);
 		
-		Coupon coupon = new Coupon();
-		coupon.setCouponNo(couponNo);
-		coupon.setCouponValue(longCouponValue);
-
-		System.out.println(coupon.toString());
+		return "redirect:/admin";
+	}
+	
+	@GetMapping(value = "/talent")
+	public String talentList(Model model) {
+		System.out.println("===== Controller talentList() start =====");
+		List<Talent> talentList =  talentService.findTalent();
 		
-		couponService.insertCouponData(coupon);
+		model.addAttribute("talentList", talentList);
 		
-		return "redirect:/admin/";
+		return "yjh/talent";
 	}
 	
 }	
