@@ -9,7 +9,19 @@ spring :
     url : jdbc:oracle:thin:@localhost:1521/xe
     username : jpanda
     password : jpanda
- 
+    
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: najungbeen@gmail.com
+    password: skwjdqls12@
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls: # 추가 안하면 SMTPSendFailedException
+            enalble: true
+            required: true  
   #HttpHiddenMethod
   mvc: 
     hiddenmethod:

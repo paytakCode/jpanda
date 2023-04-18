@@ -12,6 +12,5 @@ public interface MemberService {
 	void joinMember(Member member);
 	List<Bank> getBankList();
 	void joinMember(JoinDto memberInfo);
-	
-	
+
 }

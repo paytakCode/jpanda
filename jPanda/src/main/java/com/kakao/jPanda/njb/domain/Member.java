@@ -1,6 +1,6 @@
 package com.kakao.jPanda.njb.domain;
 
-import java.util.Date;
+
 
 import lombok.Data;
 
@@ -13,7 +13,6 @@ public class Member {
 	private String name;
 	private String tel;
 	private String email;
-//	private Date birth;
 	private String gender;
 	private String status;
 	private String grade;

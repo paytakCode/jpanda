@@ -23,4 +23,7 @@
             (id, account, code)
         VALUES (#{id},#{account}, #{code})
     </insert>
+    <select id="checkId" resultType="int" parameterType="JoinDto">
+    SELECT COUNT(*) FROM member WHERE id=#{id}
+	</select>
 </mapper>

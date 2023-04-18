@@ -17,6 +17,10 @@ import lombok.RequiredArgsConstructor;
 	        return "njb/login";
 	    }
 	    
-	    
+	    @GetMapping("/find")
+	    public String find(Model model) {
+	    	System.out.println("find start....");
+	    	return "njb/find";
+	    }
 	}
 

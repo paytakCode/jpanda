@@ -37,4 +37,6 @@ public class MemberServiceImpl implements MemberService {
 		md.insertMember(memberInfo);		
 	}
 
+
+	
 }
