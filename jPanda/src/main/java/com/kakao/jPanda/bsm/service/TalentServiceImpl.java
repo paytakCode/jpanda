@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -20,27 +18,22 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TalentServiceImpl implements TalentService{
-	private final TalentDao dao;
+	private final TalentDao talentDao;
 	
 	@Override
 	public List<Category> findCategorys() {
-		List<Category> categoryList = dao.selectCategorys();
+		List<Category> categoryList = talentDao.selectCategorys();
 		System.out.println("TalentDao.categoryList() categoryList.size() -> " + categoryList.size());
 		return categoryList;
 	}
 	
 	@Override
-	public void talentAdd(Talent talent) {
-		dao.talentAdd(talent);
+	public void addTalent(Talent talent) {
+		talentDao.insertTalent(talent);
 	}
 	
 	@Override
-	public ModelAndView contentImageUpload(MultipartHttpServletRequest request) {
-		// 이미지 업로드시 10mb이하 크기만 업로드 가능
-		long maxFileSize = 10 * 1024 * 1024; // 10mb
-		if (request.getFile("upload").getSize() > maxFileSize) {
-		    return null;
-		}
+	public ModelAndView talentImageUpload(MultipartHttpServletRequest request) {
 		
 		// ckeditor는 이미지 업로드 후 이미지 표시하기 위해 uploaded 와 url을 json 형식으로 받아야 함
 		// modelandview를 사용하여 json 형식으로 보내기위해 모델앤뷰 생성자 매개변수로 jsonView 라고 써줌
@@ -64,7 +57,7 @@ public class TalentServiceImpl implements TalentService{
 		System.out.println("MainController.image() 서버에 저장될 파일 이름 -> " + newFileName);
 
 		// 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
-		String realPath = request.getServletContext().getRealPath("/contentImage/");
+		String realPath = request.getServletContext().getRealPath("/talentImage/");
 		System.out.println("MainController.image() 현재 파일 경로 -> " + realPath);
 
 		// 현재경로/upload/파일명이 저장 경로
@@ -80,7 +73,7 @@ public class TalentServiceImpl implements TalentService{
 		
 		// 브라우저에서 이미지 불러올 때 절대 경로로 불러오면 보안의 위험 있어 상대경로를 쓰거나 이미지 불러오는 jsp 또는 클래스 파일을 만들어 가져오는 식으로 우회해야 함
 		// 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
-		String uploadPath = "./contentImage/" + newFileName; 
+		String uploadPath = "../talentImage/" + newFileName; 
 		System.out.println("MainController.image() 보안을 위한 상대 경로 출력 -> " + uploadPath);
 
 		// 저장 경로로 파일 객체 생성
@@ -100,66 +93,16 @@ public class TalentServiceImpl implements TalentService{
 	}
 	
 	@Override
-	public ModelAndView mainImageUpload(MultipartFile file, HttpServletRequest request) {
-        
-        ModelAndView mav = new ModelAndView("jsonView");
-
-        // 파일의 오리지널 네임
-        String originalFileName = file.getOriginalFilename();
-        
-        // 파일의 확장자 추출
-        String ext = originalFileName.substring(originalFileName.indexOf("."));
-
-        // 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
-        String newFileName = UUID.randomUUID() + ext;
-
-        // 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
-        String realPath = request.getServletContext().getRealPath("/mainImage/");
-        
-        // 해당 파일 경로에 폴더가 없을시 폴더 생성
-     		File fileDirectory = new File(realPath);
-     		if(!fileDirectory.exists()) {
-     			// 신규 폴더(Directory)생성
-     			fileDirectory.mkdirs();
-     		}
-        
-        // 현재경로/upload/파일명이 저장 경로
-        String savePath = realPath + newFileName;
-        System.out.println("Controller.uploadImage() 파일 저장 경로 + 파일 이름 -> " + savePath);
-
-        // 브라우저에서 이미지 불러올 때 절대 경로로 불러오면 보안의 위험 있어 상대경로를 쓰거나 이미지 불러오는 jsp 또는 클래스 파일을 만들어 가져오는 식으로 우회해야 함
-        // 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
-        String uploadPath = "./mainImage/" + newFileName;
-        System.out.println("Controller.uploadImage() 보안을 위한 상대 경로 출력 -> " + uploadPath);
-
-        // 저장 경로로 파일 객체 생성
-        File saveFile = new File(savePath);
-
-        // 파일 업로드
-        try {
-			file.transferTo(saveFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-        // uploaded, url 값을 modelandview를 통해 보냄
-        mav.addObject("uploaded", true); // 업로드 완료
-        mav.addObject("url", uploadPath); // 업로드 파일의 경로 // 일단 절대경로
-
-        return mav;
-	}
-
-	@Override
-	public Talent getTalent(Long talentNo) {
+	public Talent findTalent(Long talentNo) {
 		// dto 새로 만들 것
-		Talent talent = dao.getTalent(talentNo);
+		Talent talent = talentDao.selectTalentBytalentNo(talentNo);
 		
 		return talent;
 	}
 
 	@Override
-	public void talentModify(Talent talent) {
-		dao.talentModify(talent);
+	public void modifyTalent(Talent talent) {
+		talentDao.updateTalent(talent);
 		
 	}
 	

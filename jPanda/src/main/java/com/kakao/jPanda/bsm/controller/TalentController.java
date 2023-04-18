@@ -2,16 +2,13 @@ package com.kakao.jPanda.bsm.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/talent")
 public class TalentController {
 	private final TalentService service;
 	
@@ -33,55 +31,46 @@ public class TalentController {
 	}
 	
 	// 재능 등록 페이지 이동
-	@GetMapping("/talent")
-	public String talentForm(Model model) {
+	@GetMapping("/write-form")
+	public String talenWritetForm(Model model) {
 		List<Category> categoryList = service.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		
-		return "bsm/talentFrom";
+		return "bsm/talentWriteForm";
 	}
 	
 	// 재능 DB Insert
 	@PostMapping("/talent")
 	public String talentAdd(Talent talent) {
-		service.talentAdd(talent);
+		service.addTalent(talent);
 		return "bsm/talentTest";
 	}
 	
 	// 재능 수정 Update
 	@PutMapping("/talent")
 	public String talentModify(Talent talent) {
-		service.talentModify(talent);
+		service.modifyTalent(talent);
 		return "bsm/talentTest";
 	}
 	
 	// 상세정보 이미지 서버 저장 후 상대 경로 반환
-	@PostMapping(value = "/contentImage/upload")
-	public ModelAndView contentImageUpload(MultipartHttpServletRequest request) {
-		ModelAndView modelAndView = service.contentImageUpload(request);
+	@PostMapping("/image-upload")
+	public ModelAndView talentImageUpload(MultipartHttpServletRequest request) {
+		ModelAndView modelAndView = service.talentImageUpload(request);
 		
 		return modelAndView;
 	}
 	
-	// 대표 이미지 서버 저장 후 상대 경로 반환
-	@ResponseBody
-	@PostMapping("/mainImage/upload")
-	public ModelAndView uploadImage(@RequestParam("upload") MultipartFile file, HttpServletRequest request) throws Exception {
-		 ModelAndView modelAndView = service.mainImageUpload(file, request);
-	 	
-		return modelAndView;
-	}
-	
 	// 수정 페이지 이동
-	@GetMapping("/talentUpdate")
+	@GetMapping("/update-form")
 	public String talentUpdateFrom(Long talentNo, Model model) {
 		// dto 새로 만들 것
 		System.out.println(talentNo);
-		Talent talent = service.getTalent(talentNo);
+		Talent talent = service.findTalent(talentNo);
 		List<Category> categoryList = service.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("talent", talent);
-		return "bsm/talentUpdate";
+		return "bsm/talentUpdateForm";
 	}
 	
 }

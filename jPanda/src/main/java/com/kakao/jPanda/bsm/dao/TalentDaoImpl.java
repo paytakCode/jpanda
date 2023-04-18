@@ -23,34 +23,34 @@ public class TalentDaoImpl implements TalentDao{
 		try {
 			categoryList = session.selectList("selectCategorys");
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl categoryList e.getMessage() ->" + e.getMessage());
+			System.out.println("TalentDaoImpl selectCategorys e.getMessage() ->" + e.getMessage());
 		}
 		return categoryList;
 	}
 	@Override
-	public void talentAdd(Talent talent) {
+	public void insertTalent(Talent talent) {
 		try {
-			session.insert("talentAdd", talent);
+			session.insert("insertTalent", talent);
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl talentWrite e.getMessage() ->" + e.getMessage());
+			System.out.println("TalentDaoImpl insertTalent e.getMessage() ->" + e.getMessage());
 		}
 	}
 	@Override
-	public Talent getTalent(Long talentNo) {
+	public Talent selectTalentBytalentNo(Long talentNo) {
 		Talent talent = null;
 		try {
-			talent = session.selectOne("getTalent", talentNo);
+			talent = session.selectOne("selectTalentBytalentNo", talentNo);
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl getTalent e.getMessage() ->" + e.getMessage());
+			System.out.println("TalentDaoImpl selectTalentBytalentNo e.getMessage() ->" + e.getMessage());
 		}
 		return talent;
 	}
 	@Override
-	public void talentModify(Talent talent) {
+	public void updateTalent(Talent talent) {
 		try {
-			session.update("talentModify", talent);
+			session.update("updateTalent", talent);
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl talentUpdate e.getMessage() ->" + e.getMessage());
+			System.out.println("TalentDaoImpl updateTalent e.getMessage() ->" + e.getMessage());
 		}
 		
 	}

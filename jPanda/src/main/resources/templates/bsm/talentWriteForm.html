@@ -1,0 +1,326 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+/* Set font family and size */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+/* Center the form and set its max width */
+form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Set width and margin of the CKEditor */
+.ck.ck-editor {
+  width: 80%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Set height of the CKEditor */
+.ck-editor__editable {
+  height: 500px	;
+}
+
+/* Style the category section */
+.category {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.category h4 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.category p {
+  margin-top: 10px;
+}
+
+/* Style the select elements */
+select {
+  width: 200px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin: 10px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+/* Style the submit button */
+button[type=submit] {
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button[type=submit]:hover {
+  background-color: #0069d9;
+}
+form {
+	text-align: center;
+}
+table {
+  border : 1px solid #EAEAEA;
+}
+
+#side {
+  position: fixed;
+  top: 200px;
+  left: 50px;
+}
+
+.write-check {
+	border: 1px solid #EAEAEA;
+	margin: 20px;
+	padding: 20px;
+}
+</style>
+<script src="/js/jquery.js"></script>
+<!-- CKEditor5 사용 -->
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+	
+</head>
+<body>
+	<div id="side">
+	  	<table id="write-check">
+	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/white.png"></td></tr>
+		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/white.png"></td></tr>
+		    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/white.png"></td></tr>
+		    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/white.png"></td></tr>
+		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/white.png"></td></tr>
+		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/white.png"></td></tr>
+	  	</table>
+	</div>
+
+	<script>
+    $('#write-check tr').on('click', function() {
+    	location.href = $(this).data('href');
+    });
+    
+    function check() {
+   		var isReadyToSubmit = true;
+		var nallArea = '';
+   	  	$('.submit-check').each(function() {
+   	    	if($(this).attr('src') !== '/image/check.png') {
+   	      		isReadyToSubmit = false;
+   	      		if(nallArea !== ''){
+   	      			nallArea += ', ' + $(this).parent().prev().text();
+   	      		}else {
+   	      			nallArea += $(this).parent().prev().text();
+   	      		}
+   	    	}
+   	  	});
+
+   	  	if (!isReadyToSubmit) {
+   	    	alert(NaNarea + '을 작성해주세요.');
+   	  	}
+   	  	return isReadyToSubmit;
+   	}
+	</script>
+	
+	<div class="container">
+		<form action="/talent/talent" method="post" name="frm" onsubmit="return check()">
+		<h1>재능 등록</h1>
+		<hr>
+	<!-- 임시 아이디 설정 PK라 INSERT시 MEMBER 테이블에 ID가 존재해야함 -->
+	<input type="hidden" name="sellerId" value="ftcxbgksj5p">
+	
+	<div id="category" class="category write-check">
+		<h4>카테고리</h4>
+		<p>강의하실 분야를 선택해 주세요.</p>
+		
+		<select id="upper-category-no" name="upperCategoryNo">
+			<option disabled selected>대분류</option>
+		</select>
+
+		<select id="lower-category-no" name="lowerCategoryNo">
+			<option disabled selected>중분류</option>
+		</select>
+	<script th:inline="javascript">
+	  	var categoryList = /*[[${categoryList}]]*/ [];
+	  
+	  	categoryList.forEach(function(category) {
+	    	if(category.upperCategoryNo === null) {
+	      		$('#upper-category-no').append($("<option>").val(category.categoryNo).text(category.item));
+	    	}
+	 	});
+	  
+		$('#upper-category-no').on("change", function() {
+	  		var selectedCategoryNo = parseInt(this.value);
+	    	$('#lower-category-no').html('');
+	    	$('#lower-category-no').append($("<option disabled selected>").text("중분류"));
+	    	$('#category-check').attr('src', '/image/white.png');
+	    	categoryList.forEach(function(category) {
+		      	if (category.upperCategoryNo === selectedCategoryNo) {
+		        	$('#lower-category-no').append($("<option>").val(category.categoryNo).text(category.item));
+		      	}
+	   		});
+	  	});
+	  	
+		$('#lower-category-no').on('change', function(){
+			if($(this).val() === ''){
+				$('#category-check').attr('src', '/image/white.png');
+			}else {
+				$('#category-check').attr('src', '/image/check.png');
+			}
+		})
+	</script>
+	</div>
+	
+	<div id="main-image" class="main-img-value write-check">
+		<h4>대표 이미지</h4>
+		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
+		
+		<img id="main-image-preview" src="/image/jpandaMainImageLabel.jpg" width="auto" height="250" />
+		<input type="file" id="choose-image-file" accept="image/*" style="display:none;" />
+		<input type="hidden" id="main-img-value" name="mainImg" >
+	<script>
+	$('#main-image-preview').on('click', function() {
+		  $('#choose-image-file').click();
+		});
+	
+	// 파일 선택 후 미리보기 기능 구현
+	$('#choose-image-file').on('change', function() {
+	    var file = this.files[0];
+	    var formData = new FormData();
+	    formData.append('upload', file);
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	        $('#main-image-preview').attr('src', e.target.result);
+	    }
+	    reader.readAsDataURL(this.files[0]);
+
+	    var form = new FormData();
+	    form.append( "upload", $("#choose-image-file")[0].files[0]);
+	    
+	    $.ajax({
+	    	url : "/talent/image-upload",
+	        type : "POST",
+	        processData : false,
+	        contentType : false,
+	        data : form,
+	        dataType: 'json',
+	        success:function(data) {
+	        	console.log(data);
+	            $('#main-img-value').val(data.url);
+	            $('#main-img-value').trigger('input');
+	        },
+	        error: function (jqXHR) { 
+	        	alert(jqXHR.responseText); 
+	        }
+	    });
+	});
+	</script>
+	</div>
+	<div id="title" class="title write-check">
+		<h4>제목</h4>
+		<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>한글을 30자 이하, 영어는 40자 이하를 권장합니다.</p>
+		<input type="text" id="title" name="title" class="title">
+	</div>
+	
+	<div id ="content" class="content write-check">
+		<h4>강의 소개</h4>
+		<p>강의에 대한 소개를 작성해주세요.</p>
+		<textarea id ="content-textarea" name = "content" class="content"></textarea>
+		<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
+	<script>		
+	ClassicEditor
+	.create(document.querySelector('#content-textarea'), {
+		ckfinder: {
+			uploadUrl : '/talent/image-upload'
+		}
+	})
+	.then(editor => {
+		console.log('Editor was initialized');
+		
+		editor.model.document.on('change:data', () => {
+            if (editor.getData().trim()) {
+                $('#content-check').attr('src', '/image/check.png');
+            } else {
+                $('#content-check').attr('src', '/image/white.png');
+            }
+        });
+	})
+	.catch(error => {
+		console.error(error);
+	});
+	</script>
+	</div>
+	
+	<div id="price" class="bamboo write-check">
+		<h4>가격</h4>
+		<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
+	<div>
+		<h3>정상 가격</h3>
+		<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000"><p>밤부</p>
+	</div>
+	<div>
+		<h3>판매 가격</h3>
+		<input type="number" id="sale-bamboo" name="saleBamboo" class="bamboo" placeholder="900"><p>밤부</p>
+	</div>
+	<div>
+		<h3>할인율</h3>
+		<input type="text" id="discount-bamboo" class="bamboo" placeholder="10" readonly><p>%</p>
+	</div>	
+	<script>
+  		$('#bamboo').on("input", calculateDiscount);
+  		$('#sale-bamboo').on("input", calculateDiscount);
+ 
+	function calculateDiscount() {
+	    var bambooPrice = $('#bamboo').val();
+	    var saleBambooPrice = $('#sale-bamboo').val();
+	    
+	    var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
+	    if (isNaN(discountPercent) || discountPercent === Infinity) {
+	    	discountPercent = 0;
+	    }
+	    $('#discount-bamboo').val(discountPercent);
+	}
+	</script>			
+	</div>
+	
+	<div id="summary" class="summary write-check">
+		<h4>요약 설명</h4>
+		<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
+		<input type="text" id="summary" name="summary" class="summary">
+	</div>
+		<input type="submit" value="등록하기">
+	</form>
+		
+	<script>
+	$('.write-check').on('input', function(){
+		var check = '#' + $(this).attr('id') + "-check";
+	    console.log(check);
+		var count = 0;
+		var each = 0;
+		var allFilled = false;
+	    $(this).find('input').each(function() {
+	    	each++;
+	        if($(this).val() !== '' && $(this).val() !== null) {
+	            count++;
+	        }
+	    });
+		if(count === each){
+			$(check).attr('src', '/image/check.png');
+		}else {
+			$(check).attr('src', '/image/white.png');
+		}
+		
+	});
+	</script>
+	</div> <!-- container -->
+</body>
+</html>
