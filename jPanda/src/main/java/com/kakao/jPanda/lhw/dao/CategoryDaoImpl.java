@@ -16,13 +16,14 @@ public class CategoryDaoImpl implements CategoryDao {
 	private final SqlSession sqlSession;
 	
 	@Override
-	public List<Category> getCategory(Long categoryNo) {
-		return sqlSession.selectList("getAllCategory", categoryNo);
+	public List<Category> selectUpperCategoryList() {
+		return sqlSession.selectList("selectUpperCategoryList");
 	}
-
+	
 	@Override
-	public List<Category> getLowerCategory(Long upperCategoryNo) {
-		return sqlSession.selectList("getLowerCategory", upperCategoryNo);
+	public List<Category> selectLowerCategoryListByUpperCategoryNo(Long upperCategoryNo) {
+		return sqlSession.selectList("selectLowerCategoryListByUpperCategoryNo", upperCategoryNo);
 	}
 
+	
 }

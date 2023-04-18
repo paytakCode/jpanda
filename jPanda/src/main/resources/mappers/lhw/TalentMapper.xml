@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="talentMapper">
-	<select id="talentList" resultType="TalentForBoard">
+	<select id="selectTalentList" resultType="Talent">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
 		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
 		FROM talent t, review r
@@ -13,30 +13,24 @@
 		ORDER BY t.talent_no DESC
 	</select>
 	
-	<select id="noticeList" resultType="Notice">
+	<select id="selectNoticeList" resultType="Notice">
 		SELECT *
 		FROM notice
 	</select>
-
-	<select id="getAllCategory" resultType="TalentForBoard" parameterType="Long">
-		SELECT talent_no, seller_id, main_img, title, summary, bamboo, sale_bamboo
-		FROM talent 
-		WHERE upper_category_no = #{categoryNo}
-	</select>
 	
-	<select id="getCategoryNo" resultType="Category" >
+	<select id="selectUpperCategoryList" resultType="Category" >
 		SELECT *
 		FROM category
 		WHERE upper_category_no IS null
 	</select>
 	
-	<select id="getTalentView" resultType="Talent" parameterType="Long">
+	<select id="selectTalentByTalentNo" resultType="Talent" parameterType="Long">
 		SELECT *
 		FROM talent
 		WHERE talent_no = #{talentNo}
 	</select>
 	
-	<select id="getUpperCategoryList" resultType="TalentForBoard" parameterType="Long">
+	<select id="selectTalentListByUpperCategoryNo" resultType="Talent" parameterType="Long">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
 		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
 		FROM talent t, review r
@@ -47,13 +41,13 @@
 		ORDER BY t.talent_no DESC
 	</select>
 
-	<select id="getLowerCategory" resultType="Category" parameterType="Long">
+	<select id="selectLowerCategoryListByUpperCategoryNo" resultType="Category" parameterType="Long">
 		SELECT *
 		FROM category
 		WHERE upper_category_no = #{upperCategoryNo}
 	</select>
 	
-	<select id="realGetAjaxLowerList" resultType="TalentForBoard" parameterType="Long">
+	<select id="selectTalentListByLowerCategoryNo" resultType="Talent" parameterType="Long">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
 		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
 		FROM talent t, review r

@@ -5,9 +5,10 @@ import java.util.List;
 import com.kakao.jPanda.lhw.domain.Category;
 
 public interface CategoryDao {
+	
+	List<Category> selectUpperCategoryList();
 
-	List<Category> getCategory(Long categoryNo);
+	List<Category> selectLowerCategoryListByUpperCategoryNo(Long upperCategoryNo);
 
-	List<Category> getLowerCategory(Long upperCategoryNo);
-
+	
 }

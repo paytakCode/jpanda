@@ -3,13 +3,9 @@ package com.kakao.jPanda.lhw.dao;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kakao.jPanda.lhw.domain.Category;
-import com.kakao.jPanda.lhw.domain.Notice;
 import com.kakao.jPanda.lhw.domain.Talent;
-import com.kakao.jPanda.lhw.domain.TalentForBoard;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,32 +16,23 @@ public class TalentDaoImpl implements TalentDao {
 	private final SqlSession sqlSession;
 	
 	@Override
-	public List<TalentForBoard> getTalentList() {
-		return sqlSession.selectList("talentList");
+	public List<Talent> selectTalentList() {
+		return sqlSession.selectList("selectTalentList");
+	}
+	
+	@Override
+	public Talent selectTalentByTalentNo(Long talentNo) {
+		return sqlSession.selectOne("selectTalentByTalentNo", talentNo);
 	}
 
 	@Override
-	public List<Notice> getNoticeList() {
-		return sqlSession.selectList("noticeList");
+	public List<Talent> selectTalentListByUpperCategoryNo(Long upperCategoryNo) {
+		return sqlSession.selectList("selectTalentListByUpperCategoryNo", upperCategoryNo);
 	}
 
 	@Override
-	public List<Category> getCategory() {
-		return sqlSession.selectList("getCategoryNo");
+	public List<Talent> selectTalentListByLowerCategoryNo(Long lowerCategoryNo) {
+		return sqlSession.selectList("selectTalentListByLowerCategoryNo", lowerCategoryNo);
 	}
 
-	@Override
-	public Talent getTalentView(Long talentNo) {
-		return sqlSession.selectOne("getTalentView", talentNo);
-	}
-
-	@Override
-	public List<Talent> getUpperCategoryList(Long upperCategoryNo) {
-		return sqlSession.selectList("getUpperCategoryList", upperCategoryNo);
-	}
-
-	@Override
-	public List<TalentForBoard> realGetAjaxLowerList(Long lowerCategoryOne) {
-		return sqlSession.selectList("realGetAjaxLowerList", lowerCategoryOne);
-	}
 }

@@ -138,15 +138,15 @@ li:hover {
     
     <div id="top-category">
     	<h2>대분류 카테고리</h2>
-    	<ul th:each="category : ${getCategoryNo}">	
-    		<li th:text="${category.item}" th:onclick="onFilter([[${category.categoryNo}]])"></li>
+    	<ul th:each="upperCategory : ${upperCategoryList}">	
+    		<li th:text="${upperCategory.item}" th:onclick="onFilter([[${upperCategory.categoryNo}]])"></li>
     	</ul>
     </div>
     
     <div id="lower-category">
     	<h2>중분류 카테고리</h2>
 			<select id="lower-category-list">
-  				<option>==대분류 먼저 선택==</option>
+  				<option>==대분류를 선택해주세요==</option>
 			</select> <br>
 			
 			<input type="checkbox" id="checkbox1" name="group" value="value1">
@@ -181,8 +181,7 @@ li:hover {
      <div class="list">
         <h2>판매 게시판 리스트</h2>
         	<ul id="defalut-list">
-            	<li th:each="talent : ${talentList}" th:onclick="|location.href='@{TalentView
-            													(talentNo=${talent.talentNo})}'|">
+            	<li th:each="talent : ${talentList}" th:onclick="|location.href='/talent/${talent.talentNo}'|">
                		이미지:	<img th:src="${talent.mainImg}">
                 	제목:		<span th:text="${talent.title}"></span><p>
                 	요약설명:	<span th:text="${talent.summary}"></span><p>
@@ -197,70 +196,79 @@ li:hover {
 
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script>
-function onFilter(categoryNo){
+function onFilter(upperCategoryNo){
     $.ajax({
-        url:"/Board/getAjaxUpperList",
-        data:{upperCategoryNo : categoryNo},
+        url:"/board/update-talent-list-by-upper-category-no",
+        type: 'get',
+        data: { upperCategoryNo: upperCategoryNo},
         dataType:'json',
-        success:function(data){
+        success:function(talentList){
             $('#defalut-list').empty();
-            console.log(data);
-            data.forEach(function(data2){
+            console.log(talentList);
+            talentList.forEach(function(talent){
                 const li = $('<li>').appendTo('#defalut-list');
-                $('<img>').attr('src', data2.mainImg).appendTo(li);
-                $('<span>').addClass('title').text(data2.title).appendTo(li);
-                $('<span>').text(data2.summary).appendTo(li);
-                $('<span>').text(data2.sellerId).appendTo(li);
-                $('<span>').text(data2.bamboo).appendTo(li);
-                $('<span>').text(data2.saleBamboo).appendTo(li);
-                $('<span>').text(data2.bambooScore).appendTo(li);
+                $('<img>').attr('src', talent.mainImg).appendTo(li);
+                $('<span>').addClass('title').text(talent.title).appendTo(li);
+                $('<span>').text(talent.summary).appendTo(li);
+                $('<span>').text(talent.sellerId).appendTo(li);
+                $('<span>').text(talent.bamboo).appendTo(li);
+                $('<span>').text(talent.saleBamboo).appendTo(li);
+                $('<span>').text(talent.bambooScore).appendTo(li);
                 li.click(function() {
-                    location.href = '/Board/TalentView?talentNo=' + data2.talentNo;
+                    location.href = '/talent/' + talent.talentNo;
                 });
             });
         }
     });
     
     $.ajax({
-    	url:"/Board/getAjaxLowerList",
-    	data:{upperCategoryNo : categoryNo},
+    	url:"/board/update-lower-category-list-by-upper-category-no",
+        type: 'get',
+    	data: {upperCategoryNo : upperCategoryNo},
     	dataType:'json',
-    	success:function(data3){
-    		console.log(data3);
+    	success:function(lowerCategoryList){
+    		console.log(lowerCategoryList);
     		$('#lower-category-list').empty();
     		$('#lower-category-list').append($('<option>').text('==중분류 선택=='));
-    		data3.forEach(function(data){
-    			$('#lower-category-list').append($('<option>').val(data.categoryNo).text(data.item));
+    		lowerCategoryList.forEach(function(lowerCategory){
+    			$('#lower-category-list').append($('<option>').val(lowerCategory.categoryNo).text(lowerCategory.item));
     		});
     	}
     });
 }
+
+
+
 	$('#lower-category-list').on('change', function() { 
-		var lowerCategoryOnes = $(this).val();
+		var lowerCategoryNo = $(this).val();
 		$.ajax({
-			url:"/Board/getAjaxLowerOnes",
-			data:{lowerCategoryOne : lowerCategoryOnes},
+			url:"/board/update-talent-list-by-lower-category-no",
+	        type: 'get',
+			data: {lowerCategoryNo : lowerCategoryNo},
 			dataType:'json',
-			success:function(data){
+			success:function(talentList){
 	            $('#defalut-list').empty();
-	            console.log(data);
-	            data.forEach(function(data2){
+	            console.log(talentList);
+	            talentList.forEach(function(talent){
 	                const li = $('<li>').appendTo('#defalut-list');
-	                $('<img>').attr('src', data2.mainImg).appendTo(li);
-	                $('<span>').addClass('title').text(data2.title).appendTo(li);
-	                $('<span>').text(data2.summary).appendTo(li);
-	                $('<span>').text(data2.sellerId).appendTo(li);
-	                $('<span>').text(data2.bamboo).appendTo(li);
-	                $('<span>').text(data2.saleBamboo).appendTo(li);
-	                $('<span>').text(data2.bambooScore).appendTo(li);
+	                $('<img>').attr('src', talent.mainImg).appendTo(li);
+	                $('<span>').addClass('title').text(talent.title).appendTo(li);
+	                $('<span>').text(talent.summary).appendTo(li);
+	                $('<span>').text(talent.sellerId).appendTo(li);
+	                $('<span>').text(talent.bamboo).appendTo(li);
+	                $('<span>').text(talent.saleBamboo).appendTo(li);
+	                $('<span>').text(talent.bambooScore).appendTo(li);
 	                li.click(function() {
-	                    location.href = '/Board/TalentView?talentNo=' + data2.talentNo;
+	                    location.href = '/talent/' + talent.talentNo;
 	                });
 	            });
 	        }
 		});
 	});
 
+	
+	
+	
 const checkboxes = document.querySelectorAll('input[name=group]');
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', function() {

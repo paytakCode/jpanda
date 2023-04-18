@@ -14,14 +14,16 @@ import lombok.RequiredArgsConstructor;
 public class CategoryServiceImpl implements CategoryService {
 	private final CategoryDao categoryDao;
 	
+	// 사이드바 대분류 카테고리 리스트
 	@Override
-	public List<Category> getCategory(Long categoryNo) {
-		return categoryDao.getCategory(categoryNo);
+	public List<Category> findUpperCategoryList() {
+		return categoryDao.selectUpperCategoryList();
+	}
+	
+	@Override
+	public List<Category> findLowerCategoryListByUpperCategoryNo(Long upperCategoryNo) {
+		return categoryDao.selectLowerCategoryListByUpperCategoryNo(upperCategoryNo);
 	}
 
-	@Override
-	public List<Category> getLowerCategory(Long upperCategoryNo) {
-		return categoryDao.getLowerCategory(upperCategoryNo);
-	}
-
+	
 }

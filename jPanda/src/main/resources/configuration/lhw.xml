@@ -9,7 +9,6 @@
   	<typeAliases>
   		<typeAlias alias="Talent" type="com.kakao.jPanda.lhw.domain.Talent"/>
   		<typeAlias alias="Notice" type="com.kakao.jPanda.lhw.domain.Notice"/>
-  		<typeAlias alias="TalentForBoard" type="com.kakao.jPanda.lhw.domain.TalentForBoard"/>
   		<typeAlias alias="Category" type="com.kakao.jPanda.lhw.domain.Category"/>
   	</typeAliases>
 </configuration>

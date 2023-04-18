@@ -6,76 +6,65 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.lhw.domain.Category;
 import com.kakao.jPanda.lhw.domain.Notice;
 import com.kakao.jPanda.lhw.domain.Talent;
-import com.kakao.jPanda.lhw.domain.TalentForBoard;
 import com.kakao.jPanda.lhw.service.CategoryService;
+import com.kakao.jPanda.lhw.service.NoticeService;
 import com.kakao.jPanda.lhw.service.TalentService;
-import com.kakao.jPanda.lhw.service.TalentViewService;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/Board")
+@RequestMapping("/board")
 public class BoardController {
 	
-	private final TalentService boardService;
-	private final TalentViewService talentViewService;
+	private final TalentService talentService;
 	private final CategoryService categoryService;
+	private final NoticeService noticeService;
 	
 	@RequestMapping("/")
-	public String mainTalentBoard(Model model) {
-		System.out.println("Controller TalentBoard Start");
-		List<TalentForBoard> talentList = boardService.getTalentList();
-		List<Notice> noticeList = boardService.getNoticeList();
-		List<Category> upperCategory = boardService.getCategory();
+	public String boardList(Model model) {
+		System.out.println("Controller boardList Start");
+		List<Talent> talentList = talentService.findTalentList();
+		List<Notice> noticeList = noticeService.findNoticeList();
+		List<Category> upperCategoryList = categoryService.findUpperCategoryList();
 		model.addAttribute("talentList", talentList);
 		model.addAttribute("noticeList", noticeList);
-		model.addAttribute("getCategoryNo", upperCategory);
-		return "lhw/TalentBoard";
-	}
-
-	@GetMapping("/TalentView")
-	public String TalentBoardView(Long talentNo, Model model) {
-		System.out.println("Controller TalentBoardView Start");
-		Talent talentView = talentViewService.getTalentView(talentNo);
-		model.addAttribute("getTalentView", talentView);
-		System.out.println(talentView);
-		return "lhw/TalentView";
+		model.addAttribute("upperCategoryList", upperCategoryList);
+		return "lhw/Board";
 	}
 	
 	@ResponseBody
-	@GetMapping("/getAjaxUpperList")
-	public List<Talent> getAjaxUpperList(Long upperCategoryNo) {
-		System.out.println("upperCategoryNo " + upperCategoryNo);
-		System.out.println("Controller getAjaxUpperList Start");
-		List<Talent> getAjaxUpperList = boardService.getUpperCategoryList(upperCategoryNo);
-		System.out.println(" getAjaxUpperList " +  getAjaxUpperList.size());
-		return getAjaxUpperList;
+	@GetMapping("/update-talent-list-by-upper-category-no")
+	public List<Talent> talentListByUpperCategoryNo(Long upperCategoryNo) {
+		System.out.println("Controller talentListByUpperCategoryNo Start");
+		List<Talent> talentList = talentService.findTalentListByUpperCategoryNo(upperCategoryNo);
+		return talentList;
 	}
 	
-	@ResponseBody
-	@GetMapping("/getAjaxLowerList")
-	public List<Category> getAjaxLowerList(Long upperCategoryNo) {
-		System.out.println("Controller getAjaxLowerList Start");
-		List<Category> getAjaxLowerList = categoryService.getLowerCategory(upperCategoryNo);
-		return getAjaxLowerList;
-	}
 	
 	@ResponseBody
-	@GetMapping("/getAjaxLowerOnes")
-	public List<TalentForBoard> realGetAjaxLowerList(Long lowerCategoryOne){
-		System.out.println("Controller realGetAjaxLowerList Start");
-		List<TalentForBoard> realGetAjaxLowerList = boardService.realGetAjaxLowerList(lowerCategoryOne);
-		return realGetAjaxLowerList;
+	@GetMapping("/update-talent-list-by-lower-category-no")
+	public List<Talent> talentListByLowerCategoryNo(Long lowerCategoryNo){
+		System.out.println("Controller talentListByLowerCategoryNo Start");
+		List<Talent> talentList = talentService.findTalentListByLowerCategoryNo(lowerCategoryNo);
+		return talentList;
 	}
+	
+	//중분류 카테고리 리스트
+	@ResponseBody
+	@GetMapping("/update-lower-category-list-by-upper-category-no")
+	public List<Category> lowerCategoryListByUpperCategoryNo(Long upperCategoryNo) {
+		System.out.println("Controller lowerCategoryListByUpperCategoryNo Start");
+		List<Category> lowerCategotyList = categoryService.findLowerCategoryListByUpperCategoryNo(upperCategoryNo);
+		return lowerCategotyList;
+	}
+	
 	
 	
 }
