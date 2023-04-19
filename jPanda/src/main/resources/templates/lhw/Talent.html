@@ -6,7 +6,7 @@
 </head>
 <body>
 	<h1 >판매 게시판 뷰</h1>
-	<div>
+	<!-- <div>
 		
 	</div>
 	<p th:text="${talent.title}">
@@ -14,7 +14,24 @@
 	<p th:text="${talent.sellerId}">
 	<p th:text="${talent.content}">
 	<p th:text="${talent.regDate}">
-	<p th:text="${talent.talentNo}">
+	<p th:text="${talent.talentNo}"> -->
+	
+	
+	<div class="tset-List">
+		<h2>판매 게시판 테스트 리스트</h2>
+			<ul id="test-Defalut-List">
+				<li th:each="talent : ${testTalentList}">
+				번호 : 	<span th:text="${talent.talentNo}"></span><p>
+				이미지: 	<img th:src="${talent.mainImg}">
+				제목: 	<span th:text="${talent.title}"></span><p>			
+				요약설명: 	<span th:text="${talent.summary}"></span><p>			
+				강사: 	<span th:text="${talent.sellerId}"></span>			
+				정상 가격: <span th:text="${talent.bamboo}"></span><p>			
+				판매 가격: <span th:text="${talent.saleBamboo}"></span><p>			
+				평균 별점: <span th:text="${talent.bambooScore}"></span>
+				</li>		
+			</ul>
+	</div>
 	
 </body>
 </html>

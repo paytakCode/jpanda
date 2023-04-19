@@ -11,5 +11,6 @@
   		<typeAlias alias="Notice" type="com.kakao.jPanda.lhw.domain.Notice"/>
   		<typeAlias alias="Category" type="com.kakao.jPanda.lhw.domain.Category"/>
   		<typeAlias alias="Criteria" type="com.kakao.jPanda.lhw.domain.Criteria"/>
+  		<typeAlias alias="TestTalent" type="com.kakao.jPanda.lhw.domain.TestTalent"/>
   	</typeAliases>
 </configuration>

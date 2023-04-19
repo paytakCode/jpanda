@@ -68,6 +68,16 @@
 		WHERE status = '게시중'
 	</select>
 	
+	<select id="selectTestTalentList" resultType="TestTalent">
+		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		FROM talent t, review r
+		WHERE t.talent_no = r.talent_no
+		AND   t.status = '게시중'
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
+		ORDER BY t.talent_no DESC
+	</select>
+	
 </mapper>
 
 
