@@ -275,7 +275,7 @@ $(function() {
  * 판매종료 버튼 Ajax 통신 function
  */
 $(document).on("click", ".end-sell-btn", function(){
-	let talentNo = $(this).attr('id');
+	let talentNo = $(this).attr('id').substr(8);
 	console.log('판매종료 talentNo : ' + talentNo);
 	if(confirm("판매를 종료하시겠습니까?")){
 		$.ajax(
@@ -302,7 +302,7 @@ $(document).on("click", ".end-sell-btn", function(){
  */
 $(document).on("click", ".exchange-btn", function(){
 	let $this = $(this);
-	let talentNo = $this.attr('id');
+	let talentNo = $this.attr('id').substr(8);
 	console.log('talentNo : ' + talentNo);
 	if(confirm('환전을 신청하시겠습니까?')){
 		$.ajax(
@@ -328,7 +328,7 @@ $(document).on("click", ".exchange-btn", function(){
  * 환불취소 버튼 Ajax 통신 function
  */
 $(document).on("click", ".refund-cancle-btn", function(){
-	let refundPurchaseNo = $(this).attr('id');
+	let refundPurchaseNo = $(this).attr('id').substr(10);
 	console.log('refundPurchaseNo : ' + refundPurchaseNo);
 	if(confirm('환불을 취소하시겠습니까?')){
 		$.ajax(
@@ -411,9 +411,31 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
  */
 
  /**
- * 환전 재신청 버틴 Ajax 통신
- *
- /
+ * 환전 재신청 버튼 Ajax 통신
+ */
+ $(document).on("click", ".re-exchange-btn", function(){
+		let $this = $(this);
+		let talentNo = $this.attr('id').substr(8);
+		console.log('talentNo : ' + talentNo);
+		if(confirm('환전을 재신청 하시겠습니까?')){
+			$.ajax(
+					{
+						type : "PUT",
+						url : "/trade/exchanges/"+ talentNo + "/status",
+						dataType : 'text',
+						success : function(message){
+							alert(message);
+							$(".filter-button[value='all']").click();	
+						},
+						error : function(){
+							alert("re-exchange-btn function() error");
+						},
+					}		
+				);	 
+		}
+		
+	});
+
  
 /**
  * list-print tradeList Ajax 통신
@@ -428,11 +450,11 @@ function getSellList(item){
 				
 	if(item.talentStatus === '게시중' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
-				'<button class="end-sell-btn btn btn-dark" id="' + item.talentNo + '">판매종료</button></div>';
+				'<button class="end-sell-btn btn btn-dark" id="sell-no-' + item.talentNo + '">판매종료</button></div>';
 	} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
-				'<button class="exchange-btn btn btn-dark" id="' + item.talentNo + '">환전하기</button>' + 
-				'<button class="repost-btn btn btn-dark" id="' + item.talentNo + '">재등록</button></div>';
+				'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">환전하기</button>' + 
+				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>';
 	} else if(item.exchangeStatus != null){
 		switch(item.exchangeStatus){
 			case '검토중':
@@ -446,7 +468,7 @@ function getSellList(item){
 			case '반려':
 				text += '<div class = "card-text">' + 
 				'환전 신청이 반려되었습니다.</div>' + 
-				'<button class="re-exchange-btn btn btn-dark" id="' + item.talentNo + '">재신청</button>';
+				'<button class="re-exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재신청</button>';
 				break;
 		}
 
@@ -499,7 +521,7 @@ function getRefundList(item){
 						'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
 			
 	if(item.refundStatus === '검토중'){
-		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="' + item.refundPurchaseNo + '">신청취소</button> </div>' +
+		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="refund-no-' + item.refundPurchaseNo + '">신청취소</button> </div>' +
 				'</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.refundSubmitDate + '</div></div>'; 
 			 
 			'</div>';

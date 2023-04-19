@@ -43,4 +43,6 @@ public interface TradeDao {
 
 	List<TradeDto> selectTradeRefundListByMemberId(String memberId);
 
+	int updateExchangeStatusByTalentNo(String talentNo);
+
 }

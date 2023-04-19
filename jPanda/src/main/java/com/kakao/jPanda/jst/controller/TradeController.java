@@ -137,6 +137,15 @@ public class TradeController {
 			return "fail submitExchange talentDto : null";
 		}
 	}
+	
+	@PutMapping("/exchanges/{talent-no}/status")
+	@ResponseBody
+	public String exchangeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
+		log.info("exchangeStatusModifyByTalentNo talentNo : " + talentNo);
+		String resultMessage = tradeService.modifyExchangeStatusByTalentNo(talentNo);
+		log.info(resultMessage);
+		return resultMessage;
+	}
 
 	@PostMapping("/refund")
 	@ResponseBody

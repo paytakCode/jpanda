@@ -24,6 +24,8 @@ public interface TradeService {
 
 	int addRefund(HttpSession session ,TradeDto tradeDto);
 
+	String modifyExchangeStatusByTalentNo(String talentNo);
+
 }
 
 //이전 코드

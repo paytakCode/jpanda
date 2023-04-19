@@ -131,6 +131,12 @@
 		ORDER BY r.submit_date desc
 	</select>
 	
+	<update id="updateExchangeStatusByTalentNo" parameterType="String">
+		UPDATE exchange
+		SET status = '검토중'
+		WHERE talent_no = #{talentNo}
+	</update>
+	
 	
 </mapper>
 

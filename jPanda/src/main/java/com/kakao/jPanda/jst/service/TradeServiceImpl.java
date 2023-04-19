@@ -2,7 +2,6 @@ package com.kakao.jPanda.jst.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -178,6 +177,20 @@ public class TradeServiceImpl implements TradeService{
 		
 		return result; 
 		
+	}
+
+	@Override
+	public String modifyExchangeStatusByTalentNo(String talentNo) {
+		int result = 0;
+		try {
+			result = tradeDao.updateExchangeStatusByTalentNo(talentNo);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+		}
+		if (result > 0) {
+			return "환전등록 재신청에 성공하였습니다.";
+		}
+		return "환전등록 재신청에 실패하였습니다.";
 	}
 
 }//end class
