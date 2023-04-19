@@ -3,14 +3,18 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="talentMapper">
-	<select id="selectTalentList" resultType="Talent">
-		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
-		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
-		FROM talent t, review r
-		WHERE t.talent_no = r.talent_no
-		AND   status = '게시중'
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo
-		ORDER BY t.talent_no DESC
+	<select id="selectTalentListByCriteria" parameterType="Criteria" resultType="Talent">
+	SELECT *
+    FROM (
+        SELECT t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo,
+        t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+        FROM talent t, review r
+        WHERE t.talent_no = r.talent_no 
+        AND t.status = '게시중'
+        GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
+        ORDER BY t.talent_no DESC
+    	) 
+    WHERE ROWNUM BETWEEN #{startPage} AND #{recordsPerPage}
 	</select>
 	
 	<select id="selectNoticeList" resultType="Notice">
@@ -35,9 +39,9 @@
 		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
-		AND   status = '게시중'
+		AND   t.status = '게시중'
 		AND   upper_category_no = #{upperCategoryNo}
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
 		ORDER BY t.talent_no DESC
 	</select>
 
@@ -52,10 +56,16 @@
 		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
-		AND   status = '게시중'
+		AND   t.status = '게시중'
 		AND   lower_category_no = #{lowerCategoryOne}
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
 		ORDER BY t.talent_no DESC
+	</select>
+	
+	<select id="selectTalentTotalCountByCriteria" parameterType="Criteria" resultType="int">
+		SELECT count(*)
+		FROM talent
+		WHERE status = '게시중'
 	</select>
 	
 </mapper>

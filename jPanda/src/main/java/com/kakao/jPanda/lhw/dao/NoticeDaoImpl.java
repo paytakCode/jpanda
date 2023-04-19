@@ -17,6 +17,7 @@ public class NoticeDaoImpl implements NoticeDao {
 	
 	@Override
 	public List<Notice> selectNoticeList() {
-		return sqlSession.selectList("selectNoticeList");
+		List<Notice> list = sqlSession.selectList("selectNoticeList"); 
+		return list;
 	}
 }
