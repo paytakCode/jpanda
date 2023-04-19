@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,7 +29,7 @@ public class TalentController {
 	// Test Main 페이지 이동
 	@GetMapping("/")
 	public String talentTest() {
-		return "bsm/talentTest";
+		return "bsm/talentTestMainpage";
 	}
 	
 	// 재능 등록 페이지 이동
@@ -40,20 +42,21 @@ public class TalentController {
 	}
 	
 	// 재능 DB Insert
+	@ResponseBody
 	@PostMapping("/talent")
 	public String talentAdd(Talent talent) {
-		service.addTalent(talent);
-		return "bsm/talentTest";
+		String result = service.addTalent(talent);
+		return result;
 	}
 	
 	// 재능 수정 Update
 	@PutMapping("/talent")
 	public String talentModify(Talent talent) {
-		service.modifyTalent(talent);
-		return "bsm/talentTest";
+		String result = service.modifyTalent(talent);
+		return result;
 	}
 	
-	// 상세정보 이미지 서버 저장 후 상대 경로 반환
+	// 이미지 서버 저장 후 상대 경로 반환
 	@PostMapping("/image-upload")
 	public ModelAndView talentImageUpload(MultipartHttpServletRequest request) {
 		ModelAndView modelAndView = service.talentImageUpload(request);
@@ -62,8 +65,8 @@ public class TalentController {
 	}
 	
 	// 수정 페이지 이동
-	@GetMapping("/update-form")
-	public String talentUpdateFrom(Long talentNo, Model model) {
+	@GetMapping("/update-form") // /talents/{talentNo}/update-form
+	public String talentUpdateFrom(@RequestParam(name = "talent-no") Long talentNo, Model model) { // @PathVariable
 		// dto 새로 만들 것
 		System.out.println(talentNo);
 		Talent talent = service.findTalent(talentNo);

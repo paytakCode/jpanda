@@ -1,6 +1,8 @@
 package com.kakao.jPanda.bsm.service;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,8 +30,21 @@ public class TalentServiceImpl implements TalentService{
 	}
 	
 	@Override
-	public void addTalent(Talent talent) {
-		talentDao.insertTalent(talent);
+	public String addTalent(Talent talent) {
+		String resultStr = "";
+		int result = talentDao.insertTalent(talent);
+		if(result > 0) {
+			resultStr = "<script> " +
+					"alert('재능 업로드가 완료되었습니다.');" + 
+					"location.href = '/talent/';" + 
+					"</script>";
+		}else {
+			resultStr = "<script> " +
+					"alert('재능 업로드가 완료되지 않았습니다. 다시 확인해주세요.');" + 
+					"history.back();" + 
+					"</script>";
+		}
+		return resultStr;
 	}
 	
 	@Override
@@ -52,6 +67,11 @@ public class TalentServiceImpl implements TalentService{
 		String ext = originalFileName.substring(originalFileName.indexOf("."));
 		System.out.println("MainController.image() 파일의 확장자 -> " + ext);
 		
+		HashSet<String> checkFileType = new HashSet<>(Arrays.asList(".jpg", ".gif", ".png", ".jpeg", ".bmp"));
+		checkFileType.add(ext);
+		if (checkFileType.size() != 5) {
+			return null;
+		}
         // 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
 		String newFileName = UUID.randomUUID() + ext;
 		System.out.println("MainController.image() 서버에 저장될 파일 이름 -> " + newFileName);
@@ -101,8 +121,21 @@ public class TalentServiceImpl implements TalentService{
 	}
 
 	@Override
-	public void modifyTalent(Talent talent) {
-		talentDao.updateTalent(talent);
+	public String modifyTalent(Talent talent) {
+		String resultStr = "";
+		int result = talentDao.updateTalent(talent);
+		if(result > 0) {
+			resultStr = "<script> " +
+					"alert('재능 수정 완료되었습니다.');" + 
+					"location.href = '/talent/';" + 
+					"</script>";
+		}else {
+			resultStr = "<script> " +
+					"alert('재능 수정이 완료되지 않았습니다. 다시 확인해주세요.');" + 
+					"history.back();" + 
+					"</script>";
+		}
+		return resultStr;
 		
 	}
 	

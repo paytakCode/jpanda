@@ -131,7 +131,7 @@ table {
    	}
 	</script>
 	<div class="container">
-		<form action="/talent/talent" method="post" name="frm">
+		<form action="/talent/talent" method="post" name="frm" onsubmit="return check()">
 		 <input type="hidden" name="_method" value="put">
 		<h1>재능 등록</h1>
 		<hr>
@@ -195,25 +195,42 @@ table {
 	<div id="main-image" class="main-img write">
 		<h4>대표 이미지</h4>
 		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
-		<img id="image-preview" width="auto" height="250" />
-		<input type="file" id="choose-image-file" accept="image/*" style="display:none;" />
+		<img id="main-image-preview" width="auto" height="250" />
+		<input type="file" id="choose-image-file" accept="image/jpeg, image/png, image/gif" style="display:none;"/>
 		<input type="hidden" id="main-img-value" name="mainImg" th:value="${talent.mainImg}">
 	<script>
-		$('#image-preview').on('click', function() {
-			  $('#choose-image-file').click();
-		});
+	$('#main-image-preview').on('click', function() {
+		  $('#choose-image-file').click();
+	});
+	
+	$(function(){
+		$('#main-image-preview').attr('src', $('#main-img-value').val());
+		calculateDiscount();
+	});
+	
+	$('#choose-image-file').on('change', function() {
+		var file_kind = $(this).val().lastIndexOf('.');
+		var file_name = $(this).val().substring(file_kind+1, $(this).val().length);
+		var file_type = file_name.toLowerCase();
+
+		var check_file_type = ['jpg','gif','png','jpeg','bmp', ''];
+		if(check_file_type.indexOf(file_type)==-1){
+		  	alert('이미지 파일만 선택할 수 있습니다.');
+		  	$('#main-image-check').attr('src', "/image/white.png");
+		  	return false;
+			}
 		
-		$(function(){
-			$('#image-preview').attr('src', $('#main-img-value').val());
-		});
-		
-		$('#choose-image-file').on('change', function() {
-			// 파일 선택 후 미리보기 기능 구현
-			var reader = new FileReader();
-		    reader.onload = function(e) {
-		    	$('#image-preview').attr('src', e.target.result);
-		    }
-		    reader.readAsDataURL(this.files[0]);
+			if($(this).val() !== ''){
+				// 파일 선택 후 미리보기 기능 구현
+				var reader = new FileReader();
+			    reader.onload = function(e) {
+			    	$('#main-image-preview').attr('src', e.target.result);
+			    }
+			    if(this.files[0] != null){
+			    	reader.readAsDataURL(this.files[0]);
+			    }else {
+			    	reader.readAsDataURL($('#main-img-value').val());
+			    }
 		    
 		    // 이미지 서버 업로드 
 		    var form = new FormData();
@@ -231,10 +248,11 @@ table {
 	               	$('#main-img-value').trigger('input');
 	           	},
 	           	error: function (jqXHR) { 
-	           		alert(jqXHR.responseText); 
+	           		$('#main-image-preview').attr('src', "../image/jpandaMainImageLabel.jpg");
 	           	}
 	       	});
-		});
+		}
+	});
 	</script>
 	</div>
 	
@@ -257,8 +275,6 @@ table {
 		}
 	})
 	.then(editor => {
-		console.log('Editor was initialized');
-		
 		editor.model.document.on('change:data', () => {
             if (editor.getData().trim()) {
                 $('#content-check').attr('src', '/image/check.png');
@@ -296,6 +312,7 @@ table {
 	    }
 	    
 	    $('#discount-bamboo').val(discountPercent);
+	    
   	}
 	</script>			
 	</div>

@@ -11,9 +11,9 @@ import com.kakao.jPanda.bsm.domain.Talent;
 public interface TalentService {
 
 	List<Category> 	findCategorys();
-	void 			addTalent(Talent talent);
+	String 			addTalent(Talent talent);
 	ModelAndView 	talentImageUpload(MultipartHttpServletRequest request);
 	Talent 			findTalent(Long talentNo);
-	void 			modifyTalent(Talent talent);
+	String 			modifyTalent(Talent talent);
 	
 }

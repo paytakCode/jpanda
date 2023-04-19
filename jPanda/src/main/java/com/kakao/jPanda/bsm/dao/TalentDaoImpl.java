@@ -28,12 +28,14 @@ public class TalentDaoImpl implements TalentDao{
 		return categoryList;
 	}
 	@Override
-	public void insertTalent(Talent talent) {
+	public int insertTalent(Talent talent) {
+		int result = 0;
 		try {
-			session.insert("insertTalent", talent);
+			result = session.insert("insertTalent", talent);
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl insertTalent e.getMessage() ->" + e.getMessage());
 		}
+		return result;
 	}
 	@Override
 	public Talent selectTalentBytalentNo(Long talentNo) {
@@ -46,13 +48,14 @@ public class TalentDaoImpl implements TalentDao{
 		return talent;
 	}
 	@Override
-	public void updateTalent(Talent talent) {
+	public int updateTalent(Talent talent) {
+		int result = 0;
 		try {
-			session.update("updateTalent", talent);
+			result = session.update("updateTalent", talent);
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl updateTalent e.getMessage() ->" + e.getMessage());
 		}
-		
+		return result;
 	}
 	
 }
