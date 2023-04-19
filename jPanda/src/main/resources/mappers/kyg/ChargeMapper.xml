@@ -3,72 +3,145 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kakao.jPanda.kyg.chargeMapper">
-	<insert id="chargeInsert" parameterType="chargeDto">
+
+	<insert id="insertCharge" parameterType="chargeDto">
 	
 	INSERT INTO bamboo_charge (
 	  charge_no,
-	  coupon_no,
-	  payment_amount
+	  charger_id,
+	  payment_method,
+	  payment_amount,
+	  charge_bamboo,
+	  charge_date,
+	  coupon_no
 	)
 	VALUES (
 	  bamboo_charge_SEQ.NEXTVAL,
-	  #{couponNo},
+	  #{chargerId},
+	  #{paymentMethod},
 	  #{chargeMoney} - COALESCE(
 	  							(
 	  							SELECT coupon_value 
 	  							FROM coupon 
 	  							WHERE coupon_no = #{couponNo}), 0
 	  							)
-								)
+								,
+	  #{chargeBamboo},							
+	  sysdate,							
+	  #{couponNo}
+	  								
+	)
+	
+	</insert>
+	<!-- (SELECT MAX(charge_no) + 1 FROM bamboo_charge) -->
 	
 	<!-- (SELECT MAX(charge_no) + 1 FROM bamboo_charge) -->
-
+	
+	<!-- coupon_use 테이블에 삽입 -->
+	<insert id="insertCouponUse" parameterType="chargeDto">
+	
+		INSERT INTO coupon_use(
+				id,
+				coupon_no
+			)
+			VALUES(
+				#{chargerId},
+	 		 	#{couponNo}
+			)
+	
+		<!-- INSERT INTO coupon_use(
+			id,
+			coupon_no
+		)
+			SELECT 
+				#{chargerId},
+	 		 	#{couponNo}
+	 		FROM DUAL
+	 		WHERE NOT EXISTS (
+	 			SELECT 1
+	 			FROM coupon_use
+	 			WHERE id = #{chargerId}
+	 			AND coupon_no = #{couponNo}
+	 		) -->
+ 		 	
+		  <!--  INSERT INTO coupon_use(
+		        id,
+		        coupon_no
+		    )
+		    SELECT 
+		        #{chargerId},
+		        COALESCE(#{couponNo}, 0)
+		    FROM DUAL
+		    WHERE NOT EXISTS (
+		        SELECT 1
+		        FROM coupon_use
+		        WHERE id = #{chargerId}
+		        AND coupon_no = COALESCE(#{couponNo}, 0)
+		    )
+		 -->
 	</insert>
 	
-	<select id="couponCheck" parameterType="java.lang.String" resultType="int">
-		SELECT count(*) 
+	
+	<select id="selectBonusRatio" parameterType="java.lang.String" resultType="double">
+	
+	SELECT ratio
+	FROM payment
+	WHERE method = #{paymentMethod}
+	
+	</select>
+	
+<!-- 	<select id="selectCoupon" parameterType="CouponCheckDto" resultType="int">
+		SELECT count(*)							
 		FROM coupon
 		WHERE coupon_no = #{couponNo}
+		AND expire_date > sysdate
+		AND NOT EXISTS (
+						SELECT *
+						FROM coupon_use
+						WHERE ID = #{id}
+						AND coupon_no = #{couponNo}
+		)	
+		
+		COUPON 테이블에서 반환된 개수가 1이면, 해당 쿠폰이 존재하고, 사용 가능한 쿠폰
+		COUPON_USE 테이블에서 현재 로그인한 사용자가 이미 해당 쿠폰을 사용한 이력이 있는지 확인
+		만약 해당 쿠폰을 사용한 이력이 없으면서, 해당 쿠폰의 만료일자가 현재 시간 이후인 경우, 1을 반환. 그렇지 않은 경우 0을 반환 
+		따라서 반환된 값이 1이면, 해당 쿠폰을 사용할 수 있음
+		
+		해당 sql -> 디벨로퍼 예
+		SELECT count(*)
+		FROM coupon
+		WHERE coupon_no = 'WMMJ2W'
+		AND expire_date > sysdate
+		AND NOT EXISTS(
+		                SELECT 1
+		                FROM coupon_use
+		                WHERE ID = 'qyyswylcav4'
+		                AND coupon_no = 'WMMJ2W'
+		                );
+	조인 업글용 미완
+		SELECT *
+		FROM coupon_use u, coupon c
+		WHERE u.ID = #{chargerId}
+		AND u.coupon_no = #{coupon_no}
+		AND u.coupon_no = c.coupon_no(+)		              
+	</select> -->
 	
+	
+	
+	
+	<select id="selectCouponUse" parameterType="CouponUseDto" resultType="CouponUseDto">
+		SELECT *
+		FROM coupon_use
+		WHERE id = #{id}
+		AND coupon_no = #{couponNo}
 	</select>
-
-</mapper>
-
-
-
-<!-- 
-
-insert into bamboo_charge(
-    charge_no,
-    coupon_no,
-    payment_amount    
-)
-values (
-    charge_seq.nextval
-    '26L9PH',
-    4000-2000
-);
-
-<mapper namespace="jpanda">
-	<insert id="insertCharge" parameterType="BambooChargeDto">
-		insert into bamboo_charge(
-		    charge_no,
-		    coupon_no,
-		    payment_amount    
-		)
-		values (
-		    102,
-		    #{couponNo},
-		    #{pay}-2000
-		)
-	</insert>
 	
-	
-	
-	<select id="insertCharge" parameterType="String">
-		select coupon_no
-		from coupon
-		where coupon_no = #{couponNo}
+	<select id="selectCouponByCouponNo" parameterType="String" resultType="CouponDto">
+		SELECT *
+		FROM coupon
+		WHERE coupon_no = #{couponNo}
 	</select>
+	
+
+	
 </mapper>
- -->

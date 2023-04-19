@@ -1,19 +1,17 @@
 package com.kakao.jPanda.kyg.service;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
+import com.kakao.jPanda.kyg.domain.CouponUseDto;
 
 public interface ChargeService {
 
-	int insertCharge(ChargeDto chargeDto);
+	int addCharge(ChargeDto chargeDto);
 
-//	시큐리티 에러
-	
+	int checkAvailableCoupon(CouponUseDto couponUseDto);
 
-	int checkCoupon(String couponNo);
+	int calculateTotalBamboo(String memberId);
+
+
+
 	
-	
-	/*
-	쿠폰 적용가능 체크 로직
-	boolean couponCheck(String couponNo);
-	*/
 }

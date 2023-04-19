@@ -5,6 +5,8 @@ import lombok.Data;
 
 //	쿠폰 적용가능 체크 로직
 @Data
-public class CouponCheckDto {
+public class CouponUseDto {
 
+	String id;
+	String couponNo;
 }

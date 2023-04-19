@@ -1,23 +1,26 @@
 package com.kakao.jPanda.kyg.dao;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
+import com.kakao.jPanda.kyg.domain.CouponDto;
+import com.kakao.jPanda.kyg.domain.CouponUseDto;
 
 public interface ChargeDao {
 
+	int insertCouponUse(ChargeDto chargeDto);
+	
 	int insertCharge(ChargeDto chargeDto);
 
-//	시큐리티 에러
+	double selectBonusRatio(ChargeDto chargeDto);
+
+	CouponUseDto selectCouponUse(CouponUseDto couponUseDto);
+
+	CouponDto selectCouponByCouponNo(String couponNo);
+
+
+
 	
-	int checkCoupon(String couponNo);
 
 	
 	
 	
-	
-	
-	
-	/*
-	쿠폰 적용가능 체크 로직
-	List<String> selectCoupon(String couponNo);
-	 */
 }
