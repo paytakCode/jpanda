@@ -113,7 +113,7 @@
 		FROM bamboo_use u 
 		INNER JOIN talent t ON u.talent_no = t.talent_no
 		WHERE buyer_id = #{memberId}
-		ORDER BY u.purchase_date
+		ORDER BY u.purchase_date desc
 	</select>
 	
 	<select id="selectTradeRefundListByMemberId" parameterType="String" resultType="TradeDto">

@@ -82,19 +82,17 @@ public class TradeController {
 	 * @param status
 	 * @return 
 	 */
-	@GetMapping("/trade-list/{listType}")
+	@GetMapping("/trades")
 	@ResponseBody
-	public List<TradeDto> tradeList(HttpSession session, Model model, @PathVariable String listType) {
-		List<TradeDto> list = null;
+	public List<TradeDto> tradeList(HttpSession session, Model model, @RequestParam(value = "list-type") String listType) {
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("tradeList id check : " + memberId);
 		log.info("tradeList listType : " + listType);
-		list = tradeService.findTradeListByMemberId(memberId, listType);
 		
-		return list;
+		return tradeService.findTradeListByMemberId(memberId, listType);
 	}
-	
-	@PutMapping("/talent/status/{talentNo}")
+		
+	@PutMapping("/talents/{talentNo}/status")
 	@ResponseBody
 	public String tradeStatusModifyByTalentNo(@PathVariable String talentNo) {
 		log.info("tradeModifyStatusByTalentNo talentNo : " + talentNo);
@@ -108,7 +106,7 @@ public class TradeController {
 		
 	}
 	
-	@DeleteMapping("/refund/{refundPurchaseNo}")
+	@DeleteMapping("/refunds/{refundPurchaseNo}")
 	@ResponseBody
 	public String refundRemoveByrefundPurchaseNo(@PathVariable String refundPurchaseNo) {
 		log.info("refundRemoveByrefundPurchaseNo purchaseNo : " + refundPurchaseNo);
@@ -121,7 +119,7 @@ public class TradeController {
 		}
 	}
 	
-	@PostMapping("/exchange/{talentNo}")
+	@PostMapping("/exchanges/{talentNo}")
 	@ResponseBody
 	public String exchangeAddByTalentNo(@PathVariable String talentNo) {
 		log.info("exchangeAddByTalentNo purchaseNo : " + talentNo);
@@ -139,7 +137,7 @@ public class TradeController {
 			return "fail submitExchange talentDto : null";
 		}
 	}
-	
+
 	@PostMapping("/refund")
 	@ResponseBody
 	public String refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
@@ -154,13 +152,7 @@ public class TradeController {
 		
 	}
 	
-	
-	
-	
-	
 }//end class
-
-
 
 //이전 코드
 //		switch (status) {

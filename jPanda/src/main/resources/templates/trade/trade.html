@@ -277,22 +277,24 @@ $(function() {
 $(document).on("click", ".end-sell-btn", function(){
 	let talentNo = $(this).attr('id');
 	console.log('판매종료 talentNo : ' + talentNo);
-	confirm("판매를 종료하시겠습니까?");
-	$.ajax(
-		{
-			type : "PUT",
-			url : "/trade/talent/status/"+ talentNo,
-			contentType: 'application/json',
-			dataType : 'text',
-			success : function(result){
-				alert(result);
-				$(".filter-button[value='all']").click();
-			},
-			error : function(){
-				alert("end-sell-btn function() error");
-			},
-		}		
-	);	 
+	if(confirm("판매를 종료하시겠습니까?")){
+		$.ajax(
+				{
+					type : "PUT",
+					url : "/trade/talents/"+ talentNo + "/status",
+		/* 			contentType: 'application/json', */
+					dataType : 'text',
+					success : function(result){
+						alert(result);
+						$(".filter-button[value='all']").click();
+					},
+					error : function(){
+						alert("end-sell-btn function() error");
+					}
+				}
+			);
+	}
+	
 });
 
 /**
@@ -302,22 +304,24 @@ $(document).on("click", ".exchange-btn", function(){
 	let $this = $(this);
 	let talentNo = $this.attr('id');
 	console.log('talentNo : ' + talentNo);
-	confirm('환전을 신청하시겠습니까?');
-	$.ajax(
-		{
-			type : "POST",
-			url : "/trade/exchange/"+ talentNo,
-			contentType: 'application/json',
-			dataType : 'text',
-			success : function(message){
-				alert(message);
-				$(".filter-button[value='all']").click();	
-			},
-			error : function(){
-				alert("exchange-btn function() error");
-			},
-		}		
-	);	 
+	if(confirm('환전을 신청하시겠습니까?')){
+		$.ajax(
+				{
+					type : "POST",
+					url : "/trade/exchanges/"+ talentNo,
+					contentType: 'application/json',
+					dataType : 'text',
+					success : function(message){
+						alert(message);
+						$(".filter-button[value='all']").click();	
+					},
+					error : function(){
+						alert("exchange-btn function() error");
+					},
+				}		
+			);	 
+	}
+	
 });
 
 /**
@@ -326,22 +330,24 @@ $(document).on("click", ".exchange-btn", function(){
 $(document).on("click", ".refund-cancle-btn", function(){
 	let refundPurchaseNo = $(this).attr('id');
 	console.log('refundPurchaseNo : ' + refundPurchaseNo);
-	confirm('환불을 취소하시겠습니까?')
-	$.ajax(
-		{
-			type : "DELETE",
-			url : "/trade/refund/"+ refundPurchaseNo,
-			contentType: 'application/json',
-			dataType : 'text',
-			success : function(message){
-				alert(message);
-				$(".filter-button[value='all']").click();
-			},
-			error : function(){
-				alert("refund-cancle-btn function() error");
-			},
-		}		
-	);	 
+	if(confirm('환불을 취소하시겠습니까?')){
+		$.ajax(
+				{
+					type : "DELETE",
+					url : "/trade/refunds/"+ refundPurchaseNo,
+					contentType: 'application/json',
+					dataType : 'text',
+					success : function(message){
+						alert(message);
+						$(".filter-button[value='all']").click();
+					},
+					error : function(){
+						alert("refund-cancle-btn function() error");
+					},
+				}
+			);		
+	}
+	 
 });
 
 /**
@@ -498,9 +504,11 @@ function getRefundList(item){
 			 
 			'</div>';
 	} else if(item.refundStatus === '환불완료'){
-		text += '</div><div class = "card-footer text-muted">승인날짜 : ' + item.refundApproveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.refundSubmitDate +   
+			'</div><div class = "card-footer text-muted">승인날짜 : ' + item.refundApproveDate + '</div></div>';
 	} else if(item.refundStatus === '반려'){
-		text += '</div><div class = "card-footer text-muted">반려날짜 : ' + item.refundApproveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.refundSubmitDate +  
+			'</div><div class = "card-footer text-muted">반려날짜 : ' + item.refundApproveDate + '</div></div>';
 	} else{
 		text += '</div></div>';
 	}
@@ -514,7 +522,8 @@ $('.filter-button').on("click", function(){
 	$.ajax(
 			{
 				type : "GET",
-				url : "/trade/trade-list/" + listType,
+				url : "/trade/trades",
+				data : {'list-type' : listType},
 				success : function(list){
 					$('#list-print').empty();
 					$.each(list, function(index, item){

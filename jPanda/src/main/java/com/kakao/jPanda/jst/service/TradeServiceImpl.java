@@ -48,6 +48,20 @@ public class TradeServiceImpl implements TradeService{
 		return statList;
 	}
 	
+	//List 정렬용 method
+	private String getDateForSort(TradeDto tradeDto) {
+	    if (tradeDto.getRegDate() != null) {
+	        return tradeDto.getRegDate();
+	    } else if (tradeDto.getRefundSubmitDate() != null) {
+	        return tradeDto.getRefundSubmitDate();
+	    } else if (tradeDto.getPurchaseDate() != null){
+	        return tradeDto.getPurchaseDate();
+	    } else {
+	    	return "";
+	    }
+	}
+	
+	
 	@Override
 	public List<TradeDto> findTradeListByMemberId(String memberId, String listType) {
 		List<TradeDto> tradeList = new ArrayList<TradeDto>();
@@ -84,43 +98,11 @@ public class TradeServiceImpl implements TradeService{
 				tempList.forEach(e -> e.setListType("refund"));
 				tradeList.addAll(tempList);
 				
-				//RegDate, SubmitDate, PurchaseDate 서로비교, 오름차순 정렬
-				Collections.sort(tradeList, new Comparator<TradeDto>() {
-				    @Override
-				    public int compare(TradeDto o1, TradeDto o2) {
-				        // RegDate 비교
-				        if (o1.getRegDate() != null && o2.getRegDate() != null) {
-				            return o1.getRegDate().compareTo(o2.getRegDate());
-				        } else if (o1.getRegDate() != null) {
-				            return 1;
-				        } else if (o2.getRegDate() != null) {
-				            return -1;
-				        }
-				        
-				        // SubmitDate 비교
-				        if (o1.getRefundSubmitDate() != null && o2.getRefundSubmitDate() != null) {
-				            return o1.getRefundSubmitDate().compareTo(o2.getRefundSubmitDate());
-				        } else if (o1.getRefundSubmitDate() != null) {
-				            return 1;
-				        } else if (o2.getRefundSubmitDate() != null) {
-				            return -1;
-				        }
-				        
-				        // PurchaseDate 비교
-				        if (o1.getPurchaseDate() != null && o2.getPurchaseDate() != null) {
-				            return o1.getPurchaseDate().compareTo(o2.getPurchaseDate());
-				        } else if (o1.getPurchaseDate() != null) {
-				            return 1;
-				        } else if (o2.getPurchaseDate() != null) {
-				            return -1;
-				        }
-				        
-				        // 모든 필드 값이 null 인 경우
-				        return 0;
-				    }
+				//RegDate, SubmitDate, PurchaseDate 서로비교, 내림차순 정렬
+				Collections.sort(tradeList, (t1, t2) -> {
+					return getDateForSort(t1).compareTo(getDateForSort(t2)) * -1;
 				});
-
-
+				
 				break;
 
 		}
@@ -202,6 +184,37 @@ public class TradeServiceImpl implements TradeService{
 
 
 //이전코드
+
+//Collections.sort(tradeList, (t1,t2) -> {
+//if (t1.getRegDate() != null) {
+//    if(t2.getRegDate() != null) {
+//        return t1.getRegDate().compareTo(t2.getRegDate()) * -1;
+//    } else if(t2.getRefundSubmitDate() != null) {
+//        return t1.getRegDate().compareTo(t2.getRefundSubmitDate()) * -1;
+//    } else if (t2.getPurchaseDate() != null) {
+//        return t1.getRegDate().compareTo(t2.getPurchaseDate()) * -1;
+//    }
+//} else if (t1.getRefundSubmitDate() != null) {
+//    if(t2.getRegDate() != null) {
+//        return t1.getRefundSubmitDate().compareTo(t2.getRegDate()) * -1;
+//    } else if(t2.getRefundSubmitDate() != null) {
+//        return t1.getRefundSubmitDate().compareTo(t2.getRefundSubmitDate()) * -1;
+//    } else if (t2.getPurchaseDate() != null) {
+//        return t1.getRefundSubmitDate().compareTo(t2.getPurchaseDate()) * -1;
+//    }
+//} else if (t1.getPurchaseDate() != null) {
+//    if(t2.getRegDate() != null) {
+//        return t1.getPurchaseDate().compareTo(t2.getRegDate()) * -1;
+//    } else if(t2.getRefundSubmitDate() != null) {
+//        return t1.getPurchaseDate().compareTo(t2.getRefundSubmitDate()) * -1;
+//    } else if (t2.getPurchaseDate() != null) {
+//        return t1.getPurchaseDate().compareTo(t2.getPurchaseDate()) * -1;
+//    }
+//}
+//return 0;
+//});
+
+
 //List<TradeDto> tradeList = tradeDao.selectTradeListByParaMap(paraMap);
 //
 //tradeList.stream()
