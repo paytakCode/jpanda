@@ -112,20 +112,36 @@ public class TradeServiceImpl implements TradeService{
 	}
 
 	@Override
-	public int modifyTalentStatusByTalentNo(String talentNo) {
+	public String modifyTalentStatusByTalentNo(String talentNo, String status) {
 		int result = 0;
+		TalentDto talentDto = new TalentDto();
+		talentDto.setTalentNo(talentNo);
+		talentDto.setStatus(status);
 		
 		try {
-			result = tradeDao.updateTalentStatusByTalentNo(talentNo);
+			result = tradeDao.updateTalentStatus(talentDto);
 		} catch (Exception e) {
 			log.info(e.getMessage());
 		}
 		
-		return result;
+		if (result > 0) {
+			if (status.equals("판매종료")) {
+				return "판매 종료 요청이 완료되었습니다.";
+			} else {
+				return "재등록 요청이 완료되었습니다.";
+			}
+			
+		} else {
+			if (status.equals("판매종료")) {
+				return "판매 종료 요청이 실패하였습니다.";
+			} else {
+				return "재등록 요청이 실패하였습니다.";
+			}
+		}
 	}
 
 	@Override
-	public int removeRefundByrefundPurchaseNo(String purchaseNo) {
+	public String removeRefundByrefundPurchaseNo(String purchaseNo) {
 		int result = 0;
 		
 		try {
@@ -134,7 +150,11 @@ public class TradeServiceImpl implements TradeService{
 			log.info(e.getMessage());
 		}
 		
-		return result;
+		if (result > 0) {
+			return "환불 취소 요청이 완료되었습니다.";
+		} else {
+			return "환불 취소 요청에 실패하였습니다.";
+		}
 	}
 
 	@Override
@@ -151,20 +171,29 @@ public class TradeServiceImpl implements TradeService{
 	}
 
 	@Override
-	public int addExchangeByTalentNo(TalentDto talentDto) {
+	public String addExchangeByTalentNo(TalentDto talentDto) {
 		int result = 0;
+		if ( talentDto != null) {
+			try {
+				result = tradeDao.insertExchangeByTalentNo(talentDto);
+			} catch (Exception e) {
+				log.info(e.getMessage());
+			}
 		
-		try {
-			result = tradeDao.insertExchangeByTalentNo(talentDto);
-		} catch (Exception e) {
-			log.info(e.getMessage());
+			if (result > 0) {
+				return "환전 신청이 완료되었습니다.";
+			} else {
+				return "환전 신청에 실패하였습니다.";
+			}
+			
+		} else {
+			return "fail submitExchange talentDto : null";
 		}
 		
-		return result;
 	}
 
 	@Override
-	public int addRefund(HttpSession session, TradeDto tradeDto) {
+	public String addRefund(HttpSession session, TradeDto tradeDto) {
 		int result = 0;
 		tradeDto.setBuyerId((String)session.getAttribute("memberId"));
 		log.info("addRefund tradeDto.getBuyerId() : " + tradeDto.getBuyerId());
@@ -175,7 +204,12 @@ public class TradeServiceImpl implements TradeService{
 			log.info(e.getMessage());
 		}
 		
-		return result; 
+		if (result > 0) {
+			return "환불 신청이 완료되었습니다.";
+		} else {
+			return "환불 신청에 실패하였습니다.";
+		}
+		
 		
 	}
 

@@ -14,15 +14,15 @@ public interface TradeService {
 
 	List<TradeDto> findTradeListByMemberId(String memberId, String tradeDto);
 
-	int modifyTalentStatusByTalentNo(String talentNo);
+	String modifyTalentStatusByTalentNo(String talentNo, String status);
 
-	int removeRefundByrefundPurchaseNo(String refundPurchaseNo);
+	String removeRefundByrefundPurchaseNo(String refundPurchaseNo);
 
 	TalentDto findTalentByTalentNo(String talentNo);
 
-	int addExchangeByTalentNo(TalentDto talentDto);
+	String addExchangeByTalentNo(TalentDto talentDto);
 
-	int addRefund(HttpSession session ,TradeDto tradeDto);
+	String addRefund(HttpSession session ,TradeDto tradeDto);
 
 	String modifyExchangeStatusByTalentNo(String talentNo);
 

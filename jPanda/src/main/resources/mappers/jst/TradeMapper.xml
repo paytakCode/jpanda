@@ -137,6 +137,14 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
+	<update id="updateTalentStatus" parameterType="TalentDto">
+		UPDATE talent
+		SET status = #{status}
+		WHERE talent_no = #{talentNo}
+	</update>
+	
+	
+	
 	
 </mapper>
 

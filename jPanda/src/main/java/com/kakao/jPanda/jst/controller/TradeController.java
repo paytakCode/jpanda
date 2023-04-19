@@ -92,50 +92,26 @@ public class TradeController {
 		return tradeService.findTradeListByMemberId(memberId, listType);
 	}
 		
-	@PutMapping("/talents/{talentNo}/status")
+	@PutMapping("/talents/{talent-no}/status")
 	@ResponseBody
-	public String tradeStatusModifyByTalentNo(@PathVariable String talentNo) {
-		log.info("tradeModifyStatusByTalentNo talentNo : " + talentNo);
-		int result = tradeService.modifyTalentStatusByTalentNo(talentNo);
+	public String tradeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
+											  @RequestParam String status) {
+		log.info("tradeModifyStatusByTalentNo talentNo, status : " + talentNo + ", " + status);
+		String resultMessage = tradeService.modifyTalentStatusByTalentNo(talentNo, status);
+		log.info("tradeModifyStatusByTalentNo resultMessage : " + resultMessage);
 		
-		if (result > 0) {
-			return "판매 종료 요청이 완료되었습니다.";
-		} else {
-			return "판매 종료 요청에 실패하였습니다.";
-		}
-		
+		return resultMessage; 
 	}
 	
-	@DeleteMapping("/refunds/{refundPurchaseNo}")
+	@PostMapping("/exchanges/{talent-no}")
 	@ResponseBody
-	public String refundRemoveByrefundPurchaseNo(@PathVariable String refundPurchaseNo) {
-		log.info("refundRemoveByrefundPurchaseNo purchaseNo : " + refundPurchaseNo);
-		int result = tradeService.removeRefundByrefundPurchaseNo(refundPurchaseNo);
-		
-		if (result > 0) {
-			return "환불 취소 요청이 완료되었습니다.";
-		} else {
-			return "환불 취소 요청에 실패하였습니다.";
-		}
-	}
-	
-	@PostMapping("/exchanges/{talentNo}")
-	@ResponseBody
-	public String exchangeAddByTalentNo(@PathVariable String talentNo) {
+	public String exchangeAddByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
 		log.info("exchangeAddByTalentNo purchaseNo : " + talentNo);
 		TalentDto talentDto = tradeService.findTalentByTalentNo(talentNo);
+		String resultMessage = tradeService.addExchangeByTalentNo(talentDto);
+		log.info("exchangeAddByTalentNo resultMessage : " + resultMessage);
 		
-		if ( talentDto != null) {
-			int submitResult = tradeService.addExchangeByTalentNo(talentDto);
-			if (submitResult > 0) {
-				return "환전 신청이 완료되었습니다.";
-			} else {
-				return "환전 신청에 실패하였습니다.";
-			}
-			
-		} else {
-			return "fail submitExchange talentDto : null";
-		}
+		return resultMessage;
 	}
 	
 	@PutMapping("/exchanges/{talent-no}/status")
@@ -143,7 +119,8 @@ public class TradeController {
 	public String exchangeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
 		log.info("exchangeStatusModifyByTalentNo talentNo : " + talentNo);
 		String resultMessage = tradeService.modifyExchangeStatusByTalentNo(talentNo);
-		log.info(resultMessage);
+		log.info("exchangeStatusModifyByTalentNo resultMessage : " + resultMessage);
+		
 		return resultMessage;
 	}
 
@@ -151,13 +128,20 @@ public class TradeController {
 	@ResponseBody
 	public String refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
 		log.info("refundAdd tradeListDto : " + tradeDto.toString());
-		int result = tradeService.addRefund(session, tradeDto);
+		String resultMessage = tradeService.addRefund(session, tradeDto);
+		log.info("refundAdd resultMessage : " + resultMessage);
 		
-		if (result > 0) {
-			return "환불 신청이 완료되었습니다.";
-		} else {
-			return "환불 신청에 실패하였습니다.";
-		}
+		return resultMessage;
+	}
+	
+	@DeleteMapping("/refunds/{refund-purchase-no}")
+	@ResponseBody
+	public String refundRemoveByrefundPurchaseNo(@PathVariable(name = "refund-purchase-no") String refundPurchaseNo) {
+		log.info("refundRemoveByrefundPurchaseNo purchaseNo : " + refundPurchaseNo);
+		String resultMessage = tradeService.removeRefundByrefundPurchaseNo(refundPurchaseNo);
+		log.info("refundRemoveByrefundPurchaseNo resultMessage : " + resultMessage);
+		
+		return resultMessage;
 		
 	}
 	

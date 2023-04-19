@@ -282,19 +282,43 @@ $(document).on("click", ".end-sell-btn", function(){
 				{
 					type : "PUT",
 					url : "/trade/talents/"+ talentNo + "/status",
-		/* 			contentType: 'application/json', */
 					dataType : 'text',
+					data : {status : '판매종료'},
 					success : function(result){
 						alert(result);
 						$(".filter-button[value='all']").click();
 					},
 					error : function(){
-						alert("end-sell-btn function() error");
+						alert("end-sell-btn function error");
 					}
 				}
 			);
 	}
 	
+});
+
+/**
+ * 재등록버튼 Ajax 통신
+ */
+$(document).on("click", ".repost-btn", function(){
+	let talentNo = $(this).attr('id').substr(8);
+	console.log("talentNo : " + talentNo);
+	
+	if(confirm("재능을 재등록 하시겠습니까?")){
+		$.ajax({
+				type : "PUT",
+				url : "/trade/talents/" + talentNo + "/status",
+				data : {status : '검토중'},
+				dataType : 'text',
+				success : function(message){
+					alert(message);
+					$(".filter-button[value = 'all']").click();
+				},
+				error : function(){
+					alert('repost btn function error');
+				}
+		});	
+	}
 });
 
 /**
@@ -406,35 +430,32 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
 	});
 	
 });
-/**
- * 재등록버튼 Ajax 통신
- */
-
+ 
  /**
  * 환전 재신청 버튼 Ajax 통신
  */
  $(document).on("click", ".re-exchange-btn", function(){
-		let $this = $(this);
-		let talentNo = $this.attr('id').substr(8);
-		console.log('talentNo : ' + talentNo);
-		if(confirm('환전을 재신청 하시겠습니까?')){
-			$.ajax(
-					{
-						type : "PUT",
-						url : "/trade/exchanges/"+ talentNo + "/status",
-						dataType : 'text',
-						success : function(message){
-							alert(message);
-							$(".filter-button[value='all']").click();	
-						},
-						error : function(){
-							alert("re-exchange-btn function() error");
-						},
-					}		
-				);	 
-		}
+	let $this = $(this);
+	let talentNo = $this.attr('id').substr(8);
+	console.log('talentNo : ' + talentNo);
+	if(confirm('환전을 재신청 하시겠습니까?')){
+		$.ajax(
+				{
+					type : "PUT",
+					url : "/trade/exchanges/"+ talentNo + "/status",
+					dataType : 'text',
+					success : function(message){
+						alert(message);
+						$(".filter-button[value='all']").click();	
+					},
+					error : function(){
+						alert("re-exchange-btn function error");
+					},
+				}		
+			);	 
+	}
 		
-	});
+});
 
  
 /**
