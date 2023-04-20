@@ -1,23 +1,291 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<style type="text/css">
+
+/* 페이지 전체 레이아웃 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* 공통 스타일 */
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 헤더 */
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+
+/* 메뉴 */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+nav li {
+  margin: 0 10px;
+}
+
+nav a {
+  color: #fff;
+}
+
+/* 검색 */
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 게시글 목록 */
+li {
+  border: 1px solid #ccc;
+  margin: 20px 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: center;
+  flex-basis: 48%;
+}
+
+li:hover {
+  background-color: #f2f2f2;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#top-title {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#main-image {
+  margin-left: 5px;
+  float: left;
+}
+
+.side-info {
+  margin-right: 5px;
+  float: right;
+  text-align: center;
+}
+
+.content {
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+
+.review-form {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.review-form .form-group {
+  margin-bottom: 10px;
+}
+
+.review-form label {
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.review-form input[type="text"],
+.review-form select,
+.review-form textarea {
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: calc(100% - 110px);
+  box-sizing: border-box;
+}
+
+.review-form select {
+  width: 110px;
+}
+
+.review-form textarea {
+  height: 150px;
+}
+
+.review-form input[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.review-form input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.review-form input[type="submit"]:focus {
+  outline: none;
+}
+
+
+#review-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#review-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#review-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+#review-list li:last-child {
+  border-bottom: none;
+}
+
+#review-list li p {
+  margin: 0;
+  font-size: 14px;
+}
+
+#load-more-button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#load-more-button:hover {
+  background-color: #0069d9;
+}
+
+
+
+
+</style>
+<script src="/js/jquery.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-	<h1 >판매 게시판 뷰</h1>
-	<!-- <div>
+
+<header>
+        <div id="logo">로고</div>
+        
+        <div class="search">
+                <input type="text" placeholder="검색어를 입력하세요">
+                <button>검색</button>
+        </div>
+            
+        <nav>
+            <ul>
+                <li><a href="#">판매 등록</a></li>
+                <li><a href="#">판매 게시판</a></li>
+                <li><a href="#">거래 관리</a></li>
+                <li><a href="#">충전 및 내역</a></li>
+                <li><a href="#">문의</a></li>
+                <li><a href="#">마이 페이지</a></li>
+            </ul>
+        </nav>
+</header>
+		<!-- 판매 정보  -->
+	<div class="container">
+		<h1 id="top-title" th:text="${talent.title}"></h1>
+		<img id="main-image" src="https://via.placeholder.com/400x300.png" alt="상품 이미지">
 		
+		<div class="side-info">
+		  강사 : 		<div th:text="${talent.sellerId}"></div>
+	         평균 별점 :	<div id="review-filter"></div>
+		  가격 : 		<div th:text="${talent.bamboo}"></div>
+		  할인 가격 : 	<div th:text="${talent.saleBamboo}"></div>
+		  요약 설명 : 	<div th:text="${talent.summary}"></div>
+		  	<div id="button">
+			    <button>구매하기</button>
+ 			</div>
+		</div>
+		
+		<div class="content">
+			상세 내용 :
+			<div th:text="${talent.content}"></div>
+		</div>
 	</div>
-	<p th:text="${talent.title}">
-	<p th:text="${talent.mainImg}">
-	<p th:text="${talent.sellerId}">
-	<p th:text="${talent.content}">
-	<p th:text="${talent.regDate}">
-	<p th:text="${talent.talentNo}"> -->
+	
+	<div class="review-form">
+	    <label for="rating">만족도</label>
+	    <select id="rating" name="rating">
+	      <option value="5">5점</option>
+	      <option value="4">4점</option>
+	      <option value="3">3점</option>
+	      <option value="2">2점</option>
+	      <option value="1">1점</option>
+	    </select><br>
+	   		리뷰 내용 : <input id="content" name="content"></input>
+	 	<div id="review-button">
+	 		<button type="submit">작성 완료</button>
+	 	</div>
+	</div>
 	
 	
-	<div class="tset-List">
+	<div id="review-container">
+	 <ul id="review-list">
+	 	<li th:each="review : ${reviewList}">
+	 		작성자 : 	<span th:text="${review.reviewerId}"></span>
+	 		작성날짜 : <span th:text="${review.reviewDate}"></span>
+	 		밤부 : 	<span th:text="${review.bambooScore}"></span><br>
+	 		내용 : 	<span th:text="${review.content}"></span>
+	 	</li>
+	 </ul>
+	</div>
+	<button id="load-more-button">리뷰 더보기</button>
+		
+	
+	
+	
+	<!-- <div class="tset-List">
 		<h2>판매 게시판 테스트 리스트</h2>
 			<ul id="test-Defalut-List">
 				<li th:each="talent : ${testTalentList}">
@@ -31,7 +299,18 @@
 				평균 별점: <span th:text="${talent.bambooScore}"></span>
 				</li>		
 			</ul>
-	</div>
+	</div> -->
 	
+<script th:inline="javascript">
+	var reviewList = /*[[${reviewList}]]*/[];
+	var reviewCount = reviewList.length;
+	var totalBambooScore = 0;
+	reviewList.forEach(function(review){
+		totalBambooScore += review.bambooScore;
+	});
+	// 반올림한 소수점 첫째자리까지 표시
+	var avgBambooScore = Math.round((totalBambooScore / reviewCount));
+	$('#review-filter').text(avgBambooScore + '/ (' + reviewCount + ')');
+</script>
 </body>
 </html>

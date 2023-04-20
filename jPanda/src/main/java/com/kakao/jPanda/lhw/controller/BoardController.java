@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.lhw.domain.Category;
-import com.kakao.jPanda.lhw.domain.Criteria;
 import com.kakao.jPanda.lhw.domain.Notice;
 import com.kakao.jPanda.lhw.domain.Talent;
 import com.kakao.jPanda.lhw.service.CategoryService;
@@ -29,9 +28,9 @@ public class BoardController {
 	private final NoticeService noticeService;
 	
 	@RequestMapping("/")
-	public String boardList(Criteria criteria, Model model) {
+	public String boardList(Model model) {
 		System.out.println("Controller boardList Start");
-		List<Talent> talentList = talentService.findTalentListByCriteria(criteria);
+		List<Talent> talentList = talentService.findTalentList();
 		List<Notice> noticeList = noticeService.findNoticeList();
 		List<Category> upperCategoryList = categoryService.findUpperCategoryList();
 		model.addAttribute("talentList", talentList);

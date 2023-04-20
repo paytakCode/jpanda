@@ -2,13 +2,12 @@ package com.kakao.jPanda.lhw.service;
 
 import java.util.List;
 
-import com.kakao.jPanda.lhw.domain.Criteria;
 import com.kakao.jPanda.lhw.domain.Talent;
 
 public interface TalentService {
 
 	// 재능 전체 리스트
-	List<Talent> findTalentListByCriteria(Criteria criteria);
+	List<Talent> findTalentList();
 	
 	// 사이드바 클릭 시 상위 카테고리 리스트 불러오기
 	List<Talent> findTalentListByUpperCategoryNo(Long upperCategoryNo);
@@ -18,7 +17,5 @@ public interface TalentService {
 	
 	// 재능 상세 페이지 
 	Talent findTalentByTalentNo(Long talentNo);
-
-	int findTalentTotalCountByCriteria(Criteria criteria);
 
 }

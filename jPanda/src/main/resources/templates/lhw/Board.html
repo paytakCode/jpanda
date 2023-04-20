@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<script src="/js/jquery.js"></script>
 <style type="text/css">
 /* 페이지 전체 레이아웃 */
 body {
@@ -111,42 +112,6 @@ li:hover {
   margin-bottom: 20px;
 }
 
-/* 페이징  */
-.pagination {
-  display: flex;
-  justify-content: center;
-}
-
-.pagination ul {
-  list-style-type: none;
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-}
-
-.pagination li {
-  margin: 0 10px;
-}
-
-.pagination li a {
-  display: block;
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  color: #333;
-}
-
-.pagination li.active a {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.pagination li a:hover {
-  background-color: #ccc;
-  color: #333;
-}
-
 </style>
 
     <title>게시판 페이지</title>
@@ -170,7 +135,7 @@ li:hover {
                 <li><a href="#">마이 페이지</a></li>
             </ul>
         </nav>
-    </header>
+</header>
     
     <div id="top-category">
     	<h2>대분류 카테고리</h2>
@@ -202,72 +167,35 @@ li:hover {
 			<button onclick="applyChanges()">적용</button>
     </div>
     
-<div id="list-container">
-   	<div class="list">
-   		<h2>공지사항 리스트</h2>
-   		 <ul id="notice-list">
-        	<li th:each="notice : ${noticeList}">
-                <span th:text="${notice.noticeNo}"></span>
-                <span th:text="${notice.title}"></span>
-                <span th:text="${notice.regDate}"></span>
-        	</li>
-         </ul>
+	<div id="list-container">
+	   	<div class="list">
+	   		<h2>공지사항 리스트</h2>
+	   		 <ul id="notice-list">
+	        	<li th:each="notice : ${noticeList}">
+	                <span th:text="${notice.noticeNo}"></span>
+	                <span th:text="${notice.title}"></span>
+	                <span th:text="${notice.regDate}"></span>
+	        	</li>
+	         </ul>
+		</div>
+	<button>판매글 등록</button>
+	     <div class="list">
+	        <h2>판매 게시판 리스트</h2>
+	        	<ul id="defalut-list">
+	            	<li th:each="talent : ${talentList}" th:onclick="|location.href='/talent/${talent.talentNo}'|">
+	               		이미지:	<img th:src="${talent.mainImg}">
+	                	제목:		<span th:text="${talent.title}"></span><p>
+	                	요약설명:	<span th:text="${talent.summary}"></span><p>
+	                	강사:		<span th:text="${talent.sellerId}"></span>
+	                	정상 가격:	<span th:text="${talent.bamboo}"></span><p>
+	                	판매 가격:	<span th:text="${talent.saleBamboo}"></span><p>
+				           		<span class="avgScoreSpan" th:text="${talent.bambooScore}">
+								</span>
+								<img >
+	            	</li>
+	        	</ul>
+	     </div>
 	</div>
-     
-     <div class="list">
-        <h2>판매 게시판 리스트</h2>
-        	<ul id="defalut-list">
-            	<li th:each="talent : ${talentList}" th:onclick="|location.href='/talent/${talent.talentNo}'|">
-               		이미지:	<img th:src="${talent.mainImg}">
-                	제목:		<span th:text="${talent.title}"></span><p>
-                	요약설명:	<span th:text="${talent.summary}"></span><p>
-                	강사:		<span th:text="${talent.sellerId}"></span>
-                	정상 가격:	<span th:text="${talent.bamboo}"></span><p>
-                	판매 가격:	<span th:text="${talent.saleBamboo}"></span><p>
-           		   	평균 별점: <span th:text="${talent.bambooScore}"></span>
-            	</li>
-        	</ul>
-     </div>
-</div>
-
-	
-
-<!-- 페이지 번호를 표시하는 컨테이너-->
-
-<div class="pagination">
-<!--   이전 페이지 링크 -->
-  <a href="#" class="prev">이전</a>
-  
- <!--  페이지 번호 목록 -->
-  <ul>
-    <!-- 첫 페이지로 이동하는 링크 -->
-    <li><a href="?page=1">1</a></li>
-
-	<!-- 이전 페이지 링크를 만들어주는 코드 -->
-	<th:block th:if="${criteria.currentPageNo > 1}">
-	  <li><a th:href="@{${'/?page=' + (criteria.currentPageNo - 1)}}">&laquo;</a></li>
-	</th:block>
-	
-	<!-- 페이지 번호를 출력하는 코드 -->
-	<th:block th:each="i: ${(criteria.currentPageNo, criteria.endPage)}">
-	  <li>
-	    <a th:href="@{${'/?page=' + i}}" th:classappend="${criteria.currentPageNo == i} ? 'active' : ''" th:text="${i}"></a>
-	  </li>
-	</th:block>
-	
-	<!-- 다음 페이지 링크를 만들어주는 코드 -->
-	<th:block th:if="${criteria.endPage < criteria.totalPages}">
-	  <li><a th:href="@{${'/?page=' + (criteria.endPage + 1)}}">&raquo;</a></li>
-	</th:block>
-	
-	<!-- 마지막 페이지로 이동하는 링크 -->
-	<li><a th:href="@{${'/?page=' + criteria.totalPages}}" th:text="${criteria.totalPages}"></a></li>
-  </ul>
-  
- <!--  다음 페이지 링크 -->
-  <a href="#" class="next">다음</a>
-</div> 
-
 
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script>
@@ -358,6 +286,19 @@ const checkboxes = document.querySelectorAll('input[name=group]');
   function applyChanges() {
     // 체크박스가 선택된 상태에서 적용 버튼을 눌렀을 때의 동작
   }
+ 
+
+  
+$(function() {
+	  var starImages = ['bamboo1star.png', 'bamboo2star.png', 'bamboo3star.png', 'bamboo4star.png', 'bamboo5star.png'];
+	  var avgScoreSpan = $('.avgScoreSpan');
+	  var avgScoreImg = document.getElementById('avgScoreImg');
+	  var avgScore = parseInt(avgScoreSpan.innerText);
+	  $('.avgScoreSpan').each(function(){
+		  	var score = parseInt($(this).text());
+		  	$(this).next('img').attr('src', '../images/bambooScore/' + starImages[score - 1]);
+	  });
+	});
 </script>
 </body>
 </html>

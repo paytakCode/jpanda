@@ -1,12 +1,10 @@
 package com.kakao.jPanda.lhw.service;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.lhw.dao.TalentDao;
-import com.kakao.jPanda.lhw.domain.Criteria;
 import com.kakao.jPanda.lhw.domain.Talent;
 
 import lombok.RequiredArgsConstructor;
@@ -19,16 +17,9 @@ public class TalentServiceImpl implements TalentService {
 	
 	// 재능 전체 리스트
 	@Override
-	public List<Talent> findTalentListByCriteria(Criteria criteria) {
-		List<Talent> selectTalentListByCriteria = Collections.emptyList();
+	public List<Talent> findTalentList() {
 		
-		int findTalentTotalCountByCriteria = talentDao.selectTalentTotalCountByCriteria(criteria);
-		
-		if(findTalentTotalCountByCriteria > 0) {
-			selectTalentListByCriteria = talentDao.selectTalentListByCriteria(criteria);
-		}
-		
-		return selectTalentListByCriteria;
+		return talentDao.selectTalentList();
 	}
 	
 	// 사이드바 클릭 시 상위 카테고리 리스트 불러오기
@@ -46,11 +37,6 @@ public class TalentServiceImpl implements TalentService {
 	@Override
 	public Talent findTalentByTalentNo(Long talentNo) {
 		return talentDao.selectTalentByTalentNo(talentNo);
-	}
-
-	@Override
-	public int findTalentTotalCountByCriteria(Criteria criteria) {
-		return talentDao.selectTalentTotalCountByCriteria(criteria);
 	}
 
 }

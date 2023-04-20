@@ -3,9 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="talentMapper">
-	<select id="selectTalentListByCriteria" parameterType="Criteria" resultType="Talent">
-	SELECT *
-    FROM (
+	<select id="selectTalentList" resultType="Talent">
         SELECT t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo,
         t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
         FROM talent t, review r
@@ -13,8 +11,6 @@
         AND t.status = '게시중'
         GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
         ORDER BY t.talent_no DESC
-    	) 
-    WHERE ROWNUM BETWEEN #{startPage} AND #{recordsPerPage}
 	</select>
 	
 	<select id="selectNoticeList" resultType="Notice">
@@ -29,7 +25,7 @@
 	</select>
 	
 	<select id="selectTalentByTalentNo" resultType="Talent" parameterType="Long">
-		SELECT *
+		SELECT title, seller_id, main_img, summary, bamboo, sale_bamboo, content
 		FROM talent
 		WHERE talent_no = #{talentNo}
 	</select>
@@ -62,10 +58,11 @@
 		ORDER BY t.talent_no DESC
 	</select>
 	
-	<select id="selectTalentTotalCountByCriteria" parameterType="Criteria" resultType="int">
-		SELECT count(*)
-		FROM talent
-		WHERE status = '게시중'
+	<select id="selectReviewListByTalentNo" parameterType="Long" resultType="Review">
+		SELECT reviewer_id, content, review_date, bamboo_score
+		FROM review
+		WHERE talent_no = #{talentNo}
+		ORDER BY review_date DESC
 	</select>
 	
 	<select id="selectTestTalentList" resultType="TestTalent">

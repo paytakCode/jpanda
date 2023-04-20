@@ -26,4 +26,6 @@ public class Talent {
 	
 	// 리뷰 테이블용 
 	private Long bambooScore;
+	
+	private int reviewCount;
 }
