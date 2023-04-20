@@ -22,13 +22,22 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/talent")
+@RequestMapping("/talent")	
 public class TalentController {
 	private final TalentService service;
 	
 	// Test Main 페이지 이동
 	@GetMapping("/")
-	public String talentTest() {
+	public String talentTest(Model model) {
+		List<Talent> bestSellerTalentList = service.findBestSellerTalents();
+		List<Talent> topRatedTalentTalentList = service.findTopRatedTalentTalents();
+		List<Talent> newTrendTalentList = service.findNewTrendTalents();
+		List<Talent> randomTalentList = service.findRandomTalents();
+		
+		model.addAttribute("bestSellerTalent", bestSellerTalentList);
+		model.addAttribute("topRatedTalent", topRatedTalentTalentList);
+		model.addAttribute("newTrendTalent", newTrendTalentList);
+		model.addAttribute("randomTalent", randomTalentList);
 		return "bsm/talentTestMainpage";
 	}
 	
@@ -50,6 +59,7 @@ public class TalentController {
 	}
 	
 	// 재능 수정 Update
+	@ResponseBody
 	@PutMapping("/talent")
 	public String talentModify(Talent talent) {
 		String result = service.modifyTalent(talent);
@@ -69,11 +79,15 @@ public class TalentController {
 	public String talentUpdateFrom(@RequestParam(name = "talent-no") Long talentNo, Model model) { // @PathVariable
 		// dto 새로 만들 것
 		System.out.println(talentNo);
-		Talent talent = service.findTalent(talentNo);
+		Talent talent = service.findTalentByTalentNo(talentNo);
 		List<Category> categoryList = service.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("talent", talent);
 		return "bsm/talentUpdateForm";
-	}
+	}	
 	
+	@GetMapping("/asd")
+	public String asd() {
+		return "bsm/asd";
+	}
 }

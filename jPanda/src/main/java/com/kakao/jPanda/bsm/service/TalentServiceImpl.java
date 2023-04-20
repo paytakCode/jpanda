@@ -113,7 +113,7 @@ public class TalentServiceImpl implements TalentService{
 	}
 	
 	@Override
-	public Talent findTalent(Long talentNo) {
+	public Talent findTalentByTalentNo(Long talentNo) {
 		// dto 새로 만들 것
 		Talent talent = talentDao.selectTalentBytalentNo(talentNo);
 		
@@ -137,6 +137,26 @@ public class TalentServiceImpl implements TalentService{
 		}
 		return resultStr;
 		
+	}
+
+	@Override
+	public List<Talent> findBestSellerTalents() {
+		return talentDao.selectBestSellerTalents();
+	}
+
+	@Override
+	public List<Talent> findTopRatedTalentTalents() {
+		return talentDao.selectTopRatedTalentTalents();
+	}
+
+	@Override
+	public List<Talent> findNewTrendTalents() {
+		return talentDao.selectNewTrendTalents();
+	}
+
+	@Override
+	public List<Talent> findRandomTalents() {
+		return talentDao.selectRandomTalents();
 	}
 	
 }

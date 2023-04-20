@@ -6,15 +6,62 @@
 	<insert id="insertTalent" parameterType="Talent">
 		<!-- 더미 테이터 떄문에 시퀀스x MAX사용 -->
 		<!-- SELECT talent_seq.NEXTVAL FROM dual -->
-		INSERT INTO talent VALUES((SELECT MAX(talent_no)+1 FROM talent), #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
-					#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
+		INSERT INTO talent 
+		VALUES((SELECT MAX(talent_no)+1 FROM talent), #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
+				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
 	</insert>
+	
 	<select id="selectTalentBytalentNo" resultType="Talent" parameterType="Long">
-		SELECT * FROM talent WHERE talent_no = #{talentNo}
+		SELECT 	* 
+		FROM 	talent 
+		WHERE 	talent_no = #{talentNo}
 	</select>
+	
 	<update id="updateTalent" parameterType="Talent">
-		UPDATE talent SET upper_category_no = #{upperCategoryNo}, lower_category_no = #{lowerCategoryNo}, main_img = #{mainImg},
-					title = #{title}, content = #{content}, bamboo = #{bamboo}, sale_bamboo = #{saleBamboo}, summary = #{summary}
-					WHERE talent_no = #{talentNo}
+		UPDATE 	talent 
+		SET 	upper_category_no = #{upperCategoryNo}, lower_category_no = #{lowerCategoryNo}, main_img = #{mainImg},
+				title = #{title}, content = #{content}, bamboo = #{bamboo}, sale_bamboo = #{saleBamboo}, summary = #{summary}
+		WHERE 	talent_no = #{talentNo}
 	</update>
+	
+	<select id="selectBestSellerTalents" resultType="Talent">
+		SELECT 	*
+		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary
+      		  	 FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+      		  	 WHERE 		t.status = '게시중'
+      		  	 GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date
+     		  	 ORDER BY  	COUNT(t.talent_no) DESC, t.reg_date DESC
+      		 	)
+		WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectTopRatedTalentTalents" resultType="Talent">
+		SELECT *
+		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary
+         		FROM     talent t JOIN review r ON t.talent_no = r.talent_no
+         		WHERE    t.status = '게시중'
+         		GROUP BY t.talent_no, t.main_img, t.title, t.summary
+         		ORDER BY AVG(r.bamboo_score) DESC, COUNT(*) DESC
+        	   )
+		WHERE  ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectNewTrendTalents" resultType="Talent">
+		SELECT   *
+		FROM     (SELECT 	*
+				  FROM 		talent 
+				  WHERE 	status = '게시중'
+				  ORDER BY 	reg_date DESC
+				 )
+		WHERE 	 ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectRandomTalents" resultType="Talent">
+		SELECT  *
+		FROM    (SELECT   * 
+         		 FROM     talent 
+         		 WHERE    status = '게시중'
+         		 ORDER BY DBMS_RANDOM.VALUE())
+		WHERE   ROWNUM BETWEEN 1 AND 5
+	</select>
 </mapper>

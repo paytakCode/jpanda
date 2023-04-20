@@ -13,7 +13,11 @@ public interface TalentService {
 	List<Category> 	findCategorys();
 	String 			addTalent(Talent talent);
 	ModelAndView 	talentImageUpload(MultipartHttpServletRequest request);
-	Talent 			findTalent(Long talentNo);
+	Talent 			findTalentByTalentNo(Long talentNo);
 	String 			modifyTalent(Talent talent);
+	List<Talent> 	findBestSellerTalents();
+	List<Talent> 	findTopRatedTalentTalents();
+	List<Talent> 	findNewTrendTalents();
+	List<Talent> 	findRandomTalents();
 	
 }

@@ -57,5 +57,45 @@ public class TalentDaoImpl implements TalentDao{
 		}
 		return result;
 	}
+	@Override
+	public List<Talent> selectBestSellerTalents() {
+		List<Talent> selectBestSellerTalents = null;
+		try {
+			selectBestSellerTalents = session.selectList("selectBestSellerTalents");
+		} catch (Exception e) {
+			System.out.println("TalentDaoImpl selectBestSellerTalents e.getMessage() ->" + e.getMessage());
+		}
+		return selectBestSellerTalents;
+	}
+	@Override
+	public List<Talent> selectTopRatedTalentTalents() {
+		List<Talent> selectTopRatedTalentTalents = null;
+		try {
+			selectTopRatedTalentTalents = session.selectList("selectTopRatedTalentTalents");
+		} catch (Exception e) {
+			System.out.println("TalentDaoImpl selectTopRatedTalentTalents e.getMessage() ->" + e.getMessage());
+		}
+		return selectTopRatedTalentTalents;
+	}
+	@Override
+	public List<Talent> selectNewTrendTalents() {
+		List<Talent> selectNewTrendTalents = null;
+		try {
+			selectNewTrendTalents = session.selectList("selectNewTrendTalents");
+		} catch (Exception e) {
+			System.out.println("TalentDaoImpl selectNewTrendTalents e.getMessage() ->" + e.getMessage());
+		}
+		return selectNewTrendTalents;
+	}
+	@Override
+	public List<Talent> selectRandomTalents() {
+		List<Talent> selectRandomTalents = null;
+		try {
+			selectRandomTalents = session.selectList("selectRandomTalents");
+		} catch (Exception e) {
+			System.out.println("TalentDaoImpl selectRandomTalents e.getMessage() ->" + e.getMessage());
+		}
+		return selectRandomTalents;
+	}
 	
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -165,42 +165,59 @@ h2{ color: #7f8c8d; font-family: Neucha, Arial, sans serif; font-size:18px; marg
   -ms-transition: all 0.3s cubic-bezier(1,.01,.32,1);
   transition: all 0.3s cubic-bezier(1,.01,.32,1); 
 }
+
 </style>
 </head>
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Neucha' rel='stylesheet' type='text/css'>
-<script src="/js/jquery.js"></script>
 <body>
-	<a href="/talent/write-form">재능 등록</a><p/>
-	<a href="/talent/asd">asd</a><p/>
-	<form action="/talent/update-form">
-	<input type="number" name="talent-no">
-	<button type="submit">재능수정</button><p/>
-	
-  	<div id="best-seller">
-  	<h5>최다 판매</h5>
-  	<div id="best-seller-list">
-    	<div class="best-seller-item" th:each="talent : ${bestSellerTalent}">
-      	<img th:src="${talent.mainImg}"><p/>
-      	<p th:text="${talent.title}"></p>
-    	</div>
-  	</div>
-	</div>
 
-
-
-
-	<div id="wrapper">
+<div id="wrapper">
       <div id="slider-wrap">
-          <ul id="slider" >
-             <li th:each="talent : ${bestSellerTalent}">
+          <ul id="slider">
+             <li>
                 <div>
-                    <h3 th:text="${talent.title}"></h3>
+                    <h3>Slide #1</h3>
+                    <span>Sub-title #1</span>
                 </div>                
-				<img th:src="${talent.mainImg}">
+<img src="https://fakeimg.pl/350x200/960a96/000?text=11111">
              </li>
-              </ul>
+             
+             <li>
+                <div>
+                    <h3>Slide #2</h3>
+                    <span>Sub-title #2</span>
+                </div>
+<img src="https://fakeimg.pl/350x200/D27328/000?text=22222">
+             </li>
+             
+             <li>
+                <div>
+                    <h3>Slide #3</h3>
+                    <span>Sub-title #3</span>
+                </div>
+<img src="https://fakeimg.pl/350x200/FF607F/000?text=33333">
+             </li>
+             
+             <li>
+                <div>
+                    <h3>Slide #4</h3>
+                    <span>Sub-title #4</span>
+                </div>
+<img src="https://fakeimg.pl/350x200/0A6E0A/000?text=44444">
+             </li>
+             
+             <li>
+                <div>
+                    <h3>Slide #5</h3>
+                    <span>Sub-title #5</span>
+                </div>
+<img src="https://fakeimg.pl/350x200/0064CD/000?text=55555">
+             </li>
+             
+             
+          </ul>
           
            <!--controls-->
           <div class="btns" id="next"><i class="fa fa-arrow-right"></i></div>
@@ -214,140 +231,113 @@ h2{ color: #7f8c8d; font-family: Neucha, Arial, sans serif; font-size:18px; marg
           <!--controls-->  
                  
       </div>
-      </div>
-      
-      
-      
-
-	<div>
-	<h5>최고 평점</h5>
-	<div th:each="talent : ${topRatedTalent}">
-	<img th:src="${talent.mainImg}"><p/>
-	<p th:text="${talent.title}"></p>
-	</div>
-	</div>
-	
-	<div>
-	<h5>최신 트렌드</h5>
-	<div th:each="talent : ${newTrendTalent}">
-	<img th:src="${talent.mainImg}"><p/>
-	<p th:text="${talent.title}"></p>
-	</div>
-	</div>
-	
-	<div>
-	<h5>오늘의 재능</h5>
-	<div th:each="talent : ${randomTalent}">
-	<img th:src="${talent.mainImg}"><p/>
-	<p th:text="${talent.title}"></p>
-	</div>
-	</div>
-	</form>
-	
-	<script type="text/javascript">
-	//current position
-	var pos = 0;
-	//number of slides
-	var totalSlides = $('#slider-wrap ul li').length;
-	//get the slide width
-	var sliderWidth = $('#slider-wrap').width();
+  
+   </div>
+   <script src="/js/jquery.js"></script>
+   <script type="text/javascript">
+ //current position
+   var pos = 0;
+   //number of slides
+   var totalSlides = $('#slider-wrap ul li').length;
+   //get the slide width
+   var sliderWidth = $('#slider-wrap').width();
 
 
-	$(document).ready(function(){
-	  
-	  
-	  /*****************
-	   BUILD THE SLIDER
-	  *****************/
-	  //set width to be 'x' times the number of slides
-	  $('#slider-wrap ul#slider').width(sliderWidth*totalSlides);
-	  
-	    //next slide  
-	  $('#next').click(function(){
-	    slideRight();
-	  });
-	  
-	  //previous slide
-	  $('#previous').click(function(){
-	    slideLeft();
-	  });
-	  
-	  
-	  
-	  /*************************
-	   //*> OPTIONAL SETTINGS
-	  ************************/
-	  //automatic slider
-	  var autoSlider = setInterval(slideRight, 3000);
-	  
-	  //for each slide 
-	  $.each($('#slider-wrap ul li'), function() { 
+   $(document).ready(function(){
+     
+     
+     /*****************
+      BUILD THE SLIDER
+     *****************/
+     //set width to be 'x' times the number of slides
+     $('#slider-wrap ul#slider').width(sliderWidth*totalSlides);
+     
+       //next slide  
+     $('#next').click(function(){
+       slideRight();
+     });
+     
+     //previous slide
+     $('#previous').click(function(){
+       slideLeft();
+     });
+     
+     
+     
+     /*************************
+      //*> OPTIONAL SETTINGS
+     ************************/
+     //automatic slider
+     var autoSlider = setInterval(slideRight, 3000);
+     
+     //for each slide 
+     $.each($('#slider-wrap ul li'), function() { 
 
-	     //create a pagination
-	     var li = document.createElement('li');
-	     $('#pagination-wrap ul').append(li);    
-	  });
-	  
-	  //counter
-	  countSlides();
-	  
-	  //pagination
-	  pagination();
-	  
-	  //hide/show controls/btns when hover
-	  //pause automatic slide when hover
-	  $('#slider-wrap').hover(
-	    function(){ $(this).addClass('active'); clearInterval(autoSlider); }, 
-	    function(){ $(this).removeClass('active'); autoSlider = setInterval(slideRight, 3000); }
-	  );
-	  
-	  
+        //create a pagination
+        var li = document.createElement('li');
+        $('#pagination-wrap ul').append(li);    
+     });
+     
+     //counter
+     countSlides();
+     
+     //pagination
+     pagination();
+     
+     //hide/show controls/btns when hover
+     //pause automatic slide when hover
+     $('#slider-wrap').hover(
+       function(){ $(this).addClass('active'); clearInterval(autoSlider); }, 
+       function(){ $(this).removeClass('active'); autoSlider = setInterval(slideRight, 3000); }
+     );
+     
+     
 
-	});//DOCUMENT READY
-	  
-
-
-	/***********
-	 SLIDE LEFT
-	************/
-	function slideLeft(){
-	  pos--;
-	  if(pos==-1){ pos = totalSlides-1; }
-	  $('#slider-wrap ul#slider').css('left', -(sliderWidth*pos));  
-	  
-	  //*> optional
-	  countSlides();
-	  pagination();
-	}
+   });//DOCUMENT READY
+     
 
 
-	/************
-	 SLIDE RIGHT
-	*************/
-	function slideRight(){
-	  pos++;
-	  if(pos==totalSlides){ pos = 0; }
-	  $('#slider-wrap ul#slider').css('left', -(sliderWidth*pos)); 
-	  
-	  //*> optional 
-	  countSlides();
-	  pagination();
-	}
+   /***********
+    SLIDE LEFT
+   ************/
+   function slideLeft(){
+     pos--;
+     if(pos==-1){ pos = totalSlides-1; }
+     $('#slider-wrap ul#slider').css('left', -(sliderWidth*pos));  
+     
+     //*> optional
+     countSlides();
+     pagination();
+   }
+
+
+   /************
+    SLIDE RIGHT
+   *************/
+   function slideRight(){
+     pos++;
+     if(pos==totalSlides){ pos = 0; }
+     $('#slider-wrap ul#slider').css('left', -(sliderWidth*pos)); 
+     
+     //*> optional 
+     countSlides();
+     pagination();
+   }
 
 
 
-	  
-	/************************
-	 //*> OPTIONAL SETTINGS
-	************************/
-	function countSlides(){
-	  $('#counter').html(pos+1 + ' / ' + totalSlides);
-	}
+     
+   /************************
+    //*> OPTIONAL SETTINGS
+   ************************/
+   function countSlides(){
+     $('#counter').html(pos+1 + ' / ' + totalSlides);
+   }
 
-	function pagination(){
-	  $('#pagination-wrap ul li').removeClass('active');
-	  $('#pagination-wrap ul li:eq('+pos+')').addClass('active');
-	}
-	</script>
+   function pagination(){
+     $('#pagination-wrap ul li').removeClass('active');
+     $('#pagination-wrap ul li:eq('+pos+')').addClass('active');
+   }
+   </script>
 </body>
 </html>
