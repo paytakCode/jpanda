@@ -45,6 +45,6 @@ public interface TradeDao {
 
 	int updateExchangeStatusByTalentNo(String talentNo);
 
-	int updateTalentStatus(TalentDto talentDto);
+	int updateTalent(TalentDto talentDto);
 
 }

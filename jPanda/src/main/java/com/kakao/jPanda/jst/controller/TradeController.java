@@ -92,12 +92,12 @@ public class TradeController {
 		return tradeService.findTradeListByMemberId(memberId, listType);
 	}
 		
-	@PutMapping("/talents/{talent-no}/status")
+	@PutMapping("/talents/{talent-no}")
 	@ResponseBody
-	public String tradeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
-											  @RequestParam String status) {
-		log.info("tradeModifyStatusByTalentNo talentNo, status : " + talentNo + ", " + status);
-		String resultMessage = tradeService.modifyTalentStatusByTalentNo(talentNo, status);
+	public String tradesByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
+								   @RequestBody TalentDto talentDto) {
+		log.info("tradeModifyStatusByTalentNo talentNo, status : " + talentNo + ", " + talentDto);
+		String resultMessage = tradeService.modifyTalentByTalentNo(talentNo, talentDto);
 		log.info("tradeModifyStatusByTalentNo resultMessage : " + resultMessage);
 		
 		return resultMessage; 

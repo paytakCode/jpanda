@@ -1,5 +1,7 @@
 package com.kakao.jPanda.jst.domain;
 
+import java.sql.Timestamp;
+
 import lombok.Data;
 
 @Data
@@ -17,7 +19,7 @@ public class TradeDto {
 	private String summary;
 	private String talentStatus; //status
 	private Long viewCount;
-	private String regDate;
+	private Timestamp regDate;
 	
 	//member
 	private String memberId; //id
@@ -34,8 +36,8 @@ public class TradeDto {
 	private String refundPurchaseNo; //purchaseNo
 	private String refundStatus; //status
 	private String issue;
-	private String refundSubmitDate;
-	private String refundApproveDate;
+	private Timestamp refundSubmitDate;
+	private Timestamp refundApproveDate;
 	private Long refundBamboo;
 	
 	//member_grade
@@ -47,8 +49,8 @@ public class TradeDto {
 	private String exchangeId; //id
 	private String exchangeTalentNo; //talentNo
 	private Long sales;
-	private String exchangeSubmitDate;
-	private String exchangeApproveDate;
+	private Timestamp exchangeSubmitDate;
+	private Timestamp exchangeApproveDate;
 	private Long total;
 	private String exchangeGrade; //grade
 	private Long exchangeRatio; //ratio
@@ -59,7 +61,7 @@ public class TradeDto {
 	private String bambooUsePurchaseNo; //purchaseNo
 	private String buyerId;
 	private String bambooUsetalentNo; //talentNo
-	private String purchaseDate;
+	private Timestamp purchaseDate;
 	private String useBamboo;
 	
 	//ExtraValues

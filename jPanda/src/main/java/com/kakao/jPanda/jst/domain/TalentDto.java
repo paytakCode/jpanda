@@ -1,5 +1,7 @@
 package com.kakao.jPanda.jst.domain;
 
+import java.sql.Timestamp;
+
 import lombok.Data;
 
 @Data
@@ -16,6 +18,6 @@ public class TalentDto {
 	private String summary;
 	private String status;
 	private Long viewCount;
-	private String regDate;
-	private String statusDate;
+	private Timestamp regDate;
+	private Timestamp statusDate;
 }

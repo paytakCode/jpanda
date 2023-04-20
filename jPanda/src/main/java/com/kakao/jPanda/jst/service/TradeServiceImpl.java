@@ -1,5 +1,7 @@
 package com.kakao.jPanda.jst.service;
 
+import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +50,7 @@ public class TradeServiceImpl implements TradeService{
 	}
 	
 	//List 정렬용 method
-	private String getDateForSort(TradeDto tradeDto) {
+	private Timestamp getDateForSort(TradeDto tradeDto) {
 	    if (tradeDto.getRegDate() != null) {
 	        return tradeDto.getRegDate();
 	    } else if (tradeDto.getRefundSubmitDate() != null) {
@@ -56,7 +58,7 @@ public class TradeServiceImpl implements TradeService{
 	    } else if (tradeDto.getPurchaseDate() != null){
 	        return tradeDto.getPurchaseDate();
 	    } else {
-	    	return "";
+	    	return null;
 	    }
 	}
 	
@@ -112,43 +114,47 @@ public class TradeServiceImpl implements TradeService{
 	}
 
 	@Override
-	public String modifyTalentStatusByTalentNo(String talentNo, String status) {
+	public String modifyTalentByTalentNo(String talentNo, TalentDto talentDto) {
 		int result = 0;
-		TalentDto talentDto = new TalentDto();
-		talentDto.setTalentNo(talentNo);
-		talentDto.setStatus(status);
+		//DB에 있는 Talent 조회
+		TalentDto foundTalentDto = tradeDao.selectTalentByTalentNo(talentNo);
 		
-		try {
-			result = tradeDao.updateTalentStatus(talentDto);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
+		//reflection을 통한 TalentDto field 값 목록
+		Field[] fields = TalentDto.class.getDeclaredFields();
+        for (Field field : fields) {
+        	//필드 접근 허용
+            field.setAccessible(true);
+            
+            try {
+				if (field.get(talentDto) != null) {
+					log.info("before : {}, after : {}",field.get(foundTalentDto)  , field.get(talentDto));
+					//field.set(해당 필드값을 set 할 인스턴스, set 해줄 값)
+					field.set(foundTalentDto, field.get(talentDto));
+				}
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+            
+            
+        }
+		
+		result = tradeDao.updateTalent(foundTalentDto);
 		
 		if (result > 0) {
-			if (status.equals("판매종료")) {
-				return "판매 종료 요청이 완료되었습니다.";
-			} else {
-				return "재등록 요청이 완료되었습니다.";
-			}
-			
+			return "재등록에 성공하였습니다.";
 		} else {
-			if (status.equals("판매종료")) {
-				return "판매 종료 요청이 실패하였습니다.";
-			} else {
-				return "재등록 요청이 실패하였습니다.";
-			}
+			return "재등록 요청에 실패하였습니다.";
 		}
+		
 	}
 
 	@Override
 	public String removeRefundByrefundPurchaseNo(String purchaseNo) {
 		int result = 0;
 		
-		try {
-			result = tradeDao.deleteRefundByrefundPurchaseNo(purchaseNo);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
+		result = tradeDao.deleteRefundByrefundPurchaseNo(purchaseNo);
 		
 		if (result > 0) {
 			return "환불 취소 요청이 완료되었습니다.";
@@ -161,11 +167,7 @@ public class TradeServiceImpl implements TradeService{
 	public TalentDto findTalentByTalentNo(String talentNo) {
 		TalentDto talentDto = null;
 		
-		try {
-			talentDto = tradeDao.selectTalentByTalentNo(talentNo);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
+		talentDto = tradeDao.selectTalentByTalentNo(talentNo);
 		
 		return talentDto;
 	}
@@ -173,12 +175,9 @@ public class TradeServiceImpl implements TradeService{
 	@Override
 	public String addExchangeByTalentNo(TalentDto talentDto) {
 		int result = 0;
+		
 		if ( talentDto != null) {
-			try {
-				result = tradeDao.insertExchangeByTalentNo(talentDto);
-			} catch (Exception e) {
-				log.info(e.getMessage());
-			}
+			result = tradeDao.insertExchangeByTalentNo(talentDto);
 		
 			if (result > 0) {
 				return "환전 신청이 완료되었습니다.";
@@ -198,11 +197,7 @@ public class TradeServiceImpl implements TradeService{
 		tradeDto.setBuyerId((String)session.getAttribute("memberId"));
 		log.info("addRefund tradeDto.getBuyerId() : " + tradeDto.getBuyerId());
 		
-		try {
-			result = tradeDao.insertTalentRefund(tradeDto);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
+		result = tradeDao.insertTalentRefund(tradeDto);
 		
 		if (result > 0) {
 			return "환불 신청이 완료되었습니다.";
@@ -216,15 +211,14 @@ public class TradeServiceImpl implements TradeService{
 	@Override
 	public String modifyExchangeStatusByTalentNo(String talentNo) {
 		int result = 0;
-		try {
-			result = tradeDao.updateExchangeStatusByTalentNo(talentNo);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
+		result = tradeDao.updateExchangeStatusByTalentNo(talentNo);
+		
 		if (result > 0) {
 			return "환전등록 재신청에 성공하였습니다.";
+		} else {
+			return "환전등록 재신청에 실패하였습니다.";
 		}
-		return "환전등록 재신청에 실패하였습니다.";
+		
 	}
 
 }//end class

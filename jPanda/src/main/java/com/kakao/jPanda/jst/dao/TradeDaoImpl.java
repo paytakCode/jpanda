@@ -130,10 +130,10 @@ public class TradeDaoImpl implements TradeDao{
 	}
 
 	@Override
-	public int updateTalentStatus(TalentDto talentDto) {
-		log.info("updateTalentStatus talentDto : " + talentDto);
-		int result = sqlSession.update("updateTalentStatus", talentDto);
-		log.info("updateTalentStatus result : " + result);
+	public int updateTalent(TalentDto talentDto) {
+		log.info("updateTalent talentDto : " + talentDto);
+		int result = sqlSession.update("updateTalent", talentDto);
+		log.info("updateTalent result : " + result);
 		return result;
 	}
 

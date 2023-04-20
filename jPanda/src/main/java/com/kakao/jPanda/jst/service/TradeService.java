@@ -14,7 +14,7 @@ public interface TradeService {
 
 	List<TradeDto> findTradeListByMemberId(String memberId, String tradeDto);
 
-	String modifyTalentStatusByTalentNo(String talentNo, String status);
+	String modifyTalentByTalentNo(String talentNo, TalentDto talentDto);
 
 	String removeRefundByrefundPurchaseNo(String refundPurchaseNo);
 

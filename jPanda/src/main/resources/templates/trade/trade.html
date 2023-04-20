@@ -262,6 +262,16 @@
  
 </script>
 <script type="text/javascript">
+/**
+ * Time출력형식 변경
+ */
+function timestampToCustomFormat(timestamp){
+	let date = new Date(timestamp);
+	let formatted_date = date.getFullYear() + " - " + (date.getMonth() + 1) + " - " + date.getDate();
+	return formatted_date;
+}
+
+
 
 /**
  * trade페이지 로드 완료시
@@ -283,7 +293,11 @@ $(document).on("click", ".end-sell-btn", function(){
 					type : "PUT",
 					url : "/trade/talents/"+ talentNo + "/status",
 					dataType : 'text',
-					data : {status : '판매종료'},
+					contentType: 'application/json',
+					data : JSON.stringify({
+						status : '판매종료',
+						statusDate : Date.now()
+						}),
 					success : function(result){
 						alert(result);
 						$(".filter-button[value='all']").click();
@@ -307,8 +321,12 @@ $(document).on("click", ".repost-btn", function(){
 	if(confirm("재능을 재등록 하시겠습니까?")){
 		$.ajax({
 				type : "PUT",
-				url : "/trade/talents/" + talentNo + "/status",
-				data : {status : '검토중'},
+				url : "/trade/talents/" + talentNo,
+				contentType: 'application/json',
+				data : JSON.stringify({
+						status : '검토중',
+						statusDate : Date.now()
+						}),
 				dataType : 'text',
 				success : function(message){
 					alert(message);
@@ -571,12 +589,15 @@ $('.filter-button').on("click", function(){
 					$('#list-print').empty();
 					$.each(list, function(index, item){
 						if(item.listType === 'sell'){
+							item.regDate = timestampToCustomFormat(item.regDate);
 							getSellList(item);
 						}
 						if(item.listType === 'refund'){
+							item.refundSubmitDate = timestampToCustomFormat(item.refundSubmitDate);
 							getRefundList(item);
 						}
 						if(item.listType === 'buy'){
+							item.purchaseDate = timestampToCustomFormat(item.purchaseDate);
 							getBuyList(item);
 						}	
 					});

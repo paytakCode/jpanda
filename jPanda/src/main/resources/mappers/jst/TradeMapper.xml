@@ -90,7 +90,7 @@
 		SELECT DISTINCT 
 			t.talent_no,
 			t.status as talent_status,
-			TO_CHAR(t.reg_date,'yy-mm-dd') AS reg_date,
+			t.reg_date AS reg_date,
 			t.title,
 			t.sale_bamboo,
 			count(t.talent_no) AS sell_count,
@@ -109,7 +109,7 @@
 			TRUNC(u.purchase_date) - TRUNC(sysdate) + 7 AS refundable_date,
 			t.title,
 			t.talent_no,
-			TO_CHAR(u.purchase_date,'yy-mm-dd') AS purchase_date
+			u.purchase_date AS purchase_date
 		FROM bamboo_use u 
 		INNER JOIN talent t ON u.talent_no = t.talent_no
 		WHERE buyer_id = #{memberId}
@@ -122,8 +122,8 @@
 			t.title,
 			u.use_bamboo,
 			r.purchase_no AS refund_purchase_no,
-			TO_CHAR(r.submit_date,'yy-mm-dd') AS refund_submit_date,
-			TO_CHAR(r.approve_date,'yy-mm-dd') AS refund_approve_date
+			r.submit_date AS refund_submit_date,
+			r.approve_date AS refund_approve_date
 		FROM talent_refund r
 		INNER JOIN bamboo_use u ON r.purchase_no = u.purchase_no
 		INNER JOIN talent t ON u.talent_no = t.talent_no
@@ -137,9 +137,23 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
-	<update id="updateTalentStatus" parameterType="TalentDto">
+	<update id="updateTalent" parameterType="TalentDto">
 		UPDATE talent
-		SET status = #{status}
+		SET
+			talent_no = #{talentNo},
+			seller_id = #{sellerId},
+			upper_category_no = #{upperCategoryNo},
+			lower_category_no = #{lowerCategoryNo},
+			main_img = #{mainImg},
+			title = #{title},
+			content = #{content},
+			bamboo = #{bamboo},
+			sale_bamboo = #{saleBamboo},
+			summary = #{summary},
+			status = #{status},
+			view_count = #{viewCount},
+			reg_date = #{regDate},
+			status_date = #{statusDate} 
 		WHERE talent_no = #{talentNo}
 	</update>
 	
