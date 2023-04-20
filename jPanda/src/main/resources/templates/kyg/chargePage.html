@@ -167,13 +167,24 @@
 												<!-- zsker;lzksrjchargeMoney ==> charge-money -->
 												<!-- couponNo ==> coupon-no -->
 												<!-- checkCoupon ==> check-coupon -->
+				<!-- 							
 				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
 				아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
 				충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" min="5000"><p/>
 				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력" onchange="couponCheck()">
-				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
-				<input type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()"><br/>
+				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
     			<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
+    			 -->
+				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
+				
+				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
+				아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
+				충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" min="5000"><p/>
+				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력">
+				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
+    			<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
+				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
+				
 				
 				<h4>충전방법</h4>
 					
@@ -292,7 +303,7 @@
 			        if (result == '1') {
 			          $('#result-check-coupon').html('success 사용 가능한 쿠폰입니다.').css('color', 'green');
 			          $('#coupon-status').val('1');
-			          
+			          $("#coupon-no").readOnly = true;
 		
 			        } else {
 				      $('#coupon-status').val('0');
@@ -307,7 +318,6 @@
 		       }
 			});  
 	   }
-	
 	
 	
 	
