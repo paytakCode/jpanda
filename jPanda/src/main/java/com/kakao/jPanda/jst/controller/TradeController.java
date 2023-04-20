@@ -52,7 +52,7 @@ public class TradeController {
 	 * @param model
 	 * @return trade페이지 url 매핑
 	 */
-	@GetMapping("/")
+	@GetMapping("")
 	public String statList(HttpSession session, Model model) {
 		if (session.getAttribute("memberId") == null) {
 			return "redirect:/trade/loginForm";

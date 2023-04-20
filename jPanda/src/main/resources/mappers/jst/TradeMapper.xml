@@ -47,22 +47,32 @@
 	</select>
 	
 	<insert id="insertExchangeByTalentNo" parameterType="TalentDto">
+		<selectKey keyProperty="exchangeNo" order="BEFORE" resultType="Long">
+			SELECT exchange_seq.nextval
+			FROM dual
+		</selectKey>
+		
 		INSERT INTO exchange(
 		    exchange_no, id, talent_no, sales, submit_date,
 		    approve_date, total, grade, ratio, status
 		)
-		VALUES (
-		    exchange_seq.nextval,
+		SELECT
+			#{exchangeNo},
 		    #{sellerId},
 		    #{talentNo},
-		    (SELECT COUNT(*) FROM bamboo_use u INNER JOIN talent t ON u.talent_no = t.talent_no WHERE t.talent_no = #{talentNo}),
+		    COUNT(*) AS sales,
 		    SYSDATE,
 		    NULL,
-		    (SELECT t.sale_bamboo * (SELECT COUNT(*) FROM bamboo_use u INNER JOIN talent t ON u.talent_no = t.talent_no WHERE t.talent_no = #{talentNo}) FROM talent t WHERE talent_no = #{talentNo}),
-		    (SELECT grade FROM member WHERE id = #{sellerId}),
-		    (SELECT ratio FROM member_grade WHERE grade = (SELECT grade FROM member WHERE id = #{sellerId})),
-		    '검토중'
-		)
+		    t.sale_bamboo * COUNT(*) AS total,
+		    m.grade,
+		    mg.ratio,
+		    '검토중' AS status
+		FROM bamboo_use u
+		INNER JOIN talent t ON u.talent_no = t.talent_no
+		INNER JOIN member m ON m.id = #{sellerId}
+		INNER JOIN member_grade mg ON m.grade = mg.grade
+		WHERE t.talent_no = #{talentNo}
+		GROUP BY m.grade, mg.ratio, t.sale_bamboo
 	</insert>
 	
 	<insert id="insertTalentRefund" parameterType="TradeDto">
