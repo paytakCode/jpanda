@@ -55,7 +55,7 @@ public class ChargeDaoImpl implements ChargeDao {
 		int couponUseInsert = 0;
 		try {
 			resultCharge = sqlSession.insert("insertCharge", chargeDto);
-			System.out.println("ChargeDaoImpl insertCouponUse resultCharge -> " + resultCharge);
+			System.out.println("ChargeDaoImpl insertCharge resultCharge -> " + resultCharge);
 //			couponUseInsert = sqlSession.insert("insertCouponUse", chargeDto);
 		} catch (Exception e) {
 			System.out.println("ChargeDaoImpl insertCharge() Exception -> " + e.getMessage());

@@ -127,16 +127,17 @@ public class ChargeController {
 	 */
 	
 //	가지고있는 밤부의 총 합계
-	@GetMapping(value = "/members/#{memberId}/total-bamboo")
-	@ResponseBody
-	public int totalBamboo(@PathVariable String memberId) {
-			log.info("ChargeController totalBamboo() Start...");
-			
-			int calculateTotalBamboo = chargeService.calculateTotalBamboo(memberId);
-		
-			log.info("ChargeController totalBamboo() calculateTotalBamboo {} -> ", calculateTotalBamboo);
-		return calculateTotalBamboo;
-	}
+	
+//	@GetMapping(value = "/members/#{memberId}/total-bamboo")
+//	@ResponseBody
+//	public int totalBamboo(@PathVariable String memberId) {
+//			log.info("ChargeController totalBamboo() Start...");
+//			
+//			int calculateTotalBamboo = chargeService.calculateTotalBamboo(memberId);
+//		
+//			log.info("ChargeController totalBamboo() calculateTotalBamboo {} -> ", calculateTotalBamboo);
+//		return calculateTotalBamboo;
+//	}
 	
 	
 }

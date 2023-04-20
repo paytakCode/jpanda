@@ -139,8 +139,6 @@
 	}
 		
 	
-	
-	
 </style>
 
 
@@ -163,28 +161,37 @@
 		<!-- chargeContents ==> charge-contents -->
 		<div id="charge-contents">
 			<!-- 금액 충전 -->
-			<form action="/charge/charge" method="post" onsubmit="return couponCheck()">
+			<form action="/charge/charge" method="post" onsubmit="return chargeSubmit()">
 				<!-- "onsubmit="return couponSubmit() -->
 												<!-- chargerId ==> charger-id -->
-												<!-- chargeMoney ==> charge-money -->
+												<!-- zsker;lzksrjchargeMoney ==> charge-money -->
 												<!-- couponNo ==> coupon-no -->
 												<!-- checkCoupon ==> check-coupon -->
 				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
 				아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
 				충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" min="5000"><p/>
-				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력">
-				<input type="button" id="check-coupon" value="쿠폰검사"><br/>
+				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력" onchange="couponCheck()">
+				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
+				<input type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()"><br/>
     			<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
 				
 				<h4>충전방법</h4>
+					
 					<div class="payment-method">
-						<input type="radio" id="select1" name="paymentMethod" value="휴대폰" checked><label for="select1">휴대폰</label>
-						<input type="radio" id="select2" name="paymentMethod" value="상품권"><label for="select2">상품권</label>
-						<input type="radio" id="select3" name="paymentMethod" value="무통장"><label for="select3">무통장</label><p/>
-						<input type="radio" id="select4" name="paymentMethod" value="신용카드"><label for="select4">신용카드</label>
-						<input type="radio" id="select5" name="paymentMethod" value="카드사 포인트"><label for="select5">카드사 포인트</label>
-						<input type="radio" id="select6" name="paymentMethod" value="계좌이체"><label for="select6">계좌이체</label>
+						<input type="radio" id="payment-method-radio1" name="paymentMethod" value="휴대폰" checked>
+						<label for="payment-method-radio1">휴대폰</label>
+						<input type="radio" id="payment-method-radio2" name="paymentMethod" value="상품권">
+						<label for="payment-method-radio2">상품권</label>
+						<input type="radio" id="payment-method-radio3" name="paymentMethod" value="무통장">
+						<label for="payment-method-radio3">무통장</label><p/>
+						<input type="radio" id="payment-method-radio4" name="paymentMethod" value="신용카드">
+						<label for="payment-method-radio4">신용카드</label>
+						<input type="radio" id="payment-method-radio5" name="paymentMethod" value="카드사 포인트">
+						<label for="payment-method-radio5">카드사 포인트</label>
+						<input type="radio" id="payment-method-radio6" name="paymentMethod" value="계좌이체">
+						<label for="payment-method-radio6">계좌이체</label>
 					</div>
+				
 				<!-- 
 				라디오 예비용 
 				https://getbootstrap.kr/docs/5.0/forms/checks-radios/
@@ -250,94 +257,45 @@
 //	}
 
 
- 	/* function couponCheck(){
+ 	 function chargeSubmit(){
 		if($('#coupon-status').val() == '1' ) {
-			alert("couponCheck() 사용가능한 쿠폰입니다");
+			alert("chargeSubmit() 사용가능한 쿠폰입니다");
 			return true;
 		} else {
 			console.log('coupon-no.val', $('#coupon-no').val());
 			console.log('charge-money.val', $('#charge-money').val());
-//			if($('#coupon-no').val() == '' && $('#charge-money').val() > '0' ) {	
-//				alert("couponCheck()  쿠폰없이 결제");
-//				return true; 
 			if($('#coupon-no').val() == '' && $('#charge-money').val() > '0'){	
-				let result = confirm("couponCheck() 쿠폰없이 결제를 계속 하시겠습니까?");
+				let result = confirm("chargeSubmit() 쿠폰이 적용되지 않았습니다. 결제를 계속 하시겠습니까?");
 				if(result){
 					return true;
 				} else {
 					return false;
 				}
 			} else {
-				alert("couponCheck() 쿠폰검사를 클릭해주세요");
+				alert("chargeSubmit() 쿠폰검사를 클릭해주세요");
 				return false;
 			}
 	   }
-	} */
-	
-	function couponCheck(){
+	} 
 		
-    	let couponNo = $("#coupon-no").val();
-    	let chargerId = $("#charger-id").val();
 		
-		$.ajax({
-			type: 'GET',
-      		url: '/charge/check-available-coupon?id=' + chargerId + '&couponNo=' + couponNo,
-      		dataType: 'text',															
-      		success: function(result) {
-				console.log(result);
-		        if (result == '1') {
-		          $('#coupon-status').val('1');
-	
-		        } else {
-			      $('#coupon-status').val('0');
-		          
-		       }
-	       }
-		});
-		
-		if($('#coupon-status').val == '1' ) {
-			alert("couponCheck() 사용가능한 쿠폰입니다");
-			return true;
-		} else {
-			console.log('coupon-no.val', $('#coupon-no').val());
-			console.log('charge-money.val', $('#charge-money').val());
-//			if($('#coupon-no').val() == '' && $('#charge-money').val() > '0' ) {	
-//				alert("couponCheck()  쿠폰없이 결제");
-//				return true; 
-			if($('#coupon-no').val() == '' && $('#charge-money').val() > 0){	
-				let result = confirm("couponCheck() 쿠폰없이 결제를 계속 하시겠습니까?");
-				if(result){
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				alert("couponCheck() 쿠폰검사를 클릭해주세요");
-				return false;
-			}
-	   }
-	}
-		 
-//사용가능한 쿠폰 validation 후 , 제출시에 쿠폰명이 바껴도 validation한 쿠폰이름으로 제출됨	
-	
-//	checkbox가 클릭될 때 쿠폰 입력란을 표시하거나 숨기는 JavaScript 함수
-	$(function (){
-		$("#check-coupon").click(function(){
-	    	let couponNo = $("#coupon-no").val();
-	    	let chargerId = $("#charger-id").val();
-	    	$.ajax({
+	//사용가능한 쿠폰 validation 
+	   function couponCheck() {
+		   	let couponNo = $("#coupon-no").val();
+			let chargerId = $("#charger-id").val();
+			$.ajax({
 				type: 'GET',
-	      		url: '/charge/check-available-coupon?id=' + chargerId + '&couponNo=' + couponNo,
-	      		dataType: 'text',															
-	      		success: function(result) {
+		  		url: '/charge/check-available-coupon?id=' + chargerId + '&couponNo=' + couponNo,
+		  		dataType: 'text',															
+		  		success: function(result) {
 					console.log(result);
 			        if (result == '1') {
 			          $('#result-check-coupon').html('success 사용 가능한 쿠폰입니다.').css('color', 'green');
-			          //$('#coupon-status').val('1');
+			          $('#coupon-status').val('1');
 			          
 		
 			        } else {
-				      //$('#coupon-status').val('0');
+				      $('#coupon-status').val('0');
 			          $('#result-check-coupon').html('success 사용이 불가능한 쿠폰입니다.').css('color', 'red');
 			          $('#coupon-no').val('').trigger('focus');
 			          $('#coupon-status').val('').trigger('focus');
@@ -347,11 +305,12 @@
 		       error: function() {
 		         alert("success 잘못된 접근입니다");
 		       }
-	    	});
-	  	});
-	})
-
-
+			});  
+	   }
+	
+	
+	
+	
 </script>
 </body>
 </html>
