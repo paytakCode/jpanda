@@ -1,13 +1,18 @@
 package com.kakao.jPanda.yjh.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Talent {
+	
 	private Long talentNo;
 	private String sellerId;
 	private Long upperCategoryNo;

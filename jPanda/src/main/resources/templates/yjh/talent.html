@@ -5,25 +5,11 @@
 <title>Insert title here</title>
 <script src="/js/jquery.js"></script>
 <link th:href="@{/css/board.css}" rel="stylesheet"/>
-<script type="text/javascript">
-	function chk() {
-		const check = $(".checkbox");
-		
-		for(var i = 0; i < check.length; i++) {
-			if(!check[i].checked){
-				alert("하나 이상의 데이터를 체크해주세요.");
-				return false;
-			} else {
-				return true;
-			}
-		}
-	}
-</script>
 </head>
 <body>
 	<h1>판매 등록 신청 현황</h1>
-	<form action="/admin/talents" method="post" onsubmit="return chk()">
-	<input type="hidden" name="_method" value="put">
+	<form action="/admin/talents" method="POST">
+  	<input type="hidden" name="_method" value="PATCH">
 		<table border="1">
 			<tr>
 				<th>선택</th>
@@ -31,11 +17,11 @@
 				<th>재능번호</th>
 				<th>제목/눌렀을때 상세 내용 보이게</th>
 				<th>요약 설명</th>
-				<th>신청 날짜</th>
+				<th>신청 날짜</th>	
 				<th>상태</th>
 			</tr>
         	<tr th:each="talent : ${talentList}">
-            	<td><input type="checkbox" class="checkbox" th:name="${talent.sellerId}"></td>
+            	<td><input type="checkbox" class="checkbox" th:name=talent th:value="${talent}"></td>
             	<td th:text="${talent.sellerId}"></td>
            	 	<td th:text="${talent.talentNo}"></td>
             	<td th:text="${talent.title}"></td>

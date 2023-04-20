@@ -1,13 +1,18 @@
 package com.kakao.jPanda.yjh.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -180,13 +185,19 @@ public class AdminController {
 		return "yjh/talent";
 	}
 	
-	@PutMapping(value = "/talents")
-	public String talentModifyByTalentNos() {
-		System.out.println("===== TalentController talentModifyByTalentNos() start =====");
+//	@PutMapping(value = "/talents/{sellerId}")
+//	public String talentModifyByTalentNos(@PathVariable("sellerId") List<String> sellerId) {
+//		System.out.println("===== TalentController talentModifyByTalentNos() start =====");
+//		System.out.println("sellerId : "+sellerId.toString());		
+//		
+//		
+//		return "";
+//	}
+	
+	@GetMapping(value = "/company-sales")
+	public String companySales() {
 		
-		
-		
-		return "";
+		return "yjh/company-sales";
 	}
 	
 }	
