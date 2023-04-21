@@ -11,5 +11,6 @@
   		<typeAlias type="com.kakao.jPanda.yjh.domain.Exchange" alias="Exchange"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.Coupon" alias="Coupon"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.Talent" alias="Talent"/>
+  		<typeAlias type="com.kakao.jPanda.yjh.domain.CompanySalesDto" alias="CompanySales"/>
   	</typeAliases>
 </configuration>

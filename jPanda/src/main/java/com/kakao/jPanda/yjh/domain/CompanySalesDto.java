@@ -1,6 +1,7 @@
 package com.kakao.jPanda.yjh.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public class CompanySalesDto {
 	private Long chargeNo;
 	private String chargerId;
 	private String paymentMethod;
-	private Long paymentAmount;
+	private Long paymentAmount;	
 	private Long chargeBamboo;
 	private String chargeDate;
 	private String couponNo;
@@ -46,4 +47,12 @@ public class CompanySalesDto {
 	private Long ratio;
 	private String exchangeStatus;
 	private Long exchangePaymentAmount;
+	
+	//기준 날짜
+	public String startDate;
+	public String endDate;
+	
+	//결과 값
+	private Long count;
+	private String yearData;
 }

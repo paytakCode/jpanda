@@ -1,8 +1,14 @@
 package com.kakao.jPanda.yjh.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.Exchange;
 import com.kakao.jPanda.yjh.domain.Notice;
 import com.kakao.jPanda.yjh.domain.Talent;
+import com.kakao.jPanda.yjh.service.CompanySalesService;
 import com.kakao.jPanda.yjh.service.CouponService;
 import com.kakao.jPanda.yjh.service.ExchangeService;
 import com.kakao.jPanda.yjh.service.NoticeService;
@@ -37,6 +45,7 @@ public class AdminController {
 	private final ExchangeService exchangeService;
 	private final CouponService couponService;
 	private final TalentService talentService;
+	private final CompanySalesService companySalesService;
 	
 	@GetMapping(value = "")
 	public String home() {
@@ -198,6 +207,24 @@ public class AdminController {
 	public String companySales() {
 		
 		return "yjh/company-sales";
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/company-sales/years")
+	public List<CompanySalesDto> companySalesListByYears(HttpServletRequest request) throws ParseException {
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		System.out.println("startDate : "+startDate);
+		System.out.println("endDate : "+endDate);
+		
+		CompanySalesDto companySalesDto = new CompanySalesDto();
+		companySalesDto.setStartDate(startDate);
+		companySalesDto.setEndDate(endDate);
+		
+		List<CompanySalesDto> csList = companySalesService.findCompanySalesByYears(companySalesDto);
+		System.out.println(csList);
+		
+		return csList;
 	}
 	
 }	

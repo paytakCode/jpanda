@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kakao.jPanda.yjh.CompanySalesMapper">
+
+	<select id="selectCompanySalesByYears" parameterType="CompanySales" resultType="CompanySales">
+		<![CDATA[
+		SELECT 
+  				 sum(bc.payment_amount) as COUNT,
+  				 TO_CHAR(bc.charge_date, 'YYYY') as YEARDATA
+		FROM
+  				 bamboo_charge bc
+		WHERE 	 bc.charge_date >= TO_DATE(#{endDate}, 'YYYYMMDD') and bc.charge_date < TO_DATE(#{startDate}, 'YYYYMMDD')
+		GROUP BY TO_CHAR(bc.charge_date, 'YYYY')
+		ORDER BY YEARDATA
+		]]>
+	</select>
+		
+</mapper>

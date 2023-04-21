@@ -5,8 +5,170 @@
 <title>Insert title here</title>
 <script src="/js/jquery.js"></script>
 <link th:href="@{/css/board.css}" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script type="text/javascript">
+
+function getToday(){
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    return year + month + day;
+}
+
+function getEndday(){
+    var date = new Date();
+    var year = date.getFullYear() - 5;
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    return year +  month + day;
+}
+
+	function callData() {
+		//option에 맞는 날짜 생성
+/* 		const sDate = new Date();
+		const eDate = new Date(sDate.getFullYear() - 5, sDate.getMonth(), sDate.getDate()); */
+
+		const period = $(".period");
+		const periodValue = period.val();
+		
+		if(periodValue == "years") {
+			const startDate = getToday();
+			const endDate = getEndday();
+			$.ajax({
+			    url: "/admin/company-sales/years",
+			    type: "GET",
+			    data: {startDate: startDate, endDate: endDate},
+			    success: function(csList) {
+		               	 var countList=[];
+		                 var yearList=[];
+		                
+		                $.each(csList,function(){
+		                    countList.push(this["count"])
+		                    yearList.push(this["yearData"])
+		                })
+		                
+		                const ctx = document.getElementById('myChart').getContext('2d');
+		                // 그래픽 엔진으로 유명한 것 (DirectX, OpenGL)
+		                const myChart = new Chart(ctx, {
+		                    type: 'bar', //bar,line,pie,doughnut,radar
+		                    //labels : x축의 값
+		                    //datasets : data의 값, 속성들 지정
+		                    data: {
+		                        labels: yearList,
+		                        datasets: [{
+		                            label: '연별 매출 현황',
+		                            data: countList,
+		                            backgroundColor: [
+		                            	'rgba(255, 99, 132, 0.2)',
+                                		'rgba(54, 162, 235, 0.2)',
+                                		'rgba(255, 206, 86, 0.2)'
+		                            ],
+		                            borderColor: [
+		                            	'rgba(255, 99, 132, 0.2)',
+                                		'rgba(54, 162, 235, 0.2)',
+                                		'rgba(255, 206, 86, 0.2)'
+		                            ],
+		                            borderWidth: 3
+		                        }]
+		                    },
+		                    options: {
+		                        scales: {
+		                            y: {
+		                                beginAtZero: true
+		                            }
+		                        }
+		                    }
+		                });
+
+			    }
+			});
+			/* location.href="/admin/company-sales/years"; */
+			
+		} else if(periodValue == "month"){
+			alert("month selected");
+		} else if(periodValue == "day") {
+			alert("day selected");
+		}
+	}
+
+</script>
 </head>
 <body>
 	<h1>살레스</h1>
+	<select class="period" onchange="return callData()">
+		<option disabled selected>----- 기간 설정 -----</option>
+		<option value="years">연간 매출 현황 보기</option>
+		<option value="month">월간 매출 현황 보기</option>
+		<option value="day">일간 매출 현황 보기</option>
+	</select>
+	
+	<div style="width: 900px; height: 900px;">
+		<!--차트가 그려질 부분-->
+		<canvas id="myChart">
+			
+		</canvas>
+	</div>
 </body>
+<script type="text/javascript">
+	var context = document
+		.getElementById('myChart')
+        .getContext('2d');
+	var myChart = new Chart(context, {
+    	type: 'bar', // 차트의 형태
+		data: { // 차트에 들어갈 데이터
+							//x 축
+		labels: [ '1','2','3','4','5','6','7'], 
+		datasets: [
+                    { //데이터
+                      label: 'test1', //차트 제목
+                      fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                    		//x축 label에 대응되는 데이터 값
+                      data: [ 21,19,25,20,23,26,25 ],
+                      backgroundColor: [
+                      					 //색상
+                      			        'rgba(255, 99, 132, 0.2)',
+                                		'rgba(54, 162, 235, 0.2)',
+                                		'rgba(255, 206, 86, 0.2)',
+                                		'rgba(75, 192, 192, 0.2)',
+                                		'rgba(153, 102, 255, 0.2)',
+                                		'rgba(255, 159, 64, 0.2)'
+                            			],
+					  borderColor: [
+                      		         //경계선 색상
+                            	    'rgba(255, 99, 132, 1)',
+                                	'rgba(54, 162, 235, 1)',
+                                	'rgba(255, 206, 86, 1)',
+                                	'rgba(75, 192, 192, 1)',
+                                	'rgba(153, 102, 255, 1)',
+                                	'rgba(255, 159, 64, 1)'
+                            		],
+                      borderWidth: 1 //경계선 굵기
+                        } ,
+                        /* {
+                            label: 'test2',
+                            fill: false,
+                            data: [
+                                8, 34, 12, 24 */
+                            ],
+                            backgroundColor: 'rgb(157, 109, 12)',
+                            borderColor: 'rgb(157, 109, 12)'
+                        } 
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+</script>
 </html>
