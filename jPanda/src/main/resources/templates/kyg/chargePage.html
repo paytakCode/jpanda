@@ -303,7 +303,8 @@
 			        if (result == '1') {
 			          $('#result-check-coupon').html('success 사용 가능한 쿠폰입니다.').css('color', 'green');
 			          $('#coupon-status').val('1');
-			          $("#coupon-no").readOnly = true;
+			          /* document.getElementById("coupon-no").readOnly = true; */ 
+			          $('#coupon-no').attr('readonly',true);
 		
 			        } else {
 				      $('#coupon-status').val('0');
