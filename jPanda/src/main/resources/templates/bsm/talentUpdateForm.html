@@ -87,6 +87,10 @@ table {
 	margin: 20px;
 	padding: 20px;
 }
+
+#price > div {
+   display: inline-block;
+}
 </style>
 <!-- CKEditor5 사용 -->
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
@@ -292,12 +296,19 @@ table {
 	<div id="price" class="bamboo write">
 		<h4>가격</h4>
 		<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
+	<div class="price">
 		<h3>정상 밤부</h3>
 		<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000" th:value="${talent.bamboo}"><p>밤부</p>
+	</div>
+	<div class="price">
 		<h3>할인 밤부</h3>
 		<input type="number" id="sale-bamboo" name="saleBamboo" class="bamboo" placeholder="900" th:value="${talent.saleBamboo}"><p>밤부</p>
+	</div>	
+	<div >
 		<h3>할인율</h3>
 		<input type="text" id="discount-bamboo" class="bamboo" placeholder="10" readonly><p>%</p>
+	</div>
+	</div>
 	<script>
  	$('#bamboo').on("input", calculateDiscount);
  	$('#sale-bamboo').on("input", calculateDiscount);
@@ -315,7 +326,6 @@ table {
 	    
   	}
 	</script>			
-	</div>
 	
 	<div id="summary" class="summary write">
 		<h4>요약 설명</h4>

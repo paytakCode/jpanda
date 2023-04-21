@@ -87,6 +87,9 @@ table {
 	margin: 20px;
 	padding: 20px;
 }
+#price > div {
+   display: inline-block;
+}
 </style>
 <script src="/js/jquery.js"></script>
 <!-- CKEditor5 사용 -->
@@ -268,7 +271,7 @@ table {
 	</div>
 	<div>
 		<h3>할인율</h3>
-		<input type="text" id="discount-bamboo" class="bamboo" placeholder="10" readonly><p>%</p>
+		<input type="number" id="discount-bamboo" class="bamboo" placeholder="10" readonly><p>%</p>
 	</div>	
 	<script>
   		$('#bamboo').on("input", calculateDiscount);
