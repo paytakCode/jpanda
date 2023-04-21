@@ -20,6 +20,8 @@ public class TradeDto {
 	private String talentStatus; //status
 	private Long viewCount;
 	private Timestamp regDate;
+	private Timestamp statusDate;
+	
 	
 	//member
 	private String memberId; //id

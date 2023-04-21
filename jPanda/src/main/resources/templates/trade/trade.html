@@ -162,11 +162,11 @@
 		<!-- nav bar -->
 		<nav>
 		  <ul class="nav-links">
-		    <li><a href="#">재능판매</a></li>
+		    <li><a href="#">재능등록</a></li>
 		    <li><a href="#">재능구매</a></li>
-		    <li><a href="#">거래관리</a></li>
-		    <li><a href="#">충전/내역</a></li>
-		    <li><a href="#">마이페이지</a></li>
+		    <li><a href="trade.html">거래관리</a></li>
+		    <li><a href="charge.html">충전/내역</a></li>
+		    <li><a href="myPage.html">마이페이지</a></li>
 		  </ul>
 		</nav> <!-- /nav bar -->
 		
@@ -267,11 +267,9 @@
  */
 function timestampToCustomFormat(timestamp){
 	let date = new Date(timestamp);
-	let formatted_date = date.getFullYear() + " - " + (date.getMonth() + 1) + " - " + date.getDate();
+	let formatted_date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 	return formatted_date;
 }
-
-
 
 /**
  * trade페이지 로드 완료시
@@ -291,7 +289,7 @@ $(document).on("click", ".end-sell-btn", function(){
 		$.ajax(
 				{
 					type : "PUT",
-					url : "/trade/talents/"+ talentNo + "/status",
+					url : "/trade/talents/"+ talentNo,
 					dataType : 'text',
 					contentType: 'application/json',
 					data : JSON.stringify({
@@ -299,7 +297,8 @@ $(document).on("click", ".end-sell-btn", function(){
 						statusDate : Date.now()
 						}),
 					success : function(result){
-						alert(result);
+						console.log(result);
+						alert('재능 판매를 종료하였습니다.');
 						$(".filter-button[value='all']").click();
 					},
 					error : function(){
@@ -329,7 +328,8 @@ $(document).on("click", ".repost-btn", function(){
 						}),
 				dataType : 'text',
 				success : function(message){
-					alert(message);
+					console.log(message);
+					alert("재능 재등록을 신청하였습니다.");
 					$(".filter-button[value = 'all']").click();
 				},
 				error : function(){
@@ -354,7 +354,8 @@ $(document).on("click", ".exchange-btn", function(){
 					contentType: 'application/json',
 					dataType : 'text',
 					success : function(message){
-						alert(message);
+						console.log(message);
+						alert('환전 신청에 성공하였습니다.');
 						$(".filter-button[value='all']").click();	
 					},
 					error : function(){
@@ -380,11 +381,12 @@ $(document).on("click", ".refund-cancle-btn", function(){
 					contentType: 'application/json',
 					dataType : 'text',
 					success : function(message){
-						alert(message);
+						console.log(message);
+						alert("환불이 취소되었습니다.");
 						$(".filter-button[value='all']").click();
 					},
 					error : function(){
-						alert("refund-cancle-btn function() error");
+						alert("refund-cancle-btn function error");
 					},
 				}
 			);		
@@ -437,11 +439,12 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
 		    	  }),
 		    contentType: 'application/json',
 		    success: function(result){
-		        alert(result);
+		        console.log(result);
+		        alert('재능 환불 신청에 성공하였습니다.');
 		        location.reload();
 		    },
 		    error: function(xhr, status, error){
-		        alert("환불 처리 중 오류가 발생하였습니다.");
+		        alert("refund-submit-btn function error");
 		    }
 		});
 			
@@ -463,7 +466,8 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
 					url : "/trade/exchanges/"+ talentNo + "/status",
 					dataType : 'text',
 					success : function(message){
-						alert(message);
+						console.log(message);
+						alert('환전 재신청에 성공하였습니다.');
 						$(".filter-button[value='all']").click();	
 					},
 					error : function(){
@@ -477,23 +481,25 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
 
  
 /**
- * list-print tradeList Ajax 통신
+ * 판매 리스트 출력
  */
 function getSellList(item){
 	let text =  '<div class = "card text-center sell-card">' + 
 					'<div class = "card-header badge text-bg-primary">' + item.talentStatus + '</div>' + 
 					'<div class = "card-body">' +  
 					'<div class = "card-title">' + item.title + '</div><br>' +
-					'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>' +
+					'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div><br>' +
 					'<div class = "card-text">' + item.sellCount + '명이 재능을 구매했어요</div>';
 				
 	if(item.talentStatus === '게시중' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
-				'<button class="end-sell-btn btn btn-dark" id="sell-no-' + item.talentNo + '">판매종료</button></div>';
+				'<button class="end-sell-btn btn btn-dark" id="sell-no-' + item.talentNo + '">판매종료</button></div>' + 
+				'</div><div class = "card-footer text-muted">판매등록날짜 : ' + item.regDate + '</div></div>';
 	} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
 				'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">환전하기</button>' + 
-				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>';
+				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' + 
+				'</div><div class = "card-footer text-muted">판매종료날짜 : ' + item.statusDate + '</div></div>';
 	} else if(item.exchangeStatus != null){
 		switch(item.exchangeStatus){
 			case '검토중':
@@ -510,22 +516,25 @@ function getSellList(item){
 				'<button class="re-exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재신청</button>';
 				break;
 		}
+		
+		text += '</div><div class = "card-footer text-muted">판매종료날짜 : ' + item.statusDate + '</div></div>';
 
 	} else {
-		text += '';
+		text += '</div><div class = "card-footer text-muted">판매등록날짜 : ' + item.statusDate + '</div></div>';
 	}
 	
-	text += '</div><div class = "card-footer text-muted">판매등록날짜 : ' + item.regDate + '</div></div>';
-			
 	$('#list-print').append(text);
 }
 
+/**
+ * 구매 리스트 출력
+ */
 function getBuyList(item){
 	let text = '<div class = "card text-center buy-card">' +  
 					'<div class = "card-header badge text-bg-success">' + item.talentStatus + '</div>' +
 					'<div class = "card-body">' + 
 						'<div class = "card-title">' + item.title + '</div><br>' +
-						'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
+						'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div><br>';
 				
 	if(item.refundableDate < 0){
 		text += '<div class = "card-text">재능 구매가 확정되었어요</div>';
@@ -537,7 +546,7 @@ function getBuyList(item){
 					' data-refund-salebamboo = ' + item.useBamboo + 
 					'>환불신청</button></div>';
 	} else if(item.refundableDate == 0){
-		text += '<div class = "card-text"> 환불가능 마지막 날입니다!</div>' + 
+		text += '<div class = "card-text"> 환불가능 마지막 날입니다! </div>' + 
 				'<div class = "card-text">'+ 
 				'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
 				'data-refund-talentno = ' + item.talentNo + 
@@ -552,12 +561,15 @@ function getBuyList(item){
 	$('#list-print').append(text);		
 }
 
+/**
+ * 환불 리스트 출력
+ */
 function getRefundList(item){
 	let text =  '<div class = "card text-center refund-card">' +  
 					'<div class = "card-header badge text-bg-danger">' + item.refundStatus + '</div>' +
 					'<div class = "card-body">' +
 						'<div class = "card-title">' + item.title + '</div>' +
-						'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div>';
+						'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div><br>';
 			
 	if(item.refundStatus === '검토중'){
 		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="refund-no-' + item.refundPurchaseNo + '">신청취소</button> </div>' +
@@ -577,6 +589,9 @@ function getRefundList(item){
 	$('#list-print').append(text);		
 }
 
+/**
+ * 필터링 버튼
+ */
 $('.filter-button').on("click", function(){
 	let listType = this.value;
 	console.log(status);
@@ -590,10 +605,12 @@ $('.filter-button').on("click", function(){
 					$.each(list, function(index, item){
 						if(item.listType === 'sell'){
 							item.regDate = timestampToCustomFormat(item.regDate);
+							item.statusDate = timestampToCustomFormat(item.statusDate);
 							getSellList(item);
 						}
 						if(item.listType === 'refund'){
 							item.refundSubmitDate = timestampToCustomFormat(item.refundSubmitDate);
+							item.refundApproveDate = timestampToCustomFormat(item.refundApproveDate);
 							getRefundList(item);
 						}
 						if(item.listType === 'buy'){

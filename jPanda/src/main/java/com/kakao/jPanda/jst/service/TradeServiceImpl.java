@@ -49,16 +49,16 @@ public class TradeServiceImpl implements TradeService{
 		return statList;
 	}
 	
-	//List 정렬용 method
+	//sell, buy, refundList 정렬을 위한 DATE 통합
 	private Timestamp getDateForSort(TradeDto tradeDto) {
-	    if (tradeDto.getRegDate() != null) {
-	        return tradeDto.getRegDate();
+	    if (tradeDto.getStatusDate() != null) {
+	        return tradeDto.getStatusDate();
 	    } else if (tradeDto.getRefundSubmitDate() != null) {
 	        return tradeDto.getRefundSubmitDate();
 	    } else if (tradeDto.getPurchaseDate() != null){
 	        return tradeDto.getPurchaseDate();
 	    } else {
-	    	return null;
+	    	return tradeDto.getRegDate();
 	    }
 	}
 	
