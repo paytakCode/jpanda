@@ -89,7 +89,7 @@ public class ChargeController {
 			    .uri(URI.create("https://api.tosspayments.com/v1/payments/confirm"))
 //			    https://developers.tosspayments.com/613834/accounts/787829/phases/test/api-keys 에서 자신들의 API 시크릿키 사용. / 시크릿키: (콜론포함) base64인코딩 후 사용
 //			    .header("Authorization", "Basic SecretKey")
-			    .header("Authorization", "Basic dGVzdF9za19ENHlLZXE1YmdycHl6cGFqUGU0OEdYMGx6VzZZOg==")
+			    .header("Authorization", "Basic dGVzdF9=")
 			    .header("Content-Type", "application/json")
 			    .method("POST", HttpRequest.BodyPublishers.ofString("{\"paymentKey\":\"" + paymentRequestInfomation.get("paymentKey") + 
 			    													"\",\"amount\": " + paymentRequestInfomation.get("amount") + 
