@@ -14,5 +14,4 @@ public interface CategoryService {
 	List<Category> findLowerCategoryListByUpperCategoryNo(Long upperCategoryNo);
 	
 	
-	
 }

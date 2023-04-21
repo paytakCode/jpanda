@@ -18,7 +18,6 @@ public class TalentServiceImpl implements TalentService {
 	// 재능 전체 리스트
 	@Override
 	public List<Talent> findTalentList() {
-		
 		return talentDao.selectTalentList();
 	}
 	

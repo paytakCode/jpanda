@@ -112,6 +112,68 @@ li:hover {
   margin-bottom: 20px;
 }
 
+.bamboo-score {
+  width: 80px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
+  height: 16px;
+}
+
+.bamboo-score img {
+  width: 16px;
+  height: 16px;
+}
+
+
+
+.talent-ajax-list {
+  margin: 80px auto;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.talent-image {
+  max-width: 100px;
+  margin-right: 10px;
+}
+
+.talent-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.talent-summary {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.talent-seller {
+  font-size: 12px;
+  color: gray;
+  margin-right: 10px;
+}
+
+.talent-price {
+  font-size: 18px;
+  margin-right: 10px;
+  text-decoration: line-through;
+  color: red;
+}
+
+.talent-sale-price {
+  font-size: 18px;
+  color: green;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.talent-score {
+  font-size: 12px;
+  color: green;
+}
+
+
 </style>
 
     <title>게시판 페이지</title>
@@ -150,22 +212,24 @@ li:hover {
   				<option>==대분류를 선택해주세요==</option>
 			</select> <br>
 			
-			<input type="checkbox" id="checkbox1" name="group" value="value1">
-			<label for="checkbox1">최신순</label>
+			<input type="radio" id="radio1" name="group" class="radio-filter" value="req_date" checked="checked">
+			<label for="radio1">최신순</label>
 			
-			<input type="checkbox" id="checkbox2" name="group" value="value2">
-			<label for="checkbox2">인기순</label><br>
+			<input type="radio" id="radio2" name="group" class="radio-filter" value="view_count">
+			<label for="radio2">인기순</label><br>
 			
-			<input type="checkbox" id="checkbox3" name="group" value="value3">
-			<label for="checkbox3">평점순</label>
+			<input type="radio" id="radio3" name="group" class="radio-filter" value="bamboo_score">
+			<label for="radio3">평점순</label>
 			
-			<input type="checkbox" id="checkbox4" name="group" value="value4">
-			<label for="checkbox4">높은 가격순</label><br>
+			<input type="radio" id="radio4" name="group" class="radio-filter" value="sale_bamboo">
+			<label for="radio4">높은 가격순</label><br>
 			
-			<input type="checkbox" id="checkbox5" name="group" value="value5">
-			<label for="checkbox5">낮은 가격순</label><br>
-			<button onclick="applyChanges()">적용</button>
+			<input type="radio" id="radio5" name="group" class="radio-filter" value="sale_bamboo">
+			<label for="radio5">낮은 가격순</label><br>
     </div>
+    
+    
+
     
 	<div id="list-container">
 	   	<div class="list">
@@ -178,7 +242,7 @@ li:hover {
 	        	</li>
 	         </ul>
 		</div>
-	<button>판매글 등록</button>
+		<button id="sell-insert">판매글 등록</button>
 	     <div class="list">
 	        <h2>판매 게시판 리스트</h2>
 	        	<ul id="defalut-list">
@@ -186,20 +250,25 @@ li:hover {
 	               		이미지:	<img th:src="${talent.mainImg}">
 	                	제목:		<span th:text="${talent.title}"></span><p>
 	                	요약설명:	<span th:text="${talent.summary}"></span><p>
-	                	강사:		<span th:text="${talent.sellerId}"></span>
+	                	강사:		<span th:text="${talent.sellerId}"></span><p>
 	                	정상 가격:	<span th:text="${talent.bamboo}"></span><p>
 	                	판매 가격:	<span th:text="${talent.saleBamboo}"></span><p>
-				           		<span class="avgScoreSpan" th:text="${talent.bambooScore}">
-								</span>
-								<img >
+				           		<span class="avgScoreSpan" th:text="${talent.bambooScore}" style="display:none;"></span>
+						만족도:	<img class="bamboo-score">
+
 	            	</li>
 	        	</ul>
 	     </div>
 	</div>
 
+<form action="" method="get">
+</form>
+
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script>
+
 function onFilter(upperCategoryNo){
+	
     $.ajax({
         url:"/board/update-talent-list-by-upper-category-no",
         type: 'get',
@@ -209,14 +278,15 @@ function onFilter(upperCategoryNo){
             $('#defalut-list').empty();
             console.log(talentList);
             talentList.forEach(function(talent){
-                const li = $('<li>').appendTo('#defalut-list');
-                $('<img>').attr('src', talent.mainImg).appendTo(li);
-                $('<span>').addClass('title').text(talent.title).appendTo(li);
-                $('<span>').text(talent.summary).appendTo(li);
-                $('<span>').text(talent.sellerId).appendTo(li);
-                $('<span>').text(talent.bamboo).appendTo(li);
-                $('<span>').text(talent.saleBamboo).appendTo(li);
-                $('<span>').text(talent.bambooScore).appendTo(li);
+            	
+                const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
+                $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
+                $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
+                $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
+                $('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
+                $('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
+                $('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
+                $('<span>').addClass('talent-score').text(talent.bambooScore).appendTo(li);
                 li.click(function() {
                     location.href = '/talent/' + talent.talentNo;
                 });
@@ -253,14 +323,14 @@ function onFilter(upperCategoryNo){
 	            $('#defalut-list').empty();
 	            console.log(talentList);
 	            talentList.forEach(function(talent){
-	                const li = $('<li>').appendTo('#defalut-list');
-	                $('<img>').attr('src', talent.mainImg).appendTo(li);
-	                $('<span>').addClass('title').text(talent.title).appendTo(li);
-	                $('<span>').text(talent.summary).appendTo(li);
-	                $('<span>').text(talent.sellerId).appendTo(li);
-	                $('<span>').text(talent.bamboo).appendTo(li);
-	                $('<span>').text(talent.saleBamboo).appendTo(li);
-	                $('<span>').text(talent.bambooScore).appendTo(li);
+	            	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
+	                $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
+	                $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
+	                $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
+	                $('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
+	                $('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
+	                $('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
+	                $('<span>').addClass('talent-score').text(talent.bambooScore).appendTo(li);
 	                li.click(function() {
 	                    location.href = '/talent/' + talent.talentNo;
 	                });
@@ -269,36 +339,24 @@ function onFilter(upperCategoryNo){
 		});
 	});
 
-	
-	
-	
-const checkboxes = document.querySelectorAll('input[name=group]');
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', function() {
-      checkboxes.forEach((c) => {
-        if (c !== this) {
-          c.checked = false;
-        }
-      });
-    });
-  });
 
-  function applyChanges() {
-    // 체크박스가 선택된 상태에서 적용 버튼을 눌렀을 때의 동작
-  }
- 
+	
+	
 
-  
+ /* 별점평균에 따라 나타내는 밤부 스코어 */
 $(function() {
-	  var starImages = ['bamboo1star.png', 'bamboo2star.png', 'bamboo3star.png', 'bamboo4star.png', 'bamboo5star.png'];
-	  var avgScoreSpan = $('.avgScoreSpan');
-	  var avgScoreImg = document.getElementById('avgScoreImg');
-	  var avgScore = parseInt(avgScoreSpan.innerText);
-	  $('.avgScoreSpan').each(function(){
-		  	var score = parseInt($(this).text());
-		  	$(this).next('img').attr('src', '../images/bambooScore/' + starImages[score - 1]);
-	  });
-	});
+  var starImages = ['bamboo1.png', 'bamboo1.5.png', 'bamboo2.png', 'bamboo2.5.png', 'bamboo3.png', 'bamboo3.5.png', 'bamboo4.png', 'bamboo4.5.png', 'bamboo5.png'];
+  var avgScoreSpan = $('.avgScoreSpan');
+  $('.avgScoreSpan').each(function(){
+    var score = parseFloat($(this).text());
+    score = Math.floor((score * 2 + 1) / 2 * 10) / 10;
+    score = Math.min(score, 5); // score가 5보다 크면 5로 고정
+    $(this).next('.bamboo-score').attr('src', '../images/bambooScore/' + starImages[(score * 2) - 2]);
+  });
+});
+
+
+
 </script>
 </body>
 </html>

@@ -4,13 +4,13 @@
 
 <mapper namespace="talentMapper">
 	<select id="selectTalentList" resultType="Talent">
-        SELECT t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo,
-        t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
-        FROM talent t, review r
-        WHERE t.talent_no = r.talent_no 
-        AND t.status = '게시중'
-        GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
-        ORDER BY t.talent_no DESC
+       	SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		FROM talent t, review r
+		WHERE t.talent_no = r.talent_no
+		AND   t.status = '게시중'
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status, t.reg_date
+		ORDER BY t.reg_date DESC
 	</select>
 	
 	<select id="selectNoticeList" resultType="Notice">
@@ -37,8 +37,8 @@
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'
 		AND   upper_category_no = #{upperCategoryNo}
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
-		ORDER BY t.talent_no DESC
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status, t.reg_date
+		ORDER BY t.reg_date DESC
 	</select>
 
 	<select id="selectLowerCategoryListByUpperCategoryNo" resultType="Category" parameterType="Long">
@@ -54,8 +54,8 @@
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'
 		AND   lower_category_no = #{lowerCategoryOne}
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
-		ORDER BY t.talent_no DESC
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status, t.reg_date
+		ORDER BY t.reg_date DESC
 	</select>
 	
 	<select id="selectReviewListByTalentNo" parameterType="Long" resultType="Review">
@@ -65,15 +65,19 @@
 		ORDER BY review_date DESC
 	</select>
 	
-	<select id="selectTestTalentList" resultType="TestTalent">
+	<select id="selectTalentListByUpperCategoryAndFilters" resultType="Talent" parameterType="Filters">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
 		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, t.status
-		ORDER BY t.talent_no DESC
+		AND   upper_category_no = #{upperCategoryNo}
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo,
+				 t.status, t.view_count, t.reg_date, r.bamboo_score
+		ORDER BY #{filter} DESC
 	</select>
+	
+	
 	
 </mapper>
 

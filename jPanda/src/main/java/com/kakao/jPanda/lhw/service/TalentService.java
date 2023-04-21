@@ -17,5 +17,6 @@ public interface TalentService {
 	
 	// 재능 상세 페이지 
 	Talent findTalentByTalentNo(Long talentNo);
+	
 
 }
