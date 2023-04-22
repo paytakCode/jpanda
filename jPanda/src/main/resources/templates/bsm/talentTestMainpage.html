@@ -91,7 +91,7 @@ a:hover{color:#1bc1a3;}
 	<input type="number" name="talent-no">
 	<button type="submit">재능수정</button><p/>
 	
-
+	<div id="talent-slide">
 	<div id="bestSellerTalent" class="slide">
   	<h4>최다 판매</h4>
       <div id="slider-wrap1" class="slider-wrap">
@@ -127,32 +127,9 @@ a:hover{color:#1bc1a3;}
               </ul>
       </div>
       </div>
-  	<!-- <div id="best-seller">
-  	<h5>최다 판매</h5>
-  	<div id="best-seller-list">
-    	<div class="best-seller-item" th:each="talent : ${bestSellerTalent}">
-      	<img th:src="${talent.mainImg}"><p/>
-      	<p th:text="${talent.title}"></p>
-    	</div>
-  	</div>
-	</div>
-	<div>
-	<h5>최고 평점</h5>
-	<div th:each="talent : ${topRatedTalent}">
-	<img th:src="${talent.mainImg}"><p/>
-	<p th:text="${talent.title}"></p>
-	</div>
-	</div>
+      </div> <!-- id="talent-slide" -->
 	
-	<div>
-	<h5>최신 트렌드</h5>
-	<div th:each="talent : ${newTrendTalent}">
-	<img th:src="${talent.mainImg}"><p/>
-	<p th:text="${talent.title}"></p>
-	</div>
-	</div> -->
-	
-	<div>
+	<div id="random-talent">
 	<h5>오늘의 재능</h5>
 	<ul>
 		<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
