@@ -278,7 +278,6 @@ function onFilter(upperCategoryNo){
             $('#defalut-list').empty();
             console.log(talentList);
             talentList.forEach(function(talent){
-            	
                 const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
                 $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
                 $('<span>').addClass('talent-title').text(talent.title).appendTo(li);

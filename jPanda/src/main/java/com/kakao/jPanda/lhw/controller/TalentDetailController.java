@@ -10,23 +10,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kakao.jPanda.lhw.domain.Review;
 import com.kakao.jPanda.lhw.domain.Talent;
-import com.kakao.jPanda.lhw.service.ReviewService;
 import com.kakao.jPanda.lhw.service.TalentService;
 
 import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/talent")
-public class TalentController {
+public class TalentDetailController {
 
 	private final TalentService talentService;
-	private final ReviewService reviewService;
 	
 	@GetMapping("/{talentNo}")
 	public String talentDetails(@PathVariable Long talentNo, Model model) {
 		System.out.println("Controller talentDetails Start");
 		Talent talent = talentService.findTalentByTalentNo(talentNo);
-		List<Review> reviewList = reviewService.findReviewListByTalentNo(talentNo);
+		List<Review> reviewList = talentService.findReviewListByTalentNo(talentNo);
 		model.addAttribute("talent", talent);
 		model.addAttribute("reviewList", reviewList);
 		return "lhw/Talent";
