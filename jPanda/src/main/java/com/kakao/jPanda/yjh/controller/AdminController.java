@@ -1,24 +1,16 @@
 package com.kakao.jPanda.yjh.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,11 +19,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.Exchange;
 import com.kakao.jPanda.yjh.domain.Notice;
 import com.kakao.jPanda.yjh.domain.Talent;
-import com.kakao.jPanda.yjh.service.CompanySalesService;
-import com.kakao.jPanda.yjh.service.CouponService;
-import com.kakao.jPanda.yjh.service.ExchangeService;
-import com.kakao.jPanda.yjh.service.NoticeService;
-import com.kakao.jPanda.yjh.service.TalentService;
+import com.kakao.jPanda.yjh.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,22 +29,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping(value = "/admin")
 public class AdminController {
-	private final NoticeService noticeService;
-	private final ExchangeService exchangeService;
-	private final CouponService couponService;
-	private final TalentService talentService;
-	private final CompanySalesService companySalesService;
+	private final AdminService adminService;
 	
+	//home
 	@GetMapping(value = "")
 	public String home() {
+		
 		return "yjh/home";
 	}
 	
+	//notice
+	
 	@GetMapping(value = "/notice") // ~~ /notices/{noticeNo}  @Pathvariable  ,   /notices   @Pathparam LocalDate date ?date="dsaffdsa" 
 	public String noticeList(Model model) {
-		System.out.println("===== NoticeController noticeList start =====");
-		
-		List<Notice> noticeList = noticeService.findNotice();
+		log.info("Notice Controller noticeList() start");
+		List<Notice> noticeList = adminService.findNotice();
 		model.addAttribute("noticeList", noticeList);
 		
 		return "yjh/notice";
@@ -64,12 +51,11 @@ public class AdminController {
 	
 	@GetMapping(value = "/notices/{noticeNo}")
 	public String noticeDetails(@PathVariable String noticeNo, Model model) {
-		System.out.println("===== NoticeController noticeDetails start =====");
-		System.out.println("noticeNo : "+noticeNo.toString());
-		
-		Notice notice = noticeService.findNoticeByNoticeNo(noticeNo);
-				
+		log.info("Notice Controller noticeDetails() start");
+		log.info("noticeNo : "+noticeNo);
+		Notice notice = adminService.findNoticeByNoticeNo(noticeNo);	
 		model.addAttribute("notice", notice);
+		
 		return "yjh/notice-content";
 	}
 	/*
@@ -90,23 +76,44 @@ public class AdminController {
 	
 	@GetMapping(value = "/notice-form")
 	public String noticeForm() {
+		
 		return "yjh/notice-form";
 	}
 	
 	@ResponseBody
 	@PostMapping(value = "/notice")
 	public String noticeAdd(Notice notice) {
-		System.out.println("=====notice controller noticeAdd() start=====");
-		String resultStr = noticeService.addNotice(notice);
+		log.info("Notice Controller noticeAdd() start");
+		String resultStr = adminService.addNotice(notice);
 		
 		return resultStr;
 	}
 	
+	@GetMapping(value = "/notice/{noticeNo}/modify-form")
+	public String noticeModifyForm(@PathVariable String noticeNo, Model model) {
+		log.info("Notice Controller noticeModifyForm() start");
+		log.info("noticeNo : "+noticeNo);
+		Notice notice = adminService.findNoticeByNoticeNo(noticeNo);
+		model.addAttribute("notice", notice);
+		
+		return "yjh/notice-modifyFrom";
+	}
+	
+	@ResponseBody
+	@PutMapping(value = "/notice/{noticeNo}/modify")
+	public String noticeModifyByNoticeNo(Notice notice) {
+		log.info("Notice Controller noticeModifyByNoticeNo() start");
+		log.info("notice : "+notice.toString());
+		String resultStr = adminService.modifyNotice(notice);
+		
+		return resultStr;
+	}
+	
+	//exchange	
 	@GetMapping(value = "/exchange")
 	public String exchangeList(Model model) {
-		System.out.println("===== ExchangeController exchangeListByStatus() start =====");
-		List<Exchange> exList = exchangeService.findExchange();
-		
+		log.info("Exchange Controller exchangeList() start");
+		List<Exchange> exList = adminService.findExchange();
 		model.addAttribute("exList", exList);
 				
 		return "yjh/exchange";
@@ -114,13 +121,13 @@ public class AdminController {
 	
 	@PutMapping(value = "/exchange")
 	public String exchangeModifyByExchangeNos(@RequestParam(name = "exchangeNo") String[] exchangeNoArray, @RequestParam String status) {
-		System.out.println("===== ExchangeController exchangeUpdateToComplete() start =====");
+		log.info("Exchange Controller exchangeModifyByExchangeNos() start");
 		
 		for(int i = 0; i < exchangeNoArray.length; i++) {
-			System.out.println("exchangeNo : "+exchangeNoArray[i].toString());
+			log.info("exchangeNoArray : "+exchangeNoArray[i]);
 		}
 		
-		exchangeService.modifyExchangeStatusByExchangeNos(exchangeNoArray, status);
+		adminService.modifyExchangeStatusByExchangeNos(exchangeNoArray, status);
 		
 		return "redirect:/admin";
 	}
@@ -141,54 +148,64 @@ public class AdminController {
 	}
 	*/
 	
+	
+	//coupon
 	@GetMapping(value = "/coupons-form")
 	public String couponsForm() {
-		System.out.println("===== Controller couponsForm() start =====");
+		log.info("Coupon Controller couponsForm() start");
+		
 		return "yjh/createCoupon";
 	}
 	
 	@ResponseBody
 	@PostMapping(value = "/coupons/coupons-no")
 	public String genetateCouponNo() {
-		System.out.println("===== Controller genetateCouponNo() start =====");
-		return couponService.generateCouponNo();
+		log.info("Coupon Controller genetateCouponNo() start");
+		
+		return adminService.generateCouponNo();
 	}
 	
 		
-	@PostMapping(value = "/coupon") 
+	@PostMapping(value = "/coupons") 
 	public String couponAdd(@RequestParam(name = "couponValue") String couponValue, @RequestParam(name = "couponNo") String couponNo) {
-		System.out.println("===== Controller couponAdd() start =====");	
-		couponService.addCoupon(couponValue, couponNo);
+		log.info("Coupon Controller couponAdd() start");
+		adminService.addCoupon(couponValue, couponNo);
 		
 		return "redirect:/admin";
 	}
 	
-	@GetMapping(value = "/notice/{noticeNo}/modify-form")
-	public String noticeModifyForm(@PathVariable String noticeNo, Model model) {
-		System.out.println("modify noticeNo : "+noticeNo);
-		Notice notice = noticeService.findNoticeByNoticeNo(noticeNo);
+	//company-sales
+	@GetMapping(value = "/company-sales")
+	public String companySales() {
 		
-		model.addAttribute("notice", notice);
-		
-		return "yjh/notice-modifyFrom";
+		return "yjh/company-sales";
 	}
 	
 	@ResponseBody
-	@PutMapping(value = "/notice/{noticeNo}/modify")
-	public String noticeModifyByNoticeNo(Notice notice) {
-		System.out.println("===== NoticeController noticeModifyByNoticeNo() start =====");
-		System.out.println("notice : "+notice.toString());
+	@GetMapping(value = "/company-sales/years")
+	public List<CompanySalesDto> companySalesListByYears(HttpServletRequest request) throws ParseException {
+		log.info("Company-sales Controller companySalesListByYears() start");
+		log.info("startDate : "+request.getParameter("startDate"));
+		log.info("endDate : "+request.getParameter("endDate"));
 		
-		String resultStr = noticeService.modifyNotice(notice);
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		
-		return resultStr;
+		CompanySalesDto companySalesDto = new CompanySalesDto();
+		companySalesDto.setStartDate(startDate);
+		companySalesDto.setEndDate(endDate);
+		
+		List<CompanySalesDto> csList = adminService.findCompanySalesByYears(companySalesDto);
+		log.info("csList : "+csList.toString());
+		
+		return csList;
 	}
 	
+	//talent
 	@GetMapping(value = "/talents") // talents
 	public String talentList(Model model) {
-		System.out.println("===== Controller talentList() start =====");
-		List<Talent> talentList =  talentService.findTalent();
-		
+		log.info("Talent Controller talentList() start");
+		List<Talent> talentList =  adminService.findTalent();
 		model.addAttribute("talentList", talentList);
 		
 		return "yjh/talent";
@@ -202,29 +219,5 @@ public class AdminController {
 //		
 //		return "";
 //	}
-	
-	@GetMapping(value = "/company-sales")
-	public String companySales() {
-		
-		return "yjh/company-sales";
-	}
-	
-	@ResponseBody
-	@GetMapping(value = "/company-sales/years")
-	public List<CompanySalesDto> companySalesListByYears(HttpServletRequest request) throws ParseException {
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
-		System.out.println("startDate : "+startDate);
-		System.out.println("endDate : "+endDate);
-		
-		CompanySalesDto companySalesDto = new CompanySalesDto();
-		companySalesDto.setStartDate(startDate);
-		companySalesDto.setEndDate(endDate);
-		
-		List<CompanySalesDto> csList = companySalesService.findCompanySalesByYears(companySalesDto);
-		System.out.println(csList);
-		
-		return csList;
-	}
 	
 }	

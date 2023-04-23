@@ -7,11 +7,11 @@
 		<![CDATA[
 		SELECT 
   				 sum(bc.payment_amount) as COUNT,
-  				 TO_CHAR(bc.charge_date, 'YYYY') as YEARDATA
+  				 TO_CHAR(bc.charge_date, 'YYYYMM') as YEARDATA
 		FROM
   				 bamboo_charge bc
-		WHERE 	 bc.charge_date >= TO_DATE(#{endDate}, 'YYYYMMDD') and bc.charge_date < TO_DATE(#{startDate}, 'YYYYMMDD')
-		GROUP BY TO_CHAR(bc.charge_date, 'YYYY')
+		WHERE 	 bc.charge_date >= TO_DATE(#{startDate}, 'YYYYMMDD') and bc.charge_date < TO_DATE(#{endDate}, 'YYYYMMDD')
+		GROUP BY TO_CHAR(bc.charge_date, 'YYYYMM')
 		ORDER BY YEARDATA
 		]]>
 	</select>
