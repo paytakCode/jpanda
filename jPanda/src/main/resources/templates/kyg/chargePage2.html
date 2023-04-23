@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="/js/jquery.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<style type="text/css">
+		
+	.navigation-menu ul {
+	  padding: 10px;
+	  margin-left: 15%;
+	  margin-right: 15%;
+	  margin-bottom: 20px;
+	  font-weight: bold;
+	}
+	.navigation-menu ul {   
+	    padding: 0;
+	    overflow: hidden;
+	    background-color: #4B4B4B;
+	    text-align: center;
+	}
+	.navigation-menu li a {
+	    display: inline-block;
+	    color: white;
+	    text-align: center;
+	    padding: 10px 20px;
+	    text-decoration: none;
+	}
+	
+	li a:hover {
+	    text-decoration: underline;
+	}
+	
+	#navigation ul
+	{
+		font-size: 1.2em;
+	}
+	#navigation ul li
+	{
+	    display: inline;
+		color:white;
+	}
+	#navigation li:not(:first-child):before {
+	    content: " | ";
+	}
+	
+	
+	
+	/* 충전컨테이너 */
+	#charge-container {
+		/* width: 960px;
+		margin: 0 auto;
+		padding: 20px; */
+		
+		display: flex;
+	    align-items: baseline;
+	    gap: 32px;
+	    padding: 48px 0;
+	    margin-left: 15%;
+	    margin-right: 15%;
+	    
+	    
+	}
+	
+	#charge-container * {
+	  background-color: gray;
+	}
+	
+	/* 충전컨텐츠 */
+	#charge-contents {
+	 	/* border : 1px solid;
+		width: 490px;
+		float: left;
+		margin-left: 15%;
+		margin-bottom: 20px;  */
+		
+		flex: 3;
+		/* background: white; */
+		padding: 32px;
+		border-radius: 16px 0 0 16px;
+		
+		
+	}
+	
+	/* 오른쪽 사이드바 */
+	#right-sidebar {
+	/* border : 1px solid;
+		width: 150px;
+		float: right;
+		margin-bottom: 20px; */
+		
+		flex: 1;
+		/*  background: white; */
+		padding: 24px;
+		border-radius: 0 16px 16px 0;
+	}	
+	
+	
+	
+	
+	/* 쿠폰중복 */	
+	.id_ok{
+	color:#008000;
+	display: none;
+	}
+	
+	.id_already{
+	color:#6A82FB; 
+	display: none;
+	}
+	
+	/* 충전방법  radio css */
+	.payment-method {
+    padding: 15px 10px;
+	}
+	.payment-method input[type=radio]{
+	    display: none;
+	}
+	.payment-method input[type=radio]+label{
+	    display: inline-block;
+	    cursor: pointer;
+	    height: 24px;
+	    width: 90px;
+	    border: 1px solid #333;
+	    line-height: 24px;
+	    text-align: center;
+	    font-weight:bold;
+	    font-size:13px;
+	}
+	.payment-method input[type=radio]+label{
+	    background-color: #fff;
+	    color: #333;
+	}
+	.payment-method input[type=radio]:checked+label{
+	    background-color: #333;
+	    color: #fff;
+	}
+		
+	
+</style>
+
+
+</head>
+<body>
+	
+	<div class="navigation-menu">
+		<nav id="navigation">
+		  <ul>
+		    <li><a href="/sell">재능판매</a></li>
+		    <li><a href="/purchase">재능구매</a></li>
+		    <li><a href="/trade">거래관리</a></li>
+		    <li><a href="/charge">충전/내역</a></li>
+		    <li><a href="/myPage">마이페이지</a></li>
+		  </ul>
+		</nav>
+	</div>
+	<!-- chargeContainer ==> charge-container -->
+	<div id="charge-container">
+		<!-- chargeContents ==> charge-contents -->
+		<div id="charge-contents">
+			<!-- 금액 충전 -->
+			<form action="/charge/charge" method="post" onsubmit="return chargeSubmit()">
+				<!-- "onsubmit="return couponSubmit() -->
+												<!-- chargerId ==> charger-id -->
+												<!-- zsker;lzksrjchargeMoney ==> charge-money -->
+												<!-- couponNo ==> coupon-no -->
+												<!-- checkCoupon ==> check-coupon -->
+				<!-- 							
+				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
+				아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
+				충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" min="5000"><p/>
+				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력" onchange="couponCheck()">
+				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
+    			<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
+    			 -->
+				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
+				
+				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
+				아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
+				충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" min="5000"><p/>
+				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력">
+				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
+    			<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
+				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
+				
+				
+				<h4>충전방법</h4>
+					
+					<div class="payment-method">
+						<input type="radio" id="payment-method-radio1" name="paymentMethod" value="휴대폰" checked>
+						<label for="payment-method-radio1">휴대폰</label>
+						<input type="radio" id="payment-method-radio2" name="paymentMethod" value="상품권">
+						<label for="payment-method-radio2">상품권</label>
+						<input type="radio" id="payment-method-radio3" name="paymentMethod" value="무통장">
+						<label for="payment-method-radio3">무통장</label><p/>
+						<input type="radio" id="payment-method-radio4" name="paymentMethod" value="신용카드">
+						<label for="payment-method-radio4">신용카드</label>
+						<input type="radio" id="payment-method-radio5" name="paymentMethod" value="카드사 포인트">
+						<label for="payment-method-radio5">카드사 포인트</label>
+						<input type="radio" id="payment-method-radio6" name="paymentMethod" value="계좌이체">
+						<label for="payment-method-radio6">계좌이체</label>
+					</div>
+				
+				<!-- 
+				라디오 예비용 
+				https://getbootstrap.kr/docs/5.0/forms/checks-radios/
+				
+				<input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
+				<label class="btn btn-secondary" for="option1">Checked</label>
+				 -->
+				
+				<!-- 확인버튼 -->
+				<!-- 아래 submit은 추후 결제확인으로 대체예정, 테스트용 버튼 -->
+				<input type="submit" value="확인">
+				
+			<!-- model.addAttribute("chargeFailMsg", "충전실패 다시 시도해주세요"); -->
+			<table>
+			  <tr th:if="${chargeFailMsg != null}">
+			    <td th:text="${chargeFailMsg}"></td>
+			  </tr>
+			</table>
+			
+			</form>
+		</div>
+		
+		<div id="right-sidebar">
+			<h2>사이드바 Right</h2>
+			<ul>
+			    <li>항목1</li>
+			    <li>항목2</li>
+			    <li>항목3</li>
+			    <li>항목4</li>
+		    </ul>
+		    
+		     <h2>목차</h2>
+		      <ul>
+		        <li>
+		          <a href="/">머리말</a>
+		        </li>
+		        <li>
+		          <a href="/">HTML</a>
+		        </li>
+		        <li>
+		          <a href="/">CSS</a>
+		        </li>
+		        <li>
+		          <a href="/">HTTP</a>
+		        </li>
+		        <li>
+		          <a href="/">맺음말</a>
+		        </li>
+		      </ul>
+		</div>   
+	</div>
+	
+
+<script type="text/javascript">
+//	금액 충전, 금액 미입력시 Null Insert 처리
+//	function couponNoChargemoneyNull(){
+//		//alert("입력해 영광이형");
+//		if($('#charge-money').val() === null || $('#charge-money').val() === '') {	// === 는 변수 타입과 값이 똑같아야한다
+//		alert("금액을 입력해주세요");
+//		return false;
+//	} 
+//	return true;
+//	}
+
+
+ 	 function chargeSubmit(){
+		if($('#coupon-status').val() == '1' ) {
+			alert("chargeSubmit() 사용가능한 쿠폰입니다");
+			return true;
+		} else {
+			console.log('coupon-no.val', $('#coupon-no').val());
+			console.log('charge-money.val', $('#charge-money').val());
+			if($('#coupon-no').val() == '' && $('#charge-money').val() > '0'){	
+				let result = confirm("chargeSubmit() 쿠폰이 적용되지 않았습니다. 결제를 계속 하시겠습니까?");
+				if(result){
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				alert("chargeSubmit() 쿠폰검사를 클릭해주세요");
+				return false;
+			}
+	   }
+	} 
+		
+		
+	//사용가능한 쿠폰 validation 
+	   function couponCheck() {
+		   	let couponNo = $("#coupon-no").val();
+			let chargerId = $("#charger-id").val();
+			$.ajax({
+				type: 'GET',
+		  		url: '/charge/check-available-coupon?id=' + chargerId + '&couponNo=' + couponNo,
+		  		dataType: 'text',															
+		  		success: function(result) {
+					console.log(result);
+			        if (result == '1') {
+			          $('#result-check-coupon').html('success 사용 가능한 쿠폰입니다.').css('color', 'green');
+			          $('#coupon-status').val('1');
+			          /* document.getElementById("coupon-no").readOnly = true; */ 
+			          $('#coupon-no').attr('readonly',true);
+		
+			        } else {
+				      $('#coupon-status').val('0');
+			          $('#result-check-coupon').html('success 사용이 불가능한 쿠폰입니다.').css('color', 'red');
+			          $('#coupon-no').val('').trigger('focus');
+			          $('#coupon-status').val('').trigger('focus');
+			          
+			       }
+		       },
+		       error: function() {
+		         alert("success 잘못된 접근입니다");
+		       }
+			});  
+	   }
+	
+	
+	
+</script>
+</body>
+</html>

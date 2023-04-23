@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="/js/jquery.js"></script>
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <style type="text/css">
@@ -161,7 +162,10 @@
 		<!-- chargeContents ==> charge-contents -->
 		<div id="charge-contents">
 			<!-- 금액 충전 -->
-			<form action="/charge/charge" method="post" onsubmit="return chargeSubmit()">
+			
+			<!-- <form action="/charge/charge" method="post" onsubmit="return chargeSubmit()"> -->
+			
+			
 				<!-- "onsubmit="return couponSubmit() -->
 												<!-- chargerId ==> charger-id -->
 												<!-- zsker;lzksrjchargeMoney ==> charge-money -->
@@ -177,17 +181,21 @@
     			 -->
 				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
 				
+				<!-- 원본인풋들 -->
+				
+				<!-- 
 				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
 				아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
 				충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" min="5000"><p/>
 				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력">
 				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
     			<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
-				<!-- 쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력"> -->
+				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력">
+				 -->
 				
 				
 				<h4>충전방법</h4>
-					
+					<!-- 
 					<div class="payment-method">
 						<input type="radio" id="payment-method-radio1" name="paymentMethod" value="휴대폰" checked>
 						<label for="payment-method-radio1">휴대폰</label>
@@ -202,7 +210,7 @@
 						<input type="radio" id="payment-method-radio6" name="paymentMethod" value="계좌이체">
 						<label for="payment-method-radio6">계좌이체</label>
 					</div>
-				
+				 -->
 				<!-- 
 				라디오 예비용 
 				https://getbootstrap.kr/docs/5.0/forms/checks-radios/
@@ -213,8 +221,8 @@
 				
 				<!-- 확인버튼 -->
 				<!-- 아래 submit은 추후 결제확인으로 대체예정, 테스트용 버튼 -->
-				<input type="submit" value="확인">
-				
+				<!-- <input type="submit" value="확인"> -->
+				 
 			<!-- model.addAttribute("chargeFailMsg", "충전실패 다시 시도해주세요"); -->
 			<table>
 			  <tr th:if="${chargeFailMsg != null}">
@@ -223,6 +231,37 @@
 			</table>
 			
 			</form>
+			
+			
+				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
+				아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
+				<!-- 충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" min="5000"><p/> -->
+				충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required"><p/>
+				쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo"  placeholder="쿠폰입력">
+				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
+	   			<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
+				
+				
+				<div class="payment-method">
+					<input type="radio" id="payment-method-radio1" name="paymentMethod" value="휴대폰" checked="checked">
+					<label for="payment-method-radio1">휴대폰</label>
+					<input type="radio" id="payment-method-radio2" name="paymentMethod" value="상품권">
+					<label for="payment-method-radio2">상품권</label>
+					<input type="radio" id="payment-method-radio3" name="paymentMethod" value="무통장">
+					<label for="payment-method-radio3">무통장</label><p/>
+					<input type="radio" id="payment-method-radio4" name="paymentMethod" value="신용카드">
+					<label for="payment-method-radio4">신용카드</label>
+					<input type="radio" id="payment-method-radio5" name="paymentMethod" value="카드사 포인트">
+					<label for="payment-method-radio5">카드사 포인트</label>
+					<input type="radio" id="payment-method-radio6" name="paymentMethod" value="계좌이체">
+					<label for="payment-method-radio6">계좌이체</label>
+				</div>
+				
+				<button onclick="requestPay()">결제하기</button> <!-- 결제하기 버튼 생성 -->
+				<!-- <button onclick="chargeSubmit()">결제하기</button> --> <!-- 결제하기 버튼 생성 -->
+				<!-- <input type="submit" value="결제하기"> -->
+			
+			
 		</div>
 		
 		<div id="right-sidebar">
@@ -257,6 +296,239 @@
 	
 
 <script type="text/javascript">
+
+//IMP
+// IMP 객체를 초기화 ***************** 식별코드 노출 금지
+
+var IMP = window.IMP; 			// 생략 가능
+	IMP.init("imp"); 	// 예: 가맹점 식별코드 imp00000000a
+	
+//let merchantUidCount = 111111111111;	// requestPay 한번 실행할때마다 +1씩 올라가냐 	
+   
+    function requestPay() {
+    	
+    	let pay_method = ''; // pay_method 초기화
+    	
+    	let chargeMoney = document.getElementById('charge-money').value;
+    	let chargerId = document.getElementById('charger-id').value;
+    	let paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+    	//merchant_uid_count++; // 주문번호 증가
+        //let merchant_uid = "order_id_" + merchant_uid_count;
+		
+		console.log("구매자 : " + chargerId);
+		console.log("충전 금액 : " + chargeMoney);
+		console.log("결제 방법 : " + $("input[name='paymentMethod']:checked").val());
+		
+		
+		if (paymentMethod === '휴대폰') {
+		    pay_method = 'phone';
+		} else if (paymentMethod === '상품권') {
+		    pay_method = 'cultureland';
+		} else if (paymentMethod === '무통장') {
+		    pay_method = 'trans';
+		} else if (paymentMethod === '신용카드') {
+		    pay_method = 'card';
+		} else if (paymentMethod === '카드사 포인트') {
+		    pay_method = 'card';
+		} else if (paymentMethod === '계좌이체') {
+		    pay_method = 'trans';
+		}
+    	
+       IMP.request_pay({
+           //pg : 'tosspayments', danal, nice			// PG사 선택
+           pg : 'tosspayments',							// PG사 선택
+           pay_method : pay_method,						// 지불 수단
+           merchant_uid: "order_id_1667634130175", 		// 주문번호  7008833-33007
+           //merchant_uid: merchant_uid, 		// 주문번호  자동상승 만들기 실패
+           name : '당근 10kg',							// 상품 명
+           amount : chargeMoney,								// 가격 숫자 타입
+           buyer_email : 'Iamport@chai.finance',
+           buyer_name : chargerId,
+           buyer_tel : '010-1234-5678',
+           buyer_addr : '서울특별시 강남구 삼성동',
+           buyer_postcode : '123-456'
+           
+           paymentMethod: pay_method // ajax에 넣기용 밑에서 한번 했는데 여기서도 굳이 할 필요가 있나
+           
+       }, function (rsp) { // callback
+           if (rsp.success) {
+               console.log(rsp);
+               alert("rsp.success 서버단 구현 중");
+               
+               
+               function chargeSubmit() {
+            	    if ($('#coupon-status').val() == '1') {
+            	        alert("chargeSubmit() 사용가능한 쿠폰입니다");
+            	        
+            	        
+            	        let chargerId: $('#charger-id').val(); // val();는 입력된 값을 반환, val은 함수 자체를 반환
+            			let couponNo: $('#coupon-no').val();
+            			let chargeMoney: $('#charge-money').val();
+            	        let paymentMethod: pay_method 
+            			console.log('paymentKeyBody.val', paymentKeyBody);
+            			console.log('orderIdBody.val', orderIdBody);
+            			console.log('amountBody.val', amountBody);
+
+            	        $.ajax({
+    	                    url: "/charge/charge", // 요청 보낼 URL
+    	                    type: "POST", // 요청 방식
+    	                    data: JSON.stringify({
+    	                    						chargerId 	  : chargerId,	// 요청 본문에 담길 데이터를 지정 , 여기서는 JSON으로 지정
+    	                    						couponNo	  : couponNo,
+    	                    						chargeMoney	  : chargeMoney,
+    	                    						paymentMethod : paymentMethod
+								}),
+							dataType: "json", // 데이터 타입 지정
+    						contentType: 'application/JSON',	
+    	                    success: function(data) { // 요청 성공시 실행할 콜백 함수
+    	                        console.log("chargeSubmit() AJAX 요청 성공: ", data);
+    	                        location.href = "kyg/test"; // 성공시 페이지 이동
+    	                    },
+    	                    error: function(jqXHR, textStatus, errorThrown) { // 요청 실패시 실행할 콜백 함수
+    	                        console.error("chargeSubmit() AJAX 요청 실패: ");
+    	                        alert("충전 실패 다시 시도해주세요");
+    	                    }
+    	                });
+            	        
+            	    } else {
+            	        console.log('coupon-no.val', $('#coupon-no').val());
+            	        console.log('charge-money.val', $('#charge-money').val());
+            	        if ($('#coupon-no').val() == '' && $('#charge-money').val() > '0') {
+            	            if (result) {
+            	                // AJAX 요청 보내기
+            	                
+            	            let chargerId: $('#charger-id').val(); // val();는 입력된 값을 반환, val은 함수 자체를 반환
+                			let couponNo: $('#coupon-no').val();	// null인데 주석처리 안하고 이렇게 넣어도 될까
+                			let chargeMoney: $('#charge-money').val();
+                	        let paymentMethod: pay_method 
+                			console.log('paymentKeyBody.val', paymentKeyBody);
+                			console.log('orderIdBody.val', orderIdBody);
+                			console.log('amountBody.val', amountBody);
+
+                	        $.ajax({
+        	                    url: "/charge/charge", // 요청 보낼 URL
+        	                    type: "POST", // 요청 방식
+        	                    data: JSON.stringify({
+        	                    						chargerId 	  : chargerId,	// 요청 본문에 담길 데이터를 지정 , 여기서는 JSON으로 지정
+        	                    						couponNo	  : couponNo,	// null인데 주석처리 안하고 이렇게 넣어도 될까
+        	                    						chargeMoney	  : chargeMoney,
+        	                    						paymentMethod : paymentMethod
+    								}),
+    							dataType: "json", // 데이터 타입 지정
+    							contentType: 'application/JSON',
+        	                    success: function(data) { // 요청 성공시 실행할 콜백 함수
+        	                        console.log("chargeSubmit() AJAX 요청 성공: ", data);
+        	                        location.href = "kyg/test"; // 성공시 페이지 이동
+        	                    },
+        	                    error: function(jqXHR, textStatus, errorThrown) { // 요청 실패시 실행할 콜백 함수
+        	                    	console.error("chargeSubmit() AJAX 요청 실패: ");
+        	                        alert("충전 실패 다시 시도해주세요");
+        	                    }
+        	                });
+            	                
+            	                
+            	        } else {
+            	            alert("chargeSubmit() 쿠폰검사를 클릭해주세요");
+            	            return false;
+            	        }
+            	    }
+            	}
+
+               
+           } else {
+               console.log(rsp);
+               alert("rsp.결제 취소");
+           }
+       });
+   }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/* 
+	//원본
+	// IMP
+	// IMP 객체를 초기화 ***************** 식별코드 노출 금지
+	
+	var IMP = window.IMP; 			// 생략 가능
+		IMP.init("imp"); 	// 예: 가맹점 식별코드 imp00000000a
+		
+	//let merchantUidCount = 111111111111;	// requestPay 한번 실행할때마다 +1씩 올라가냐 	
+	   
+	    function requestPay() {
+	    	
+	    	let pay_method = ''; // pay_method 초기화
+	    	
+	    	let chargeMoney = document.getElementById('charge-money').value;
+	    	let chargerId = document.getElementById('charger-id').value;
+	    	let paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+	    	//merchant_uid_count++; // 주문번호 증가
+	        //let merchant_uid = "order_id_" + merchant_uid_count;
+			
+			console.log("구매자 : " + chargerId);
+			console.log("충전 금액 : " + chargeMoney);
+			console.log("결제 방법 : " + $("input[name='paymentMethod']:checked").val());
+			
+			
+			if (paymentMethod === '휴대폰') {
+			    pay_method = 'phone';
+			} else if (paymentMethod === '상품권') {
+			    pay_method = 'cultureland';
+			} else if (paymentMethod === '무통장') {
+			    pay_method = 'trans';
+			} else if (paymentMethod === '신용카드') {
+			    pay_method = 'card';
+			} else if (paymentMethod === '카드사 포인트') {
+			    pay_method = 'card';
+			} else if (paymentMethod === '계좌이체') {
+			    pay_method = 'trans';
+			}
+	    	
+	       IMP.request_pay({
+	           //pg : 'tosspayments', danal, nice			// PG사 선택
+	           pg : 'tosspayments',							// PG사 선택
+	           pay_method : pay_method,						// 지불 수단
+	           merchant_uid: "order_id_1667634130175", 		// 주문번호  7008833-33007
+	           //merchant_uid: merchant_uid, 		// 주문번호  자동상승 만들기 실패
+	           name : '당근 10kg',							// 상품 명
+	           amount : chargeMoney,								// 가격 숫자 타입
+	           buyer_email : 'Iamport@chai.finance',
+	           buyer_name : chargerId,
+	           buyer_tel : '010-1234-5678',
+	           buyer_addr : '서울특별시 강남구 삼성동',
+	           buyer_postcode : '123-456'
+	       }, function (rsp) { // callback
+	           if (rsp.success) {
+	               console.log(rsp);
+	               alert("rsp.success 서버단 구현 요구");
+	               
+	           } else {
+	               console.log(rsp);
+	               alert("rsp.결제 취소");
+	           }
+	       });
+	   }
+	 */
+	
+
 //	금액 충전, 금액 미입력시 Null Insert 처리
 //	function couponNoChargemoneyNull(){
 //		//alert("입력해 영광이형");
@@ -267,7 +539,7 @@
 //	return true;
 //	}
 
-
+ 
  	 function chargeSubmit(){
 		if($('#coupon-status').val() == '1' ) {
 			alert("chargeSubmit() 사용가능한 쿠폰입니다");
@@ -288,7 +560,7 @@
 			}
 	   }
 	} 
-		
+		 
 		
 	//사용가능한 쿠폰 validation 
 	   function couponCheck() {
@@ -319,6 +591,8 @@
 		       }
 			});  
 	   }
+	
+	
 	
 	
 	

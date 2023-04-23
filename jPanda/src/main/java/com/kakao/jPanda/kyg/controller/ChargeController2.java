@@ -28,14 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@Controller
-@RequestMapping("/charge")		//홈 http://localhost:8888/charge/
-public class ChargeController {
+//@Controller
+@RequestMapping("/charge2")		//홈 http://localhost:8888/charge/
+public class ChargeController2 {
 	
 	private final ChargeService chargeService;
 	
 	@Autowired
-	public ChargeController(ChargeService chargeService) {
+	public ChargeController2(ChargeService chargeService) {
 		this.chargeService = chargeService;
 	}
 	
@@ -114,23 +114,29 @@ public class ChargeController {
 	
 	
 	
-
-
-	
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
 //	충전 성공시 페이지로 이동
 	@GetMapping("/test")
 	public String test() {
-		return "kyg/test";		
+		return "kyg/tossApi";		
+	}
+
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+//	Test로그인
+	@PostMapping("/login")
+	public String login(@RequestParam(name = "member-id") String memberId,
+						HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		log.info("TradeController memberId check : " + memberId);
+		session.setAttribute("memberId", memberId);
+		return "redirect:/trade";
 	}
 	
 	
 	
 //	밤부 충전
-	@ResponseBody
 	@PostMapping("/charge") // /charge로 수정하기
-	public Map<String, String> chargeAdd(ChargeDto chargeDto, Model model) {
+	public String chargeAdd(ChargeDto chargeDto, Model model) {
 		
 		log.info("ChargeContoller charge() Start...");
 		System.out.println("ChargeController charge() Start...");
@@ -148,28 +154,6 @@ public class ChargeController {
 		}
 		
 	}
-	
-	
-	// 원본
-//	@PostMapping("/charge") // /charge로 수정하기
-//	public String chargeAdd(ChargeDto chargeDto, Model model) {
-//		
-//		log.info("ChargeContoller charge() Start...");
-//		System.out.println("ChargeController charge() Start...");
-//		
-//		int resultCharge = chargeService.addCharge(chargeDto);
-//		
-//		if(resultCharge > 0) {
-//			System.out.println("ChargeController charge() resultCharge 완료 -> redirect:test");
-//			return "redirect:test";
-//		// ajax에서 거르지 못한 잘못된 충전 출력
-//		} else {
-//			System.out.println("ChargeContoller charge() resultCharge 실패 -> kyg/chargePage");
-//			model.addAttribute("chargeFailMsg", "충전실패 다시 시도해주세요");
-//			return "kyg/chargePage";
-//		}
-//		
-//	}
 	
 	
 //	이용 가능한 쿠폰 체크
