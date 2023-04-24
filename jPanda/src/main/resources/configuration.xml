@@ -5,4 +5,8 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+  	
+  	<typeAliases>
+  		<typeAlias type="com.kakao.jPanda.kts.domain.Chat" alias="Chat"/>
+  	</typeAliases>
 </configuration>
