@@ -9,75 +9,125 @@
 a{text-decoration:none; color:#666;}
 a:hover{color:#1bc1a3;}
 
-.wrapper{
-  width:240px;
-  margin:50px auto;
-  height:300px;
-  position:relative;
-}
-
 .slider-wrap{
-  width:240px;
-  height:300px;
-  position:relative;
-  overflow:hidden;
+  	width:240px;
+  	height:300px;
+  	position:relative;
+  	overflow:hidden;
 }
 
 .slider-wrap ul.slider{
-  width:240px;
-  height:300px;
-  
-  position:absolute;
-  top:0;
-  left:0;   
+  	width:240px;
+  	height:300px;
+  	position:absolute;
+  	top:0;
+  	left:0;   
 }
 
 .slider-wrap ul.slider li{
-  float:left;
-  position:relative;
-  width:240px;
-  height:300px; 
+  	float:left;
+  	position:relative;
+  	width:240px;
+  	height:300px; 
 }
 
 .slider-wrap ul.slider li > div{
-  position:absolute;
-  top:20px;
-  left:35px;  
+  	position:absolute;
+  	top:20px;
+  	left:35px;  
 }
 
 .slider-wrap ul.slider li > h3{
-  font-size:16px;
-  text-transform:uppercase; 
+  	font-size:16px;
+  	text-transform:uppercase; 
 }
 
 .slider-wrap ul.slider li > div span{
-  font-family: Neucha, Arial, sans serif;
-  font-size:21px;
+  	font-family: Neucha, Arial, sans serif;
+  	font-size:21px;
 }
 
 .slider-wrap ul.slider li img{
-  display:block;
-  width: 240px;
-  height: 180px;
+  	display:block;
+  	width: 240px;
+  	height: 180px;
 }
 
 /*ANIMATION*/
 .slider-wrap ul{
-  -webkit-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  -moz-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  -o-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  -ms-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  transition: all 0.3s cubic-bezier(1,.01,.32,1); 
+  	-webkit-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+  	-moz-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+  	-o-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+  	-ms-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+  	transition: all 0.3s cubic-bezier(1,.01,.32,1); 
 }
 
 .slide{
-	float: left;
-	margin-right: 30px;
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	margin: 20px;
 }
 .title{
 	margin-top: 20px;
-	font-size: 13px;
+	font-size: 17px;
+	font-weight: bold; 
 }
+.random-ralent {
+	border: 1px solid #EAEAEA;
+	margin-top: 30px;
+}
+
+.talents.random-ralent > img {
+	display: block;
+  	width: 160px;
+  	height: 120px;
+  	vertical-align: middle;
+}
+
+.talents.random-ralent > img,
+.talents.random-ralent > div {
+  	display: inline-block;
+  	vertical-align: middle;
+}
+
+.talents.random-ralent > div {
+  	vertical-align: middle;
+  	margin-left: 10px;
+  	height: 100px;
+  	width: 800px;
+}
+
+.container	{
+	width: 1000px;
+  	margin: 0 auto;
+}
+#talent-slide {
+	text-align: center;
+	border: 1px solid #EAEAEA;
+	margin-bottom: 50px;
+}
+h4 {
+	margin: 10px;
+}
+
+.navbar {
+  display: flex; /* flexbox로 설정 */
+  justify-content: space-around; /* 링크 간 간격 일정하게 유지 */
+  align-items: center; /* 링크 수직 가운데 정렬 */
+  margin: 0 auto;
+  background-color: #333; /* 배경색 설정 */
+  height: 50px; /* 높이 설정 */
+  width: 1000px;
+}
+
+.navbar a {
+  color: white; /* 링크 글씨 색상 설정 */
+  text-decoration: none; /* 링크 밑줄 제거 */
+  font-size: 15px; /* 글씨 크기 설정 */
+  font-weight: bold; /* 글씨 굵기 설정 */
+  padding: 15px 20px; /* 링크 좌우 여백 설정 */
+}
+
 </style>
 </head>
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -85,11 +135,22 @@ a:hover{color:#1bc1a3;}
 <link href='https://fonts.googleapis.com/css?family=Neucha' rel='stylesheet' type='text/css'>
 <script src="/js/jquery.js"></script>
 <body>
-	<a href="/talent/write-form">재능 등록</a><p/>
-	<a href="/talent/asd">asd</a><p/>
+	<div class="navbar">
+		<a href="/talent/write-form">재능 등록</a>
+  		<a href="#2">판매게시판</a>
+  		<a href="#3">거래관리</a>
+  		<a href="#4">충전/내역</a>
+  		<a href="#5">마이페이지</a>
+  		<a href="#6">공지사항</a>
+	</div>
+
+	<div class="container">
 	<form action="/talent/update-form">
+	<div>
+	<a href="/talent/write-form">재능 등록</a><p/>
 	<input type="number" name="talent-no">
 	<button type="submit">재능수정</button><p/>
+	</div>
 	
 	<div id="talent-slide">
 	<div id="bestSellerTalent" class="slide">
@@ -99,6 +160,7 @@ a:hover{color:#1bc1a3;}
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}" >
 				<img th:src="${talent.mainImg}">
                     <p class="title" th:text="${talent.title}"></p>
+                    <p class="name" th:text="${talent.name}"></p>
              </li>
               </ul>
       </div>
@@ -111,12 +173,13 @@ a:hover{color:#1bc1a3;}
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${topRatedTalent}">
 				<img th:src="${talent.mainImg}">
                     <p class="title" th:text="${talent.title}"></p>
+                    <p class="name" th:text="${talent.name}"></p>
              </li>
               </ul>
       </div>
       </div>
       
-	<div id="newTrendTalent">
+	<div id="newTrendTalent" class="slide">
 	<h4>최신 트렌드</h4>
       <div id="slider-wrap3" class="slider-wrap">
           <ul id="slider3" class="slider" >
@@ -129,46 +192,39 @@ a:hover{color:#1bc1a3;}
       </div>
       </div> <!-- id="talent-slide" -->
 	
-	<div id="random-talent">
+	<div id="random-talent-div">
 	<h5>오늘의 재능</h5>
 	<ul>
-		<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
-		<img th:src="${talent.mainImg}"><p/>
-		<p th:text="${talent.title}"></p>
+		<li class="talents random-ralent" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
+			<img th:src="${talent.mainImg}">
+		<div>
+			<p th:text="${talent.title}" class="title"></p>
+			<p th:text="${talent.summary}" class="summary"></p>
+            <p th:text="${talent.name}" class="name"></p>
+		</div>
 		</li>
 	</ul>
 	</div>
 	</form>
-	
+	</div> <!-- container -->
 	<script type="text/javascript">
-	//current position
 	var pos1 = 0;
 	var pos2 = 0;
 	var pos3 = 0;
-	//number of slides
 	// var totalSlides = $('#slider-wrap ul li').length;
 	var totalSlides = 5;
-	//get the slide width
 	// var sliderWidth = $('#slider-wrap').width();
 	var sliderWidth = 240;
 
 	$(document).ready(function(){
 	  
-	  /*****************
-	   BUILD THE SLIDER
-	  *****************/
-	  //set width to be 'x' times the number of slides
 	  $('ul.slider').width(sliderWidth*totalSlides);
 	 /*  $('ul#slider2').width(sliderWidth*totalSlides);
 	  $('ul#slider3').width(sliderWidth*totalSlides); */
 	  
-	  /*************************
-	   //*> OPTIONAL SETTINGS
-	  ************************/
-	  //automatic slider
-	  var autoSlider1 = setInterval(slideRight1, 2000);
-	  var autoSlider2 = setInterval(slideRight2, 2000);
-	  var autoSlider3 = setInterval(slideRight3, 2000);
+	  var autoSlider1 = setInterval(slideRight1, 3000);
+	  var autoSlider2 = setInterval(slideRight2, 3000);
+	  var autoSlider3 = setInterval(slideRight3, 3000);
 	  
 	/* 	$('.slider-wrap').hover(function(this){
 			
@@ -187,29 +243,22 @@ a:hover{color:#1bc1a3;}
 	 
 		}
 	 */
-	  
-	  //hide/show controls/btns when hover
-	  //pause automatic slide when hover
 	  $('#slider-wrap1').hover(
 			  
 	    function(){ $(this).addClass('active'); clearInterval(autoSlider1); }, 
-	    function(){ $(this).removeClass('active'); autoSlider1 = setInterval(slideRight1, 2000); }
+	    function(){ $(this).removeClass('active'); autoSlider1 = setInterval(slideRight1, 3000); }
 	  );
 	  $('#slider-wrap2').hover(
 	    function(){ $(this).addClass('active'); clearInterval(autoSlider2); }, 
-	    function(){ $(this).removeClass('active'); autoSlider2 = setInterval(slideRight2, 2000); }
+	    function(){ $(this).removeClass('active'); autoSlider2 = setInterval(slideRight2, 3000); }
 	  );
 	  $('#slider-wrap3').hover(
 	    function(){ $(this).addClass('active'); clearInterval(autoSlider3); }, 
-	    function(){ $(this).removeClass('active'); autoSlider3 = setInterval(slideRight3, 2000); }
+	    function(){ $(this).removeClass('active'); autoSlider3 = setInterval(slideRight3, 3000); }
 	  );
 	  
-	});//DOCUMENT READY
+	});
 	  
-
-	/************
-	 SLIDE RIGHT
-	*************/
 	function slideRight1(){
 		pos1++;
 		if(pos1==totalSlides){ 
@@ -233,7 +282,7 @@ a:hover{color:#1bc1a3;}
 	}
 
 	$('.talents').on('click', function(){
-		location.href = "/talent/update-form?talent-no=" + $(this).val();
+		location.href = "/talent/talents/" + $(this).val() + "/update-form";
 	});
 	</script>
 </body>

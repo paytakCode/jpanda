@@ -26,10 +26,11 @@
 	
 	<select id="selectBestSellerTalents" resultType="Talent">
 		SELECT 	*
-		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary
+		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name
       		  	 FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+      		  	 					 JOIN member m ON t.seller_id = m.id
       		  	 WHERE 		t.status = '게시중'
-      		  	 GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date
+      		  	 GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name
      		  	 ORDER BY  	COUNT(t.talent_no) DESC, t.reg_date DESC
       		 	)
 		WHERE ROWNUM BETWEEN 1 AND 5
@@ -37,10 +38,11 @@
 	
 	<select id="selectTopRatedTalentTalents" resultType="Talent">
 		SELECT *
-		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary
+		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name
          		FROM     talent t JOIN review r ON t.talent_no = r.talent_no
+         						  JOIN member m ON t.seller_id = m.id
          		WHERE    t.status = '게시중'
-         		GROUP BY t.talent_no, t.main_img, t.title, t.summary
+         		GROUP BY t.talent_no, t.main_img, t.title, t.summary, m.name
          		ORDER BY AVG(r.bamboo_score) DESC, COUNT(*) DESC
         	   )
 		WHERE  ROWNUM BETWEEN 1 AND 5
@@ -48,19 +50,19 @@
 	
 	<select id="selectNewTrendTalents" resultType="Talent">
 		SELECT   *
-		FROM     (SELECT 	*
-				  FROM 		talent 
-				  WHERE 	status = '게시중'
-				  ORDER BY 	reg_date DESC
+		FROM     (SELECT 	t.*, m.name
+				  FROM 		talent t JOIN member m ON t.seller_id = m.id
+				  WHERE 	t.status = '게시중'
+				  ORDER BY 	t.reg_date DESC
 				 )
 		WHERE 	 ROWNUM BETWEEN 1 AND 5
 	</select>
 	
 	<select id="selectRandomTalents" resultType="Talent">
 		SELECT  *
-		FROM    (SELECT   * 
-         		 FROM     talent 
-         		 WHERE    status = '게시중'
+		FROM    (SELECT   t.*, m.name
+         		 FROM     talent t JOIN member m ON t.seller_id = m.id
+         		 WHERE    t.status = '게시중'
          		 ORDER BY DBMS_RANDOM.VALUE())
 		WHERE   ROWNUM BETWEEN 1 AND 5
 	</select>

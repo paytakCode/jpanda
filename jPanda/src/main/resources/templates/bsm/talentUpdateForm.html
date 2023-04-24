@@ -97,6 +97,10 @@ table {
   margin-left: 3px; /* 필요에 따라 여백을 조정하세요 */
   vertical-align: middle;
 }
+
+#main-image-preview {
+	max-width: 600px;
+}
 </style>
 <!-- CKEditor5 사용 -->
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
@@ -204,7 +208,7 @@ table {
 	
 	<div id="main-image" class="main-img write">
 		<h4>대표 이미지</h4>
-		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
+		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율은 4:3이 가장 좋아요.</p>
 		<img id="main-image-preview" width="auto" height="250" />
 		<input type="file" id="choose-image-file" accept="image/jpeg, image/png, image/gif" style="display:none;"/>
 		<input type="hidden" id="main-img-value" name="mainImg" th:value="${talent.mainImg}">

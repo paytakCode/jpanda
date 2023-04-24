@@ -18,4 +18,6 @@ public class Talent {
 	private Long  	viewCount;
 	private String 	regDate;
 	private String 	statusDate;
+	
+	private String name;
 }

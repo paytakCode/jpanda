@@ -97,6 +97,10 @@ table {
   vertical-align: middle;
 }
 
+#main-image-preview {
+	max-width: 600px;
+}
+
 </style>
 <script src="/js/jquery.js"></script>
 <!-- CKEditor5 사용 -->
@@ -192,7 +196,7 @@ table {
 	
 	<div id="main-image" class="main-img-value write-check">
 		<h4>대표 이미지</h4>
-		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율을 4:3이 가장 좋아요.</p>
+		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율은 4:3이 가장 좋아요.</p>
 		
 		<img id="main-image-preview" src="/image/jpandaMainImageLabel.jpg" width="auto" height="250" />
 		<input type="file" id="choose-image-file" accept="image/jpeg, image/png, image/gif" style="display:none;" />
@@ -203,32 +207,49 @@ table {
 		});
 	
 	$('#choose-image-file').on('change', function() {
-		// 파일 선택 후 미리보기 기능 구현
-	    var reader = new FileReader();
-	    reader.onload = function(e) {
-	        $('#main-image-preview').attr('src', e.target.result);
-	    }
-	    reader.readAsDataURL(this.files[0]);
+		var file_kind = $(this).val().lastIndexOf('.');
+		var file_name = $(this).val().substring(file_kind+1, $(this).val().length);
+		var file_type = file_name.toLowerCase();
 
-	    var form = new FormData();
-	    form.append( "upload", $("#choose-image-file")[0].files[0]);
-	    
-	    $.ajax({
-	    	url : "/talent/image-upload",
-	        type : "POST",
-	        processData : false,
-	        contentType : false,
-	        data : form,
-	        dataType: 'json',
-	        success:function(data) {
-	        	console.log(data);
-	            $('#main-img-value').val(data.url);
-	            $('#main-img-value').trigger('input');
-	        },
-	        error: function (jqXHR) { 
-	        	alert(jqXHR.responseText); 
-	        }
-	    });
+		var check_file_type = ['jpg','gif','png','jpeg','bmp', ''];
+		if(check_file_type.indexOf(file_type)==-1){
+		  	alert('이미지 파일만 선택할 수 있습니다.');
+		  	$('#main-image-check').attr('src', "/image/white.png");
+		  	return false;
+			}
+		
+			if($(this).val() !== ''){
+				// 파일 선택 후 미리보기 기능 구현
+				var reader = new FileReader();
+			    reader.onload = function(e) {
+			    	$('#main-image-preview').attr('src', e.target.result);
+			    }
+			    if(this.files[0] != null){
+			    	reader.readAsDataURL(this.files[0]);
+			    }else {
+			    	reader.readAsDataURL($('#main-img-value').val());
+			    }
+		    
+		    // 이미지 서버 업로드 
+		    var form = new FormData();
+	        form.append( "upload", $("#choose-image-file")[0].files[0]);
+	        $.ajax({
+	            url : "/talent/image-upload",
+	         	type : "POST",
+	           	processData : false,
+	           	contentType : false,
+	           	data : form,
+	           	dataType: 'json',
+	           	success:function(data) {
+	            	console.log(data);
+	               	$('#main-img-value').val(data.url);
+	               	$('#main-img-value').trigger('input');
+	           	},
+	           	error: function (jqXHR) { 
+	           		$('#main-image-preview').attr('src', "../image/jpandaMainImageLabel.jpg");
+	           	}
+	       	});
+		}
 	});
 	</script>
 	</div>

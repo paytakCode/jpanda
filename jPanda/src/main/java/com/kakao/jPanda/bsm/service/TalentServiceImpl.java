@@ -91,9 +91,7 @@ public class TalentServiceImpl implements TalentService{
 			fileDirectory.mkdirs();
 		}
 		
-		// 브라우저에서 이미지 불러올 때 절대 경로로 불러오면 보안의 위험 있어 상대경로를 쓰거나 이미지 불러오는 jsp 또는 클래스 파일을 만들어 가져오는 식으로 우회해야 함
-		// 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
-		String uploadPath = "../talentImage/" + newFileName; 
+		String uploadPath = "/talentImage/" + newFileName; 
 		System.out.println("MainController.image() 보안을 위한 상대 경로 출력 -> " + uploadPath);
 
 		// 저장 경로로 파일 객체 생성
@@ -107,7 +105,7 @@ public class TalentServiceImpl implements TalentService{
 		}
 		// uploaded, url 값을 modelandview를 통해 보냄
 		mav.addObject("uploaded", true); // 업로드 완료
-		mav.addObject("url", uploadPath); // 업로드 파일의 경로 // 일단 절대경로
+		mav.addObject("url", uploadPath); // 업로드 파일의 경로 
 
 		return mav;
 	}
@@ -141,22 +139,28 @@ public class TalentServiceImpl implements TalentService{
 
 	@Override
 	public List<Talent> findBestSellerTalents() {
-		return talentDao.selectBestSellerTalents();
+		return namePlusStr(talentDao.selectBestSellerTalents());
 	}
 
 	@Override
 	public List<Talent> findTopRatedTalentTalents() {
-		return talentDao.selectTopRatedTalentTalents();
+		return namePlusStr(talentDao.selectTopRatedTalentTalents());
 	}
 
 	@Override
 	public List<Talent> findNewTrendTalents() {
-		return talentDao.selectNewTrendTalents();
+		return namePlusStr(talentDao.selectNewTrendTalents());
 	}
 
 	@Override
 	public List<Talent> findRandomTalents() {
-		return talentDao.selectRandomTalents();
+		return namePlusStr(talentDao.selectRandomTalents());
 	}
 	
+	private static List<Talent> namePlusStr(List<Talent> talentList) {
+		for(int i = 0; i < talentList.size(); i++) {
+			talentList.get(i).setName("강사: " + talentList.get(i).getName());
+		}
+		return talentList;
+	}
 }

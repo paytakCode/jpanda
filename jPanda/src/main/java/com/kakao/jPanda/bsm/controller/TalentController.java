@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,8 +76,8 @@ public class TalentController {
 	}
 	
 	// 수정 페이지 이동
-	@GetMapping("/update-form") // /talents/{talentNo}/update-form
-	public String talentUpdateFrom(@RequestParam(name = "talent-no") Long talentNo, Model model) { // @PathVariable
+	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
+	public String talentUpdateFrom(@PathVariable Long talentNo, Model model) { // @PathVariable
 		// dto 새로 만들 것
 		System.out.println(talentNo);
 		Talent talent = service.findTalentByTalentNo(talentNo);
@@ -86,8 +87,4 @@ public class TalentController {
 		return "bsm/talentUpdateForm";
 	}	
 	
-	@GetMapping("/asd")
-	public String asd() {
-		return "bsm/asd";
-	}
 }
