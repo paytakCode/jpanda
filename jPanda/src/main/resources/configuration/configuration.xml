@@ -10,5 +10,6 @@
   		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.TalentDto" alias="TalentDto"/>
   		<typeAlias type="com.kakao.jPanda.jst.domain.TradeDto" alias="TradeDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeSearchDto" alias="TradeSearchDto"/>
 	</typeAliases>
 </configuration>

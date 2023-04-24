@@ -138,7 +138,8 @@
 			u.use_bamboo,
 			r.purchase_no AS refund_purchase_no,
 			r.submit_date AS refund_submit_date,
-			r.approve_date AS refund_approve_date
+			r.approve_date AS refund_approve_date,
+			t.talent_no
 		FROM talent_refund r
 		INNER JOIN bamboo_use u ON r.purchase_no = u.purchase_no
 		INNER JOIN talent t ON u.talent_no = t.talent_no
@@ -171,6 +172,37 @@
 			status_date = #{statusDate} 
 		WHERE talent_no = #{talentNo}
 	</update>
+	
+	<select id="findSellListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
+		<![CDATA[
+			SELECT
+				talent_no
+			FROM talent
+			WHERE seller_id = #{userId}
+			AND status_date >= #{standardTime}
+		]]>
+	</select>
+	
+	<select id="findExchangeListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
+		<![CDATA[
+			SELECT
+				talent_no as exchange_talent_no
+			FROM exchange
+			WHERE id = #{userId}
+			AND approve_date >= #{standardTime}
+		]]>
+	</select>
+	
+	<select id="findRefundListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
+		<![CDATA[
+			SELECT
+				b.talent_no as bamboo_use_talent_no
+			FROM talent_refund r
+			INNER JOIN bamboo_use b ON r.purchase_no = b.purchase_no 
+			WHERE buyer_id = #{userId}
+			AND approve_date >= #{standardTime}
+		]]>
+	</select>
 	
 	
 	

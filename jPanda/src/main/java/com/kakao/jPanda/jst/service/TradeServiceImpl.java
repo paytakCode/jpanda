@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,7 +18,6 @@ import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
 import com.kakao.jPanda.jst.domain.TradeSearchDto;
-import com.zaxxer.hikari.util.SuspendResumeLock;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -224,13 +224,40 @@ public class TradeServiceImpl implements TradeService{
 	}
 
 	@Override
-	public List<TradeDto> findChangedTradeByTradeSearchDto(TradeSearchDto tradeSearchDto) {
-//		List<TradeDto> changedSellList = tradeDao.selectSellListByTradeSearchDto(tradeSearchDto);
-//		List<TradeDto> changedExchangelList = tradeDao.selectExchangeListByTradeSearchDto(tradeSearchDto);
-//		List<TradeDto> changedBuyList = tradeDao.selectBuyListByTradeSearchDto(tradeSearchDto);
-		
-		
-		return null;
+	public CompletableFuture<List<TradeDto>> tradeChangeListener(TradeSearchDto tradeSearchDto) {
+        CompletableFuture<List<TradeDto>> future = new CompletableFuture<>();
+
+        Thread listenerThread = new Thread(() -> {
+
+            while (true) {
+            	List<TradeDto> tradeList = new ArrayList<TradeDto>();
+                List<TradeDto> sellList = tradeDao.findSellListByTradeSearchDto(tradeSearchDto);
+                List<TradeDto> exchangeList = tradeDao.findExchangeListByTradeSearchDto(tradeSearchDto);
+                List<TradeDto> refundList = tradeDao.findRefundListByTradeSearchDto(tradeSearchDto);
+                
+                tradeList.addAll(sellList);
+                tradeList.addAll(exchangeList);
+                tradeList.addAll(refundList);
+                
+                log.info("tradeChangeListener tradeList.size() : " + tradeList.size());
+
+                if (tradeList != null && !tradeList.isEmpty()) {
+                    future.complete(tradeList);
+                    break;
+                }
+
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    future.completeExceptionally(e);
+                    break;
+                }
+            }
+        });
+
+        listenerThread.start();
+
+        return future;
 	}
 
 }//end class

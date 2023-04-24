@@ -1,6 +1,7 @@
 package com.kakao.jPanda.jst.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,7 +28,7 @@ public interface TradeService {
 
 	String modifyExchangeStatusByTalentNo(String talentNo);
 
-	List<TradeDto> findChangedTradeByTradeSearchDto(TradeSearchDto tradeSearchDto);
+	CompletableFuture<List<TradeDto>> tradeChangeListener(TradeSearchDto tradeSearchDto);
 
 }
 

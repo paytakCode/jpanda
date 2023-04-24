@@ -6,6 +6,7 @@ import java.util.Map;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
+import com.kakao.jPanda.jst.domain.TradeSearchDto;
 
 public interface TradeDao {
 
@@ -46,5 +47,11 @@ public interface TradeDao {
 	int updateExchangeStatusByTalentNo(String talentNo);
 
 	int updateTalent(TalentDto talentDto);
+
+	List<TradeDto> findSellListByTradeSearchDto(TradeSearchDto tradeSearchDto);
+
+	List<TradeDto> findExchangeListByTradeSearchDto(TradeSearchDto tradeSearchDto);
+
+	List<TradeDto> findRefundListByTradeSearchDto(TradeSearchDto tradeSearchDto);
 
 }
