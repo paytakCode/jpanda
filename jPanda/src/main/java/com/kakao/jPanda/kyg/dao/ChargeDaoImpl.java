@@ -28,20 +28,22 @@ public class ChargeDaoImpl implements ChargeDao {
 	public int insertCouponUse(ChargeDto chargeDto) {
 		log.info("ChargeDaoImpl insertCouponUse() Start...");
 		System.out.println("ChargeDaoImpl insertCouponUse chargeDto.toString -> " + chargeDto.toString());
-		int resultinsertCouponUse = 0; 
+		int resultInsertCouponUse = 0; 
 		try {
-			resultinsertCouponUse = sqlSession.insert("insertCouponUse", chargeDto);
-			System.out.println("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> " + resultinsertCouponUse);
+			resultInsertCouponUse = sqlSession.insert("insertCouponUse", chargeDto);
+			System.out.println("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> " + resultInsertCouponUse);
 		} catch (Exception e) {
 			System.out.println("ChargeDaoImpl insertCouponUse() Exception -> " + e.getMessage());
 		}
-		if(resultinsertCouponUse > 0) {
+		if(resultInsertCouponUse > 0) {
+			resultInsertCouponUse = 1;
 			System.out.println("ChargeDaoImpl resultinsertCouponUse가 삽입되었습니다");
 		} else {
+			resultInsertCouponUse = 0;
 			System.out.println("ChargeDaoImpl resultinsertCouponUse가 삽입되지 않았습니다");
 		}
 		
-		return resultinsertCouponUse;
+		return resultInsertCouponUse;
 	}
 	
 //	밤부 충전시 bamboo_charge Insert
@@ -119,6 +121,21 @@ public class ChargeDaoImpl implements ChargeDao {
 		}
 		
 		return selectCouponByCouponNoResult;
+	}
+
+	@Override
+	public Long selectAvailAmountCoupon(CouponUseDto couponUseDto) {
+		log.info("ChargeDaoImpl selectAvailAmountCoupon() Start...");
+		
+		Long selectAvailAmountCouponResult = (long) 0;
+		try {
+			selectAvailAmountCouponResult = sqlSession.selectOne("selectAvailAmountCoupon", couponUseDto);
+			log.info(" ChargeDaoImpl selectAvailAmountCoupon -> " + selectAvailAmountCouponResult);		
+		} catch (Exception e) {
+			log.info("ChargeDaoImpl selectCouponByCouponNo() Exception -> " + e.getMessage());
+		}
+		
+		return selectAvailAmountCouponResult;
 	}
 
 	

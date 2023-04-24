@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -88,8 +89,8 @@ public class ChargeController {
 		HttpRequest request = HttpRequest.newBuilder()
 			    .uri(URI.create("https://api.tosspayments.com/v1/payments/confirm"))
 //			    https://developers.tosspayments.com/613834/accounts/787829/phases/test/api-keys 에서 자신들의 API 시크릿키 사용. / 시크릿키: (콜론포함) base64인코딩 후 사용
-//			    .header("Authorization", "Basic SecretKey")
-			    .header("Authorization", "Basic dGVzdF9za19ENHlLZXE1YmdycHl6cGFqUGU0OEdYMGx6VzZZOg==")
+//			    .header("Authorization", "Basic SecretKey")***********************유출안되게 조심
+			    .header("Authorization", "Basic SecretKey==")
 			    .header("Content-Type", "application/json")
 			    .method("POST", HttpRequest.BodyPublishers.ofString("{\"paymentKey\":\"" + paymentRequestInfomation.get("paymentKey") + 
 			    													"\",\"amount\": " + paymentRequestInfomation.get("amount") + 
@@ -130,21 +131,25 @@ public class ChargeController {
 //	밤부 충전
 	@ResponseBody
 	@PostMapping("/charge") // /charge로 수정하기
-	public Map<String, String> chargeAdd(ChargeDto chargeDto, Model model) {
+	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto, Model model) {
 		
 		log.info("ChargeContoller charge() Start...");
 		System.out.println("ChargeController charge() Start...");
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
+		Map<String, String> resultMap = new HashMap<>();
+		
 		
 		if(resultCharge > 0) {
 			System.out.println("ChargeController charge() resultCharge 완료 -> redirect:test");
-			return "redirect:test";
+			 resultMap.put("result", "success");
+			return resultMap;
 		// ajax에서 거르지 못한 잘못된 충전 출력
 		} else {
 			System.out.println("ChargeContoller charge() resultCharge 실패 -> kyg/chargePage");
+			resultMap.put("result", "fail");
 			model.addAttribute("chargeFailMsg", "충전실패 다시 시도해주세요");
-			return "kyg/chargePage";
+			return resultMap;
 		}
 		
 	}
@@ -175,18 +180,27 @@ public class ChargeController {
 //	이용 가능한 쿠폰 체크
 	@GetMapping(value = "/check-available-coupon")
 	@ResponseBody
-	public String checkAvailableCoupon(CouponUseDto couponUseDto) {
+	public CouponUseDto checkAvailableCoupon(CouponUseDto couponUseDto) {
 		String resultStr = "0";
+		CouponUseDto couponUseDto3 = new CouponUseDto();	// 쿠폰사용유무 결과값을 dto에 담아서 보냄
 		log.info("ChargeContoller couponDetails() Start...");
 		log.info(couponUseDto.toString());
 		
+		// 사용 결과만 가져옴 -> 사용 가능한 쿠폰, 사용 했던 쿠폰을 비교하여, 회원이 사용했던 이력이 있는 쿠폰의 결과를 가져와 사용가능 여부를 따짐
+		// 사용 결과만 가져옴
 		int resultInt = chargeService.checkAvailableCoupon(couponUseDto);
 		
-		resultStr=String.valueOf(resultInt); 
+		// 충전 금액과 쿠폰의 금액을 차감해 실제 충전에 사용되는 금액을 구하기 위해 쿠폰의 금액을 가져옴
+		// 쿠폰의 금액을 가져옴
+		Long couponValue = chargeService.getAvailAmountCoupon(couponUseDto);
 		
-		System.out.println("Controller checkAvailableCoupon resultStr->"+resultStr);
+		couponUseDto3.setResult(resultInt);
+		couponUseDto3.setCouponValue(couponValue);
 		
-		return resultStr;
+		System.out.println("Controller checkAvailableCoupon resultInt->"+resultInt);
+		System.out.println("Controller checkAvailableCoupon couponValue->"+couponValue);
+		
+		return couponUseDto3;
 	}
 	
 	/*

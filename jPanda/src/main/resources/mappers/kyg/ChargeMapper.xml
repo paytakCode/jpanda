@@ -6,31 +6,30 @@
 
 	<insert id="insertCharge" parameterType="chargeDto">
 	
-	INSERT INTO bamboo_charge (
-	  charge_no,
-	  charger_id,
-	  payment_method,
-	  payment_amount,
-	  charge_bamboo,
-	  charge_date,
-	  coupon_no
-	)
-	VALUES (
-	  bamboo_charge_SEQ.NEXTVAL,
-	  #{chargerId},
-	  #{paymentMethod},
-	  #{chargeMoney} - COALESCE(
-	  							(
-	  							SELECT coupon_value 
-	  							FROM coupon 
-	  							WHERE coupon_no = #{couponNo}), 0
-	  							)
-								,
-	  #{chargeBamboo},							
-	  sysdate,							
-	  #{couponNo}
-	  								
-	)
+		INSERT INTO bamboo_charge (
+		  charge_no,
+		  charger_id,
+		  payment_method,
+		  payment_amount,
+		  charge_bamboo,
+		  charge_date,
+		  coupon_no
+		)
+		VALUES (
+		  bamboo_charge_SEQ.NEXTVAL,
+		  #{chargerId},
+		  #{paymentMethod},
+		  #{chargeMoney} - NVL(
+		  							(
+		  							SELECT coupon_value 
+		  							FROM coupon 
+		  							WHERE coupon_no = #{couponNo , jdbcType=VARCHAR}), 0
+		  							)
+									,
+		  #{chargeBamboo},							
+		  SYSDATE,
+		  #{couponNo,  jdbcType=VARCHAR}
+		)
 	
 	</insert>
 	<!-- (SELECT MAX(charge_no) + 1 FROM bamboo_charge) -->
@@ -134,6 +133,12 @@
 		FROM coupon_use
 		WHERE id = #{id}
 		AND coupon_no = #{couponNo}
+	</select>
+	
+	<select id="selectAvailAmountCoupon" parameterType="couponUseDto" resultType="long">
+		SELECT	coupon_value
+		FROM	coupon
+		WHERE	coupon_no = #{couponNo}
 	</select>
 	
 	<select id="selectCouponByCouponNo" parameterType="String" resultType="CouponDto">

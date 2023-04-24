@@ -27,130 +27,45 @@ public class ChargeServiceImpl implements ChargeService {
 	 @Override
 		public int addCharge(ChargeDto chargeDto) {
 			log.info("ChargeServiceImpl insertCharge() Start...");
+			log.info("ChargeServiceImpl insertCharge() chargeDto.toString() : " + chargeDto.toString());
 			
 			Long chargeMoney = chargeDto.getChargeMoney();
-			String paymentMethod = chargeDto.getPaymentMethod();
-
+//			String paymentMethod = chargeDto.getPaymentMethod();
+			
+			//
+			if (chargeDto.getCouponNo() == "0") {
+				chargeDto.setCouponNo(null);
+			}
+			
 //			coupon_use insert
 			int insertCouponUse = chargeDao.insertCouponUse(chargeDto);
+			System.out.println("insertCouponUse 결과값 : " + insertCouponUse);
 			
 //			결제방법 선택시 보너스율 적용
 			double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-			Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000);
+			//Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000);
+			Long chargeBamboo = (long) (chargeMoney * bonusRatio);
 			chargeDto.setChargeBamboo(chargeBamboo);
 			
+//			밑에 미작성
+//			부적합한 열 유형: 1111
+			
+			//parent key not found
+			
+			
+			log.info("chargeDto.getCouponNo() : " + chargeDto.getCouponNo());
 			int resultInsertCharge = chargeDao.insertCharge(chargeDto);
 			
-			if(insertCouponUse > 0 && insertCouponUse > 0) {
-				System.out.println("insertCouponUse 삽입 완료");
+			if(insertCouponUse > 0) {
+				System.out.println("ChargeServiceImpl insertCouponUse 삽입 완료");
 			} else {
-				System.out.println("insertCouponUse 삽입 안함(미삽입 or 오류)");
+				System.out.println("ChargeServiceImpl insertCouponUse 삽입 안함(미삽입 or 오류)");
 			}
 			
 			log.info("ChargeServiceImpl insertCharge() DAO에서 반환받은 resultInsertCharge-> " + resultInsertCharge);
 			return resultInsertCharge;
 			
 		}
-	 
-//	 @Override
-//		public int addCharge(ChargeDto chargeDto) {
-//			log.info("ChargeServiceImpl insertCharge() Start...");
-//			
-//			Long chargeMoney = chargeDto.getChargeMoney();
-//			String paymentMethod = chargeDto.getPaymentMethod();
-//			int insertCouponUse = 0;
-//			int resultInsertCharge = 0;
-//			
-//			System.out.println("ChargeServiceImpl addCharge chargeDto.toString -> " + chargeDto.toString());
-//			
-//			if(chargeDto.getCouponNo() == null) {
-//				log.info("insertCouponUse 쿠폰 미입력 충전");
-////				결제방법 선택시 보너스율 적용
-//				double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-//				Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000);
-//				chargeDto.setChargeBamboo(chargeBamboo);
-//				
-//				resultInsertCharge = chargeDao.insertCharge(chargeDto);
-//				
-//				if(insertCouponUse > 0) {
-//					System.out.println("insertCouponUse 쿠폰 미입력 충전 charge 삽입 완료");
-//				} else {
-//					System.out.println("insertCouponUse 쿠폰 미입력 충전 charge 삽입 안함(미삽입 or 오류)");
-//				}
-//			} else if (insertCouponUse > 0) {
-//				log.info("insertCouponUse 쿠폰 미입력 충전");
-////				결제방법 선택시 보너스율 적용
-//				double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-//				Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000);
-//				chargeDto.setChargeBamboo(chargeBamboo);
-//				
-//				resultInsertCharge = chargeDao.insertCharge(chargeDto);
-//				
-//				if(insertCouponUse > 0) {
-//					System.out.println("insertCouponUse 쿠폰  입력 충전 charge 삽입 완료");
-//				} else {
-//					System.out.println("insertCouponUse 쿠폰 입력 충전 charge 삽입 안함(미삽입 or 오류)");
-//				}
-//			} else {
-//				log.info("insertCouponUse 사용할 수 없는 쿠폰");
-//			}
-//			
-//			
-//			log.info("ChargeServiceImpl insertCharge() DAO에서 반환받은 resultInsertCharge-> " + resultInsertCharge);
-//			return resultInsertCharge;
-//		}
-			
-//	@Override
-//	public int addCharge(ChargeDto chargeDto) {
-//	    log.info("ChargeServiceImpl insertCharge() Start...");
-//
-//	    Long chargeMoney = chargeDto.getChargeMoney();
-//	    String paymentMethod = chargeDto.getPaymentMethod();
-//	    int insertCouponUse = 0;
-//	    int resultInsertCharge = 0;
-//
-//	    System.out.println("ChargeServiceImpl addCharge chargeDto.toString -> " + chargeDto.toString());
-//
-//	    if(chargeDto.getCouponNo() != null) {
-//	        insertCouponUse = chargeDao.insertCouponUse(chargeDto);
-//	    } else {
-//	        log.info("insertCouponUse 쿠폰 미입력 충전");
-//	        // 결제방법 선택시 보너스율 적용
-//	        double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-//	        Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000);
-//	        chargeDto.setChargeBamboo(chargeBamboo);
-//
-//	        resultInsertCharge = chargeDao.insertCharge(chargeDto);
-//
-//	        if(resultInsertCharge > 0) {
-//	            System.out.println("쿠폰 미입력 충전 charge 삽입 완료");
-//	        } else {
-//	            System.out.println("쿠폰 미입력 충전 charge 삽입 안함(미삽입 or 오류)");
-//	        }
-//	    }
-//
-//	    if (insertCouponUse > 0) {
-//	        log.info("insertCouponUse 쿠폰 입력 충전");
-//	        // 결제방법 선택시 보너스율 적용
-//	        double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-//	        Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000);
-//	        chargeDto.setChargeBamboo(chargeBamboo);
-//
-//	        resultInsertCharge = chargeDao.insertCharge(chargeDto);
-//
-//	        if(resultInsertCharge > 0) {
-//	            System.out.println("쿠폰 입력 충전 charge 삽입 완료");
-//	        } else {
-//	            System.out.println("쿠폰 입력 충전 charge 삽입 안함(미삽입 or 오류)");
-//	        }
-//	    } else {
-//	        log.info("insertCouponUse 사용할 수 없는 쿠폰");
-//	    }
-//
-//	    log.info("ChargeServiceImpl insertCharge() DAO에서 반환받은 resultInsertCharge-> " + resultInsertCharge);
-//	    return resultInsertCharge;
-//	}
-
 	 
 	 
 
@@ -202,13 +117,22 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 
 	@Override
+	public Long getAvailAmountCoupon(CouponUseDto couponUseDto) {
+		log.info("ChargeServiceImpl getAvailAmountCoupon() Start...");
+		//log.info("ChargeServiceImpl getAvailAmountCoupon() chargeDto.toString() : " + couponUseDto.toString());
+		
+		Long findAvailAmountCoupon = chargeDao.selectAvailAmountCoupon(couponUseDto);
+		log.info("ChargeServiceImpl getAvailAmountCoupon() findAvailAmountCoupon -> " + findAvailAmountCoupon);
+		
+		
+		return findAvailAmountCoupon;
+	}
+	
+	@Override
 	public int calculateTotalBamboo(String memberId) {
 		
 //		int selectBambooChargeBamboo = chargeDao.selectBambooChargeBamboo();
 //		int selectBambooUseBamboo = chargeDao.selectBambooUseUseBamboo();
-		
-		
-		
 		
 		return 0;
 	}
