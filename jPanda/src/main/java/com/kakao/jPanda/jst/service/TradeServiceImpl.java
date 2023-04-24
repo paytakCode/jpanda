@@ -16,6 +16,8 @@ import com.kakao.jPanda.jst.dao.TradeDao;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
+import com.kakao.jPanda.jst.domain.TradeSearchDto;
+import com.zaxxer.hikari.util.SuspendResumeLock;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -219,6 +221,16 @@ public class TradeServiceImpl implements TradeService{
 			return "환전등록 재신청에 실패하였습니다.";
 		}
 		
+	}
+
+	@Override
+	public List<TradeDto> findChangedTradeByTradeSearchDto(TradeSearchDto tradeSearchDto) {
+//		List<TradeDto> changedSellList = tradeDao.selectSellListByTradeSearchDto(tradeSearchDto);
+//		List<TradeDto> changedExchangelList = tradeDao.selectExchangeListByTradeSearchDto(tradeSearchDto);
+//		List<TradeDto> changedBuyList = tradeDao.selectBuyListByTradeSearchDto(tradeSearchDto);
+		
+		
+		return null;
 	}
 
 }//end class

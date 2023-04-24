@@ -153,6 +153,10 @@
 		
 	}
 	
+	.new-cards{
+		border: medium solid red; 
+	}
+	
 	
 </style>
 </head>
@@ -259,7 +263,59 @@
 	 })
 	 
  });
- 
+/**
+ * 
+ */
+function getNow(){
+	const now = new Date(Date.now());
+	const year = now.getFullYear();
+	const month = String(now.getMonth() + 1).padStart(2, '0');
+	const day = String(now.getDate()).padStart(2, '0');
+	const hours = String(now.getHours()).padStart(2, '0');
+	const minutes = String(now.getMinutes()).padStart(2, '0');
+	const seconds = String(now.getSeconds()).padStart(2, '0');
+	
+	const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	
+	return formattedDate;
+}
+
+ /**
+  * Long polling 요청
+  * DB데이터에 StatusDate가 변경된 것이 있는지 Looping
+  * 구매 환불신청 / 환전신청 / 판매등록 / 환불
+  */
+ $(function(){
+ 	let userId = [[${#session.getAttribute("memberId")}]];
+ 	$.ajax({
+ 		url : "/trade/trades/tradeSearch",
+ 		method : "get",
+ 		data :{
+	 			userId : userId,
+	 			standardTime : getNow()
+ 		},
+ 		dataType : "json",
+ 		success : function(data){
+ 			$.each(data, function(index, item){
+ 				let talentNo = null;
+ 				if(item.refundTalentNo != null){
+ 					talentNo = item.refundTalentNo; 
+ 					$('#refund-no-' + talentNo).parent().parent().addClass('new-cards');
+ 				} else if(item.exchangeTalentNo != null){
+ 					talentNo = item.exchangeTalentNo; 
+ 					$('#sell-no-' + talentNo).parent().parent().addClass('new-cards');
+ 				} else if(item.talentNo != null){
+ 					talentNo = item.talentNo; 
+ 					$('#sell-no-' + talentNo).parent().parent().addClass('new-cards');
+ 				}
+ 			});
+ 		},
+ 		error : function(){
+ 			
+ 		}
+ 	});
+ 	
+ });
 </script>
 <script type="text/javascript">
 /**

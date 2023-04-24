@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
+import com.kakao.jPanda.jst.domain.TradeSearchDto;
 
 public interface TradeService {
 	
@@ -25,6 +26,8 @@ public interface TradeService {
 	String addRefund(HttpSession session ,TradeDto tradeDto);
 
 	String modifyExchangeStatusByTalentNo(String talentNo);
+
+	List<TradeDto> findChangedTradeByTradeSearchDto(TradeSearchDto tradeSearchDto);
 
 }
 

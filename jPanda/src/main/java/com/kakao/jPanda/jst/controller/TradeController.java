@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
+import com.kakao.jPanda.jst.domain.TradeSearchDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -143,6 +145,14 @@ public class TradeController {
 		
 		return resultMessage;
 		
+	}
+	
+	@GetMapping("/trades/tradeSearch")
+	@ResponseBody
+	public List<TradeDto> tradesasdasdasdasd(TradeSearchDto tradeSearchDto){
+		log.info("userId, standardTime : {}", tradeSearchDto.toString());
+		List<TradeDto> changedTradeList = tradeService.findChangedTradeByTradeSearchDto(tradeSearchDto);
+		return null;
 	}
 	
 }//end class
