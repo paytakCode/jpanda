@@ -3,7 +3,7 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.CompanySalesMapper">
 
-	<select id="selectCompanySalesByYears" parameterType="CompanySales" resultType="CompanySales">
+	<select id="selectCompanySalesAtBambooChargeByYYMMDate" parameterType="CompanySales" resultType="CompanySales">
 		<![CDATA[
 		SELECT 
   				 sum(bc.payment_amount) as COUNT,
@@ -13,6 +13,45 @@
 		WHERE 	 bc.charge_date >= TO_DATE(#{startDate}, 'YYYYMMDD') and bc.charge_date < TO_DATE(#{endDate}, 'YYYYMMDD')
 		GROUP BY TO_CHAR(bc.charge_date, 'YYYYMM')
 		ORDER BY YEARDATA
+		]]>
+	</select>
+	
+	<select id="selectCompanySalesAtBambooChargeByDDDate" parameterType="CompanySales" resultType="CompanySales">
+		<![CDATA[
+		SELECT 
+  				 sum(bc.payment_amount) as COUNT,
+  				 TO_CHAR(bc.charge_date, 'YYYYMMDD') as YEARDATA
+		FROM
+  				 bamboo_charge bc
+		WHERE 	 bc.charge_date >= TO_DATE(#{startDate}, 'YYYYMMDD') and bc.charge_date < TO_DATE(#{endDate}, 'YYYYMMDD')
+		GROUP BY TO_CHAR(bc.charge_date, 'YYYYMMDD')
+		ORDER BY YEARDATA
+		]]>
+	</select>
+	
+	<select id="selectCompanySalesAtExchangeByYYMMDate" parameterType="CompanySales" resultType="CompanySales">
+		<![CDATA[
+		SELECT 
+  				 (sum(ex.total) - sum(ex.payment_amount)) as EX_COUNT,
+  				 TO_CHAR(ex.approve_date, 'YYYYMM') as EXDATA
+		FROM
+  				 exchange ex
+		WHERE 	 ex.approve_date >= TO_DATE(#{startDate}, 'YYYYMMDD') and ex.approve_date < TO_DATE(#{endDate}, 'YYYYMMDD')
+		GROUP BY TO_CHAR(ex.approve_date, 'YYYYMM')
+		ORDER BY EXDATA
+		]]>
+	</select>
+	
+	<select id="selectCompanySalesAtExchangeByDDDate" parameterType="CompanySales" resultType="CompanySales">
+		<![CDATA[
+		SELECT 
+  				 sum(ex.total) - sum(ex.payment_amount) as EXCOUNT,
+  				 TO_CHAR(ex.approve_date, 'YYYYMMDD') as EXDATA
+		FROM
+  				 exchange ex
+		WHERE 	 ex.approve_date >= TO_DATE(#{startDate}, 'YYYYMMDD') and ex.approve_date < TO_DATE(#{endDate}, 'YYYYMMDD')
+		GROUP BY TO_CHAR(ex.approve_date, 'YYYYMMDD')
+		ORDER BY EXDATA
 		]]>
 	</select>
 		

@@ -23,7 +23,7 @@ public interface AdminService {
 	void addCoupon(String couponValue, String couponNo);
 	
 	//company-sales
-	List<CompanySalesDto> findCompanySalesByYears(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> findCompanySalesAtBambooChargeByStartDateAndEndDate(String startDate, String endDate);
 	
 	//talent
 	List<Talent> findTalent();

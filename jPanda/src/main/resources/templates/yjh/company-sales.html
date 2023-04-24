@@ -12,7 +12,7 @@
 		<input type="date" class="start-period"> ~ 
 		<input type="date" class="end-period" oninput="callData()">
 	
-	<div style="width: 900px; height: 900px;">
+	<div id="chartContainer" style="width: 900px; height: 900px;">
 		<!--차트가 그려질 부분-->
 		<canvas id="myChart">
 			
@@ -20,69 +20,102 @@
 	</div>
 </body>
 <script type="text/javascript">
+	window.onload = function() {
+		const ctx = document.getElementById('myChart').getContext('2d');
+		// 그래픽 엔진으로 유명한 것 (DirectX, OpenGL)
+		const myChart = new Chart(ctx, {
+			type : 'bar', //bar,line,pie,doughnut,radar
+			//labels : x축의 값
+			//datasets : data의 값, 속성들 지정
+			data : {
+				labels : [ '기간을 입력해주세요.' ],
+				datasets : [ {
+					label : '매출 현황',
+					data : 0,
+					backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)' ],
+					borderColor : [ 'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)' ],
+					borderWidth : 3
+				} ]
+			},
+			options : {
+				scales : {
+					y : {
+						beginAtZero : true
+					}
+				}
+			}
+		});
+
+	}
+
 	function callData() {
+		$("#myChart").remove();
+		$("#chartContainer").append('<canvas id="myChart"></canvas>');
+
 		const startPeriod = $(".start-period");
 		const startPeriodValue = startPeriod.val();
-		
+
 		const endPeriod = $(".end-period");
 		const endPeriodValue = endPeriod.val();
 
 		const startDate = startPeriodValue.split("-").join("");
 		const endDate = endPeriodValue.split("-").join("");
-		
-		if(!startDate) {
+
+		if (!startDate) {
 			alert("시작일을 입력해주세요");
 			$(".start-period").focus();
 			return false;
 		}
-			$.ajax({
-			    url: "/admin/company-sales/years",
-			    type: "GET",
-			    data: {startDate: startDate, endDate: endDate},
-			    success: function(csList) {
-		               	 var countList=[];
-		                 var yearList=[];
-		                
-		                $.each(csList, function() {
-		                    countList.push(this["count"])
-		                    yearList.push(this["yearData"])
-		                })
-		                
-		                const ctx = document.getElementById('myChart').getContext('2d');
-		                // 그래픽 엔진으로 유명한 것 (DirectX, OpenGL)
-		                const myChart = new Chart(ctx, {
-		                    type: 'bar', //bar,line,pie,doughnut,radar
-		                    //labels : x축의 값
-		                    //datasets : data의 값, 속성들 지정
-		                    data: {
-		                        labels: yearList,
-		                        datasets: [{
-		                            label: '연별 매출 현황',
-		                            data: countList,
-		                            backgroundColor: [
-		                            	'rgba(255, 99, 132, 0.2)',
-                                		'rgba(54, 162, 235, 0.2)',
-                                		'rgba(255, 206, 86, 0.2)'
-		                            ],
-		                            borderColor: [
-		                            	'rgba(255, 99, 132, 0.2)',
-                                		'rgba(54, 162, 235, 0.2)',
-                                		'rgba(255, 206, 86, 0.2)'
-		                            ],
-		                            borderWidth: 3
-		                        }]
-		                    },
-		                    options: {
-		                        scales: {
-		                            y: {
-		                                beginAtZero: true
-		                            }
-		                        }
-		                    }
-		                });
+		$.ajax({
+				url : "/admin/company-sales/years",
+				type : "GET",
+				data : {startDate : startDate,
+						endDate : endDate
+						},
+				success : function(csList) {
+						var countList = [];
+						var yearList = [];
 
-			    }
-			});
+						$.each(csList, function() {
+							countList.push(this["count"])
+							yearList.push(this["yearData"])
+						})
+						
+						const ctx = document.getElementById('myChart').getContext('2d');
+						// 그래픽 엔진으로 유명한 것 (DirectX, OpenGL)
+						const myChart = new Chart(ctx, {
+							type : 'bar', //bar,line,pie,doughnut,radar
+							//labels : x축의 값
+							//datasets : data의 값, 속성들 지정
+							data : {
+								labels : yearList,
+								datasets : [ {
+									label : '매출 현황',
+									data : countList,
+									backgroundColor : [
+											'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderColor : [ 'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderWidth : 3
+								} ]
+							},
+							options : {
+								scales : {
+									y : {
+										beginAtZero : true
+									}
+								}
+							}
+						});
+					}
+				});
 	}
 </script>
 </html>

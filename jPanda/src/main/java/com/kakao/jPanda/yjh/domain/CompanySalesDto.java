@@ -1,7 +1,6 @@
 package com.kakao.jPanda.yjh.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,17 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompanySalesDto {
-	//Member table
-	private String id;
-	private String password;
-	private String name;
-	private String tel;
-	private String email;
-	private String birth;
-	private String gender;
-	private String status;
-	private String grade;
-	
 	//Bamboo_charge table
 	private Long chargeNo;
 	private String chargerId;
@@ -55,4 +43,7 @@ public class CompanySalesDto {
 	//결과 값
 	private Long count;
 	private String yearData;
+	private Long exCount;
+	private String exData;
+	
 }

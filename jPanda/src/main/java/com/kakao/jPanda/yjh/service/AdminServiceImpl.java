@@ -1,5 +1,6 @@
 package com.kakao.jPanda.yjh.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,9 +31,9 @@ public class AdminServiceImpl implements AdminService {
 		int result = adminDao.insertNotice(notice);
 		
 		if(result > 0) {
-			resultStr = "<script>alert('怨듭��궗�빆 �쟻�슜�씠 �셿猷� �릺�뿀�뒿�땲�떎.'); location.href='/admin';</script>";
+			resultStr = "<script>alert('공지사항 적용이 완료되었습니다.'); location.href='/admin';</script>";
 		} else {
-			resultStr = "<script>alert('怨듭��궗�빆 �쟻�슜 �삤瑜�'); history.back();</script>";
+			resultStr = "<script>alert('공지사항 적용 오류'); history.back();</script>";
 		}
 		return resultStr;
 	}
@@ -61,9 +62,9 @@ public class AdminServiceImpl implements AdminService {
 		int result = adminDao.updateNotice(notice);
 		
 		if(result > 0) {
-			resultStr = "<script>alert('�꽦怨듭쟻�쑝濡� �닔�젙 �릺�뿀�뒿�땲�떎.'); location.href='/admin/notice'; </script>";
+			resultStr = "<script>alert('공지사항 수정이 완료되었습니다.'); location.href='/admin/notice'; </script>";
 		} else {
-			resultStr = "<script>alert('�닔�젙�뿉 �떎�뙣�븯���뒿�땲�떎.'); history.back(); </script>";
+			resultStr = "<script>alert('공지사항 수정 오류'); history.back(); </script>";
 		}
 		return resultStr;
 	}
@@ -166,11 +167,83 @@ public class AdminServiceImpl implements AdminService {
 	
 	//company-sales
 	@Override
-	public List<CompanySalesDto> findCompanySalesByYears(CompanySalesDto companySalesDto) {
+	public List<CompanySalesDto> findCompanySalesAtBambooChargeByStartDateAndEndDate(String startDate, String endDate) {
 		log.info("Service findCompanySalesByYears() start");
-		List<CompanySalesDto> csList = adminDao.selectCompanySalesByYears(companySalesDto);
+		CompanySalesDto companySalesDto = new CompanySalesDto();
+		List<CompanySalesDto> csList = null;
 		
-		return csList;
+		if(Integer.parseInt(startDate.substring(6)) > 1 && Integer.parseInt(endDate.substring(6)) > 1) {
+			companySalesDto.setStartDate(startDate);
+			log.info("Company-sales Service 'DD' startDate : "+companySalesDto.getStartDate().toString());
+			companySalesDto.setEndDate(endDate);
+			log.info("Company-sales Service 'DD' endDate : "+companySalesDto.getEndDate().toString());
+			csList = adminDao.selectCompanySalesAtBambooChargeByDDDate(companySalesDto);
+			
+		} else {
+			companySalesDto.setStartDate(startDate);
+			companySalesDto.setEndDate(endDate);
+			csList = adminDao.selectCompanySalesAtBambooChargeByYYMMDate(companySalesDto);
+			log.info("Company-sales Service YYYYMM csList : "+csList.toString());
+		}
+		
+		CompanySalesDto companySalesDtoForExchange = new CompanySalesDto();
+		List<CompanySalesDto> csExList = null;
+		
+		if(Integer.parseInt(startDate.substring(6)) > 1 && Integer.parseInt(endDate.substring(6)) > 1) {
+			companySalesDtoForExchange.setStartDate(startDate);
+			log.info("Company-sales Service 'DD' startDate : "+companySalesDtoForExchange.getStartDate().toString());
+			companySalesDtoForExchange.setEndDate(endDate);
+			log.info("Company-sales Service 'DD' endDate : "+companySalesDtoForExchange.getEndDate().toString());
+			csExList = adminDao.selectCompanySalesAtExchangeByDDDate(companySalesDtoForExchange);
+			
+		} else {
+			companySalesDtoForExchange.setStartDate(startDate);
+			companySalesDtoForExchange.setEndDate(endDate);
+			csExList = adminDao.selectCompanySalesAtExchangeByYYMMDate(companySalesDtoForExchange);
+			log.info("Company-sales Service YYYYMM csExList : "+csExList.toString());
+		}
+		
+		csList.addAll(csExList);
+		List<CompanySalesDto> resultList = new ArrayList<>();
+
+		 for (int i = 0; i < csList.size(); i++) {
+			 CompanySalesDto csd = csList.get(i);
+			 
+		     Long longCsd = csd.getCount();
+		     log.info("longCsd : " + longCsd);
+		        
+		     Long longExCsd = csd.getExCount();
+		     log.info("longExCsd : " + longExCsd);
+		        
+		     String strCsd = csd.getYearData();
+		     log.info("yearData : "+strCsd);
+		        
+		     String strExCsd = csd.getExData();
+		     log.info("exData : " + strExCsd);
+
+		     if (longCsd == null) {
+		    	 longCsd = 0L;
+		        } else if(longExCsd == null) {
+		        	longExCsd = 0L;
+		        }
+
+		     Long result = longCsd + longExCsd;
+		     log.info("result : " + result);
+
+		     CompanySalesDto resultDto = new CompanySalesDto();
+		     resultDto.setCount(result);
+		     resultDto.setYearData(strCsd);
+		     
+		     resultDto.setExCount(null);
+		     resultDto.setExData(null);
+		     
+		     resultList.add(resultDto);
+		     
+		    }
+		 
+		    log.info("resultList : "+resultList);
+		    
+		    return resultList;
 	}
 	
 	//talent
@@ -181,4 +254,5 @@ public class AdminServiceImpl implements AdminService {
 		
 		return talentList;
 	}
+
 }

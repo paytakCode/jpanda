@@ -40,7 +40,7 @@ public class AdminController {
 	
 	//notice
 	
-	@GetMapping(value = "/notice") // ~~ /notices/{noticeNo}  @Pathvariable  ,   /notices   @Pathparam LocalDate date ?date="dsaffdsa" 
+	@GetMapping(value = "/notices") // ~~ /notices/{noticeNo}  @Pathvariable  ,   /notices   @Pathparam LocalDate date ?date="dsaffdsa" 
 	public String noticeList(Model model) {
 		log.info("Notice Controller noticeList() start");
 		List<Notice> noticeList = adminService.findNotice();
@@ -110,7 +110,7 @@ public class AdminController {
 	}
 	
 	//exchange	
-	@GetMapping(value = "/exchange")
+	@GetMapping(value = "/exchanges")
 	public String exchangeList(Model model) {
 		log.info("Exchange Controller exchangeList() start");
 		List<Exchange> exList = adminService.findExchange();
@@ -190,12 +190,8 @@ public class AdminController {
 		
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
+		List<CompanySalesDto> csList = adminService.findCompanySalesAtBambooChargeByStartDateAndEndDate(startDate, endDate);
 		
-		CompanySalesDto companySalesDto = new CompanySalesDto();
-		companySalesDto.setStartDate(startDate);
-		companySalesDto.setEndDate(endDate);
-		
-		List<CompanySalesDto> csList = adminService.findCompanySalesByYears(companySalesDto);
 		log.info("csList : "+csList.toString());
 		
 		return csList;

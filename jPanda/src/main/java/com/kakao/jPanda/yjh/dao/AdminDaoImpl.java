@@ -144,13 +144,34 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//company-sales
 	@Override
-	public List<CompanySalesDto> selectCompanySalesByYears(CompanySalesDto companySalesDto) {
-		log.info("Dao selectCompanySalesByYears() start");
-		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesByYears", companySalesDto);
+	public List<CompanySalesDto> selectCompanySalesAtBambooChargeByYYMMDate(CompanySalesDto companySalesDto) {
+		log.info("Dao selectCompanySalesAtBambooChargeByYYMMDate() start");
+		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesAtBambooChargeByYYMMDate", companySalesDto);
 		
 		return csList;
 	}
 	
+	@Override
+	public List<CompanySalesDto> selectCompanySalesAtBambooChargeByDDDate(CompanySalesDto companySalesDto) {
+		log.info("Dao selectCompanySalesAtBambooChargeByDDDate() start");
+		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesAtBambooChargeByDDDate", companySalesDto);
+		
+		return csList;
+	}
+	
+	@Override
+	public List<CompanySalesDto> selectCompanySalesAtExchangeByDDDate(CompanySalesDto companySalesDto) {
+		log.info("Dao selectCompanySalesAtExchangeByDDDate() start");
+		List<CompanySalesDto> csExList = sqlSession.selectList("selectCompanySalesAtExchangeByDDDate", companySalesDto);
+		return csExList;
+	}
+	
+	@Override
+	public List<CompanySalesDto> selectCompanySalesAtExchangeByYYMMDate(CompanySalesDto companySalesDto) {
+		log.info("Dao selectCompanySalesAtExchangeByYYMMDate() start");
+		List<CompanySalesDto> csExList = sqlSession.selectList("selectCompanySalesAtExchangeByYYMMDate", companySalesDto);
+		return csExList;
+	}
 	
 	//talent
 	@Override

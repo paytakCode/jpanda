@@ -25,7 +25,10 @@ public interface AdminDao {
 	void insertCoupon(Coupon coupon);
 	
 	//company-sales
-	List<CompanySalesDto> selectCompanySalesByYears(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> selectCompanySalesAtBambooChargeByYYMMDate(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> selectCompanySalesAtBambooChargeByDDDate(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> selectCompanySalesAtExchangeByDDDate(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> selectCompanySalesAtExchangeByYYMMDate(CompanySalesDto companySalesDto);
 	
 	//talent
 	List<Talent> selectTalent();
