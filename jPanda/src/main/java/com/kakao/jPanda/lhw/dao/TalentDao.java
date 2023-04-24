@@ -12,4 +12,10 @@ public interface TalentDao {
 	
 	// 리뷰 리스트 불러오기
 	List<Review> selectReivewListByTalentNo(Long talentNo);
+	
+	// 리뷰 인서트
+	int insertReview(Review review);
+	
+	
+	
 }

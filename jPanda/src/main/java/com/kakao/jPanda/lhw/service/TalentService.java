@@ -12,4 +12,6 @@ public interface TalentService {
 	
 	// 리뷰 리스트 불러오기
 	List<Review> findReviewListByTalentNo(Long talentNo);
+
+	int insertReview(Review review);
 }

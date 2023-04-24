@@ -14,6 +14,6 @@ public class Review {
 	private String reviewerId;
 	private String content;
 	private Date reviewDate;
-	private Long bambooScore;
+	private Double bambooScore;
 
 }

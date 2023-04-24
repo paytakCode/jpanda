@@ -27,6 +27,11 @@ public class TalentDaoImpl implements TalentDao {
 	public List<Review> selectReivewListByTalentNo(Long talentNo) {
 		return sqlSession.selectList("selectReviewListByTalentNo", talentNo);
 	}
+
+	@Override
+	public int insertReview(Review review) {
+		return sqlSession.insert("insertReview", review);
+	}
 	
 
 }

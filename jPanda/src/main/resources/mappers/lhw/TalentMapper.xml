@@ -5,7 +5,7 @@
 <mapper namespace="talentMapper">
 	<select id="selectTalentList" resultType="Talent">
        	SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
-		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score) * 2) / 2 AS bambooScore
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'
@@ -25,14 +25,14 @@
 	</select>
 	
 	<select id="selectTalentByTalentNo" resultType="Talent" parameterType="Long">
-		SELECT title, seller_id, main_img, summary, bamboo, sale_bamboo, content
+		SELECT talent_no, title, seller_id, main_img, summary, bamboo, sale_bamboo, content
 		FROM talent
 		WHERE talent_no = #{talentNo}
 	</select>
 	
 	<select id="selectTalentListByUpperCategoryNo" resultType="Talent" parameterType="Long">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
-		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score) * 2) / 2 AS bambooScore
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'
@@ -49,7 +49,7 @@
 	
 	<select id="selectTalentListByLowerCategoryNo" resultType="Talent" parameterType="Long">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
-		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score) * 2) / 2 AS bambooScore
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'
@@ -65,9 +65,14 @@
 		ORDER BY review_date DESC
 	</select>
 	
+	<insert id="insertReview" parameterType="Review">
+		 INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score ,review_no) 
+    					VALUES (#{talentNo}, #{reviewerId}, #{content}, SYSDATE, #{bambooScore}, (SELECT MAX(review_no)+1 FROM review))
+	</insert>
+	
 	<select id="selectTalentListByUpperCategoryAndFilters" resultType="Talent" parameterType="Filters">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
-		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score),0) AS bambooScore
+		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score) * 2) / 2 AS bambooScore
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'

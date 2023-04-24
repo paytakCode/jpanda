@@ -25,7 +25,7 @@ public class Talent {
 	private Date statusDate;
 	
 	// 리뷰 테이블용 
-	private Long bambooScore;
+	private Double bambooScore;
 	
 	private int reviewCount;
 }

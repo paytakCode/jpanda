@@ -239,10 +239,10 @@ li:hover {
 		
 		<div class="side-info">
 		  강사 : 		<div th:text="${talent.sellerId}"></div>
-	         평균 별점 :	<div id="review-filter"></div>
-		  가격 : 		<div th:text="${talent.bamboo}"></div>
-		  할인 가격 : 	<div th:text="${talent.saleBamboo}"></div>
 		  요약 설명 : 	<div th:text="${talent.summary}"></div>
+		  정상 가격 : 		<div th:text="${talent.bamboo}"></div>
+		  판매 가격 : 	<div th:text="${talent.saleBamboo}"></div>
+	         평균 별점 :	<div id="review-filter"></div>
 		  	<div id="button">
 			    <button>구매하기</button>
  			</div>
@@ -253,21 +253,25 @@ li:hover {
 			<div th:text="${talent.content}"></div>
 		</div>
 	</div>
-	
-	<div class="review-form">
-	    <label for="rating">만족도</label>
-	    <select id="rating" name="rating">
-	      <option value="5">5점</option>
-	      <option value="4">4점</option>
-	      <option value="3">3점</option>
-	      <option value="2">2점</option>
-	      <option value="1">1점</option>
+	<form class="review-form" method="post">
+	    <label for="bambooScore">만족도</label>
+	    <select id="bambooScore" name="bambooScore">
+	      <option value="5.0">5점</option>
+	      <option value="4.5">4.5점</option>
+	      <option value="4.0">4점</option>
+	      <option value="3.5">3.5점</option>
+	      <option value="3.0">3점</option>
+	      <option value="2.5">2.5점</option>
+	      <option value="2.0">2점</option>
+	      <option value="1.5">1.5점</option>
+	      <option value="1.0">1점</option>
 	    </select><br>
 	   		리뷰 내용 : <input id="content" name="content"></input>
+	   		
 	 	<div id="review-button">
-	 		<button type="submit">작성 완료</button>
+	 		<button type="button" th:onclick="'reviewInsert(' + ${talent.talentNo} + ')'">작성 완료</button>
 	 	</div>
-	</div>
+	</form>
 	
 	
 	<div id="review-container">
@@ -275,13 +279,51 @@ li:hover {
 	 	<li th:each="review : ${reviewList}">
 	 		작성자 : 	<span th:text="${review.reviewerId}"></span>
 	 		작성날짜 : <span th:text="${review.reviewDate}"></span>
-	 		밤부 : 	<span th:text="${review.bambooScore}"></span><br>
+	 		평점 : 	<span th:text="${review.bambooScore}"></span><br>
 	 		내용 : 	<span th:text="${review.content}"></span>
 	 	</li>
 	 </ul>
 	</div>
 	<button id="load-more-button">리뷰 더보기</button>
-		
+
+
+<script type="text/javascript" src="/js/jquery.js"></script>	
+<script>
+
+function reviewInsert(talentNo){
+	if( $("#content").val().trim() == ''){
+		alert('내용을 입력해주세요');
+		return;
+	};  
+	$.ajax({
+	    type: "POST",
+	    url: "/talent/talents/" + talentNo + "/review",
+	    data: JSON.stringify({
+	    	talentNo : talentNo,
+	    	reviewerId : "kzwloppneba",
+	        bambooScore: $("#bambooScore").val(),
+	        content: $("#content").val()
+	    }),
+	    contentType : "application/json",
+	    dataType:'json',
+	    success: function(review) {
+	    	$('#review-list').empty();
+	        console.log(review);
+	        review.forEach(function(review){
+	        	const li = $('<li>').appendTo('#review-list');
+	        	$('<span>').text(review.reviewerId).appendTo(li);
+	        	$('<span>').text(review.reviewDate).appendTo(li);
+	        	$('<span>').text(review.bambooScore).appendTo(li);
+	        	$('<span>').text(review.content).appendTo(li); 
+	        }); 
+	    },
+	    error: function(xhr, status, error) {
+	        console.log(xhr);
+	        alert('리뷰 작성에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+	    }
+	});
+};
+</script>
 	
 	
 	
@@ -293,9 +335,13 @@ li:hover {
 	reviewList.forEach(function(review){
 		totalBambooScore += review.bambooScore;
 	});
-	// 반올림한 소수점 첫째자리까지 표시
-	var avgBambooScore = Math.round((totalBambooScore / reviewCount) * 10) / 10;
-	$('#review-filter').text(avgBambooScore + '/ (' + reviewCount + ')');
+	// // 반올림해서 0.5 단위로 계산
+	var avgBambooScore = Math.round((totalBambooScore / reviewCount) * 2) / 2;
+	// 5점 이상일 경우 5점으로 표시
+	if (avgBambooScore > 5) {
+		avgBambooScore = 5;
+	}
+	$('#review-filter').text(avgBambooScore.toFixed(1) + ' / (' + reviewCount + ')');
 </script>
 </body>
 </html>

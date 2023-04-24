@@ -58,22 +58,22 @@ public class BoardController {
 	
 	// 중분류 카테고리 눌렀을때 리스트
 	@ResponseBody
-	@GetMapping("/update-talent-list-by-lower-category-no")
+	@GetMapping("/update-talent-list-by-lower-category-no") 
 	public List<Talent> talentListByLowerCategoryNo(Long lowerCategoryNo){
 		System.out.println("Controller talentListByLowerCategoryNo Start");
 		List<Talent> talentList = boardService.findTalentListByLowerCategoryNo(lowerCategoryNo);
 		return talentList;
 	}
-	/*
-	 * @ResponseBody
-	 * 
-	 * @GetMapping("/talents?upper-category-and-filters={filters}") public
-	 * List<Talent> talentListByFilters(@RequestParam Filters filters){
-	 * List<Talent> talentListByFilters =
-	 * boardService.findTalentListByUpperCategoryAndFilter(filters); 
-	 * return talentListByFilters; 
-	 * }
-	 */
+	
+	 @ResponseBody
+	 @GetMapping("/talents?upper-category-and-filters={filters}") 
+	 public List<Talent> talentListByFilters(@RequestParam Filters filters){ 
+		 List<Talent> talentListByFilters = boardService.
+				 							findTalentListByUpperCategoryAndFilter(filters); 
+		 System.out.println(filters);
+		 return talentListByFilters; 
+	}
+	 
 	
 	
 }
