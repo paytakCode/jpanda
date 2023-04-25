@@ -23,7 +23,6 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 	
 //	  밤부 충전
-	
 	 @Override
 		public int addCharge(ChargeDto chargeDto) {
 			log.info("ChargeServiceImpl insertCharge() Start...");
@@ -39,7 +38,8 @@ public class ChargeServiceImpl implements ChargeService {
 			
 //			coupon_use insert
 			int insertCouponUse = chargeDao.insertCouponUse(chargeDto);
-			System.out.println("insertCouponUse 결과값 : " + insertCouponUse);
+			//System.out.println("insertCouponUse 결과값 : " + insertCouponUse);
+			log.info("insertCouponUse 결과값 : {}", insertCouponUse);
 			
 //			결제방법 선택시 보너스율 적용
 			double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
@@ -57,12 +57,14 @@ public class ChargeServiceImpl implements ChargeService {
 			int resultInsertCharge = chargeDao.insertCharge(chargeDto);
 			
 			if(insertCouponUse > 0) {
-				System.out.println("ChargeServiceImpl insertCouponUse 삽입 완료");
+				//System.out.println("ChargeServiceImpl insertCouponUse 삽입 완료");
+				log.info("ChargeServiceImpl insertCouponUse 삽입 완료");
 			} else {
-				System.out.println("ChargeServiceImpl insertCouponUse 삽입 안함(미삽입 or 오류)");
+				//System.out.println("ChargeServiceImpl insertCouponUse 삽입 안함(미삽입 or 오류)");
+				log.info("ChargeServiceImpl insertCouponUse 삽입 안함(미삽입 or 오류)");
 			}
 			
-			log.info("ChargeServiceImpl insertCharge() DAO에서 반환받은 resultInsertCharge-> " + resultInsertCharge);
+			log.info("ChargeServiceImpl insertCharge() DAO에서 반환받은 resultInsertCharge-> {}", resultInsertCharge);
 			return resultInsertCharge;
 			
 		}
@@ -73,13 +75,14 @@ public class ChargeServiceImpl implements ChargeService {
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
 		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isUsed 검증
 		CouponUseDto selectedcouponUseDto = chargeDao.selectCouponUse(couponUseDto);
+		//System.out.println("초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
+		log.info("초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
 		
 		int returnResult = 1;
 		
-		// 사용된 쿠폰  -> true 미사용 false
+		// 사용된 쿠폰  -> true / 미사용 -> false
 		boolean isUsed = true;	
 		boolean isExpired = true;
-		System.out.println("초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
 		//해당 DTO(id, couponId)가 Coupon_Use 테이블에 존재하면 사용 불가(0) 존재하지 않으면 사용 가능(1)
 		if(selectedcouponUseDto == null) {
 			isUsed = false;
@@ -90,9 +93,12 @@ public class ChargeServiceImpl implements ChargeService {
 			
 			//해당 쿠폰이 기한남아있는지 확인 boolean isExpired 검증
 			CouponDto selectedCouponDto = chargeDao.selectCouponByCouponNo(couponUseDto.getCouponNo());
-			System.out.println("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto->"+selectedCouponDto);
+			//System.out.println("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto->"+selectedCouponDto);
+			log.info("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto -> "+selectedCouponDto);
 			LocalDate expireDate = selectedCouponDto.getExpireDate();
 			LocalDate today = LocalDate.now();
+			log.info("expireDate -> " + expireDate);
+			log.info("today -> " + today);
 			if(today.isBefore(expireDate)) {
 				isExpired = false;
 			} else if(today.isEqual(expireDate)) {
@@ -100,8 +106,10 @@ public class ChargeServiceImpl implements ChargeService {
 			} else {
 				isExpired = true;
 			}
-			System.out.println("checkAvailableCoupon isUsed->"+isUsed);
-			System.out.println("checkAvailableCoupon isExpired->"+isExpired);
+			//System.out.println("checkAvailableCoupon isUsed->"+isUsed);
+			//System.out.println("checkAvailableCoupon isExpired->"+isExpired);
+			log.info("checkAvailableCoupon isUsed->"+isUsed);
+			log.info("checkAvailableCoupon isExpired->"+isExpired);
 
 		}
 		 
@@ -112,7 +120,8 @@ public class ChargeServiceImpl implements ChargeService {
 			returnResult = 0;
 		}
 		
-		System.out.println("checkAvailableCoupon returnResult->"+returnResult);
+		//System.out.println("checkAvailableCoupon returnResult->"+returnResult);
+		log.info("checkAvailableCoupon returnResult->"+returnResult);
 		return returnResult;
 	}
 
@@ -129,12 +138,27 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 	
 	@Override
-	public int calculateTotalBamboo(String memberId) {
+	public long findTotalBamboo(String memberId) {
 		
-//		int selectBambooChargeBamboo = chargeDao.selectBambooChargeBamboo();
-//		int selectBambooUseBamboo = chargeDao.selectBambooUseUseBamboo();
+//		int selectedBambooChargeAmount = chargeDao.selectChargeBambooAmount(memberId);
+//		int selectedBambooUseAmount    = chargeDao.selectBambooUseAmount(memberId);
+//		int selectedTalentRefundAmount = chargeDao.selectTalentRefundAmount(memberId);
+//		log.info("ChargeServiceImpl calculateTotalBamboo findBambooChargeAmount -> {}", selectedBambooChargeAmount);
+//		log.info("ChargeServiceImpl calculateTotalBamboo findBambooUseAmount    -> {}", selectedBambooUseAmount);
+//		log.info("ChargeServiceImpl calculateTotalBamboo findTalentRefundAmount -> {}", selectedTalentRefundAmount);
 		
-		return 0;
+		long selectedBambooChargeAmount = chargeDao.selectChargeBambooAmount(memberId);
+		long selectedBambooUseAmount    = chargeDao.selectBambooUseAmount(memberId);
+		long selectedTalentRefundAmount = chargeDao.selectTalentRefundAmount(memberId);
+		log.info("ChargeServiceImpl calculateTotalBamboo findBambooChargeAmount -> {}", selectedBambooChargeAmount);
+		log.info("ChargeServiceImpl calculateTotalBamboo findBambooUseAmount    -> {}", selectedBambooUseAmount);
+		log.info("ChargeServiceImpl calculateTotalBamboo findTalentRefundAmount -> {}", selectedTalentRefundAmount);
+		
+		//int foundTotalBamboo = selectedBambooChargeAmount + selectedTalentRefundAmount - selectedBambooUseAmount;
+		long foundTotalBamboo = selectedBambooChargeAmount + selectedTalentRefundAmount - selectedBambooUseAmount;
+		log.info("ChargeServiceImpl calculateTotalBamboo calculatedTotalBamboo  -> {}", foundTotalBamboo);
+		
+		return foundTotalBamboo;
 	}
 
 

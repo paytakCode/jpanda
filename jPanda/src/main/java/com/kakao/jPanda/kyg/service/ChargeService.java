@@ -11,7 +11,8 @@ public interface ChargeService {
 
 	Long getAvailAmountCoupon(CouponUseDto couponUseDto);
 
-	int calculateTotalBamboo(String memberId);
+	//int findTotalBamboo(String memberId);
+	long findTotalBamboo(String memberId);
 
 
 

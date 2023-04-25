@@ -9,8 +9,8 @@ import lombok.Setter;
 @Data
 public class CouponDto {
 	
-	private String couponNo;
-	private LocalDate issueDate;
-	private LocalDate expireDate;
-	private Long couponValue;
+	private String		couponNo;
+	private LocalDate	issueDate;
+	private LocalDate	expireDate;
+	private Long		couponValue;
 }

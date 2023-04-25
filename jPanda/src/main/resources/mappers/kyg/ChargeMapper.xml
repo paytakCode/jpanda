@@ -20,12 +20,12 @@
 		  #{chargerId},
 		  #{paymentMethod},
 		  #{chargeMoney} - NVL(
-		  							(
-		  							SELECT coupon_value 
-		  							FROM coupon 
-		  							WHERE coupon_no = #{couponNo , jdbcType=VARCHAR}), 0
-		  							)
-									,
+		  					  (
+		  					   SELECT coupon_value 
+		  					   FROM coupon 
+		  					   WHERE coupon_no = #{couponNo , jdbcType=VARCHAR}), 0
+		  					  )
+							  ,
 		  #{chargeBamboo},							
 		  SYSDATE,
 		  #{couponNo,  jdbcType=VARCHAR}
@@ -83,9 +83,9 @@
 	
 	<select id="selectBonusRatio" parameterType="java.lang.String" resultType="double">
 	
-	SELECT ratio
-	FROM payment
-	WHERE method = #{paymentMethod}
+		SELECT	ratio
+		FROM	payment
+		WHERE	method = #{paymentMethod}
 	
 	</select>
 	
@@ -129,24 +129,55 @@
 	
 	
 	<select id="selectCouponUse" parameterType="CouponUseDto" resultType="CouponUseDto">
-		SELECT *
-		FROM coupon_use
-		WHERE id = #{id}
-		AND coupon_no = #{couponNo}
+	
+		SELECT	*
+		FROM	coupon_use
+		WHERE	id = #{id}
+		AND		coupon_no = #{couponNo}
+		
 	</select>
 	
 	<select id="selectAvailAmountCoupon" parameterType="couponUseDto" resultType="long">
+	
 		SELECT	coupon_value
 		FROM	coupon
 		WHERE	coupon_no = #{couponNo}
+		
 	</select>
 	
 	<select id="selectCouponByCouponNo" parameterType="String" resultType="CouponDto">
-		SELECT *
-		FROM coupon
-		WHERE coupon_no = #{couponNo}
+	
+		SELECT	*
+		FROM	coupon
+		WHERE	coupon_no = #{couponNo}
+		
 	</select>
 	
-
+	<select id="selectChargeBambooAmount" parameterType="String" resultType="long">
+	
+		SELECT	sum(charge_bamboo)
+		FROM	bamboo_charge
+		WHERE	charger_id = #{memberId}
+		
+	</select>
+	
+	<select id="selectBambooUseAmount" parameterType="String" resultType="long">
+		
+		SELECT	sum(use_bamboo)
+		FROM	bamboo_use
+		WHERE	buyer_id = #{memberId}
+		
+	</select>
+	
+	<select id="selectTalentRefundAmount" parameterType="String" resultType="long">
+	
+		SELECT NVL(sum(tr.refund_bamboo),0)
+		FROM talent_refund tr
+		LEFT JOIN bamboo_use bu
+		ON tr.purchase_no = bu.purchase_no
+		WHERE tr.status = '환불완료' 
+		AND bu.buyer_id = #{memberId}
+	
+	</select>
 	
 </mapper>

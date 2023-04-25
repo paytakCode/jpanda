@@ -18,12 +18,12 @@ public interface ChargeDao {
 
 	CouponDto selectCouponByCouponNo(String couponNo);
 
+	long selectChargeBambooAmount(String memberId);
 
+	long selectBambooUseAmount(String memberId);
 
+	long selectTalentRefundAmount(String memberId);
 
-	
-
-	
 	
 	
 }
