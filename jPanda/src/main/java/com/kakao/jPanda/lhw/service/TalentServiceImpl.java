@@ -26,9 +26,20 @@ public class TalentServiceImpl implements TalentService {
 	public List<Review> findReviewListByTalentNo(Long talentNo) {
 		return talentDao.selectReivewListByTalentNo(talentNo);
 	}
+	
+	// 리뷰 인서트
+	@Override
+	public int addReview(Review review) {
+		return talentDao.insertReview(review);
+	}
 
 	@Override
-	public int insertReview(Review review) {
-		return talentDao.insertReview(review);
+	public int modifyReview(Review review) {
+		return talentDao.updateReview(review);
+	}
+
+	@Override
+	public int removeReview(Review review) {
+		return talentDao.deleteReview(review);
 	}
 }

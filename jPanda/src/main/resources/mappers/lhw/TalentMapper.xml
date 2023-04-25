@@ -59,7 +59,7 @@
 	</select>
 	
 	<select id="selectReviewListByTalentNo" parameterType="Long" resultType="Review">
-		SELECT reviewer_id, content, review_date, bamboo_score
+		SELECT reviewer_id, content, review_date, bamboo_score, review_no
 		FROM review
 		WHERE talent_no = #{talentNo}
 		ORDER BY review_date DESC
@@ -81,6 +81,16 @@
 				 t.status, t.view_count, t.reg_date, r.bamboo_score
 		ORDER BY #{filter} DESC
 	</select>
+	
+	<update id="updateReview" parameterType="Review">
+		UPDATE review SET content = #{content}, bamboo_score = #{bambooScore}
+		WHERE review_no = #{reviewNo}
+	</update>
+	
+	<delete id="deleteReview" parameterType="Review">
+		DELETE FROM review
+		WHERE review_no = #{reviewNo}
+	</delete>
 	
 	
 	

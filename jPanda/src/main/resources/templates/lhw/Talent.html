@@ -116,12 +116,12 @@ li:hover {
   margin-bottom: 10px;
 }
 
-.review-form label {
+.review-form h3 {
   display: inline-block;
-  width: 100px;
+  width: 200px;
   font-weight: bold;
   margin-right: 10px;
-  text-align: right;
+  text-align: center;
 }
 
 .review-form input[type="text"],
@@ -159,30 +159,26 @@ li:hover {
 }
 
 
-#review-container {
+.review-list {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-#review-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
-#review-list li {
+
+.review-list li {
   padding: 10px 0;
   border-bottom: 1px solid #ccc;
 }
 
-#review-list li:last-child {
+.review-list li:last-child {
   border-bottom: none;
 }
 
-#review-list li p {
+.review-list li p {
   margin: 0;
   font-size: 14px;
 }
@@ -253,9 +249,9 @@ li:hover {
 			<div th:text="${talent.content}"></div>
 		</div>
 	</div>
-	<form class="review-form" method="post">
-	    <label for="bambooScore">만족도</label>
-	    <select id="bambooScore" name="bambooScore">
+	<form class="review-form" id="insert-review-form" method="post">
+	    <h3 class="insert-bambooScore">리뷰를 남겨주세요</h3><br>
+	    <select id="insert-bambooScore" name="bambooScore">
 	      <option value="5.0">5점</option>
 	      <option value="4.5">4.5점</option>
 	      <option value="4.0">4점</option>
@@ -266,21 +262,43 @@ li:hover {
 	      <option value="1.5">1.5점</option>
 	      <option value="1.0">1점</option>
 	    </select><br>
-	   		리뷰 내용 : <input id="content" name="content"></input>
-	   		
-	 	<div id="review-button">
+	   		리뷰 내용 : <input id="insert-content" name="content"></input>
+	 	<div id="insert-review-button">
 	 		<button type="button" th:onclick="'reviewInsert(' + ${talent.talentNo} + ')'">작성 완료</button>
 	 	</div>
 	</form>
 	
 	
-	<div id="review-container">
+	<form class="review-form" id="update-review-form" method="post" style="display: none;">
+	    <h3 class="update-bambooScore">리뷰를 남겨주세요</h3><br>
+	    <select id="update-bambooScore" name="bambooScore">
+	      <option value="5.0" selected="selected">5점</option>
+	      <option value="4.5">4.5점</option>
+	      <option value="4.0">4점</option>
+	      <option value="3.5">3.5점</option>
+	      <option value="3.0">3점</option>
+	      <option value="2.5">2.5점</option>
+	      <option value="2.0">2점</option>
+	      <option value="1.5">1.5점</option>
+	      <option value="1.0">1점</option>
+	    </select><br>
+	   		리뷰 내용 : <input id="update-content" name="content"></input>
+	   		<input id="review-no" value="" type="hidden">
+	 	<div id="update-review-button">
+	 		<button type="button" th:onclick="'sendUpdateReview(' + ${talent.talentNo} + ')'">수정 완료</button>
+	 	</div>
+	</form>
+	
+	
+	<div class="review-list">
 	 <ul id="review-list">
 	 	<li th:each="review : ${reviewList}">
 	 		작성자 : 	<span th:text="${review.reviewerId}"></span>
 	 		작성날짜 : <span th:text="${review.reviewDate}"></span>
 	 		평점 : 	<span th:text="${review.bambooScore}"></span><br>
 	 		내용 : 	<span th:text="${review.content}"></span>
+	 		<button type="button" class="modifyReview" th:data-reviewNo="${review.reviewNo}" th:data-content="${review.content}">수정</button>
+	 		<button type="button" class="deleteReview" th:data-reviewNo="${review.reviewNo}" th:data-talentNo="${talent.talentNo}">삭제</button>
 	 	</li>
 	 </ul>
 	</div>
@@ -289,20 +307,32 @@ li:hover {
 
 <script type="text/javascript" src="/js/jquery.js"></script>	
 <script>
+$(document).on('click', '.modifyReview', function(){
+	// 기존에 있는 인서트 폼 숨기고 업데이트 폼 보여주기
+	$('#insert-review-form').hide();
+	$('#update-review-form').show();
+	// 기존 리뷰의 내용을 가져와서 수정 폼에 채워주기
+   	$('#update-content').val($(this).data('content'));
+   	$('#review-no').val($(this).data('reviewno'));
+   	console.log($(this).data('content'));
+   	console.log($(this).data('reviewno'));
+});
 
+
+// 인서트 
 function reviewInsert(talentNo){
-	if( $("#content").val().trim() == ''){
+	if( $("#insert-content").val().trim() == ''){
 		alert('내용을 입력해주세요');
 		return;
 	};  
 	$.ajax({
-	    type: "POST",
-	    url: "/talent/talents/" + talentNo + "/review",
+	    type: 'POST',
+	    url: "/talent/talents/" + talentNo + "/reviews",
 	    data: JSON.stringify({
 	    	talentNo : talentNo,
 	    	reviewerId : "kzwloppneba",
-	        bambooScore: $("#bambooScore").val(),
-	        content: $("#content").val()
+	        bambooScore: $("#insert-bambooScore").val(),
+	        content: $("#insert-content").val()
 	    }),
 	    contentType : "application/json",
 	    dataType:'json',
@@ -314,20 +344,105 @@ function reviewInsert(talentNo){
 	        	$('<span>').text(review.reviewerId).appendTo(li);
 	        	$('<span>').text(review.reviewDate).appendTo(li);
 	        	$('<span>').text(review.bambooScore).appendTo(li);
-	        	$('<span>').text(review.content).appendTo(li); 
-	        }); 
+	        	$('<span>').text(review.content).appendTo(li);
+	        	
+	        	const modifyBtn = 
+	        	$('<button>').attr('type', 'button').attr('class', 'modifyReview')
+                .attr('data-reviewNo', review.reviewNo).attr('data-content', review.content)
+                .text('수정');
+                
+	        	
+				const deleteBtn = 
+				$('<button>').attr('type', 'button').attr('class', 'deleteReview').text('삭제');
+				$('<br>').appendTo(li);
+				modifyBtn.appendTo(li);
+				deleteBtn.appendTo(li);
+				}); 
 	    },
 	    error: function(xhr, status, error) {
 	        console.log(xhr);
 	        alert('리뷰 작성에 실패하였습니다. 잠시 후 다시 시도해주세요.');
 	    }
 	});
-};
+}
+
+// 업데이트
+function sendUpdateReview(talentNo){
+	if( $("#update-content").val().trim() == ''){
+		alert('내용을 입력해주세요');
+		return;
+	};  
+	 var reviewNo = $("#review-no").val();
+	 console.log(reviewNo);
+  		$.ajax({
+  			type : 'PUT',
+  			url : talentNo + "/reviews/" + reviewNo,
+  			data: JSON.stringify({
+  		    	talentNo : talentNo,
+  		    	reviewNo : reviewNo,
+  		    	reviewerId : "kzwloppneba",
+  		        bambooScore: $("#update-bambooScore").val(),
+  		        content: $("#update-content").val()
+  		    }),
+  		    contentType : "application/json",
+  			dataType : 'json',
+  		success : function(review){
+			$('#review-list').empty();
+			console.log(review);
+			review.forEach(function(review){
+				const li = $('<li>').appendTo('#review-list');
+	        	$('<span>').text(review.reviewerId).appendTo(li);
+	        	$('<span>').text(review.reviewDate).appendTo(li);
+	        	$('<span>').text(review.bambooScore).appendTo(li);
+	        	$('<span>').text(review.content).appendTo(li);
+	        	
+	        	const modifyBtn = 
+	        	$('<button>').attr('type', 'button').attr('class', 'modifyReview')
+                .attr('data-reviewNo', review.reviewNo).attr('data-content', review.content)
+                .text('수정');
+	        	
+				const deleteBtn = 
+				$('<button>').attr('type', 'button').attr('class', 'deleteReview').text('삭제');
+				$('<br>').appendTo(li);
+				modifyBtn.appendTo(li);
+				deleteBtn.appendTo(li);
+				}); 
+	    },
+		error: function(xhr, status, error) {
+	        console.log(xhr);
+	        alert('리뷰 수정에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+	    }
+  		  });
+}
+  
+// 리뷰 삭제
+$(document).on('click', '.deleteReview', function() {
+	var reviewNo = $(this).data("reviewNo");
+	var talentNo = $(this).data("talentNo");
+	console.log(reviewNo);
+	console.log(talentNo);
+  if (confirm('리뷰를 삭제하시겠습니까?')) {
+    $.ajax({
+      type: 'DELETE',
+      url: talentNo + "/reviews/" + reviewNo,
+      success: function() {
+        // 리뷰 목록 새로고침
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr);
+        alert('리뷰 삭제에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+      }
+    });
+  }
+});
+
+ 
+
 </script>
 	
 	
 	
-	
+<!-- 평균 리뷰 스코어와 리뷰 총 개수 출력  -->
 <script th:inline="javascript">
 	var reviewList = /*[[${reviewList}]]*/[];
 	var reviewCount = reviewList.length;

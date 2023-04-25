@@ -39,7 +39,7 @@ public class BoardController {
 	
 	// 대분류 카테고리를 눌렀을때 리스트
 	@ResponseBody
-	@GetMapping("/update-talent-list-by-upper-category-no")
+	@GetMapping("/update-talent-list-by-upper-category-no") 
 	public List<Talent> talentListByUpperCategoryNo(Long upperCategoryNo) {
 		System.out.println("Controller talentListByUpperCategoryNo Start");
 		List<Talent> talentList = boardService.findTalentListByUpperCategoryNo(upperCategoryNo);

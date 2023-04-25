@@ -202,7 +202,7 @@ li:hover {
     <div id="top-category">
     	<h2>대분류 카테고리</h2>
     	<ul th:each="upperCategory : ${upperCategoryList}">	
-    		<li th:text="${upperCategory.item}" th:onclick="onFilter([[${upperCategory.categoryNo}]])"></li>
+    		<li class="topCategoryList" th:text="${upperCategory.item}" th:onclick="onFilter([[${upperCategory.categoryNo}]])"></li>
     	</ul>
     </div>
     
@@ -286,15 +286,14 @@ function onFilter(upperCategoryNo){
             	$('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
             	$('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
             	$('<span>').addClass('avgScoreSpan').text(talent.bambooScore).appendTo(li);
-            	$('<span>').text('만족도: ').appendTo(li);
             	$('<img>').addClass('bamboo-score').appendTo(li);
+            	//$('<span>').text('만족도: ').appendTo(li);
                 li.click(function() {
                     location.href = '/talent/talents/' + talent.talentNo;
                 });
             });
         }
     });
-    
     
     $.ajax({
     	url:"/board/update-lower-category-list-by-upper-category-no",
@@ -311,7 +310,6 @@ function onFilter(upperCategoryNo){
     	}
     });
 }
-
 
 
 	$('#lower-category-list').on('change', function() { 
@@ -340,8 +338,6 @@ function onFilter(upperCategoryNo){
 	        }
 		});
 	});
-
-
 
 	
 
@@ -379,7 +375,10 @@ $(function rivewImg() {
       $(this).next('.bamboo-score').attr('src', '../images/bambooScore/' + starImages[index]);
   });
 });
-
+ 
+	/* $(document).ready(function(){
+		$('.topCategoryList').on('DOMSubtreeModified',rivewImg);
+	})  */
 
 </script>
 </body>

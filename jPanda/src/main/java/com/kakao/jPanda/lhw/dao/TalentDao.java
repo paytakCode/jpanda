@@ -16,6 +16,12 @@ public interface TalentDao {
 	// 리뷰 인서트
 	int insertReview(Review review);
 	
+	// 리뷰 업데이트
+	int updateReview(Review review);
+	
+	// 리뷰 삭제
+	int deleteReview(Review review);
+	
 	
 	
 }
