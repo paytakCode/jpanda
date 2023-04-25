@@ -16,7 +16,7 @@ public interface TalentService {
 	Talent 			findTalentByTalentNo(Long talentNo);
 	String 			modifyTalent(Talent talent);
 	List<Talent> 	findBestSellerTalents();
-	List<Talent> 	findTopRatedTalentTalents();
+	List<Talent> 	findTopRatedTalents();
 	List<Talent> 	findNewTrendTalents();
 	List<Talent> 	findRandomTalents();
 	

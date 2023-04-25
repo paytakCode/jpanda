@@ -17,8 +17,6 @@ a:hover{color:#1bc1a3;}
 }
 
 .slider-wrap ul.slider{
-  	width:240px;
-  	height:300px;
   	position:absolute;
   	top:0;
   	left:0;   
@@ -143,7 +141,6 @@ h4 {
   		<a href="#5">마이페이지</a>
   		<a href="#6">공지사항</a>
 	</div>
-
 	<div class="container">
 	<form action="/talent/update-form">
 	<div>
@@ -186,6 +183,7 @@ h4 {
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${newTrendTalent}">
 				<img th:src="${talent.mainImg}">
                     <p class="title" th:text="${talent.title}"></p>
+                    <p class="name" th:text="${talent.name}"></p>
              </li>
               </ul>
       </div>
@@ -208,79 +206,62 @@ h4 {
 	</form>
 	</div> <!-- container -->
 	<script type="text/javascript">
-	var pos1 = 0;
-	var pos2 = 0;
-	var pos3 = 0;
-	// var totalSlides = $('#slider-wrap ul li').length;
-	var totalSlides = 5;
-	// var sliderWidth = $('#slider-wrap').width();
-	var sliderWidth = 240;
-
-	$(document).ready(function(){
-	  
-	  $('ul.slider').width(sliderWidth*totalSlides);
-	 /*  $('ul#slider2').width(sliderWidth*totalSlides);
-	  $('ul#slider3').width(sliderWidth*totalSlides); */
-	  
-	  var autoSlider1 = setInterval(slideRight1, 3000);
-	  var autoSlider2 = setInterval(slideRight2, 3000);
-	  var autoSlider3 = setInterval(slideRight3, 3000);
-	  
-	/* 	$('.slider-wrap').hover(function(this){
-			
-			let sliderWrap = this;
-			var autoSlider3 = setInterval(slideRight(), 2000);
-			
-				function(){ $(this).addClass('active'); clearInterval(autoSlider1); }, 
-				function(){ $(this).removeClass('active'); autoSlider1 = setInterval(slideRight1, 2000);
-			});
-		
-			function slideRight(pos, totalSlides, sliderWrap){
-				pos++;
-				if(pos==totalSlides){ pos = 0; }
-				$(sliderWrap + '.slider-wrap ' + sliderWrap + '.slider').css('left', -(sliderWidth*pos)); 
-			}
-	 
+	var sliderInfo = [
+		{
+			wrap: "#slider-wrap1",
+			pos: 0,
+		    autoSlider: null,
+		    sliderWidth : 0,
+		    totalSlides : 0
+		},
+		{
+		    wrap: "#slider-wrap2",
+		    pos: 0,
+		    autoSlider: null,
+		    sliderWidth : 0,
+		    totalSlides : 0
+		},
+		{
+		    wrap: "#slider-wrap3",
+		    pos: 0,
+		    autoSlider: null,
+		    sliderWidth : 0,
+		    totalSlides : 0
 		}
-	 */
-	  $('#slider-wrap1').hover(
-			  
-	    function(){ $(this).addClass('active'); clearInterval(autoSlider1); }, 
-	    function(){ $(this).removeClass('active'); autoSlider1 = setInterval(slideRight1, 3000); }
-	  );
-	  $('#slider-wrap2').hover(
-	    function(){ $(this).addClass('active'); clearInterval(autoSlider2); }, 
-	    function(){ $(this).removeClass('active'); autoSlider2 = setInterval(slideRight2, 3000); }
-	  );
-	  $('#slider-wrap3').hover(
-	    function(){ $(this).addClass('active'); clearInterval(autoSlider3); }, 
-	    function(){ $(this).removeClass('active'); autoSlider3 = setInterval(slideRight3, 3000); }
-	  );
-	  
+	];
+
+	$(function(){
+	  	sliderInfo.forEach(function(slider) {
+			slider.totalSlides = $(slider.wrap + " ul li").length;
+	    	slider.sliderWidth = $(slider.wrap + " ul li").width();
+	    	$(slider.wrap + " ul").width(slider.totalSlides * slider.sliderWidth);
+	    	slider.autoSlider = setInterval(function() {
+	    		slideRight(slider);
+	    	}, 3000);
+
+			$(slider.wrap).hover(
+		      	function() { 
+		        	$(this).addClass("active");
+		        	clearInterval(slider.autoSlider);
+		      	},
+		      	function() { 
+		        	$(this).removeClass("active");
+		        	slider.autoSlider = setInterval(function() {
+		          		slideRight(slider);
+		        	}, 3000);
+		      	}
+		    );
+	  	});
 	});
-	  
-	function slideRight1(){
-		pos1++;
-		if(pos1==totalSlides){ 
-			pos1 = 0; 
-		}
-		$('#slider-wrap1 ul#slider1').css('left', -(sliderWidth*pos1)); 
-	}
-	function slideRight2(){
-		pos2++;
-		if(pos2==totalSlides){ 
-			pos2 = 0; 
-		}
-		$('#slider-wrap2 ul#slider2').css('left', -(sliderWidth*pos2)); 
-	}
-	function slideRight3(){
-		pos3++;
-		if(pos3==totalSlides){ 
-		pos3 = 0; 
-		}
-		$('#slider-wrap3 ul#slider3').css('left', -(sliderWidth*pos3)); 
-	}
 
+	function slideRight(slider) {
+		slider.pos++;
+		if (slider.pos == slider.totalSlides) {
+			slider.pos = 0;
+		}
+		$(slider.wrap + " ul").css("left", -(slider.sliderWidth * slider.pos));
+	}
+		
 	$('.talents').on('click', function(){
 		location.href = "/talent/talents/" + $(this).val() + "/update-form";
 	});

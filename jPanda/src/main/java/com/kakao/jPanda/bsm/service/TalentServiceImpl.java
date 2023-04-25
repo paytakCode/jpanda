@@ -35,12 +35,12 @@ public class TalentServiceImpl implements TalentService{
 		int result = talentDao.insertTalent(talent);
 		if(result > 0) {
 			resultStr = "<script> " +
-					"alert('재능 업로드가 완료되었습니다.');" + 
+					"alert('재능 등록이 완료되었습니다.');" + 
 					"location.href = '/talent/';" + 
 					"</script>";
 		}else {
 			resultStr = "<script> " +
-					"alert('재능 업로드가 완료되지 않았습니다. 다시 확인해주세요.');" + 
+					"alert('재능 등록이 완료되지 않았습니다. 다시 확인해주세요.');" + 
 					"history.back();" + 
 					"</script>";
 		}
@@ -67,11 +67,6 @@ public class TalentServiceImpl implements TalentService{
 		String ext = originalFileName.substring(originalFileName.indexOf("."));
 		System.out.println("MainController.image() 파일의 확장자 -> " + ext);
 		
-		HashSet<String> checkFileType = new HashSet<>(Arrays.asList(".jpg", ".gif", ".png", ".jpeg", ".bmp"));
-		checkFileType.add(ext);
-		if (checkFileType.size() != 5) {
-			return null;
-		}
         // 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
 		String newFileName = UUID.randomUUID() + ext;
 		System.out.println("MainController.image() 서버에 저장될 파일 이름 -> " + newFileName);
@@ -80,7 +75,7 @@ public class TalentServiceImpl implements TalentService{
 		String realPath = request.getServletContext().getRealPath("/talentImage/");
 		System.out.println("MainController.image() 현재 파일 경로 -> " + realPath);
 
-		// 현재경로/upload/파일명이 저장 경로
+		// 현재경로/talentImage/파일명이 저장 경로
 		String savePath = realPath + newFileName;
 		System.out.println("MainController.image() 파일 저장 경로 + 파일 이름 -> " + savePath);
 		
@@ -92,7 +87,7 @@ public class TalentServiceImpl implements TalentService{
 		}
 		
 		String uploadPath = "/talentImage/" + newFileName; 
-		System.out.println("MainController.image() 보안을 위한 상대 경로 출력 -> " + uploadPath);
+		System.out.println("MainController.image() 경로 출력 -> " + uploadPath);
 
 		// 저장 경로로 파일 객체 생성
 		File file = new File(savePath);
@@ -112,7 +107,6 @@ public class TalentServiceImpl implements TalentService{
 	
 	@Override
 	public Talent findTalentByTalentNo(Long talentNo) {
-		// dto 새로 만들 것
 		Talent talent = talentDao.selectTalentBytalentNo(talentNo);
 		
 		return talent;
@@ -143,8 +137,8 @@ public class TalentServiceImpl implements TalentService{
 	}
 
 	@Override
-	public List<Talent> findTopRatedTalentTalents() {
-		return namePlusStr(talentDao.selectTopRatedTalentTalents());
+	public List<Talent> findTopRatedTalents() {
+		return namePlusStr(talentDao.selectTopRatedTalents());
 	}
 
 	@Override

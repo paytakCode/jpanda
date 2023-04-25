@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,12 +30,12 @@ public class TalentController {
 	@GetMapping("/")
 	public String talentTest(Model model) {
 		List<Talent> bestSellerTalentList = service.findBestSellerTalents();
-		List<Talent> topRatedTalentTalentList = service.findTopRatedTalentTalents();
+		List<Talent> topRatedTalentList = service.findTopRatedTalents();
 		List<Talent> newTrendTalentList = service.findNewTrendTalents();
 		List<Talent> randomTalentList = service.findRandomTalents();
 		
 		model.addAttribute("bestSellerTalent", bestSellerTalentList);
-		model.addAttribute("topRatedTalent", topRatedTalentTalentList);
+		model.addAttribute("topRatedTalent", topRatedTalentList);
 		model.addAttribute("newTrendTalent", newTrendTalentList);
 		model.addAttribute("randomTalent", randomTalentList);
 		return "bsm/talentTestMainpage";
@@ -78,7 +77,6 @@ public class TalentController {
 	// 수정 페이지 이동
 	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
 	public String talentUpdateFrom(@PathVariable Long talentNo, Model model) { // @PathVariable
-		// dto 새로 만들 것
 		System.out.println(talentNo);
 		Talent talent = service.findTalentByTalentNo(talentNo);
 		List<Category> categoryList = service.findCategorys();

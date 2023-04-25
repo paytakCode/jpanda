@@ -12,7 +12,7 @@ public interface TalentDao {
 	Talent 			selectTalentBytalentNo(Long talentNo);
 	int 			updateTalent(Talent talent);
 	List<Talent> 	selectBestSellerTalents();
-	List<Talent> 	selectTopRatedTalentTalents();
+	List<Talent> 	selectTopRatedTalents();
 	List<Talent> 	selectNewTrendTalents();
 	List<Talent> 	selectRandomTalents();
 

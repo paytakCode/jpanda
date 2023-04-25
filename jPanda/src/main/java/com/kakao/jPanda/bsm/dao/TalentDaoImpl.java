@@ -68,14 +68,14 @@ public class TalentDaoImpl implements TalentDao{
 		return selectBestSellerTalents;
 	}
 	@Override
-	public List<Talent> selectTopRatedTalentTalents() {
-		List<Talent> selectTopRatedTalentTalents = null;
+	public List<Talent> selectTopRatedTalents() {
+		List<Talent> selectTopRatedTalents = null;
 		try {
-			selectTopRatedTalentTalents = session.selectList("selectTopRatedTalentTalents");
+			selectTopRatedTalents = session.selectList("selectTopRatedTalents");
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl selectTopRatedTalentTalents e.getMessage() ->" + e.getMessage());
 		}
-		return selectTopRatedTalentTalents;
+		return selectTopRatedTalents;
 	}
 	@Override
 	public List<Talent> selectNewTrendTalents() {
