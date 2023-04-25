@@ -8,4 +8,6 @@ public interface ChatService {
 
 	List<Chat> findChatListByUserId(String userId);
 
+	Integer saveChat(Chat chat);
+
 }

@@ -105,151 +105,196 @@
       <textarea id="chat-input" placeholder="메시지를 입력하세요..."></textarea>
     </div>
 
-	<script type="text/javascript" src="/js/jquery.js"></script>
-	<script>
-	    var scrollBtn = document.getElementById("scroll-to-chat");
-	    var chatPopup = document.getElementById("chat-popup");
-	    var partnerList = document.getElementById("chat-list");
-	    var chatContent = document.getElementById("chat-content");
-	    var chatInput = document.getElementById("chat-input");
-	    var selectedChat = null;
-		
-		function updateChatPartnerList(userId, chatList) {
-			const chatPartnerList = new Set();
-			
-			for(let i = 0; i < chatList.length; i++){
-				if (chatList[i].receiverId) {
-					chatPartnerList.add(chatList[i].receiverId);
-				}
-				if (chatList[i].senderId) {
-					chatPartnerList.add(chatList[i].senderId);
-				}
-			}
-			  
-			chatPartnerList.delete(userId);
-	
-			chatPartnerList.forEach((value, index, set) => {
-				let chatPartnerElem = document.createElement("div");
-				chatPartnerElem.innerText = value;
-				chatPartnerElem.addEventListener("click", function() {
-					selectedChat = this.innerText;
-					updateSelectedChat();
-					updateChatContent();
-				});
-				partnerList.appendChild(chatPartnerElem);
-			});
-		}
-	
-		$(document).ready(function() {
-			let userId = 'bgdtkgxqyj2';
-			$.ajax({
-				url: "/chats?userId=" + userId ,
-				method: "GET",
-				success: function(chatList) {
-					console.log(chatList);
-					updateChatPartnerList(userId, chatList)
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log('chatList Load Failed');
-				}
-			});
-		});
-		
-		let ws = new WebSocket("ws://localhost:8888/ws");
-		
-		ws.onopen = function (){
-			console.log('WebSocket Connection Opened');
-			ws.onmessage = function (event){
-				console.log(event.data + '\n');
-			};
-		};
-		
-		
-		ws.onclose = function (event) {
-			console.log('WebSocket Connection Closed : ' + event);
-		}
-		
-		ws.onerror = function (error) {
-			console.log('WebSocket Connection error : ' + error);
-		}
-	
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script>
 
-	  // 선택된 채팅 상대 표시 업데이트
-	  function updateSelectedChat() {
-		console.log('updateSelectedChat');
-	    var selectedChatElem = document.getElementById("selected-chat");
-	    if (selectedChatElem) {
-	      selectedChatElem.innerText = "Selected Chat: " + selectedChat;
-	    } else {
-	      selectedChatElem = document.createElement("div");
-	      selectedChatElem.id = "selected-chat";
-	      selectedChatElem.innerText = "Selected Chat: " + selectedChat;
-	      chatContent.insertBefore(selectedChatElem, chatContent.firstChild);
-	    }
-	  }
-	  
-	  // 채팅 대화 내용 업데이트
-		function updateChatContent() {
-			console.log('updateChatContent');
-	  // 채팅 대화 내용을 서버에서 가져오는 등의 코드로 대체
-	  var chatMessages = [
-	    {sender: "User1", message: "안녕하세요?"},
-	    {sender: "User2", message: "안녕하세요!"},
-	    {sender: "User1", message: "오늘은 뭐하세요?"},
-	    {sender: "User2", message: "일하고 있습니다ㅠㅠ"},
-	    {sender: "User1", message: "힘내세요!"},
-	    {sender: "User3", message: "안녕하세요!"},
-	    {sender: "User4", message: "안녕하세요!"},
-	    {sender: "User3", message: "오늘은 뭐하세요?"},
-	    {sender: "User4", message: "산책하고 있습니다~"},
-	    {sender: "User3", message: "좋네요!"},
-	    {sender: "User4", message: "네!"},
-	  ];
-	  var chatContentElem = document.getElementById("chat-content");
-	  chatContentElem.innerHTML = "";
-	  for (var i = 0; i < chatMessages.length; i++) {
-	    if (chatMessages[i].sender == selectedChat) {
-	      var chatMessageElem = document.createElement("div");
-	      chatMessageElem.innerText = chatMessages[i].message;
-	      if (chatMessages[i].sender == "User1") {
-	        chatMessageElem.classList.add("from-me");
-	      } else {
-	        chatMessageElem.classList.add("from-them");
-	      }
-	      chatContentElem.appendChild(chatMessageElem);
-	    }
-	  }
+
+	//전역 변수 선언
+	const userId = 'bgdtkgxqyj2'; //test용 하드코딩 Id  원래는 로그인한 유저 id 들어갈 곳
+	const scrollBtn = document.getElementById("scroll-to-chat"); //$('#scroll-to-chat')
+	const chatPopup = document.getElementById("chat-popup");
+	const partnerList = document.getElementById("chat-list");
+	const chatContent = document.getElementById("chat-content");
+	const chatInput = document.getElementById("chat-input");
+	let myChatInfo = null;
+	let selectedChat = null;
+	
+	//WebSocket
+	
+	
+	let ws = new WebSocket("ws://" + location.host + "/chat-ws?" + userId);
+	
+	ws.onopen = function (){
+		console.log('WebSocket Connection Opened');
 	}
 	
-	  
-	  // 채팅창 열기/닫기
-	  scrollBtn.addEventListener("click", function() {
-	    chatPopup.style.display = "block";
-	  });
-	  chatPopup.addEventListener("click", function(e) {
-	    if (e.target == chatPopup) {
-	      chatPopup.style.display = "none";
-	      selectedChat = null;
-	      updateSelectedChat();
-	      updateChatContent();
-	    }
-	  });
-	  
-	  // Enter 키로 메시지 전송
-	  chatInput.addEventListener("keydown", function(e) {
+	ws.onmessage = function (event){
+		console.log('WebSocket onMessage : ' + event.data);
+	};
+	
+	ws.onclose = function (event) {
+		console.log('WebSocket Connection Closed : ' + event);
+	}
+	
+	ws.onerror = function (error) {
+		console.log('WebSocket Connection error : ' + error);
+	}
+	
+	
+	
+	// 선택된 채팅 상대 표시 업데이트
+	function updateSelectedChat() {
+		var selectedChatElem = document.getElementById("selected-chat");
+		if (selectedChatElem) {
+			selectedChatElem.innerText = "Selected Chat: " + selectedChat;			
+		} else {
+			selectedChatElem = document.createElement("div");
+			selectedChatElem.id = "selected-chat";
+			selectedChatElem.innerText = "Selected Chat: " + selectedChat;
+			chatContent.insertBefore(selectedChatElem, chatContent.firstChild);
+		}
+	}
+ 
+	//채팅 대화 내용 업데이트
+	function updateChatContent() {
+		// 채팅 대화 내용을 서버에서 가져오는 등의 코드로 대체
+		var chatContentElem = document.getElementById("chat-content");
+		chatContentElem.innerHTML = "";
+		
+		for (var i = 0; i < myChatInfo.length; i++) {
+			
+			if (myChatInfo[i].receiverId == selectedChat) {
+				
+				var chatMessageElem = document.createElement("div");
+				
+				chatMessageElem.innerText = "me :"  + myChatInfo[i].message;
+				
+		    	chatMessageElem.classList.add("from-me");
+			  	
+				chatContentElem.appendChild(chatMessageElem);
+				
+			} else if(myChatInfo[i].senderId == selectedChat){
+				
+				var chatMessageElem = document.createElement("div");
+				
+				chatMessageElem.innerText = myChatInfo[i].senderId + ":"  + myChatInfo[i].message;
+				
+		    	chatMessageElem.classList.add("from-other");
+			  	
+				chatContentElem.appendChild(chatMessageElem);
+				
+				
+			}
+			
+		}
+	}
+
+ 
+	// 채팅창 열기/닫기
+	scrollBtn.addEventListener("click", function() {
+    	chatPopup.style.display = "block";
+	});
+  
+	chatPopup.addEventListener("click", function(e) {
+		if (e.target == chatPopup) {
+			chatPopup.style.display = "none";
+			selectedChat = null;
+			updateSelectedChat();
+			updateChatContent();
+    	}
+	});
+ 
+	//Enter 키로 메시지 전송
+	chatInput.addEventListener("keydown", function(e) {
 	    if (e.keyCode == 13 && selectedChat && chatInput.value.trim() != "") {
-	      var chatMessageElem = document.createElement("div");
-	      chatMessageElem.innerText = chatInput.value;
-	      chatMessageElem.classList.add("from-me");
-	      chatContent.appendChild(chatMessageElem);
-	      chatInput.value = "";
+	    	
+	    	
+	    	
+	    	message = JSON.stringify({
+	    		    'senderId': userId,
+	    		    'receiverId': selectedChat,
+	    		    'message': chatInput.value,
+	    		    'chatDate' : Date.now()
+	    		});
+		
+	    	ws.send(message);
+
+	    	saveMessage(message);
+	    	
+	    	
+			var chatMessageElem = document.createElement("div");
+			chatMessageElem.innerText = chatInput.value;
+			chatMessageElem.classList.add("from-me");
+			chatContent.appendChild(chatMessageElem);
+			chatInput.value = "";
 	    }
-	  });
-	  
-	  /* // 최초 열기 시 선택된 채팅 상대 설정
-	  selectedChat= chatPartners[0];
-	  updateSelectedChat();
-	  updateChatContent();
-	   */
-	</script>
+	});
+  	
+	//message를 DB에 저장하는 함수
+	function saveMessage(message){
+		$.ajax({
+			url: "/chat" ,
+			method: "POST",
+			data : message,
+			contentType : "application/json",
+			dataType : "json",
+			success: function(result) {
+				return result;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('saveMessage Failed');
+			}
+		});
+	}
+	
+ 		//채팅 상대 리스트 업데이트
+	function updateChatPartnerList(userId, chatList) {
+		const chatPartnerList = new Set();
+		
+		for(let i = 0; i < chatList.length; i++){
+			if (chatList[i].receiverId) {
+				chatPartnerList.add(chatList[i].receiverId);
+			}
+			if (chatList[i].senderId) {
+				chatPartnerList.add(chatList[i].senderId);
+			}
+		}
+		  
+		chatPartnerList.delete(userId);
+
+		chatPartnerList.forEach((value, index, set) => {
+			let chatPartnerElem = document.createElement("div"); //$("<div>")
+			chatPartnerElem.innerText = value;  //chatPartnerElem.text(value);
+			chatPartnerElem.addEventListener("click", function() { //$(document).on('click', '.chatPartnerElem', function() {
+				selectedChat = this.innerText; // selectedChat = $(this).text();
+				updateSelectedChat();
+				updateChatContent();
+			});
+			partnerList.appendChild(chatPartnerElem);  //$(partnerList).append(chatPartnerElem);
+		});
+	}
+ 		
+	$(document).ready(function() {
+		$.ajax({
+			url: "/chats?userId=" + userId ,
+			method: "GET",
+			dataType : "json",
+			success: function(chatList) {
+				myChatInfo = chatList;
+				console.log(chatList);
+				updateChatPartnerList(userId, chatList)		
+				selectedChat= partnerList.childNodes[0].textContent;
+				updateSelectedChat();
+				updateChatContent();
+
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('chatList Load Failed');
+			}
+		});
+	});
+	
+</script>
+</body>
+</html>
         

@@ -8,4 +8,6 @@ public interface ChatDao {
 
 	List<Chat> selectChatListByUserId(String userId);
 
+	Integer insertChat(Chat chat);
+
 }

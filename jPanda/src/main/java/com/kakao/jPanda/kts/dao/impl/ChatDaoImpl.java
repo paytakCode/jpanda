@@ -24,5 +24,11 @@ public class ChatDaoImpl implements ChatDao {
 		List<Chat> selectedChatList = sqlSession.selectList("selectChatListById", userId);
 		return selectedChatList;
 	}
+
+	@Override
+	public Integer insertChat(Chat chat) {
+		int result = sqlSession.insert("insertChat", chat);
+		return result;
+	}
 	
 }
