@@ -9,9 +9,14 @@
 			OR sender_id = #{id}	
 	</select>
 	
+	<select id="selectChatList" resultType="Chat">
+		SELECT *
+		FROM chat
+	</select>
+	
 	<insert id="insertChat" parameterType="Chat">
 		INSERT INTO 
 			chat(id, sender_id, receiver_id, message, chat_date) 
-			VALUES(#{id}, #{senderId}, #{receiverId}, #{message}, #{chatDate})
+			VALUES(chat_id_seq.nextval, #{senderId}, #{receiverId}, #{message}, #{chatDate})
 	</insert>
 </mapper>

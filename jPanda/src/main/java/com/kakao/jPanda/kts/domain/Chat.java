@@ -23,6 +23,5 @@ public class Chat {
 	@NotEmpty
 	private String message;
 
-	@NotEmpty
 	private Timestamp chatDate;
 }

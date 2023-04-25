@@ -21,7 +21,12 @@ public class ChatDaoImpl implements ChatDao {
 
 	@Override
 	public List<Chat> selectChatListByUserId(String userId) {
-		List<Chat> selectedChatList = sqlSession.selectList("selectChatListById", userId);
+	    List<Chat> selectedChatList = null;
+	    if (userId == null || userId == "") {
+            selectedChatList = sqlSession.selectList("selectChatList");
+	    } else {
+	        selectedChatList = sqlSession.selectList("selectChatListById", userId);
+	    }
 		return selectedChatList;
 	}
 

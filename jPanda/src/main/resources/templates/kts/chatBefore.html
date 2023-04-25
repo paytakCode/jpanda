@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Chat Before</title>
+  </head>
+ <body>
+ 	<select id="chat-user-list" name="userId">
+ 	</select>
+ 	<button id="chat-btn">확인</button>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script>
+	const userList = document.getElementById("chat-user-list");
+	let chatList = null;
+	
+
+
+	//채팅 상대 리스트 업데이트
+	function updateChatPartnerList(chatList) {
+		const chatPartnerList = new Set();
+		
+		for(let i = 0; i < chatList.length; i++){
+			if (chatList[i].receiverId) {
+				chatPartnerList.add(chatList[i].receiverId);
+			}
+			if (chatList[i].senderId) {
+				chatPartnerList.add(chatList[i].senderId);
+			}
+		}
+		  
+
+		chatPartnerList.forEach((value, index, set) => {
+			let chatPartnerElem = document.createElement("option"); 
+			chatPartnerElem.value = value; 
+			chatPartnerElem.innerText = value; 
+			userList.appendChild(chatPartnerElem);
+		});
+	}
+	
+	$(document).ready(function() {
+		$.ajax({
+			url: "/chats?userId=",
+			method: "GET",
+			dataType : "json",
+			success: function(receivedchatList) {
+				chatList = receivedchatList;
+				updateChatPartnerList(chatList);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('chatList Load Failed');
+			}
+		});
+		
+		$("#chat-btn").click(function(){
+			location.href= "http://" + location.host + "/chat?user-id=" + $("#chat-user-list option:selected").val();
+		});
+	});
+	
+
+	
+	
+</script>
+</body>
+</html>
+        

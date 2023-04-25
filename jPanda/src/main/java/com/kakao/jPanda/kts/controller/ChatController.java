@@ -38,6 +38,11 @@ public class ChatController {
 		session.setAttribute("memberId", "아무거나");
 		return "kts/chatView";
 	}
+    
+    @GetMapping("/chat-before")
+    public String chatBeforeView() {
+        return "kts/chatBefore";
+    }
 	
 	@ResponseBody
 	@GetMapping("/chats")
