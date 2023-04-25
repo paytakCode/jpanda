@@ -79,10 +79,12 @@
 				success : function(csList) {
 						var countList = [];
 						var yearList = [];
+						var exCountList = [];
 
 						$.each(csList, function() {
 							countList.push(this["count"])
 							yearList.push(this["yearData"])
+							exCountList.push(this["exCount"])
 						})
 						
 						const ctx = document.getElementById('myChart').getContext('2d');
@@ -93,8 +95,9 @@
 							//datasets : data의 값, 속성들 지정
 							data : {
 								labels : yearList,
-								datasets : [ {
-									label : '매출 현황',
+								datasets : [ 
+								{
+									label : 'BambooPoint 판매 매출 현황',
 									data : countList,
 									backgroundColor : [
 											'rgba(255, 99, 132, 0.2)',
@@ -104,7 +107,21 @@
 											'rgba(54, 162, 235, 0.2)',
 											'rgba(255, 206, 86, 0.2)' ],
 									borderWidth : 3
-								} ]
+								},
+								
+ 								{
+									label : '환전 수수료 수익 현황',
+									data : exCountList,
+									backgroundColor : [
+											'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderColor : [ 'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderWidth : 3
+								} 
+							  ]
 							},
 							options : {
 								scales : {

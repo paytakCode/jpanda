@@ -32,7 +32,7 @@
 	<select id="selectCompanySalesAtExchangeByYYMMDate" parameterType="CompanySales" resultType="CompanySales">
 		<![CDATA[
 		SELECT 
-  				 (sum(ex.total) - sum(ex.payment_amount)) as EX_COUNT,
+  				 (sum(ex.total) - sum(ex.payment_amount)) as EXCOUNT,
   				 TO_CHAR(ex.approve_date, 'YYYYMM') as EXDATA
 		FROM
   				 exchange ex

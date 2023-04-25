@@ -203,47 +203,46 @@ public class AdminServiceImpl implements AdminService {
 			log.info("Company-sales Service YYYYMM csExList : "+csExList.toString());
 		}
 		
-		csList.addAll(csExList);
-		List<CompanySalesDto> resultList = new ArrayList<>();
-
-		 for (int i = 0; i < csList.size(); i++) {
-			 CompanySalesDto csd = csList.get(i);
-			 
-		     Long longCsd = csd.getCount();
-		     log.info("longCsd : " + longCsd);
-		        
-		     Long longExCsd = csd.getExCount();
-		     log.info("longExCsd : " + longExCsd);
-		        
-		     String strCsd = csd.getYearData();
-		     log.info("yearData : "+strCsd);
-		        
-		     String strExCsd = csd.getExData();
-		     log.info("exData : " + strExCsd);
-
-		     if (longCsd == null) {
-		    	 longCsd = 0L;
-		        } else if(longExCsd == null) {
-		        	longExCsd = 0L;
-		        }
-
-		     Long result = longCsd + longExCsd;
-		     log.info("result : " + result);
-
-		     CompanySalesDto resultDto = new CompanySalesDto();
-		     resultDto.setCount(result);
-		     resultDto.setYearData(strCsd);
-		     
-		     resultDto.setExCount(null);
-		     resultDto.setExData(null);
-		     
-		     resultList.add(resultDto);
-		     
-		    }
-		 
-		    log.info("resultList : "+resultList);
-		    
-		    return resultList;
+//		csList.addAll(csExList);
+//		List<CompanySalesDto> returnList = new ArrayList<CompanySalesDto>();
+//		
+//		for(int i = 0; i < csList.size(); i++) {
+//			CompanySalesDto ex = csList.get(i);
+//			
+//			Long exCount = ex.getCount();
+//			Long exExCount = ex.getExCount();
+//			String exYearData = ex.getYearData();
+//			String exExData = ex.getExData();
+//			
+//			if (exCount == null) {
+//			    exCount = 0L;
+//			}
+//			
+//			if (exExCount == null) {
+//			    exExCount = 0L;
+//			}
+//			
+//			if (exYearData == null && exExCount > 0) {
+//			    exYearData = exExData;
+//			} else if (exExData == null && exCount > 0) {
+//			    exExData = exYearData;    
+//			}
+//			
+//			log.info("exCount : "+exCount);
+//			log.info("exExCount : "+exExCount);
+//			log.info("exYearData : " + exYearData);
+//			
+//			ex.setCount(exCount);
+//			ex.setExCount(exExCount);
+//			ex.setYearData(exYearData);
+//			ex.setExData(null);
+//			
+//			returnList.add(ex);
+//		}
+//		
+//		log.info("returnList : "+returnList);
+//		
+//		return returnList;
 	}
 	
 	//talent
