@@ -173,7 +173,13 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
-	<select id="findSellListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
+	
+	
+</mapper>
+
+<!-- 이전 코드 -->
+
+<!-- 	<select id="findSellListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
 		<![CDATA[
 			SELECT
 				talent_no
@@ -202,14 +208,7 @@
 			WHERE buyer_id = #{userId}
 			AND approve_date >= #{standardTime}
 		]]>
-	</select>
-	
-	
-	
-	
-</mapper>
-
-<!-- 이전 코드 -->
+	</select> -->
 
 <!--
 	<select id="selectTradeListByParaMap" resultType="TradeDto" parameterType="Map">

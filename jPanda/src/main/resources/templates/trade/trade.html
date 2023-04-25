@@ -185,6 +185,7 @@
 			<button class="filter-button" value="sell">판매</button>
 			<button class="filter-button" value="buy">구매</button>
 			<button class="filter-button" value="refund">환불</button>
+			<button class="btn btn-primary" id="test-btn" >테스트</button>
 		</div> <!-- /filter-buttons -->
 			<div class = "content">
 		<!-- content -->
@@ -280,59 +281,49 @@ function getNow(){
 	return formattedDate;
 }
 
- /**
-  * Long polling 요청
-  * DB데이터에 StatusDate가 변경된 것이 있는지 Looping
-  * 구매 환불신청 / 환전신청 / 판매등록 / 환불
-  */
-$(function(){
-	checkNewTrades();
-});
-  
-function checkNewTrades(){
-	let userId = [[${#session.getAttribute("memberId")}]];
-	console.log("checkNewTrades userId : " + userId);
-	$.ajax({
-		url : "/trade/trades/tradeSearch",
-		method : "post",
-		contentType : "application/json",
-		data :JSON.stringify({
- 			userId : userId,
- 			standardTime : Date.now()
-		}),
-		dataType : "json",
-		success : function(data){
-			console.log(data);
-			if(data && data.length > 0){
-				console.log(data.length);
-				$.each(data, function(index, item){
-					let talentNo = null;
-					if(item.bambooUsetalentNo != null){
-						talentNo = item.bambooUsetalentNo; 
-						console.log(talentNo);
-						$('#refund-list-no-' + talentNo).addClass(' new-cards');
-					} else if(item.exchangeTalentNo != null){
-						talentNo = item.exchangeTalentNo; 
-						$('#sell-list-no-' + talentNo).addClass(' new-cards');
-					} else if(item.talentNo != null){
-						talentNo = item.talentNo;
-						console.log(talentNo);
-						$('#sell-list-no-' + talentNo).addClass(' new-cards');
-					}
-				});
-			}
-			// 성공시 15초 후에 다시 호출
-		    setTimeout(checkNewTrades, 15000);
-		},
+/**
+ * WebSocket
+ */
 
-		error: function(xhr, status, error) {
-		      console.log(status + ": " + error);
-		      setTimeout(checkNewTrades, 15000);
-		}
-	});
+//웹소켓 객체 생성
+let userId = [[${#httpSession.getAttribute('memberId')}]];
+console.log("userId : " + userId);
+let webSocket = new WebSocket("ws://localhost:8888/trade-ws?" + userId);
+webSocket.onopen = function(){
+	console.log("webSocket opened");
 }
+
+webSocket.onmessage = async function(message){
+	console.log(message);
+	alert("거래정보가 갱신되었습니다.");
+	
+	let tradeInfo = JSON.parse(message.data);
+	let memberId = tradeInfo.memberId;
+	let talentNo = tradeInfo.talentNo;
+	
+	await updateList($('#selected-filter').val(), talentNo);
+	$('#talent-no-' + talentNo).addClass('new-cards');
+	
+	//aa
+	
+}
+
+webSocket.onclosed = function(){
+	console.log("server closed");
+}
+
+//소켓용 테스트 버튼
+$('#test-btn').on("click", function(){
+	let message =JSON.stringify({memberId : 'test', talentNo : '103'});
+	webSocket.send(message);
+});
+
+
+ 
 </script>
 <script type="text/javascript">
+
+
 /**
  * Time출력형식 변경
  */
@@ -555,7 +546,7 @@ $(document).on('show.bs.modal', '#refund-modal', function (event) {
  * 판매 리스트 출력
  */
 function getSellList(item){
-	let text =  '<div id = "sell-list-no-' + item.talentNo + '"class = "card text-center sell-card">' + 
+	let text =  '<div id = "talent-no-' + item.talentNo + '"class = "card text-center sell-card">' + 
 					'<div class = "card-header badge text-bg-primary">' + item.talentStatus + '</div>' + 
 					'<div class = "card-body">' +  
 					'<div class = "card-title">' + item.title + '</div><br>' +
@@ -601,7 +592,7 @@ function getSellList(item){
  * 구매 리스트 출력
  */
 function getBuyList(item){
-	let text = '<div id = "buy-list-no-' + item.talentNo + '"class = "card text-center buy-card">' + 
+	let text = '<div id = "talent-no-' + item.talentNo + '"class = "card text-center buy-card">' + 
 					'<div class = "card-header badge text-bg-success">' + item.talentStatus + '</div>' +
 					'<div class = "card-body">' + 
 						'<div class = "card-title">' + item.title + '</div><br>' +
@@ -636,7 +627,7 @@ function getBuyList(item){
  * 환불 리스트 출력
  */
 function getRefundList(item){
-	let text =  '<div id = "refund-list-no-' + item.talentNo + '"class = "card text-center refund-card">' +   
+	let text =  '<div id = "talent-no-' + item.talentNo + '"class = "card text-center refund-card">' +   
 					'<div class = "card-header badge text-bg-danger">' + item.refundStatus + '</div>' +
 					'<div class = "card-body">' +
 						'<div class = "card-title">' + item.title + '</div>' +
@@ -660,12 +651,7 @@ function getRefundList(item){
 	$('#list-print').append(text);		
 }
 
-/**
- * 필터링 버튼
- */
-$('.filter-button').on("click", function(){
-	let listType = this.value;
-	console.log(status);
+function updateList(listType, talentNo){
 	$.ajax(
 			{
 				type : "GET",
@@ -690,13 +676,34 @@ $('.filter-button').on("click", function(){
 						}	
 					});
 					
+//					if(talentNo != null){
+//						$('#talent-no-' + talentNo).addClass('new-cards');
+//					}
+					
 				},
 				error : function(){
 					console.log("filter-button on click function error");
 				}
 			}		
 	);
+}
+
+/**
+ * 필터링 버튼
+ */
+$('.filter-button').on("click", function(){
+	if($('#selected-filter') == null){
+	} else {
+		$('#selected-filter').removeAttr('id');
+	}
+	this.id = "selected-filter";
+	let listType = this.value;
+	console.log(status);
+	updateList(listType);
+
 });
+
+
 </script>
 </body>
 </html>

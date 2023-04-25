@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
-import com.kakao.jPanda.jst.domain.TradeSearchDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -138,33 +137,34 @@ public class TradeDaoImpl implements TradeDao{
 		return result;
 	}
 
-	@Override
-	public List<TradeDto> findSellListByTradeSearchDto(TradeSearchDto tradeSearchDto) {
-		log.info("findSellListByTradeSearchDto tradeSearchDto : " + tradeSearchDto);
-		List<TradeDto> sellList = sqlSession.selectList("findSellListByTradeSearchDto", tradeSearchDto);
-		log.info("findSellListByTradeSearchDto sellList.size() : " + sellList.size());
-		return sellList;
-	}
-
-	@Override
-	public List<TradeDto> findExchangeListByTradeSearchDto(TradeSearchDto tradeSearchDto) {
-		log.info("findExchangeListByTradeSearchDto tradeSearchDto : " + tradeSearchDto);
-		List<TradeDto> exchangeList = sqlSession.selectList("findExchangeListByTradeSearchDto", tradeSearchDto);
-		log.info("findExchangeListByTradeSearchDto exchangeList.size() : " + exchangeList.size());
-		return exchangeList;
-	}
-
-	@Override
-	public List<TradeDto> findRefundListByTradeSearchDto(TradeSearchDto tradeSearchDto) {
-		log.info("findRefundListByTradeSearchDto tradeSearchDto : " + tradeSearchDto);
-		List<TradeDto> refundList = sqlSession.selectList("findRefundListByTradeSearchDto", tradeSearchDto);
-		log.info("findRefundListByTradeSearchDto refundList.size() : " + refundList.size());
-		return refundList;
-	}
 
 }//end class
 
 //이전코드
+
+//@Override
+//public List<TradeDto> findSellListByTradeSearchDto(TradeSearchDto tradeSearchDto) {
+//	log.info("findSellListByTradeSearchDto tradeSearchDto : " + tradeSearchDto);
+//	List<TradeDto> sellList = sqlSession.selectList("findSellListByTradeSearchDto", tradeSearchDto);
+//	log.info("findSellListByTradeSearchDto sellList.size() : " + sellList.size());
+//	return sellList;
+//}
+//
+//@Override
+//public List<TradeDto> findExchangeListByTradeSearchDto(TradeSearchDto tradeSearchDto) {
+//	log.info("findExchangeListByTradeSearchDto tradeSearchDto : " + tradeSearchDto);
+//	List<TradeDto> exchangeList = sqlSession.selectList("findExchangeListByTradeSearchDto", tradeSearchDto);
+//	log.info("findExchangeListByTradeSearchDto exchangeList.size() : " + exchangeList.size());
+//	return exchangeList;
+//}
+//
+//@Override
+//public List<TradeDto> findRefundListByTradeSearchDto(TradeSearchDto tradeSearchDto) {
+//	log.info("findRefundListByTradeSearchDto tradeSearchDto : " + tradeSearchDto);
+//	List<TradeDto> refundList = sqlSession.selectList("findRefundListByTradeSearchDto", tradeSearchDto);
+//	log.info("findRefundListByTradeSearchDto refundList.size() : " + refundList.size());
+//	return refundList;
+//}
 
 //@Override
 //public List<SellListDto> getSellListById(String memberId) {

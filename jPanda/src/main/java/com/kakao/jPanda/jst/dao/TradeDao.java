@@ -6,7 +6,6 @@ import java.util.Map;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
-import com.kakao.jPanda.jst.domain.TradeSearchDto;
 
 public interface TradeDao {
 
@@ -48,10 +47,12 @@ public interface TradeDao {
 
 	int updateTalent(TalentDto talentDto);
 
-	List<TradeDto> findSellListByTradeSearchDto(TradeSearchDto tradeSearchDto);
+}//end class
 
-	List<TradeDto> findExchangeListByTradeSearchDto(TradeSearchDto tradeSearchDto);
+//이전코드
 
-	List<TradeDto> findRefundListByTradeSearchDto(TradeSearchDto tradeSearchDto);
-
-}
+//List<TradeDto> findSellListByTradeSearchDto(TradeSearchDto tradeSearchDto);
+//
+//List<TradeDto> findExchangeListByTradeSearchDto(TradeSearchDto tradeSearchDto);
+//
+//List<TradeDto> findRefundListByTradeSearchDto(TradeSearchDto tradeSearchDto);

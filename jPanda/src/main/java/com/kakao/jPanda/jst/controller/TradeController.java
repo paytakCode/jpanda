@@ -1,14 +1,11 @@
 package com.kakao.jPanda.jst.controller;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
-import com.kakao.jPanda.jst.domain.TradeSearchDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -149,23 +145,26 @@ public class TradeController {
 		
 	}
 	
-	@PostMapping("/trades/tradeSearch")
-	@ResponseBody
-	public CompletableFuture<ResponseEntity<List<TradeDto>>> changedTradeListByTradeSearchDto(@RequestBody TradeSearchDto tradeSearchDto){
-		log.info("userId, standardTime : {}", tradeSearchDto.toString());
-		CompletableFuture<List<TradeDto>> future = tradeService.tradeChangeListener(tradeSearchDto);
-        return future.thenApply(tradeList -> {
-            if (tradeList != null) {
-                return ResponseEntity.ok(tradeList);
-            } else {
-                return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(null);
-            }
-        });
-	}
+
 	
 }//end class
 
 //이전 코드
+
+//@PostMapping("/trades/tradeSearch")
+//@ResponseBody
+//public CompletableFuture<ResponseEntity<List<TradeDto>>> changedTradeListByTradeSearchDto(@RequestBody TradeSearchDto tradeSearchDto){
+//	log.info("userId, standardTime : {}", tradeSearchDto.toString());
+//	CompletableFuture<List<TradeDto>> future = tradeService.tradeChangeListener(tradeSearchDto);
+//    return future.thenApply(tradeList -> {
+//        if (tradeList != null) {
+//            return ResponseEntity.ok(tradeList);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(null);
+//        }
+//    });
+//}
+
 //		switch (status) {
 //		
 //			case "all":
