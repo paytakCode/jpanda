@@ -9,6 +9,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakao.jPanda.kts.domain.Chat;
+
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -16,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TextWsHandler extends TextWebSocketHandler{
 	
 	private final ObjectMapper objectMapper = new ObjectMapper();
+	
+	@Getter
 	private final Map<String, WebSocketSession> sessionMap = new HashMap<String, WebSocketSession>();
 	
 	//Connection 이후 실행되는 메서드

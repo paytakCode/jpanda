@@ -227,7 +227,6 @@
 	    		    'chatDate' : Date.now()
 	    		});
 		
-	    	ws.send(message);
 
 	    	saveMessage(message);
 	    	
@@ -249,6 +248,7 @@
 			contentType : "application/json",
 			dataType : "json",
 			success: function(result) {
+		    	ws.send(message);
 				return result;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {

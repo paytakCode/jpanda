@@ -35,7 +35,6 @@ public class ChatController {
 	@GetMapping("/chat")
 	public String chatView(HttpSession session) {
 		log.info("[chatView] session id : {}", session.getId());
-		session.setAttribute("memberId", "아무거나");
 		return "kts/chatView";
 	}
     
