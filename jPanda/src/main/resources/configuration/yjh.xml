@@ -7,10 +7,12 @@
   	</settings>
   	
   	<typeAliases>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.Notice" alias="Notice"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.Exchange" alias="Exchange"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.Coupon" alias="Coupon"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.Talent" alias="Talent"/>
+  		<typeAlias type="com.kakao.jPanda.yjh.domain.NoticeDto" alias="Notice"/>
+  		<typeAlias type="com.kakao.jPanda.yjh.domain.ExchangeDto" alias="Exchange"/>
+  		<typeAlias type="com.kakao.jPanda.yjh.domain.CouponDto" alias="Coupon"/>
+  		<typeAlias type="com.kakao.jPanda.yjh.domain.TalentDto" alias="Talent"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.CompanySalesDto" alias="CompanySales"/>
+  		<typeAlias type="com.kakao.jPanda.yjh.domain.TalentRefundDto" alias="TalentRefund"/>
   	</typeAliases>
+  	
 </configuration>

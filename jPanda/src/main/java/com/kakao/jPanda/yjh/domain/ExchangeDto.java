@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Exchange {
+public class ExchangeDto {
 	private Long exchangeNo;
 	private String id;
 	private Long talentNo;

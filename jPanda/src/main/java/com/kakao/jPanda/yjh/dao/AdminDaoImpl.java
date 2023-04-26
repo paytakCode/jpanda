@@ -6,10 +6,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.kakao.jPanda.yjh.domain.CompanySalesDto;
-import com.kakao.jPanda.yjh.domain.Coupon;
-import com.kakao.jPanda.yjh.domain.Exchange;
-import com.kakao.jPanda.yjh.domain.Notice;
-import com.kakao.jPanda.yjh.domain.Talent;
+import com.kakao.jPanda.yjh.domain.CouponDto;
+import com.kakao.jPanda.yjh.domain.ExchangeDto;
+import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.TalentDto;
+import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +23,15 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//notice
 	@Override
-	public List<Notice> selectNotice() {
+	public List<NoticeDto> selectNotice() {
 		log.info("Dao selectNotice() start");
-		List<Notice> noticeList = sqlSession.selectList("selectNotice");
+		List<NoticeDto> noticeList = sqlSession.selectList("selectNotice");
 		
 		return noticeList;
 	}
 	
 	@Override
-	public int insertNotice(Notice notice) {
+	public int insertNotice(NoticeDto notice) {
 		log.info("Dao insertNotice() start");
 		int result = sqlSession.insert("insertNotice", notice);
 		
@@ -38,15 +39,15 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public Notice selectNoticeByNoticeNo(Long noticeNo) {
+	public NoticeDto selectNoticeByNoticeNo(Long noticeNo) {
 		log.info("Dao selectNoticeByNoticeNo() start");
-		Notice notice = sqlSession.selectOne("selectNoticeByNoticeNo", noticeNo);
+		NoticeDto notice = sqlSession.selectOne("selectNoticeByNoticeNo", noticeNo);
 		
 		return notice;
 	}
 	
 	@Override
-	public int updateNotice(Notice notice) {
+	public int updateNotice(NoticeDto notice) {
 		log.info("Dao updateNotice() start");
 		int result = sqlSession.update("updateNotice", notice);
 		
@@ -55,9 +56,9 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//exchange
 	@Override
-	public Exchange selectExchangeByExchangeNo(Long exchangeNo) {
+	public ExchangeDto selectExchangeByExchangeNo(Long exchangeNo) {
 		log.info("Dao selectExchangeByExchangeNo() start");
-		Exchange exchange = null;
+		ExchangeDto exchange = null;
 		
 		try {
 			exchange = sqlSession.selectOne("selectExchangeByExchangeNo", exchangeNo);
@@ -70,9 +71,9 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public List<Exchange> selectExchange() {
+	public List<ExchangeDto> selectExchange() {
 		log.info("Dao selectExchange() start");
-		List<Exchange> exList = null;
+		List<ExchangeDto> exList = null;
 		
 		try {
 			exList = sqlSession.selectList("selectExchange");
@@ -86,7 +87,7 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public void updateExchange(Exchange exchange) {
+	public void updateExchange(ExchangeDto exchange) {
 		log.info("Dao updateExchange() start");
 		sqlSession.update("updateExchange", exchange);
 	}
@@ -121,9 +122,9 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//coupon
 	@Override
-	public List<Coupon> findCouponList() {
+	public List<CouponDto> findCouponList() {
 		log.info("Dao findCouponList() start");
-		List<Coupon> couponList = null;
+		List<CouponDto> couponList = null;
 		
 		try {
 			couponList = sqlSession.selectList("findCouponList");
@@ -137,48 +138,63 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public void insertCoupon(Coupon coupon) {
+	public void insertCoupon(CouponDto coupon) {
 		log.info("Dao insertCoupon() start");
 		sqlSession.insert("insertCoupon", coupon);
 	}
 	
 	//company-sales
 	@Override
-	public List<CompanySalesDto> selectCompanySalesAtBambooChargeByYYMMDate(CompanySalesDto companySalesDto) {
+	public List<CompanySalesDto> selectCompanySalesByYYMMDate(CompanySalesDto companySalesDto) {
 		log.info("Dao selectCompanySalesAtBambooChargeByYYMMDate() start");
-		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesAtBambooChargeByYYMMDate", companySalesDto);
+		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesByYYMMDate", companySalesDto);
 		
 		return csList;
 	}
 	
 	@Override
-	public List<CompanySalesDto> selectCompanySalesAtBambooChargeByDDDate(CompanySalesDto companySalesDto) {
+	public List<CompanySalesDto> selectCompanyByDDDate(CompanySalesDto companySalesDto) {
 		log.info("Dao selectCompanySalesAtBambooChargeByDDDate() start");
-		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesAtBambooChargeByDDDate", companySalesDto);
+		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanyByDDDate", companySalesDto);
 		
 		return csList;
-	}
-	
-	@Override
-	public List<CompanySalesDto> selectCompanySalesAtExchangeByDDDate(CompanySalesDto companySalesDto) {
-		log.info("Dao selectCompanySalesAtExchangeByDDDate() start");
-		List<CompanySalesDto> csExList = sqlSession.selectList("selectCompanySalesAtExchangeByDDDate", companySalesDto);
-		return csExList;
-	}
-	
-	@Override
-	public List<CompanySalesDto> selectCompanySalesAtExchangeByYYMMDate(CompanySalesDto companySalesDto) {
-		log.info("Dao selectCompanySalesAtExchangeByYYMMDate() start");
-		List<CompanySalesDto> csExList = sqlSession.selectList("selectCompanySalesAtExchangeByYYMMDate", companySalesDto);
-		return csExList;
 	}
 	
 	//talent
 	@Override
-	public List<Talent> selectTalent() {
+	public List<TalentDto> selectTalent() {
 		log.info("Dao selectTalent() start");
 		
 		return sqlSession.selectList("selectTalent");
+	}
+
+	@Override
+	public int updateTalentBySellerIds(List<String> sellerId) {
+		int returnValue = 0;
+		
+		try {
+			returnValue = sqlSession.update("updateTalentBySellerIds", sellerId);
+		} catch(Exception e) {
+			log.info("Dao updateTalentBySellerIds() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return returnValue;
+	}
+
+	@Override
+	public List<TalentRefundDto> selectTalentRefund() {
+		log.info("TalentRefund Dao selectTalentRefund() start");
+		List<TalentRefundDto> refundList = null;
+		try {
+			refundList = sqlSession.selectList("selectTalentRefund");
+			
+		} catch(Exception e) {
+			log.info("TalentRefund Dao selectTalentRefun() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return refundList;
 	}
 
 }

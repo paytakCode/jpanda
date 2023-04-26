@@ -67,6 +67,7 @@
 
 		if (!startDate) {
 			alert("시작일을 입력해주세요");
+			location.href="/admin/company-sales";
 			$(".start-period").focus();
 			return false;
 		}
@@ -77,13 +78,13 @@
 						endDate : endDate
 						},
 				success : function(csList) {
-						var countList = [];
-						var yearList = [];
+						var bcCountList = [];
+						var periodList = [];
 						var exCountList = [];
 
 						$.each(csList, function() {
-							countList.push(this["count"])
-							yearList.push(this["yearData"])
+							bcCountList.push(this["bcCount"])
+							periodList.push(this["period"])
 							exCountList.push(this["exCount"])
 						})
 						
@@ -94,11 +95,11 @@
 							//labels : x축의 값
 							//datasets : data의 값, 속성들 지정
 							data : {
-								labels : yearList,
+								labels : periodList,
 								datasets : [ 
 								{
 									label : 'BambooPoint 판매 매출 현황',
-									data : countList,
+									data : bcCountList,
 									backgroundColor : [
 											'rgba(255, 99, 132, 0.2)',
 											'rgba(54, 162, 235, 0.2)',

@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>판매 등록 신청 현황</h1>
-	<form action="/admin/talents" method="POST">
+	<form id="frm" method="POST">
   	<input type="hidden" name="_method" value="PATCH">
 		<table border="1">
 			<tr>
@@ -21,7 +21,7 @@
 				<th>상태</th>
 			</tr>
         	<tr th:each="talent : ${talentList}">
-            	<td><input type="checkbox" class="checkbox" th:name=talent th:value="${talent}"></td>
+            	<td><input type="checkbox" class="checkbox" name="sellerId" th:value="${talent.sellerId}"></td>
             	<td th:text="${talent.sellerId}"></td>
            	 	<td th:text="${talent.talentNo}"></td>
             	<td th:text="${talent.title}"></td>
@@ -31,10 +31,25 @@
        		</tr>
 			<tr>
 				<td colspan="7">
-					<input type="submit" value="검토 완료">
+					<input type="button" class="submit" value="검토 완료">
 				</td>
 			</tr>
 		</table>
 	</form>
 </body>
+<script type="text/javascript">
+	$(".submit").on("click", function(){
+		const sellerId = $("input.checkbox:checked").map(function(){
+			return $(this).val();
+		}).get();
+		
+		if(sellerId.length == 0) {
+			alert("하나 이상의 데이터를 체크해주세요.");
+			return;
+		}
+		
+		const url = "/admin/talents/"+sellerId.join(",");
+		$("#frm").attr("action", url).submit();
+	})
+</script>
 </html>

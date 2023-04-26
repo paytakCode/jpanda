@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="/js/jquery.js"></script>
+<link th:href="@{/css/board.css}" rel="stylesheet"/>
+</head>
+<body>
+	<h1>환불 관리</h1>
+	<form class="frm" method="post">
+	<input type="hidden" name="_method" value="PATCH">
+		<table border="1">
+			<tr>
+				<th>번호</th>
+				<th>신청 아이디</th>
+				<th>구매번호</th>
+				<th>재능번호</th>
+				<th>환불 밤부</th>
+				<th>환불 사유</th>
+				<th>상태</th>
+				<th>신청일</th>
+				<th></th>
+			</tr>
+        	<tr th:each="refund : ${refundList}">
+            	<td><input type="checkbox" class="checkbox" name="purchaseNo" th:value="${refund.purchaseNo}"></td>
+           	 	<td th:text="${refund.buyerId}"></td>
+            	<td th:text="${refund.purchaseNo}"></td>
+            	<td th:text="${refund.talentNo}"></td>
+            	<td th:text="${refund.refundBamboo}"></td>
+            	<td th:text="${refund.issue}"></td>
+            	<td th:text="${refund.status}"></td>
+            	<td th:text="${refund.approveDate}"></td>
+       		</tr>
+			<tr>
+				<td colspan="8">
+					<input type="button" class="submitToSuccess" value="확인">
+					<input type="button" class="submitToCompanion" value="반려">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+<script type="text/javascript">
+ 	$(".submitToSuccess").on("click", function(){
+		const purchaseNo = $("input.checkbox:checked").map(function(){
+			return $(this).val();
+		}).get();
+		
+		if(purchaseNo.length == 0) {
+			alert("하나 이상의 데이터를 체크해주세요");
+			return;
+		}
+		
+		const url = "/admin/talent-refunds/"+purchaseNo.join(",");
+		$(".frm").attr("action", url).submit();
+	})
+	
+ 	$(".submitToCompanion").on("click", function(){
+		const purchaseNo = $("input.checkbox:checked").map(function(){
+			return $(this).val();
+		}).get();
+		
+		if(purchaseNo.length == 0) {
+			alert("하나 이상의 데이터를 체크해주세요");
+			return;
+		}
+		
+		const url = "/admin/talent-refunds/"+purchaseNo.join(",");
+		$(".frm").attr("action", url).submit();
+	})
+</script>
+</html>

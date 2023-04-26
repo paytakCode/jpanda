@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.yjh.dao.AdminDao;
 import com.kakao.jPanda.yjh.domain.CompanySalesDto;
-import com.kakao.jPanda.yjh.domain.Coupon;
-import com.kakao.jPanda.yjh.domain.Exchange;
-import com.kakao.jPanda.yjh.domain.Notice;
-import com.kakao.jPanda.yjh.domain.Talent;
+import com.kakao.jPanda.yjh.domain.CouponDto;
+import com.kakao.jPanda.yjh.domain.ExchangeDto;
+import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.TalentDto;
+import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class AdminServiceImpl implements AdminService {
 	
 	//notice
 	@Override
-	public String addNotice(Notice notice) {
+	public String addNotice(NoticeDto notice) {
 		log.info("Service addNotice() start");
 		String resultStr = "";
 		
@@ -39,23 +40,23 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Notice> findNotice() {
+	public List<NoticeDto> findNotice() {
 		log.info("Service findNotice() start");
-		List<Notice> noticeList = adminDao.selectNotice();
+		List<NoticeDto> noticeList = adminDao.selectNotice();
 		
 		return noticeList;
 	}
 
 	@Override
-	public Notice findNoticeByNoticeNo(String noticeNo) {
+	public NoticeDto findNoticeByNoticeNo(String noticeNo) {
 		log.info("Service findNoticeByNoticeNo() start");
-		Notice notice = adminDao.selectNoticeByNoticeNo(Long.parseLong(noticeNo));
+		NoticeDto notice = adminDao.selectNoticeByNoticeNo(Long.parseLong(noticeNo));
 		
 		return notice;
 	}
 
 	@Override
-	public String modifyNotice(Notice notice) {
+	public String modifyNotice(NoticeDto notice) {
 		log.info("Service modifyNotice() start");
 		String resultStr = "";
 		
@@ -71,9 +72,9 @@ public class AdminServiceImpl implements AdminService {
 	
 	//exchange
 	@Override
-	public List<Exchange> findExchange() {
+	public List<ExchangeDto> findExchange() {
 		log.info("Service findExchange() start");
-		List<Exchange> exList = adminDao.selectExchange();
+		List<ExchangeDto> exList = adminDao.selectExchange();
 		
 		return exList;
 	}
@@ -110,7 +111,7 @@ public class AdminServiceImpl implements AdminService {
 	public void modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status) {
 		log.info("Service modifyExchangeStatusByExchangeNos() start");
 		Long exchangeNo = null;
-		Exchange exchange = null;
+		ExchangeDto exchange = null;
 		
 		for(String exchangeNoStr : exchangeNoArray) {
 			exchangeNo = Long.parseLong(exchangeNoStr);
@@ -125,7 +126,7 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public String generateCouponNo(){
 		log.info("Service generateCouponNo() start");
-		List<Coupon> couponList = null;
+		List<CouponDto> couponList = null;
 		String couponNo = null;
 		UUID uuid = null;
 		boolean result = false;
@@ -137,7 +138,7 @@ public class AdminServiceImpl implements AdminService {
 			couponList = adminDao.findCouponList();
 			log.info("couponList : "+couponList);
 			
-			for(Coupon cn : couponList) {
+			for(CouponDto cn : couponList) {
 				if(cn.getCouponNo().equals(couponNo)) {
 					result = false;
 				} else {
@@ -156,7 +157,7 @@ public class AdminServiceImpl implements AdminService {
 		log.info("longCouponValue : "+longCouponValue.toString());
 		
 //		Coupon coupon = null;
-		Coupon coupon = new Coupon();
+		CouponDto coupon = new CouponDto();
 		coupon.setCouponNo(couponNo);
 		coupon.setCouponValue(longCouponValue);
 		log.info("coupon : "+coupon);
@@ -167,7 +168,7 @@ public class AdminServiceImpl implements AdminService {
 	
 	//company-sales
 	@Override
-	public List<CompanySalesDto> findCompanySalesAtBambooChargeByStartDateAndEndDate(String startDate, String endDate) {
+	public List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(String startDate, String endDate) {
 		log.info("Service findCompanySalesByYears() start");
 		CompanySalesDto companySalesDto = new CompanySalesDto();
 		List<CompanySalesDto> csList = null;
@@ -177,81 +178,71 @@ public class AdminServiceImpl implements AdminService {
 			log.info("Company-sales Service 'DD' startDate : "+companySalesDto.getStartDate().toString());
 			companySalesDto.setEndDate(endDate);
 			log.info("Company-sales Service 'DD' endDate : "+companySalesDto.getEndDate().toString());
-			csList = adminDao.selectCompanySalesAtBambooChargeByDDDate(companySalesDto);
+			csList = adminDao.selectCompanyByDDDate(companySalesDto);
 			
 		} else {
 			companySalesDto.setStartDate(startDate);
 			companySalesDto.setEndDate(endDate);
-			csList = adminDao.selectCompanySalesAtBambooChargeByYYMMDate(companySalesDto);
+			csList = adminDao.selectCompanySalesByYYMMDate(companySalesDto);
 			log.info("Company-sales Service YYYYMM csList : "+csList.toString());
 		}
 		
-		CompanySalesDto companySalesDtoForExchange = new CompanySalesDto();
-		List<CompanySalesDto> csExList = null;
+		List<CompanySalesDto> returnList = new ArrayList<CompanySalesDto>();
 		
-		if(Integer.parseInt(startDate.substring(6)) > 1 && Integer.parseInt(endDate.substring(6)) > 1) {
-			companySalesDtoForExchange.setStartDate(startDate);
-			log.info("Company-sales Service 'DD' startDate : "+companySalesDtoForExchange.getStartDate().toString());
-			companySalesDtoForExchange.setEndDate(endDate);
-			log.info("Company-sales Service 'DD' endDate : "+companySalesDtoForExchange.getEndDate().toString());
-			csExList = adminDao.selectCompanySalesAtExchangeByDDDate(companySalesDtoForExchange);
+		for(int i = 0; i < csList.size(); i++) {
+			CompanySalesDto returnDto = csList.get(i);
 			
-		} else {
-			companySalesDtoForExchange.setStartDate(startDate);
-			companySalesDtoForExchange.setEndDate(endDate);
-			csExList = adminDao.selectCompanySalesAtExchangeByYYMMDate(companySalesDtoForExchange);
-			log.info("Company-sales Service YYYYMM csExList : "+csExList.toString());
+			Long bcCount = returnDto.getBcCount();
+			Long exCount = returnDto.getExCount();
+			String period = returnDto.getPeriod();
+			
+			bcCount = bcCount == null ? 0L : bcCount;
+			exCount = exCount == null ? 0L : exCount;
+			
+			log.info("CompanySales Service getCout() : "+bcCount);
+			log.info("CompanySales Service getExCount() : "+exCount);
+			log.info("CompanySales Service getPeriod() : "+period);
+			
+			returnDto.setBcCount(bcCount);
+			returnDto.setExCount(exCount);
+			returnDto.setPeriod(period);
+			
+			returnList.add(returnDto);
+			}
+			
+			return returnList;
 		}
-		
-//		csList.addAll(csExList);
-//		List<CompanySalesDto> returnList = new ArrayList<CompanySalesDto>();
-//		
-//		for(int i = 0; i < csList.size(); i++) {
-//			CompanySalesDto ex = csList.get(i);
-//			
-//			Long exCount = ex.getCount();
-//			Long exExCount = ex.getExCount();
-//			String exYearData = ex.getYearData();
-//			String exExData = ex.getExData();
-//			
-//			if (exCount == null) {
-//			    exCount = 0L;
-//			}
-//			
-//			if (exExCount == null) {
-//			    exExCount = 0L;
-//			}
-//			
-//			if (exYearData == null && exExCount > 0) {
-//			    exYearData = exExData;
-//			} else if (exExData == null && exCount > 0) {
-//			    exExData = exYearData;    
-//			}
-//			
-//			log.info("exCount : "+exCount);
-//			log.info("exExCount : "+exExCount);
-//			log.info("exYearData : " + exYearData);
-//			
-//			ex.setCount(exCount);
-//			ex.setExCount(exExCount);
-//			ex.setYearData(exYearData);
-//			ex.setExData(null);
-//			
-//			returnList.add(ex);
-//		}
-//		
-//		log.info("returnList : "+returnList);
-//		
-//		return returnList;
-	}
 	
 	//talent
 	@Override
-	public List<Talent> findTalent() {
-		log.info("Service findTalent() start");
-		List<Talent> talentList = adminDao.selectTalent();
+	public List<TalentDto> findTalent() {
+		log.info("Talent Service findTalent() start");
+		List<TalentDto> talentList = adminDao.selectTalent();
 		
 		return talentList;
+	}
+
+	@Override
+	public String modifyTalentBySellerIds(List<String> sellerId) {
+		log.info("Talent Service modifyTalentBySellerIds() start");
+		int returnValue = adminDao.updateTalentBySellerIds(sellerId);
+		String returnStr = "";
+		
+		if(returnValue > 0) {
+			returnStr = "<script>alert('서비스가 정상적으로 등록되었습니다'); location.href='/admin/talents';</script>";
+		} else {
+			returnStr = "<script>alert('서비스 등록중 오류가 발생했습니다'); history.back();</script>";
+		}
+		return returnStr;
+	}
+
+	//talent-refund
+	@Override
+	public List<TalentRefundDto> findTalentRefund() {
+		log.info("TalentRefund Service findTalentRefund() start");
+		List<TalentRefundDto> refundList = adminDao.selectTalentRefund();
+		
+		return refundList;
 	}
 
 }

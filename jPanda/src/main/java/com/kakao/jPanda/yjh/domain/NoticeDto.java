@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Notice {
+public class NoticeDto {
 	private Long noticeNo;
 	private String title;
 	private String content;

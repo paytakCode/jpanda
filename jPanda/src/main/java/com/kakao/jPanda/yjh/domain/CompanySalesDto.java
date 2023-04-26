@@ -40,13 +40,12 @@ public class CompanySalesDto {
 	private Long exchangePaymentAmount;
 	
 	//기준 날짜
-	public String startDate;
-	public String endDate;
+	private String startDate;
+	private String endDate;
 	
 	//결과 값
-	private Long count;
-	private String yearData;
+	private Long bcCount;
+	private String period;
 	private Long exCount;
-	private String exData;
 	
 }

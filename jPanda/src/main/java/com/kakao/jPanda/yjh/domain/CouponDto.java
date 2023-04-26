@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Coupon {
+public class CouponDto {
 	private String couponNo;
 	private String issueDate;
 	private String expireDate;

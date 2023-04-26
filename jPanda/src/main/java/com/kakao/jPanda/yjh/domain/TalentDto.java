@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Talent {
+public class TalentDto {
 	
 	private Long talentNo;
 	private String sellerId;
