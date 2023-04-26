@@ -154,7 +154,18 @@
 	}
 	
 	.new-cards{
-		border: thick solid yellow; 
+		position: relative;
+		animation: shake ease-in-out;
+		animation-duration: 0.3s;
+		animation-iteration-count: 15;
+	}
+		
+	@keyframes shake {
+		0% { transform: translate(0, 0); }
+		25% { transform: translate(-2px, 0); }
+		50% { transform: translate(0, -2px); }
+		75% { transform: translate(2px, 0); }
+		100% { transform: translate(0, 0); }
 	}
 	
 	
@@ -289,23 +300,27 @@ function getNow(){
 let userId = [[${#httpSession.getAttribute('memberId')}]];
 console.log("userId : " + userId);
 let webSocket = new WebSocket("ws://localhost:8888/trade-ws?" + userId);
+
 webSocket.onopen = function(){
 	console.log("webSocket opened");
 }
 
-webSocket.onmessage = async function(message){
+webSocket.onmessage = function(message){
 	console.log(message);
 	alert("거래정보가 갱신되었습니다.");
 	
-	let tradeInfo = JSON.parse(message.data);
-	let memberId = tradeInfo.memberId;
-	let talentNo = tradeInfo.talentNo;
+	let tradeInfos = JSON.parse(message.data);
+	console.log(tradeInfos);
 	
-	await updateList($('#selected-filter').val(), talentNo);
-	$('#talent-no-' + talentNo).addClass('new-cards');
-	
-	//aa
-	
+	updateList($('#selected-filter').val())
+		.then(function(){
+			$.each(tradeInfos, function(index, tradeInfo){
+				$('#talent-no-' + tradeInfo.talentNo).addClass('new-cards');
+			});
+		})
+		.catch(function(error){
+			console.log(error);
+		});	
 }
 
 webSocket.onclosed = function(){
@@ -314,8 +329,10 @@ webSocket.onclosed = function(){
 
 //소켓용 테스트 버튼
 $('#test-btn').on("click", function(){
-	let message =JSON.stringify({memberId : 'test', talentNo : '103'});
+	let message =JSON.stringify([{memberId: 'test', talentNo: '103'}, {memberId: 'test', talentNo: '102'}, {memberId: 'test3', talentNo: '101'}, {memberId: 'test2', talentNo: '100'}]);
+	console.log("btn : " + message);
 	webSocket.send(message);
+	console.log("message sent");
 });
 
 
@@ -651,41 +668,46 @@ function getRefundList(item){
 	$('#list-print').append(text);		
 }
 
-function updateList(listType, talentNo){
-	$.ajax(
-			{
-				type : "GET",
-				url : "/trade/trades",
-				data : {'list-type' : listType},
-				success : function(list){
-					$('#list-print').empty();
-					$.each(list, function(index, item){
-						if(item.listType === 'sell'){
-							item.regDate = timestampToCustomFormat(item.regDate);
-							item.statusDate = timestampToCustomFormat(item.statusDate);
-							getSellList(item);
-						}
-						if(item.listType === 'refund'){
-							item.refundSubmitDate = timestampToCustomFormat(item.refundSubmitDate);
-							item.refundApproveDate = timestampToCustomFormat(item.refundApproveDate);
-							getRefundList(item);
-						}
-						if(item.listType === 'buy'){
-							item.purchaseDate = timestampToCustomFormat(item.purchaseDate);
-							getBuyList(item);
-						}	
-					});
-					
-//					if(talentNo != null){
-//						$('#talent-no-' + talentNo).addClass('new-cards');
-//					}
-					
-				},
-				error : function(){
-					console.log("filter-button on click function error");
-				}
-			}		
-	);
+/**
+ * List Update
+ * 동기적 처리 필요성이 있어서 Promise 객체를 return
+ */
+function updateList(listType){
+	return new Promise(function(resolve, reject){
+		$.ajax(
+				{
+					type : "GET",
+					url : "/trade/trades",
+					data : {'list-type' : listType},
+					success : function(list){
+						$('#list-print').empty();
+						$.each(list, function(index, item){
+							if(item.listType === 'sell'){
+								item.regDate = timestampToCustomFormat(item.regDate);
+								item.statusDate = timestampToCustomFormat(item.statusDate);
+								getSellList(item);
+							}
+							if(item.listType === 'refund'){
+								item.refundSubmitDate = timestampToCustomFormat(item.refundSubmitDate);
+								item.refundApproveDate = timestampToCustomFormat(item.refundApproveDate);
+								getRefundList(item);
+							}
+							if(item.listType === 'buy'){
+								item.purchaseDate = timestampToCustomFormat(item.purchaseDate);
+								getBuyList(item);
+							}	
+						});
+						
+						resolve(list);
+						
+					},
+					error : function(error){
+						console.log(error);
+						reject(error);
+					}
+				}		
+		);
+	});
 }
 
 /**
@@ -702,8 +724,6 @@ $('.filter-button').on("click", function(){
 	updateList(listType);
 
 });
-
-
 </script>
 </body>
 </html>

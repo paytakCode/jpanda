@@ -28,4 +28,4 @@ public class TradeWebSocketConfig implements WebSocketConfigurer{
 		registry.addHandler(replyEchoHandler, "/trade-ws");
 	}
 
-}
+}//endClass
