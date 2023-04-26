@@ -133,28 +133,22 @@ public class TalentServiceImpl implements TalentService{
 
 	@Override
 	public List<Talent> findBestSellerTalents() {
-		return namePlusStr(talentDao.selectBestSellerTalents());
+		return talentDao.selectBestSellerTalents();
 	}
 
 	@Override
 	public List<Talent> findTopRatedTalents() {
-		return namePlusStr(talentDao.selectTopRatedTalents());
+		return talentDao.selectTopRatedTalents();
 	}
 
 	@Override
 	public List<Talent> findNewTrendTalents() {
-		return namePlusStr(talentDao.selectNewTrendTalents());
+		return talentDao.selectNewTrendTalents();
 	}
 
 	@Override
 	public List<Talent> findRandomTalents() {
-		return namePlusStr(talentDao.selectRandomTalents());
+		return talentDao.selectRandomTalents();
 	}
 	
-	private static List<Talent> namePlusStr(List<Talent> talentList) {
-		for(int i = 0; i < talentList.size(); i++) {
-			talentList.get(i).setName("강사: " + talentList.get(i).getName());
-		}
-		return talentList;
-	}
 }

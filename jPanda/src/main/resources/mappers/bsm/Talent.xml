@@ -26,44 +26,69 @@
 	
 	<select id="selectBestSellerTalents" resultType="Talent">
 		SELECT 	*
-		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name
-      		  	 FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
-      		  	 					 JOIN member m ON t.seller_id = m.id
-      		  	 WHERE 		t.status = '게시중'
-      		  	 GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name
-     		  	 ORDER BY  	COUNT(*) DESC, t.reg_date DESC
-      		 	)
+		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		         FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+		                             JOIN member m 				  ON t.seller_id = m.id
+		                             LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                                              FROM      review 
+		                                              GROUP BY  talent_no) r 
+		                                                          ON t.talent_no = r.talent_no
+		                             LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		         WHERE 		t.status = '게시중'
+		         GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
+		         ORDER BY  	COUNT(*) DESC, t.reg_date DESC
+		        )
 		WHERE ROWNUM BETWEEN 1 AND 5
 	</select>
 	
 	<select id="selectTopRatedTalents" resultType="Talent">
 		SELECT *
-		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name
-         		FROM     talent t JOIN review r ON t.talent_no = r.talent_no
-         						  JOIN member m ON t.seller_id = m.id
-         		WHERE    t.status = '게시중'
-         		GROUP BY t.talent_no, t.main_img, t.title, t.summary, m.name
-         		ORDER BY AVG(r.bamboo_score) DESC, COUNT(*) DESC
-        	   )
+		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		        FROM     talent t JOIN review r ON t.talent_no = r.talent_no
+		                          JOIN member m ON t.seller_id = m.id
+		                          LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                                           FROM      review 
+		                                           GROUP BY  talent_no) r 
+		                                                        ON t.talent_no = r.talent_no
+		                          LEFT OUTER JOIN category c    ON t.lower_category_no = c.category_no
+		        WHERE    t.status = '게시중'
+		        GROUP BY t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		        ORDER BY r.review_avg_score DESC, review_count DESC
+		       )
 		WHERE  ROWNUM BETWEEN 1 AND 5
 	</select>
 	
 	<select id="selectNewTrendTalents" resultType="Talent">
-		SELECT   *
-		FROM     (SELECT 	t.*, m.name
-				  FROM 		talent t JOIN member m ON t.seller_id = m.id
-				  WHERE 	t.status = '게시중'
-				  ORDER BY 	t.reg_date DESC
-				 )
+		SELECT   *        
+		FROM     (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		          FROM     talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+		                            JOIN member m                ON t.seller_id = m.id
+		                            LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                                             FROM      review 
+		                                             GROUP BY  talent_no) r 
+		                                                         ON t.talent_no = r.talent_no
+		                            LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		          WHERE    b.purchase_date >= TO_DATE('2023-01-23', 'YYYY/MM/DD') - 7
+		          AND      t.status = '게시중'
+		          GROUP BY t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
+		          ORDER BY COUNT(*) DESC, t.reg_date DESC
+		         )
 		WHERE 	 ROWNUM BETWEEN 1 AND 5
 	</select>
 	
 	<select id="selectRandomTalents" resultType="Talent">
 		SELECT  *
-		FROM    (SELECT   t.*, m.name
-         		 FROM     talent t JOIN member m ON t.seller_id = m.id
-         		 WHERE    t.status = '게시중'
-         		 ORDER BY DBMS_RANDOM.VALUE())
+		FROM    (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		         FROM     talent t JOIN member m ON t.seller_id = m.id
+		                           LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                                            FROM      review 
+		                                            GROUP BY  talent_no) r 
+		                                                        ON t.talent_no = r.talent_no
+		                           LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		         WHERE    t.status = '게시중'
+		         GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
+		         ORDER BY DBMS_RANDOM.VALUE()
+		        )
 		WHERE   ROWNUM BETWEEN 1 AND 5
 	</select>
 </mapper>

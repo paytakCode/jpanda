@@ -66,29 +66,29 @@ a:hover{color:#1bc1a3;}
 	margin: 20px;
 }
 .title{
-	margin-top: 20px;
+	margin-top: 10px;
 	font-size: 17px;
 	font-weight: bold; 
 }
-.random-ralent {
+.random-talent {
 	border: 1px solid #EAEAEA;
 	margin-top: 30px;
 }
 
-.talents.random-ralent > img {
+.talents.random-talent > img {
 	display: block;
   	width: 160px;
   	height: 120px;
   	vertical-align: middle;
 }
 
-.talents.random-ralent > img,
-.talents.random-ralent > div {
+.talents.random-talent > img,
+.talents.random-talent > div {
   	display: inline-block;
   	vertical-align: middle;
 }
 
-.talents.random-ralent > div {
+.talents.random-talent > div {
   	vertical-align: middle;
   	margin-left: 10px;
   	height: 100px;
@@ -151,26 +151,27 @@ h4 {
 	
 	<div id="talent-slide">
 	<div id="bestSellerTalent" class="slide">
-  	<h4>최다 판매</h4>
+	<h4>최다 판매</h4>
       <div id="slider-wrap1" class="slider-wrap">
           <ul id="slider1" class="slider" >
-             <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}" >
+             <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}">
 				<img th:src="${talent.mainImg}">
-                    <p class="title" th:text="${talent.title}"></p>
-                    <p class="name" th:text="${talent.name}"></p>
+                    <p class="summary" th:text="${talent.summary}"></p>
+                    <p class="item-name" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+                    <p class="review" th:text	="${talent.reviewAvgScore} + ' (' + ${talent.reviewCount} + ')'"></p>
              </li>
               </ul>
       </div>
       </div>
-      
 	<div id="topRatedTalent" class="slide">
 	<h4>최고 평점</h4>
       <div id="slider-wrap2" class="slider-wrap">
           <ul id="slider2" class="slider" >
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${topRatedTalent}">
 				<img th:src="${talent.mainImg}">
-                    <p class="title" th:text="${talent.title}"></p>
-                    <p class="name" th:text="${talent.name}"></p>
+                    <p class="summary" th:text="${talent.summary}"></p>
+                    <p class="item-name" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+                    <p class="review" th:text	="${talent.reviewAvgScore} + ' (' + ${talent.reviewCount} + ')'"></p>
              </li>
               </ul>
       </div>
@@ -184,6 +185,7 @@ h4 {
 				<img th:src="${talent.mainImg}">
                     <p class="title" th:text="${talent.title}"></p>
                     <p class="name" th:text="${talent.name}"></p>
+                    
              </li>
               </ul>
       </div>
@@ -193,12 +195,14 @@ h4 {
 	<div id="random-talent-div">
 	<h5>오늘의 재능</h5>
 	<ul>
-		<li class="talents random-ralent" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
+		<li class="talents random-talent" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
 			<img th:src="${talent.mainImg}">
 		<div>
 			<p th:text="${talent.title}" class="title"></p>
 			<p th:text="${talent.summary}" class="summary"></p>
             <p th:text="${talent.name}" class="name"></p>
+            <p class="item-name" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+            <p class="review" th:text	="${talent.reviewAvgScore} + ' (' + ${talent.reviewCount} + ')'"></p>
 		</div>
 		</li>
 	</ul>
