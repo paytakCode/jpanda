@@ -9,7 +9,7 @@ public interface ChargeService {
 
 	int checkAvailableCoupon(CouponUseDto couponUseDto);
 
-	Long getAvailAmountCoupon(CouponUseDto couponUseDto);
+	int getAvailAmountCoupon(CouponUseDto couponUseDto);
 
 	//int findTotalBamboo(String memberId);
 	long findTotalBamboo(String memberId);

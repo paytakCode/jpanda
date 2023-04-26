@@ -14,7 +14,7 @@ public interface ChargeDao {
 
 	CouponUseDto selectCouponUse(CouponUseDto couponUseDto);
 
-	Long selectAvailAmountCoupon(CouponUseDto couponUseDto);
+	int selectAvailAmountCoupon(CouponUseDto couponUseDto);
 
 	CouponDto selectCouponByCouponNo(String couponNo);
 

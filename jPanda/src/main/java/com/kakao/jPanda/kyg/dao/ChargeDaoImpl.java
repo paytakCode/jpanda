@@ -24,61 +24,24 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 	
 //	밤부 충전시 coupon_use Insert
-	/*
 	@Override
 	public int insertCouponUse(ChargeDto chargeDto) {
 		log.info("ChargeDaoImpl insertCouponUse() Start...");
-		System.out.println("ChargeDaoImpl insertCouponUse chargeDto.toString -> " + chargeDto.toString());
-		int resultInsertCouponUse = 0; 
-		
-		if(chargeDto.getCouponNo() != null) {
-			
-		} else {
-			log.info("ChargeDaoImpl insertCouponUse() chargeDto.getCouponNo()가 null입니다. 0을 반환합니다.");
-			return resultInsertCouponUse;
-		}
-		
-		try {
-			resultInsertCouponUse = sqlSession.insert("insertCouponUse", chargeDto);
-			System.out.println("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> " + resultInsertCouponUse);
-		} catch (Exception e) {
-			System.out.println("ChargeDaoImpl insertCouponUse() Exception -> " + e.getMessage());
-		}
-		if(resultInsertCouponUse > 0) {
-			resultInsertCouponUse = 1;
-			System.out.println("ChargeDaoImpl resultinsertCouponUse가 삽입되었습니다");
-		} else {
-			resultInsertCouponUse = 0;
-			System.out.println("ChargeDaoImpl resultinsertCouponUse가 삽입되지 않았습니다");
-		}
-		
-		return resultInsertCouponUse;
-	}
-	*/
-	
-	@Override
-	public int insertCouponUse(ChargeDto chargeDto) {
-		log.info("ChargeDaoImpl insertCouponUse() Start...");
-		//System.out.println("ChargeDaoImpl insertCouponUse chargeDto.toString -> " + chargeDto.toString());
 		log.info("ChargeDaoImpl insertCouponUse chargeDto.toString -> " + chargeDto.toString());
 		int resultInsertCouponUse = 0; 
 		
 		if(chargeDto.getCouponNo() != null) {
 			try {
 				resultInsertCouponUse = sqlSession.insert("insertCouponUse", chargeDto);
-				//System.out.println("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> " + resultInsertCouponUse);
 				log.info("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> {}", resultInsertCouponUse);
 			} catch (Exception e) {
-				//System.out.println("ChargeDaoImpl insertCouponUse() Exception -> " + e.getMessage());
 				log.error("ChargeDaoImpl insertCouponUse() Exception ->  {}", e.getMessage(), e);
 			}
 			if(resultInsertCouponUse > 0) {
 				resultInsertCouponUse = 1;
-				//System.out.println("ChargeDaoImpl resultinsertCouponUse가 삽입되었습니다");
 				log.info("ChargeDaoImpl resultinsertCouponUse가 삽입되었습니다");
 			} else {
 				resultInsertCouponUse = 0;
-				//System.err.println("ChargeDaoImpl resultinsertCouponUse가 삽입되지 않았습니다");
 				log.error("ChargeDaoImpl resultinsertCouponUse가 삽입되지 않았습니다");
 			}
 		} else {
@@ -95,26 +58,21 @@ public class ChargeDaoImpl implements ChargeDao {
 	public int insertCharge(ChargeDto chargeDto) {
 		log.info("ChargeDaoImpl insertCharge() Start...");
 		
-		//System.out.println("ChargeDaoImpl insertCharge chargeDto.toString -> " + chargeDto.toString());
 		log.info("ChargeDaoImpl insertCharge chargeDto.toString -> {}", chargeDto.toString());
 		
 		int resultCharge = 0;
-		int couponUseInsert = 0;
+//		int couponUseInsert = 0;
 		try {
 			resultCharge = sqlSession.insert("insertCharge", chargeDto);
-			//System.out.println("ChargeDaoImpl insertCharge resultCharge -> " + resultCharge);
 			log.info("ChargeDaoImpl insertCharge resultCharge -> {}", resultCharge);
 //			couponUseInsert = sqlSession.insert("insertCouponUse", chargeDto);
 		} catch (Exception e) {
-			//System.out.println("ChargeDaoImpl insertCharge() Exception -> " + e.getMessage());
 			log.error("ChargeDaoImpl insertCharge() Exception -> {}", e.getMessage(), e);
 		}
 		
 		if(resultCharge > 0) {
-			//System.out.println("ChargeDaoImpl insertCharge() resultCharge 완료 ");
 			log.info("ChargeDaoImpl insertCharge() resultCharge 완료 ");
 		} else {
-			//System.out.println("ChargeDaoImpl insertCharge() resultCharge 실패 ");
 			log.info("ChargeDaoImpl insertCharge() resultCharge 실패 ");
 		}
 		
@@ -126,16 +84,13 @@ public class ChargeDaoImpl implements ChargeDao {
 	public double selectBonusRatio(ChargeDto chargeDto) {
 		
 		log.info("ChargeDaoImpl selectBonusRatio() Start...");
-		//System.out.println("ChargeDaoImpl selectBonusRatio chargeDto.toString -> " + chargeDto.toString());
 		log.info("ChargeDaoImpl selectBonusRatio chargeDto.toString -> {}", chargeDto.toString());
 		
 		double selectBonusRatioResult = (double) 0;
 		try {
 			selectBonusRatioResult = sqlSession.selectOne("selectBonusRatio", chargeDto);
-			//System.out.println("ChargeDaoImpl ChargeDaoImpl selectBonusRatioResult -> " + selectBonusRatioResult);
 			log.info("ChargeDaoImpl ChargeDaoImpl selectBonusRatioResult -> {}", selectBonusRatioResult);
 		} catch (Exception e) {
-			//System.out.println("ChargeDaoImpl selectBonusRatio() Exception -> " + e.getMessage());
 			log.error("ChargeDaoImpl selectBonusRatio() Exception -> {}", e.getMessage(), e);
 		}
 		
@@ -150,10 +105,8 @@ public class ChargeDaoImpl implements ChargeDao {
 		CouponUseDto selectCouponUseResult = null;
 		try {
 			selectCouponUseResult = sqlSession.selectOne("selectCouponUse", couponUseDto);
-			//System.out.println("ChargeDaoImpl ChargeDaoImpl selectCouponUseResult -> " + selectCouponUseResult);
 			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponUseResult -> " + selectCouponUseResult);
 		} catch (Exception e) {
-			//System.err.println("ChargeDaoImpl selectCouponUse() Exception -> " + e.getMessage());
 			log.error("ChargeDaoImpl selectCouponUse() Exception -> " + e.getMessage(), e);
 		}
 		
@@ -179,10 +132,10 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public Long selectAvailAmountCoupon(CouponUseDto couponUseDto) {
+	public int selectAvailAmountCoupon(CouponUseDto couponUseDto) {
 		log.info("ChargeDaoImpl selectAvailAmountCoupon() Start...");
 		
-		Long selectAvailAmountCouponResult = (long) 0;
+		int selectAvailAmountCouponResult = 0;
 		try {
 			selectAvailAmountCouponResult = sqlSession.selectOne("selectAvailAmountCoupon", couponUseDto);
 			log.info(" ChargeDaoImpl selectAvailAmountCoupon -> " + selectAvailAmountCouponResult);		

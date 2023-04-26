@@ -31,36 +31,28 @@ public class ChargeServiceImpl implements ChargeService {
 			Long chargeMoney = chargeDto.getChargeMoney();
 //			String paymentMethod = chargeDto.getPaymentMethod();
 			
-			//
+			// 
 			if (chargeDto.getCouponNo() == "0") {
 				chargeDto.setCouponNo(null);
 			}
 			
 //			coupon_use insert
 			int insertCouponUse = chargeDao.insertCouponUse(chargeDto);
-			//System.out.println("insertCouponUse 결과값 : " + insertCouponUse);
 			log.info("insertCouponUse 결과값 : {}", insertCouponUse);
 			
 //			결제방법 선택시 보너스율 적용
 			double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-			//Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000);
-			Long chargeBamboo = (long) (chargeMoney * bonusRatio);
+			//Long chargeBamboo = (long) (chargeMoney * bonusRatio); // 테스트용
+			Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000); 
+			
 			chargeDto.setChargeBamboo(chargeBamboo);
-			
-//			밑에 미작성
-//			부적합한 열 유형: 1111
-			
-			//parent key not found
-			
 			
 			log.info("chargeDto.getCouponNo() : " + chargeDto.getCouponNo());
 			int resultInsertCharge = chargeDao.insertCharge(chargeDto);
 			
 			if(insertCouponUse > 0) {
-				//System.out.println("ChargeServiceImpl insertCouponUse 삽입 완료");
 				log.info("ChargeServiceImpl insertCouponUse 삽입 완료");
 			} else {
-				//System.out.println("ChargeServiceImpl insertCouponUse 삽입 안함(미삽입 or 오류)");
 				log.info("ChargeServiceImpl insertCouponUse 삽입 안함(미삽입 or 오류)");
 			}
 			
@@ -70,12 +62,12 @@ public class ChargeServiceImpl implements ChargeService {
 		}
 	 
 	 
-
+	// 사용가능한 쿠폰 체크
 	@Override
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
+		
 		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isUsed 검증
 		CouponUseDto selectedcouponUseDto = chargeDao.selectCouponUse(couponUseDto);
-		//System.out.println("초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
 		log.info("초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
 		
 		int returnResult = 1;
@@ -93,8 +85,8 @@ public class ChargeServiceImpl implements ChargeService {
 			
 			//해당 쿠폰이 기한남아있는지 확인 boolean isExpired 검증
 			CouponDto selectedCouponDto = chargeDao.selectCouponByCouponNo(couponUseDto.getCouponNo());
-			//System.out.println("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto->"+selectedCouponDto);
 			log.info("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto -> "+selectedCouponDto);
+			
 			LocalDate expireDate = selectedCouponDto.getExpireDate();
 			LocalDate today = LocalDate.now();
 			log.info("expireDate -> " + expireDate);
@@ -106,8 +98,7 @@ public class ChargeServiceImpl implements ChargeService {
 			} else {
 				isExpired = true;
 			}
-			//System.out.println("checkAvailableCoupon isUsed->"+isUsed);
-			//System.out.println("checkAvailableCoupon isExpired->"+isExpired);
+			
 			log.info("checkAvailableCoupon isUsed->"+isUsed);
 			log.info("checkAvailableCoupon isExpired->"+isExpired);
 
@@ -120,19 +111,17 @@ public class ChargeServiceImpl implements ChargeService {
 			returnResult = 0;
 		}
 		
-		//System.out.println("checkAvailableCoupon returnResult->"+returnResult);
 		log.info("checkAvailableCoupon returnResult->"+returnResult);
 		return returnResult;
 	}
 
 	@Override
-	public Long getAvailAmountCoupon(CouponUseDto couponUseDto) {
+	public int getAvailAmountCoupon(CouponUseDto couponUseDto) {
 		log.info("ChargeServiceImpl getAvailAmountCoupon() Start...");
-		//log.info("ChargeServiceImpl getAvailAmountCoupon() chargeDto.toString() : " + couponUseDto.toString());
+		log.info("ChargeServiceImpl getAvailAmountCoupon() chargeDto.toString() : {}", couponUseDto.toString());
 		
-		Long findAvailAmountCoupon = chargeDao.selectAvailAmountCoupon(couponUseDto);
+		int findAvailAmountCoupon = chargeDao.selectAvailAmountCoupon(couponUseDto);
 		log.info("ChargeServiceImpl getAvailAmountCoupon() findAvailAmountCoupon -> " + findAvailAmountCoupon);
-		
 		
 		return findAvailAmountCoupon;
 	}
