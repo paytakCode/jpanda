@@ -37,15 +37,6 @@ public class BoardController {
 		return "lhw/Board";
 	}
 	
-	// 대분류 카테고리를 눌렀을때 리스트
-	@ResponseBody
-	@GetMapping("/update-talent-list-by-upper-category-no") 
-	public List<Talent> talentListByUpperCategoryNo(Long upperCategoryNo) {
-		System.out.println("Controller talentListByUpperCategoryNo Start");
-		List<Talent> talentList = boardService.findTalentListByUpperCategoryNo(upperCategoryNo);
-		return talentList;
-	}
-	
 	
 	// 중분류 카테고리를 불러오는 리스트
 	@ResponseBody
@@ -56,6 +47,17 @@ public class BoardController {
 		return lowerCategotyList;
 	}
 	
+	
+	// 대분류 카테고리를 눌렀을때 리스트
+	@ResponseBody
+	@GetMapping("/update-talent-list-by-upper-category-no") 
+	public List<Talent> talentListByUpperCategoryNo(Long upperCategoryNo) {
+		System.out.println("Controller talentListByUpperCategoryNo Start");
+		List<Talent> talentList = boardService.findTalentListByUpperCategoryNo(upperCategoryNo);
+		return talentList;
+	}
+	
+	
 	// 중분류 카테고리 눌렀을때 리스트
 	@ResponseBody
 	@GetMapping("/update-talent-list-by-lower-category-no") 
@@ -65,15 +67,18 @@ public class BoardController {
 		return talentList;
 	}
 	
-	 @ResponseBody
-	 @GetMapping("/talents?upper-category-and-filters={filters}") 
-	 public List<Talent> talentListByFilters(@RequestParam Filters filters){ 
-		 List<Talent> talentListByFilters = boardService.
-				 							findTalentListByUpperCategoryAndFilter(filters); 
-		 System.out.println(filters);
-		 return talentListByFilters; 
+	// 재능 리스트 필터 기능
+	@ResponseBody
+	@GetMapping("/talentsList/")
+	public List<Talent> talentListByFilters(Filters filters, Model model){
+		System.out.println("Controller talentListByFilters Start");
+		List<Talent> talentListByFilters = boardService.findTalentListByFilter(filters);
+		model.addAttribute("talentList", talentListByFilters);
+		return talentListByFilters;
 	}
-	 
+	
+	
+
 	
 	
 }

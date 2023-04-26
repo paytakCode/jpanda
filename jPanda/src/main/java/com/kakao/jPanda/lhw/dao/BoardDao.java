@@ -25,7 +25,9 @@ public interface BoardDao {
 	
 	// 중분류 클릭시 해당 카테고리 리스트 불러오기
 	List<Talent> selectTalentListByLowerCategoryNo(Long lowerCategoryNo);
+
+	// 재능 리스트 필터 기능
+	List<Talent> selectTalentListByFilter(Filters filters);
 	
-	// 대분류 카테고리 눌렀을 때 필터 기능
-	List<Talent> selectTalentListByUpperCategoryAndFilter(Filters filters);
+
 }

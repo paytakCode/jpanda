@@ -54,11 +54,15 @@ public class BoardDaoImpl implements BoardDao {
 	public List<Talent> selectTalentListByLowerCategoryNo(Long lowerCategoryNo) {
 		return sqlSession.selectList("selectTalentListByLowerCategoryNo", lowerCategoryNo);
 	}
-	
-	// 대분류 카테고리 눌렀을 때 필터 기능
+
+	// 재능 리스트 필터 기능
 	@Override
-	public List<Talent> selectTalentListByUpperCategoryAndFilter(Filters filter) {
-		return sqlSession.selectList("selectTalentListByUpperCategoryAndFilters", filter);
+	public List<Talent> selectTalentListByFilter(Filters filters) {
+		System.out.println("DAO -> " + filters.getFilter());
+		System.out.println("DAO -> " + filters.getUpperCategoryNo());
+		System.out.println("DAO -> " + filters.getLowerCategoryNo());
+		return sqlSession.selectList("selectTalentListByFilters", filters);
 	}
+	
 
 }

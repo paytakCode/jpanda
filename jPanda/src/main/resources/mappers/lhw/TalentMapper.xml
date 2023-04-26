@@ -66,20 +66,34 @@
 	</select>
 	
 	<insert id="insertReview" parameterType="Review">
-		 INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score ,review_no) 
-    					VALUES (#{talentNo}, #{reviewerId}, #{content}, SYSDATE, #{bambooScore}, (SELECT MAX(review_no)+1 FROM review))
+		INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score ,review_no) 
+    	VALUES (#{talentNo}, #{reviewerId}, #{content}, SYSDATE, #{bambooScore}, (SELECT MAX(review_no)+1 FROM review))
 	</insert>
 	
-	<select id="selectTalentListByUpperCategoryAndFilters" resultType="Talent" parameterType="Filters">
+	<select id="selectTalentListByFilters" resultType="Talent" parameterType="Filters">
 		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
-		t.summary, t.bamboo, t.sale_bamboo, ROUND(AVG(r.bamboo_score) * 2) / 2 AS bambooScore
+		t.summary, t.bamboo, t.sale_bamboo, (ROUND(AVG(r.bamboo_score) * 2) / 2) AS bambooScore, t.view_count, t.reg_date
 		FROM talent t, review r
 		WHERE t.talent_no = r.talent_no
 		AND   t.status = '게시중'
-		AND   upper_category_no = #{upperCategoryNo}
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo,
-				 t.status, t.view_count, t.reg_date, r.bamboo_score
-		ORDER BY #{filter} DESC
+		<if test="upperCategoryNo != null and upperCategoryNo != ''">
+		AND	  t.upper_category_no = #{upperCategoryNo}
+		</if>
+		<if test="lowerCategoryNo != null and lowerCategoryNo != ''">
+		AND	  t.lower_category_no = #{lowerCategoryNo}
+		</if>
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, 
+				 t.status, t.reg_date, t.view_count
+		ORDER BY 
+		<if test="filter != null and filter != ''">
+			<choose>
+				<when test="filter eq 'reg_date'"> reg_date DESC</when>
+				<when test="filter eq 'view_count'"> view_count DESC</when>
+				<when test="filter eq 'bambooScore'"> bambooScore DESC</when>
+				<when test="filter eq 'sale_bamboo'"> sale_bamboo DESC </when>
+				<otherwise> sale_bamboo ASC</otherwise>
+			</choose>
+		</if>
 	</select>
 	
 	<update id="updateReview" parameterType="Review">

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Filters {
 	
-	private Long categoryNo;
+	private Long lowerCategoryNo;
 	private Long upperCategoryNo;
 	private String filter;
 }

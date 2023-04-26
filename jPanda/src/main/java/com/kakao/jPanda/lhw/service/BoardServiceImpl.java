@@ -54,10 +54,13 @@ public class BoardServiceImpl implements BoardService {
 	public List<Talent> findTalentListByLowerCategoryNo(Long lowerCategoryNo) {
 		return boardDao.selectTalentListByLowerCategoryNo(lowerCategoryNo);
 	}
-	
-	// 대분류 카테고리 눌렀을 때 필터 기능
-	public List<Talent> findTalentListByUpperCategoryAndFilter(Filters filters){
-		return boardDao.selectTalentListByUpperCategoryAndFilter(filters);
+
+	// 재능 리스트 필터 기능
+	@Override
+	public List<Talent> findTalentListByFilter(Filters filters) {
+		return boardDao.selectTalentListByFilter(filters);
 	}
+	
+
 
 }

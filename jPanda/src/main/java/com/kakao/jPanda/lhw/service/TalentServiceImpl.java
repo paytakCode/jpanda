@@ -32,12 +32,14 @@ public class TalentServiceImpl implements TalentService {
 	public int addReview(Review review) {
 		return talentDao.insertReview(review);
 	}
-
+	
+	// 리뷰 업데이트
 	@Override
 	public int modifyReview(Review review) {
 		return talentDao.updateReview(review);
 	}
-
+	
+	// 리뷰 삭제
 	@Override
 	public int removeReview(Review review) {
 		return talentDao.deleteReview(review);

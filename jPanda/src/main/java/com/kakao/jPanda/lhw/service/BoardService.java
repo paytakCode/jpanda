@@ -27,6 +27,9 @@ public interface BoardService {
 	// 중분류 클릭시 해당 카테고리 리스트 불러오기
 	List<Talent> findTalentListByLowerCategoryNo(Long lowerCategoryNo);
 	
-	// 대분류 카테고리 필터 기능
-	List<Talent> findTalentListByUpperCategoryAndFilter(Filters filters);
+	// 재능 리스트 필터 기능
+	List<Talent> findTalentListByFilter(Filters filters);
+	
+
+
 }
