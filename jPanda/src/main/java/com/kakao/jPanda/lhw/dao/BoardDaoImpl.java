@@ -18,12 +18,6 @@ public class BoardDaoImpl implements BoardDao {
 
 	private final SqlSession sqlSession;
 	
-	// 재능 전체 리스트
-	@Override
-	public List<Talent> selectTalentList() {
-		return sqlSession.selectList("selectTalentList");
-	}
-	
 	// 공지사항 전체 리스트
 	@Override
 	public List<Notice> selectNoticeList() {
@@ -37,24 +31,12 @@ public class BoardDaoImpl implements BoardDao {
 		return sqlSession.selectList("selectUpperCategoryList");
 	}
 	
-	// 사이드바 클릭 시 상위 카테고리 리스트 불러오기
-	@Override
-	public List<Talent> selectTalentListByUpperCategoryNo(Long upperCategoryNo) {
-		return sqlSession.selectList("selectTalentListByUpperCategoryNo", upperCategoryNo);
-	}
-	
 	// 중분류 카테고리 리스트 불러오기
-	@Override
-	public List<Category> selectLowerCategoryListByUpperCategoryNo(Long upperCategoryNo) {
-		return sqlSession.selectList("selectLowerCategoryListByUpperCategoryNo", upperCategoryNo);
+	@Override 
+	public List<Category> selectLowerCategoryListByUpperCategoryNo(Long upperCategoryNo) { 
+		return sqlSession.selectList("selectLowerCategoryListByUpperCategoryNo", upperCategoryNo); 
 	}
 	
-	// 중분류 클릭시 해당 카테고리 리스트 불러오기
-	@Override
-	public List<Talent> selectTalentListByLowerCategoryNo(Long lowerCategoryNo) {
-		return sqlSession.selectList("selectTalentListByLowerCategoryNo", lowerCategoryNo);
-	}
-
 	// 재능 리스트 필터 기능
 	@Override
 	public List<Talent> selectTalentListByFilter(Filters filters) {

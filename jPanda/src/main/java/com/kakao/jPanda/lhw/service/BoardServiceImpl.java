@@ -18,12 +18,6 @@ public class BoardServiceImpl implements BoardService {
 	
 	private final BoardDao boardDao;
 	
-	// 재능 전체 리스트
-	@Override
-	public List<Talent> findTalentList() {
-		return boardDao.selectTalentList();
-	}
-	
 	// 노티스 리스트 
 	@Override
 	public List<Notice> findNoticeList() {
@@ -37,24 +31,12 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.selectUpperCategoryList();
 	}
 	
-	// 사이드바 클릭 시 상위 카테고리 리스트 불러오기
-	@Override
-	public List<Talent> findTalentListByUpperCategoryNo(Long upperCategoryNo) {
-		return boardDao.selectTalentListByUpperCategoryNo(upperCategoryNo);
-	}
-	
 	// 중분류 카테고리 리스트 불러오기
-	@Override
-	public List<Category> findLowerCategoryListByUpperCategoryNo(Long upperCategoryNo) {
-		return boardDao.selectLowerCategoryListByUpperCategoryNo(upperCategoryNo);
+	@Override 
+	public List<Category> findLowerCategoryListByUpperCategoryNo(Long upperCategoryNo) { 
+		return boardDao.selectLowerCategoryListByUpperCategoryNo(upperCategoryNo); 
 	}
 	
-	// 중분류 클릭시 해당 카테고리 리스트 불러오기
-	@Override
-	public List<Talent> findTalentListByLowerCategoryNo(Long lowerCategoryNo) {
-		return boardDao.selectTalentListByLowerCategoryNo(lowerCategoryNo);
-	}
-
 	// 재능 리스트 필터 기능
 	@Override
 	public List<Talent> findTalentListByFilter(Filters filters) {

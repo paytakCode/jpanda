@@ -346,7 +346,7 @@ function reviewInsert(talentNo){
 	};  
 	$.ajax({
 	    type: 'POST',
-	    url: "/talent/talents/" + talentNo + "/reviews",
+	    url: "/talents/talent/" + talentNo + "/reviews",
 	    data: JSON.stringify({
 	    	talentNo : talentNo,
 	    	reviewerId : "kzwloppneba",
@@ -395,7 +395,8 @@ function sendUpdateReview(talentNo){
 	 console.log(reviewNo);
   		$.ajax({
   			type : 'PUT',
-  			url : talentNo + "/reviews/" + reviewNo,
+  			url : 
+  				talentNo + "/reviews/" + reviewNo,
   			data: JSON.stringify({
   		    	talentNo : talentNo,
   		    	reviewNo : reviewNo,

@@ -20,12 +20,13 @@ import com.kakao.jPanda.lhw.service.TalentService;
 import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/talent")
+@RequestMapping("/talents")
 public class TalentDetailController {
 
 	private final TalentService talentService;
 	
-	@GetMapping("/talents/{talentNo}")
+	// 재능 상세페이지 및 리뷰 리스트 불러오기
+	@GetMapping("/talent/{talentNo}")
 	public String talentDetails(@PathVariable Long talentNo, Model model) {
 		System.out.println("Controller talentDetails Start");
 		Talent talent = talentService.findTalentByTalentNo(talentNo);
@@ -35,8 +36,9 @@ public class TalentDetailController {
 		return "lhw/Talent";
 	}
 	
+	// 리뷰 인서트
 	@ResponseBody
-	@PostMapping("/talents/{talentNo}/reviews")
+	@PostMapping("/talent/{talentNo}/reviews")
 	public List<Review> reviewAdd(@PathVariable("talentNo") Long talentNo, @RequestBody Review review) {
 		System.out.println("Controller reviewAdd Start");
 		review.setTalentNo(talentNo); // talentNo를 review 객체에 설정
@@ -45,8 +47,9 @@ public class TalentDetailController {
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
 	
+	// 리뷰 업데이트
 	@ResponseBody
-	@PutMapping("/talents/{talentNo}/reviews/{reviewNo}")
+	@PutMapping("/talent/{talentNo}/reviews/{reviewNo}")
 	public List<Review> reviewModify(@PathVariable("talentNo") Long talentNo, @PathVariable("reviewNo") Long reviewNo, 
 							   @RequestBody Review review) {
 		System.out.println("Controller reviewModify Start");
@@ -57,8 +60,9 @@ public class TalentDetailController {
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
 	
+	// 리뷰 딜리트
 	@ResponseBody
-	@DeleteMapping("/talents/{talentNo}/reviews/{reviewNo}")
+	@DeleteMapping("/talent/{talentNo}/reviews/{reviewNo}")
 	public List<Review> reviewRemove(@PathVariable("talentNo") Long talentNo, @PathVariable("reviewNo") Long reviewNo,
 									@RequestBody Review review) {
 		System.out.println("Controller reviewRemove Start");

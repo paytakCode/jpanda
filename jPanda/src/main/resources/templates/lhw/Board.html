@@ -8,14 +8,14 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-}
+} 
 
 /* 공통 스타일 */
 ul, li {
   list-style: none;
   margin: 0;
   padding: 0;
-}
+}  
 
 /* 헤더 */
 header {
@@ -40,7 +40,12 @@ nav ul {
 }
 
 nav li {
-  margin: 0 10px;
+  border: 1px solid #ccc;
+  margin: 20px 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: center;
+  flex-basis: 45%;
 }
 
 nav a {
@@ -48,22 +53,12 @@ nav a {
 }
 
 /* 게시판 리스트 */
-#list-container {
+.list-container, .sell-board {
   margin: 80px auto;
-  max-width: 800px;
+  max-width: 1000px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
-}
-
-/* 게시글 목록 */
-li {
-  border: 1px solid #ccc;
-  margin: 20px 10px;
-  margin-bottom: 10px;
-  padding: 10px;
-  text-align: center;
-  flex-basis: 48%;
 }
 
 li:hover {
@@ -88,8 +83,13 @@ li:hover {
   left: 20px;
   top: 200px;
   width: 200px;
-  border: solid 1px;
+  border: 1px solid #ccc;
   margin-left: 20px;
+  text-align: center;
+  margin: 20px 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  flex-basis: 45%;
 }
 
 /* 중분류 카테고리 */
@@ -112,66 +112,105 @@ li:hover {
   margin-bottom: 20px;
 }
 
-.bamboo-score {
+.bamboo-imges {
   width: 80px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
   height: 16px;
 }
 
-.bamboo-score img {
-  width: 16px;
-  height: 16px;
+.bamboo-imges img {
+  width: 20px;
+  height: 20px;
 }
 
-
-
-.talent-ajax-list {
-  margin: 80px auto;
-  max-width: 800px;
+/* 컨테이너 */
+#defalut-list {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+  flex-direction: column; /* 아이템들을 수직 방향으로 배치 */
+  flex-direction: row;
+  align-items: center; /* 아이템들을 가운데 정렬 */
+  margin: 10px;
 }
 
+/* 카드 컨테이너 */
+.talent-ajax-list {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  height: 450px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  margin 10px;
+  margin-bottom: 20px;
+  overflow: hidden; /* 아이템 내부의 내용이 넘칠 경우, 숨김 처리 */
+}
+
+/* 이미지 */
 .talent-image {
-  max-width: 100px;
-  margin-right: 10px;
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
+/* 제목 */
 .talent-title {
-  font-size: 16px;
+  display: block;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 5px;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden; /* 넘치는 텍스트는 숨김 처리 */
+  text-overflow: ellipsis; /* 넘치는 텍스트는 생략 부호(...)로 대체 */
 }
 
+/* 요약 */
 .talent-summary {
-  font-size: 14px;
+  display: block;
+  width: 190px;
+  height: 120px;
+  font-size: 16px;
+  overflow: hidden; /* 넘치는 텍스트는 숨김 처리 */
+  text-overflow: ellipsis; /* 넘치는 텍스트는 생략 부호(...)로 대체 */
+}
+
+/* 판매자 */
+.talent-seller {
+  font-size: 15px;
   margin-bottom: 5px;
 }
 
-.talent-seller {
-  font-size: 12px;
-  color: gray;
-  margin-right: 10px;
-}
-
+/* 가격 */
 .talent-price {
-  font-size: 18px;
-  margin-right: 10px;
-  text-decoration: line-through;
-  color: red;
-}
-
-.talent-sale-price {
-  font-size: 18px;
-  color: green;
+  font-size: 15px;
   font-weight: bold;
-  margin-right: 10px;
+  color: gray;
+  margin-bottom: 5px;
+  text-decoration: line-through;
 }
 
-.talent-score {
-  font-size: 12px;
+/* 세일 가격 */
+.talent-sale-price {
+  font-size: 17px;
+  font-weight: bold;
   color: green;
+  margin-bottom: 5px;
 }
+
+/* 대나무 점수 */
+.talent-bamboo-score {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+/* 선택 가능 */
+.talent-ajax-list:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 10px #ccc;
+}
+
 
 
 </style>
@@ -203,7 +242,6 @@ li:hover {
     	<h2>대분류 카테고리</h2>
     	<ul th:each="upperCategory : ${upperCategoryList}">	
     		<li class="topCategoryList" th:text="${upperCategory.item}" th:data-upperCategoryNo="${upperCategory.categoryNo}"></li>
-    		<!--th:onclick="onAjax([[${upperCategory.categoryNo}]])"  -->
     	</ul>
     </div>
     
@@ -232,9 +270,9 @@ li:hover {
     
 
     
-	<div id="list-container">
-	   	<div class="list">
-	   		<h2>공지사항 리스트</h2>
+	<div class="list-container">
+	   	<div class="notice">
+	   		<h2>공지사항</h2>
 	   		 <ul id="notice-list">
 	        	<li th:each="notice : ${noticeList}">
 	                <span th:text="${notice.noticeNo}"></span>
@@ -243,256 +281,138 @@ li:hover {
 	        	</li>
 	         </ul>
 		</div>
-		<button id="sell-insert">판매글 등록</button>
-	     <div class="list">
-	        <h2>판매 게시판 리스트</h2>
+	</div>
+	
+	
+	<div class="sell-board">
 	        	<ul id="defalut-list">
-	            	<li th:each="talent : ${talentList}" th:onclick="|location.href='/talent/talents/${talent.talentNo}'|">
+	        	</ul>
+				<div class="sell-btn">
+					<button id="sell-insert">판매글 등록</button>
+				</div>
+	</div>
+	
+	            <!-- 	<li th:each="talent : ${talentList}" th:onclick="|location.href='/talent/talents/${talent.talentNo}'|">
 	               		이미지:	<img th:src="${talent.mainImg}">
 	                	제목:		<span th:text="${talent.title}"></span><p>
 	                	요약설명:	<span th:text="${talent.summary}"></span><p>
 	                	강사:		<span th:text="${talent.sellerId}"></span><p>
 	                	정상 가격:	<span th:text="${talent.bamboo}"></span><p>
 	                	판매 가격:	<span th:text="${talent.saleBamboo}"></span><p>
-				           		<span class="avgScoreSpan" th:text="${talent.bambooScore}"> <!-- style="display:none;" --></span>
+				           		<span class="avgScoreSpan" th:text="${talent.bambooScore}" style="display:none;"></span>
 						만족도:	<img class="bamboo-score">
 
-	            	</li>
-	        	</ul>
-	     </div>
-	</div>
+	            	</li> -->
+	
 
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script>
-
-$('.topCategoryList').click(function(){
-	$('.topCategoryList').removeClass('selected');
-	$(this).addClass('selected');
-// 중분류 카테고리 리스트 불러오기
- $.ajax({
-   	url:"/board/update-lower-category-list-by-upper-category-no",
-    type: 'GET',
-   	data: {upperCategoryNo : $(this).data('uppercategoryno')},
-   	dataType:'json',
-   	success:function(lowerCategoryList){
-   		console.log(lowerCategoryList);
-   		$('#lower-category-list').empty();
-   		$('#lower-category-list').append($('<option>').text('==중분류 선택=='));
-   		lowerCategoryList.forEach(function(lowerCategory){
-   			$('#lower-category-list').append($('<option>').val(lowerCategory.categoryNo).text(lowerCategory.item));
-   		});
-   	}
-   });
-	
-	talentList();
-});
-
-function talentList(){
-	$.ajax({
-		url : "/board/talentsList/",
-		type : 'GET',
-		data : {filter : $(".radio-filter:checked:first").val(),
-				upperCategoryNo : $('.selected').data('uppercategoryno'),
-				lowerCategoryNo : $('#lower-category-list').val()
-			   },
-		dataType : 'json',
-		success : function(talentList){
-			 $('#defalut-list').empty();
-	            console.log(talentList);
-	            talentList.forEach(function(talent){
-	            	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
-	                $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
-	                $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
-	                $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
-	                $('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
-	                $('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
-	                $('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
-	                $('<span>').addClass('talent-score').text(talent.bambooScore).appendTo(li);
-	                li.click(function() {
-	                    location.href = '/talent/talents/' + talent.talentNo;
-	                });
-	            });
-		},
-	    error: function(xhr, status, error) {
-	        console.log(xhr);
-	        alert('잠시 후 다시 시도해주세요.');
-	    }
+	function updateList(){
+		let upperCategoryNo = $('.selected').data('uppercategoryno');
+	 	let lowerCategoryNo = $('#lower-category-list').val();
+	 	let filter =  $(".radio-filter:checked:first").val();
+	 	
+	 	$.ajax({
+	 		url : "/board/talents-test",
+	 		type : 'GET',
+	 		data : {upperCategoryNo : upperCategoryNo,
+	 			lowerCategoryNo : lowerCategoryNo,
+	 			filter : filter
+	 		},
+	 		dataType : 'json',
+	 		success : function(talentList){
+	 			 $('#defalut-list').empty();
+	 	            console.log(talentList);
+	 	           talentList.forEach(function(talent){
+	 	            	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
+	 	                $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
+	 	                $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
+	 	                $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
+	 	                $('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
+	 	                $('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
+	 	                $('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
+	 	                $('<span>').addClass('talent-bamboo-score').text(talent.bambooScore).appendTo(li);
+	 	                $('<img>').addClass('bamboo-imges').appendTo(li);
+	 	                li.click(function() {
+	 	                    location.href = '/talents/talent/' + talent.talentNo;
+	 	                });
+	 	            });
+		 	          /* 별점평균에 따라 나타내는 밤부 스코어 */
+		 	          $(function rivewImg() {
+		 	            var starImages = ['bamboo0.png', 'bamboo0.5.png', 'bamboo1.png', 'bamboo1.5.png', 'bamboo2.png', 
+		 	          	  'bamboo2.5.png', 'bamboo3.png', 'bamboo3.5.png', 'bamboo4.png', 'bamboo4.5.png', 'bamboo5.png'];
+		 	            $('.talent-bamboo-score').each(function(){
+		 	                var score = parseFloat($(this).text());
+		 	                if (score > 5) score = 5; // score가 5보다 크면 5로 고정
+		 	                var index;
+		 	                if (score == 0) {
+		 	                  index = 0;
+		 	                } else if (score == 0.5) {
+		 	                  index = 1;
+		 	                } else if (score == 1) {
+		 	                  index = 2;
+		 	                } else if (score == 1.5) {
+		 	                  index = 3;
+		 	                } else if (score == 2) {
+		 	                  index = 4;
+		 	                } else if (score == 2.5) {
+		 	                  index = 5;
+		 	                } else if (score == 3) {
+		 	                  index = 6;
+		 	                } else if (score == 3.5) {
+		 	                  index = 7;
+		 	                } else if (score == 4) {
+		 	                  index = 8;
+		 	                } else if (score == 4.5) {
+		 	                  index = 9;
+		 	                } else { // score가 5일 때
+		 	                  index = 10;
+		 	                }
+		 	                $(this).next('.bamboo-imges').attr('src', '../images/bambooScore/' + starImages[index]);
+		 	            });
+		 	          });
+	 		},
+	 	    error: function(xhr, status, error) {
+	 	        console.log(xhr);
+	 	        alert('잠시 후 다시 시도해주세요.');
+	 	    }
+	 	}); 
+	 	
+	 }		
+	 
+	$('.radio-filter').click(function(){	
+		updateList();
 	});
-}
-
-
-
-/* function onAjax(upperCategoryNo){
-    $.ajax({
-        url:"/board/update-talent-list-by-upper-category-no",
-        type: 'GET',
-        data: { upperCategoryNo: upperCategoryNo},
-        dataType:'json',
-        success:function(talentList){
-            $('#defalut-list').empty();
-            console.log(talentList);
-            talentList.forEach(function(talent){
-            	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
-            	$('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
-            	$('<span>').addClass('talent-title').text(talent.title).appendTo(li);
-            	$('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
-            	$('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
-            	$('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
-            	$('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
-            	$('<span>').addClass('avgScoreSpan').text(talent.bambooScore).appendTo(li);
-            	$('<img>').addClass('bamboo-score').appendTo(li);
-            	//$('<span>').text('만족도: ').appendTo(li);
-                li.click(function() {
-                    location.href = '/talent/talents/' + talent.talentNo;
-                });
-            });
-        }
-    });
-} */
-   
-
-
-$('#lower-category-list').on('change', function() { 
-	/* var lowerCategoryNo = $(this).val(); */
-	/* $.ajax({
-		url:"/board/update-talent-list-by-lower-category-no",
-        type: 'GET',
-		data: {lowerCategoryNo : lowerCategoryNo},
-		dataType:'json',
-		success:function(talentList){
-            $('#defalut-list').empty();
-            console.log(talentList);
-            talentList.forEach(function(talent){
-            	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
-                $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
-                $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
-                $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
-                $('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
-                $('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
-                $('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
-                $('<span>').addClass('talent-score').text(talent.bambooScore).appendTo(li);
-                li.click(function() {
-                    location.href = '/talent/talents/' + talent.talentNo;
-                });
-            });
-        }
-	}); */
-	talentList();
-});
-
-
-$(".radio-filter").on("click", function(){
-/* 	var filter = $(this).val();
-	console.log(filter);
-	$.ajax({
-		url : "/board/talentsList/" + filter,
-		type : 'GET',
-		data : {filter : filter},
-		dataType : 'json',
-		success : function(talentList){
-			 $('#defalut-list').empty();
-	            console.log(talentList);
-	            talentList.forEach(function(talent){
-	            	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
-	                $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
-	                $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
-	                $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
-	                $('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
-	                $('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
-	                $('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
-	                $('<span>').addClass('talent-score').text(talent.bambooScore).appendTo(li);
-	                li.click(function() {
-	                    location.href = '/talent/talents/' + talent.talentNo;
-	                });
-	            });
-		},
-	    error: function(xhr, status, error) {
-	        console.log(xhr);
-	        alert('잠시 후 다시 시도해주세요.');
-	    }
-	}); */
-	talentList();
-});
-	
-	
-	
-	
-	
-	
-	
-
- /* 별점평균에 따라 나타내는 밤부 스코어 */
-$(function rivewImg() {
-  var starImages = ['bamboo0.png', 'bamboo0.5.png', 'bamboo1.png', 'bamboo1.5.png', 'bamboo2.png', 
-	  'bamboo2.5.png', 'bamboo3.png', 'bamboo3.5.png', 'bamboo4.png', 'bamboo4.5.png', 'bamboo5.png'];
-  $('.avgScoreSpan').each(function(){
-      var score = parseFloat($(this).text());
-      if (score > 5) score = 5; // score가 5보다 크면 5로 고정
-      var index;
-      if (score == 0) {
-        index = 0;
-      } else if (score == 0.5) {
-        index = 1;
-      } else if (score == 1) {
-        index = 2;
-      } else if (score == 1.5) {
-        index = 3;
-      } else if (score == 2) {
-        index = 4;
-      } else if (score == 2.5) {
-        index = 5;
-      } else if (score == 3) {
-        index = 6;
-      } else if (score == 3.5) {
-        index = 7;
-      } else if (score == 4) {
-        index = 8;
-      } else if (score == 4.5) {
-        index = 9;
-      } else { // score가 5일 때
-        index = 10;
-      }
-      $(this).next('.bamboo-score').attr('src', '../images/bambooScore/' + starImages[index]);
-  });
-});
- 
-
-
-/* $(".radio-filter #lower-category-list .topCategoryList").on("click", function(){
-	var filter = $(this).val();
-	console.log(filter);
-	$.ajax({
-		url : "/board/talentsList",
-		type : 'GET',
-		data : {filter : filter,
-				upperCategoryNo : $('.selected').text(),
-				lowerCategoryNo : $('#lower-category-list').val()
-			   },
-		dataType : 'json',
-		success : function(talentList){
-			 $('#defalut-list').empty();
-	            console.log(talentList);
-	            talentList.forEach(function(talent){
-	            	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
-	                $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
-	                $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
-	                $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
-	                $('<span>').addClass('talent-seller').text(talent.sellerId).appendTo(li);
-	                $('<span>').addClass('talent-price').text(talent.bamboo).appendTo(li);
-	                $('<span>').addClass('talent-sale-price').text(talent.saleBamboo).appendTo(li);
-	                $('<span>').addClass('talent-score').text(talent.bambooScore).appendTo(li);
-	                li.click(function() {
-	                    location.href = '/talent/talents/' + talent.talentNo;
-	                });
-	            });
-		},
-	    error: function(xhr, status, error) {
-	        console.log(xhr);
-	        alert('잠시 후 다시 시도해주세요.');
-	    }
+	$('#lower-category-list').on('change', function() {
+		updateList();
 	});
-}); */
- 
+	
+	updateList();	
+	
+	
+	$('.topCategoryList').click(function(){
+		$('.topCategoryList').removeClass('selected');
+		$(this).addClass('selected');
+	// 중분류 카테고리 리스트 불러오기
+	 $.ajax({
+	   	url:"/board/categorys/lower-category-nos",
+	    type: 'GET',
+	   	data: {upperCategoryNo : $('.selected').data('uppercategoryno')},
+	   	dataType:'json',
+	   	success:function(lowerCategoryList){
+	   		console.log(lowerCategoryList);
+	   		$('#lower-category-list').empty();
+	   		$('#lower-category-list').append($('<option>').val('').text('==중분류 선택=='));
+	   		lowerCategoryList.forEach(function(lowerCategory){
+	   			$('#lower-category-list').append($('<option>').val(lowerCategory.categoryNo).text(lowerCategory.item));
+	   		});
+	   	 	updateList();
+	   	}
+	   });
+	});
+	
+
+
 </script>
 </body>
 </html>

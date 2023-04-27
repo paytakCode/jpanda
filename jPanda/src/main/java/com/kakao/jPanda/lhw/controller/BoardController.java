@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,13 +26,11 @@ public class BoardController {
 	
 	private final BoardService boardService;
 	
-	@GetMapping("/")
-	public String boardList(Model model) {
+	@GetMapping("")
+	public String boardView(Model model) {
 		System.out.println("Controller boardList Start");
-		List<Talent> talentList = boardService.findTalentList();
 		List<Notice> noticeList = boardService.findNoticeList();
 		List<Category> upperCategoryList = boardService.findUpperCategoryList();
-		model.addAttribute("talentList", talentList);
 		model.addAttribute("noticeList", noticeList);
 		model.addAttribute("upperCategoryList", upperCategoryList);
 		return "lhw/Board";
@@ -40,45 +39,26 @@ public class BoardController {
 	
 	// 중분류 카테고리를 불러오는 리스트
 	@ResponseBody
-	@GetMapping("/update-lower-category-list-by-upper-category-no") // /categorys?upper-category-no="{upperCategoryNo}"
-	public List<Category> lowerCategoryListByUpperCategoryNo(Long upperCategoryNo) {
+	@GetMapping("/categorys/lower-category-nos") 
+	public List<Category> lowerCategoryListByUpperCategoryNo(@RequestParam Long upperCategoryNo) {
 		System.out.println("Controller lowerCategoryListByUpperCategoryNo Start");
 		List<Category> lowerCategotyList = boardService.findLowerCategoryListByUpperCategoryNo(upperCategoryNo);
 		return lowerCategotyList;
 	}
 	
 	
-	// 대분류 카테고리를 눌렀을때 리스트
+	//재능 리스트 불러오기 (필터 통합)
 	@ResponseBody
-	@GetMapping("/update-talent-list-by-upper-category-no") 
-	public List<Talent> talentListByUpperCategoryNo(Long upperCategoryNo) {
-		System.out.println("Controller talentListByUpperCategoryNo Start");
-		List<Talent> talentList = boardService.findTalentListByUpperCategoryNo(upperCategoryNo);
-		return talentList;
-	}
-	
-	
-	// 중분류 카테고리 눌렀을때 리스트
-	@ResponseBody
-	@GetMapping("/update-talent-list-by-lower-category-no") 
-	public List<Talent> talentListByLowerCategoryNo(Long lowerCategoryNo){
-		System.out.println("Controller talentListByLowerCategoryNo Start");
-		List<Talent> talentList = boardService.findTalentListByLowerCategoryNo(lowerCategoryNo);
-		return talentList;
-	}
-	
-	// 재능 리스트 필터 기능
-	@ResponseBody
-	@GetMapping("/talentsList/")
-	public List<Talent> talentListByFilters(Filters filters, Model model){
-		System.out.println("Controller talentListByFilters Start");
+	@GetMapping("/talents-test")
+	public List<Talent> talentListTest(Filters filters){
+		System.out.println(filters.toString());
 		List<Talent> talentListByFilters = boardService.findTalentListByFilter(filters);
-		model.addAttribute("talentList", talentListByFilters);
+		/*
+		 * for(int i = 0; i <talentListByFilters.size(); i++) {
+		 * System.out.println(talentListByFilters.get(i).toString()); }
+		 */
 		return talentListByFilters;
 	}
-	
-	
-
 	
 	
 }
