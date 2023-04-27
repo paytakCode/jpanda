@@ -197,4 +197,35 @@ public class AdminDaoImpl implements AdminDao {
 		return refundList;
 	}
 
+	@Override
+	public int updateTalentRefundToSuccessByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto) {
+		log.info("TalentRefund Dao updateTalentRefundToSuccessByPurchaseNosAndStatus() start");
+		int result = 0;
+		
+		try {
+			result = sqlSession.update("updateTalentRefundToSuccessByPurchaseNosAndStatus", talentRefundDto);
+			
+		} catch(Exception e) {
+			log.info("TalentRefund Dao updateTalentRefundToSuccessByPurchaseNosAndStatus() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int updateTalentRefundToCompanionByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto) {
+		log.info("TalentRefund Dao updateTalentRefundToCompanionByPurchaseNosAndStarus() start");
+		int result = 0;
+		
+		try {
+			result = sqlSession.update("updateTalentRefundToCompanionByPurchaseNosAndStatus", talentRefundDto);
+		} catch(Exception e) {
+			log.info("TalentRefund Dao updateTalentRefundToCompanionByPurchaseNosAndStatus() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
 }

@@ -1,11 +1,9 @@
 package com.kakao.jPanda.yjh.controller;
 
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -232,16 +231,19 @@ public class AdminController {
 		
 		return "yjh/talent-refund";
 	}
-	
+	 
 	@ResponseBody
-	@PatchMapping(value = "/talent-refunds/{purchaseNo}")
-	public String talentRefundModifyToSuccessByPurchaseNos(@PathVariable("purchaseNo") List<String> purchaseNo,
-														   @RequestParam(name = "status") String status) {
+	@PatchMapping(value = "/talent-refunds/{purchaseNos}")
+	public int talentRefundModifyByPurchaseNosAndStatus(@PathVariable("purchaseNos") List<String> purchaseNo, 
+														   			@RequestBody List<TalentRefundDto> talentRefundDto)
+	{
 		log.info("TalentRefund Controller talentRefundModifyTosuccessByPurchaseNos() start");
 		log.info("purchaseNos : "+purchaseNo);
-		log.info("status : "+status);
+		log.info("Dto : "+talentRefundDto.toString());
 		
-		return "잘왔음";
+		int result = adminService.modifyTalentRefundByPurchaseNosAndStatus(talentRefundDto);
+				
+		return result;
 	}
 	
 }	

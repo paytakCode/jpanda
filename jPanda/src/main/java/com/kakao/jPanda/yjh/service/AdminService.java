@@ -32,5 +32,6 @@ public interface AdminService {
 	
 	//talent-refund
 	List<TalentRefundDto> findTalentRefund();
+	int modifyTalentRefundByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto);
 
 }

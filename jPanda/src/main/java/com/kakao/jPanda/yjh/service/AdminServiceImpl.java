@@ -245,4 +245,20 @@ public class AdminServiceImpl implements AdminService {
 		return refundList;
 	}
 
+	@Override
+	public int modifyTalentRefundByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto) {
+		log.info("Talent Refund Service modifyTalentRefundByPurchaseNosAndStatus() start");
+		int result = 0;
+		for(TalentRefundDto comparisonWithParam : talentRefundDto) {
+			if(comparisonWithParam.getStatus().equals("환불완료")) {
+				
+				
+				result = adminDao.updateTalentRefundToSuccessByPurchaseNosAndStatus(talentRefundDto);
+			} else {
+				result = adminDao.updateTalentRefundToCompanionByPurchaseNosAndStatus(talentRefundDto);
+			}
+		}
+		return result;
+	}
+
 }
