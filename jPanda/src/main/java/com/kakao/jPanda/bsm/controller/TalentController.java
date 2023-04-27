@@ -1,7 +1,8 @@
 package com.kakao.jPanda.bsm.controller;
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +16,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kakao.jPanda.bsm.domain.Category;
+import com.kakao.jPanda.bsm.domain.Notice;
+import com.kakao.jPanda.bsm.domain.Pager;
 import com.kakao.jPanda.bsm.domain.Talent;
+import com.kakao.jPanda.bsm.service.NoticeService;
 import com.kakao.jPanda.bsm.service.TalentService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,15 +28,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/talent")	
 public class TalentController {
-	private final TalentService service;
+	private final TalentService talentService;
+	private final NoticeService noticeService;
 	
 	// Test Main 페이지 이동
 	@GetMapping("/")
 	public String talentTest(Model model) {
-		List<Talent> bestSellerTalentList = service.findBestSellerTalents();
-		List<Talent> topRatedTalentList = service.findTopRatedTalents();
-		List<Talent> newTrendTalentList = service.findNewTrendTalents();
-		List<Talent> randomTalentList = service.findRandomTalents();
+		List<Talent> bestSellerTalentList = talentService.findBestSellerTalents();
+		List<Talent> topRatedTalentList = talentService.findTopRatedTalents();
+		List<Talent> newTrendTalentList = talentService.findNewTrendTalents();
+		List<Talent> randomTalentList = talentService.findRandomTalents();
 		
 		model.addAttribute("bestSellerTalent", bestSellerTalentList);
 		model.addAttribute("topRatedTalent", topRatedTalentList);
@@ -44,7 +49,7 @@ public class TalentController {
 	// 재능 등록 페이지 이동
 	@GetMapping("/write-form")
 	public String talenWritetForm(Model model) {
-		List<Category> categoryList = service.findCategorys();
+		List<Category> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		
 		return "bsm/talentWriteForm";
@@ -54,7 +59,7 @@ public class TalentController {
 	@ResponseBody
 	@PostMapping("/talent")
 	public String talentAdd(Talent talent) {
-		String result = service.addTalent(talent);
+		String result = talentService.addTalent(talent);
 		return result;
 	}
 	
@@ -62,14 +67,14 @@ public class TalentController {
 	@ResponseBody
 	@PutMapping("/talent")
 	public String talentModify(Talent talent) {
-		String result = service.modifyTalent(talent);
+		String result = talentService.modifyTalent(talent);
 		return result;
 	}
 	
 	// 이미지 서버 저장 후 상대 경로 반환
 	@PostMapping("/image-upload")
 	public ModelAndView talentImageUpload(MultipartHttpServletRequest request) {
-		ModelAndView modelAndView = service.talentImageUpload(request);
+		ModelAndView modelAndView = talentService.talentImageUpload(request);
 		
 		return modelAndView;
 	}
@@ -78,11 +83,32 @@ public class TalentController {
 	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
 	public String talentUpdateFrom(@PathVariable Long talentNo, Model model) { // @PathVariable
 		System.out.println(talentNo);
-		Talent talent = service.findTalentByTalentNo(talentNo);
-		List<Category> categoryList = service.findCategorys();
+		Talent talent = talentService.findTalentByTalentNo(talentNo);
+		List<Category> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("talent", talent);
 		return "bsm/talentUpdateForm";
 	}	
 	
+	@GetMapping("/notice") 
+	public String noticePage() {
+		return "notice";
+	}
+	
+	@ResponseBody
+	@GetMapping("/notice/notices")
+	public Map<String, Object> noticeListBySearchAndCurrentPage(Pager pager) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// service로 옮김
+		int totalCount = noticeService.findNoticeCountByPager(pager);
+		
+		pager.setTotalCount(totalCount);
+		
+		List<Notice> noticeList = noticeService.findNoticeListByPager(pager);
+		
+		map.put("noticeList", noticeList);
+		map.put("pager", pager);
+		
+		return map;
+	}
 }

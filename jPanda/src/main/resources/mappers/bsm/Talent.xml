@@ -26,10 +26,10 @@
 	
 	<select id="selectBestSellerTalents" resultType="Talent">
 		SELECT 	*
-		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		         FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
 		                             JOIN member m 				  ON t.seller_id = m.id
-		                             LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                             LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
 		                                              FROM      review 
 		                                              GROUP BY  talent_no) r 
 		                                                          ON t.talent_no = r.talent_no
@@ -43,10 +43,10 @@
 	
 	<select id="selectTopRatedTalents" resultType="Talent">
 		SELECT *
-		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		        FROM     talent t JOIN review r ON t.talent_no = r.talent_no
 		                          JOIN member m ON t.seller_id = m.id
-		                          LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                          LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
 		                                           FROM      review 
 		                                           GROUP BY  talent_no) r 
 		                                                        ON t.talent_no = r.talent_no
@@ -60,10 +60,10 @@
 	
 	<select id="selectNewTrendTalents" resultType="Talent">
 		SELECT   *        
-		FROM     (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		FROM     (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		          FROM     talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
 		                            JOIN member m                ON t.seller_id = m.id
-		                            LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                            LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
 		                                             FROM      review 
 		                                             GROUP BY  talent_no) r 
 		                                                         ON t.talent_no = r.talent_no
@@ -78,9 +78,9 @@
 	
 	<select id="selectRandomTalents" resultType="Talent">
 		SELECT  *
-		FROM    (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		FROM    (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		         FROM     talent t JOIN member m ON t.seller_id = m.id
-		                           LEFT OUTER JOIN (SELECT    talent_no, NVL(ROUND(AVG(bamboo_score), 1), 0) AS review_avg_score, NVL(COUNT(*), 0) AS review_count
+		                           LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
 		                                            FROM      review 
 		                                            GROUP BY  talent_no) r 
 		                                                        ON t.talent_no = r.talent_no

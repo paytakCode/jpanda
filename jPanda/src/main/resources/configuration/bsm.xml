@@ -8,5 +8,6 @@
   	<typeAliases>
     	<typeAlias alias="Category" type="com.kakao.jPanda.bsm.domain.Category"/>
     	<typeAlias alias="Talent" type="com.kakao.jPanda.bsm.domain.Talent"/>
+    	<typeAlias alias="Notice" type="com.kakao.jPanda.bsm.domain.Notice"/>
     </typeAliases>
 </configuration>
