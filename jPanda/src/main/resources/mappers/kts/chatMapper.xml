@@ -2,16 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chatMapper">
-	<select id="selectChatListById" parameterType="String" resultType="Chat">
-		SELECT *
-		FROM chat
+	<select id="selectChatMessageListByMemberId" parameterType="String" resultType="ChatMessage">
+		SELECT c.id, c.sender_id, m1.name AS sender_name, c.receiver_id, m2.name AS receiver_name, c.message, c.chat_date
+		FROM chat c 
+			JOIN member m1 ON(c.sender_id = m1.id) 
+			JOIN member m2 ON(c.receiver_id = m2.id)
 		WHERE receiver_id = #{id}
-			OR sender_id = #{id}	
+			OR sender_id = #{id}
 	</select>
 	
-	<select id="selectChatList" resultType="Chat">
-		SELECT *
-		FROM chat
+	<select id="selectPartnerListByMemberId" parameterType="String" resultType="Partner">	
+		SELECT DISTINCT(c.sender_id) as id, m.name
+		FROM chat c JOIN member m ON(c.sender_id = m.id)
+		WHERE c.receiver_id = #{id}
+        UNION
+        SELECT DISTINCT(c.receiver_id) as id, m.name
+		FROM chat c JOIN member m ON(c.receiver_id = m.id)
+		WHERE c.sender_id = #{id}
 	</select>
 	
 	<insert id="insertChat" parameterType="Chat">
@@ -19,4 +26,9 @@
 			chat(id, sender_id, receiver_id, message, chat_date) 
 			VALUES(chat_id_seq.nextval, #{senderId}, #{receiverId}, #{message}, #{chatDate})
 	</insert>
+	
+	<select id="selectMemberList" resultType="Member">
+		select *
+		FROM member
+	</select>
 </mapper>

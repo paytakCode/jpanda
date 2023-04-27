@@ -12,12 +12,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatMessage {
-	
+
 	@NotEmpty
 	private String senderId;
+	
+	@NotEmpty
+	private String senderName;
 
 	@NotEmpty
 	private String receiverId;
+	
+	@NotEmpty
+	private String receiverName;
 
 	@NotEmpty
 	private String message;
