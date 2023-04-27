@@ -9,16 +9,22 @@
 			JOIN member m2 ON(c.receiver_id = m2.id)
 		WHERE receiver_id = #{id}
 			OR sender_id = #{id}
+		ORDER BY c.chat_date ASC
 	</select>
 	
 	<select id="selectPartnerListByMemberId" parameterType="String" resultType="Partner">	
-		SELECT DISTINCT(c.sender_id) as id, m.name
-		FROM chat c JOIN member m ON(c.sender_id = m.id)
-		WHERE c.receiver_id = #{id}
-        UNION
-        SELECT DISTINCT(c.receiver_id) as id, m.name
-		FROM chat c JOIN member m ON(c.receiver_id = m.id)
-		WHERE c.sender_id = #{id}
+		SELECT * 
+		FROM
+			(
+			SELECT DISTINCT(c.sender_id) as id, m.name
+			FROM chat c JOIN member m ON(c.sender_id = m.id)
+			WHERE c.receiver_id = #{id}
+	        UNION
+	        SELECT DISTINCT(c.receiver_id) as id, m.name
+			FROM chat c JOIN member m ON(c.receiver_id = m.id)
+			WHERE c.sender_id = #{id}
+			)
+		ORDER BY name
 	</select>
 	
 	<insert id="insertChat" parameterType="Chat">
@@ -30,5 +36,6 @@
 	<select id="selectMemberList" resultType="Member">
 		select *
 		FROM member
+		ORDER BY name
 	</select>
 </mapper>
