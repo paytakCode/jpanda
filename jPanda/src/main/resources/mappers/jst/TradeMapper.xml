@@ -112,7 +112,7 @@
 		LEFT OUTER JOIN exchange e ON t.talent_no = e.talent_no
 		WHERE t.seller_id = #{memberId}
 		GROUP BY t.talent_no, t.status, t.reg_date ,t.sale_bamboo, t.title, t.sale_bamboo, e.status, t.status_date
-		ORDER BY reg_date desc
+		ORDER BY status_date desc
 	</select>
 	
 	<select id="selectTradeBuyListByMemberId" parameterType="String" resultType="TradeDto">
@@ -144,7 +144,7 @@
 		INNER JOIN bamboo_use u ON r.purchase_no = u.purchase_no
 		INNER JOIN talent t ON u.talent_no = t.talent_no
 		WHERE u.buyer_id = #{memberId}
-		ORDER BY r.submit_date desc
+		ORDER BY r.approve_date desc, r.submit_date desc
 	</select>
 	
 	<update id="updateExchangeStatusByTalentNo" parameterType="String">

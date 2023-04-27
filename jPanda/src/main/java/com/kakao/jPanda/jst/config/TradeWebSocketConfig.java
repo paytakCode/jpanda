@@ -6,7 +6,8 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import com.kakao.jPanda.jst.handler.ReplyEchoHandler;
+import com.kakao.jPanda.jst.handler.TradeWebSocketHandler;
+import com.kakao.jPanda.jst.handler.TradeWebSocketInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,17 +16,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TradeWebSocketConfig implements WebSocketConfigurer{
 	
-	private final ReplyEchoHandler replyEchoHandler;
+	private final TradeWebSocketHandler tradeWebSocketHandler;
+	private final TradeWebSocketInterceptor tradeWebSocketInterceptor;
 	
 	@Autowired
-	public TradeWebSocketConfig(ReplyEchoHandler replyEchoHandler) {
-		this.replyEchoHandler = replyEchoHandler;
+	public TradeWebSocketConfig(TradeWebSocketHandler tradeWebSocketHandler, TradeWebSocketInterceptor tradeWebSocketInterceptor) {
+		this.tradeWebSocketHandler = tradeWebSocketHandler;
+		this.tradeWebSocketInterceptor = tradeWebSocketInterceptor;
 	}
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		log.info("registerWebSocketHandlers");
-		registry.addHandler(replyEchoHandler, "/trade-ws");
+		registry.addHandler(tradeWebSocketHandler, "/trade-ws").addInterceptors(tradeWebSocketInterceptor);
 	}
 
 }//endClass

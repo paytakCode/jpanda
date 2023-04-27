@@ -20,7 +20,7 @@ import com.kakao.jPanda.jst.domain.TradeDto;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
-public class ReplyEchoHandler extends TextWebSocketHandler{
+public class TradeWebSocketHandler extends TextWebSocketHandler{
 	
 	//Session 관리를 위한 Map
 	private final Map<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
@@ -31,11 +31,17 @@ public class ReplyEchoHandler extends TextWebSocketHandler{
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		String memberId = session.getUri().getQuery();
+		String memberId = (String) session.getAttributes().get("memberId");
 		log.info("afterConnectionEstablished memberId : " +  memberId);
-		sessionMap.put(memberId, session);
+		if (memberId != null) {
+			sessionMap.put(memberId, session);
+		}
+		
+		sessionMap.forEach((key, value)->{
+			log.info("session map>> id : {} session : {}", key, value);
+		});
+		
 	}
-	
 	
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
@@ -58,7 +64,9 @@ public class ReplyEchoHandler extends TextWebSocketHandler{
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		super.afterConnectionClosed(session, status);
+		log.info("afterConnectionClosed removed memberId : {} session : {}", (String) session.getAttributes().get("memberId"),sessionMap.values().remove(session));
+		sessionMap.values().remove(session);
+		
 	}
 	
 	

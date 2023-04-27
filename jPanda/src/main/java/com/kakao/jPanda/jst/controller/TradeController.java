@@ -145,6 +145,15 @@ public class TradeController {
 		
 	}
 	
+	/**
+	 * TEST PAGE
+	 */
+	@GetMapping("/test")
+	public String test() {
+		
+		return "trade/adminTest";
+		
+	}
 
 	
 }//end class

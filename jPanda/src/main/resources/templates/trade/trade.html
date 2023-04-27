@@ -155,9 +155,10 @@
 	
 	.new-cards{
 		position: relative;
+		border : medium inset highlight;
 		animation: shake ease-in-out;
-		animation-duration: 0.3s;
-		animation-iteration-count: 15;
+		animation-duration: 0.4s;
+		animation-iteration-count: infinite;
 	}
 		
 	@keyframes shake {
@@ -168,6 +169,13 @@
 		100% { transform: translate(0, 0); }
 	}
 	
+	.update-dot{
+		position: relative;
+		border : medium inset highlight;
+		animation: shake ease-in-out;
+		animation-duration: 0.4s;
+		animation-iteration-count: infinite;
+	}
 	
 </style>
 </head>
@@ -196,7 +204,7 @@
 			<button class="filter-button" value="sell">판매</button>
 			<button class="filter-button" value="buy">구매</button>
 			<button class="filter-button" value="refund">환불</button>
-			<button class="btn btn-primary" id="test-btn" >테스트</button>
+			<button class="btn btn-primary" id="test-btn" style="float:right;">정훈씨 버튼</button>
 		</div> <!-- /filter-buttons -->
 			<div class = "content">
 		<!-- content -->
@@ -297,9 +305,7 @@ function getNow(){
  */
 
 //웹소켓 객체 생성
-let userId = [[${#httpSession.getAttribute('memberId')}]];
-console.log("userId : " + userId);
-let webSocket = new WebSocket("ws://localhost:8888/trade-ws?" + userId);
+let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
 
 webSocket.onopen = function(){
 	console.log("webSocket opened");
@@ -307,15 +313,20 @@ webSocket.onopen = function(){
 
 webSocket.onmessage = function(message){
 	console.log(message);
-	alert("거래정보가 갱신되었습니다.");
+	//추후에 구독알림식으로 변경
+	//alert("거래정보가 갱신되었습니다.");
 	
 	let tradeInfos = JSON.parse(message.data);
-	console.log(tradeInfos);
 	
 	updateList($('#selected-filter').val())
 		.then(function(){
 			$.each(tradeInfos, function(index, tradeInfo){
-				$('#talent-no-' + tradeInfo.talentNo).addClass('new-cards');
+				console.log("tradeInfo.listType : " + tradeInfo.listType);
+				let listType = tradeInfo.listType;
+				if(tradeInfo.listType == 'exchange'){
+					listType = 'sell';
+				}
+				updateAlarm(tradeInfo.listType, tradeInfo.talentNo, new Date().toISOString());
 			});
 		})
 		.catch(function(error){
@@ -329,7 +340,7 @@ webSocket.onclosed = function(){
 
 //소켓용 테스트 버튼
 $('#test-btn').on("click", function(){
-	let message =JSON.stringify([{memberId: 'test', talentNo: '103'}, {memberId: 'test', talentNo: '102'}, {memberId: 'test3', talentNo: '101'}, {memberId: 'test2', talentNo: '100'}]);
+	let message =JSON.stringify([{memberId: 'test', talentNo: '103', listType: 'sell'}, {memberId: 'test', talentNo: '102', listType: 'sell'}, {memberId: 'test', talentNo: '58', listType: 'refund'}]);
 	console.log("btn : " + message);
 	webSocket.send(message);
 	console.log("message sent");
@@ -573,12 +584,12 @@ function getSellList(item){
 	if(item.talentStatus === '게시중' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
 				'<button class="end-sell-btn btn btn-dark" id="sell-no-' + item.talentNo + '">판매종료</button></div>' + 
-				'</div><div class = "card-footer text-muted">판매등록날짜 : ' + item.regDate + '</div></div>';
+				'</div><div class = "card-footer text-muted">판매등록날짜 : ' + timestampToCustomFormat(item.regDate) + '</div></div>';
 	} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
 		text += '<div class = "card-text">' + 
 				'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">환전하기</button>' + 
 				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' + 
-				'</div><div class = "card-footer text-muted">판매종료날짜 : ' + item.statusDate + '</div></div>';
+				'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
 	} else if(item.exchangeStatus != null){
 		switch(item.exchangeStatus){
 			case '검토중':
@@ -596,10 +607,10 @@ function getSellList(item){
 				break;
 		}
 		
-		text += '</div><div class = "card-footer text-muted">판매종료날짜 : ' + item.statusDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
 
 	} else {
-		text += '</div><div class = "card-footer text-muted">판매등록날짜 : ' + item.statusDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">판매등록날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
 	}
 	
 	$('#list-print').append(text);
@@ -635,7 +646,7 @@ function getBuyList(item){
 		text += '';	
 	}
 	
-	text += '</div><div class = "card-footer text-muted">구매날짜 : ' + item.purchaseDate + '</div></div>';
+	text += '</div><div class = "card-footer text-muted">구매날짜 : ' + timestampToCustomFormat(item.purchaseDate) + '</div></div>';
 			
 	$('#list-print').append(text);		
 }
@@ -656,11 +667,11 @@ function getRefundList(item){
 			 
 			'</div>';
 	} else if(item.refundStatus === '환불완료'){
-		text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.refundSubmitDate +   
-			'</div><div class = "card-footer text-muted">승인날짜 : ' + item.refundApproveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + timestampToCustomFormat(item.refundSubmitDate) +   
+			'</div><div class = "card-footer text-muted">승인날짜 : ' + timestampToCustomFormat(item.refundApproveDate) + '</div></div>';
 	} else if(item.refundStatus === '반려'){
-		text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.refundSubmitDate +  
-			'</div><div class = "card-footer text-muted">반려날짜 : ' + item.refundApproveDate + '</div></div>';
+		text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + timestampToCustomFormat(item.refundSubmitDate) +  
+			'</div><div class = "card-footer text-muted">반려날짜 : ' + timestampToCustomFormat(item.refundApproveDate) + '</div></div>';
 	} else{
 		text += '</div></div>';
 	}
@@ -683,19 +694,17 @@ function updateList(listType){
 						$('#list-print').empty();
 						$.each(list, function(index, item){
 							if(item.listType === 'sell'){
-								item.regDate = timestampToCustomFormat(item.regDate);
-								item.statusDate = timestampToCustomFormat(item.statusDate);
 								getSellList(item);
+								updateAlarm(item.listType, item.talentNo, item.statusDate);
 							}
 							if(item.listType === 'refund'){
-								item.refundSubmitDate = timestampToCustomFormat(item.refundSubmitDate);
-								item.refundApproveDate = timestampToCustomFormat(item.refundApproveDate);
 								getRefundList(item);
+								updateAlarm(item.listType, item.talentNo, item.refundApproveDate);
 							}
 							if(item.listType === 'buy'){
-								item.purchaseDate = timestampToCustomFormat(item.purchaseDate);
 								getBuyList(item);
-							}	
+							}
+							
 						});
 						
 						resolve(list);
@@ -720,10 +729,32 @@ $('.filter-button').on("click", function(){
 	}
 	this.id = "selected-filter";
 	let listType = this.value;
-	console.log(status);
 	updateList(listType);
-
 });
+
+/**
+ * 새 거래 알림 멈춤
+ */
+$(document).on("click", '.new-cards',function(){
+	$(this).removeClass("new-cards");
+});
+
+$(document).on("mouseenter", '.update-dot', function(){
+	$(this).removeClass("update-dot");
+});
+
+/**
+ * update된 버튼과, 거래카드에 신규알림 표시
+ */
+function updateAlarm(listType, talentNo, time){
+	const now = new Date();
+	if(now.toISOString() <= time){
+		console.log("updateAlarm time : " + time);
+		console.log("now.toISOString() : " + now.toISOString());
+		$('.filter-button[value="' + listType + '"]').addClass('update-dot');
+		$('#talent-no-' + talentNo).addClass('new-cards');
+	}
+}
 </script>
 </body>
 </html>

@@ -143,9 +143,9 @@ public class TradeServiceImpl implements TradeService{
 		result = tradeDao.updateTalent(foundTalentDto);
 		
 		if (result > 0) {
-			return "재등록에 성공하였습니다.";
+			return "수정에 성공하였습니다.";
 		} else {
-			return "재등록 요청에 실패하였습니다.";
+			return "수정 요청에 실패하였습니다.";
 		}
 		
 	}
