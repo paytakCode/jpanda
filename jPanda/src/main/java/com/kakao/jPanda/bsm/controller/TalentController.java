@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -92,22 +93,29 @@ public class TalentController {
 	
 	@GetMapping("/notice") 
 	public String noticePage() {
-		return "notice";
+		return "bsm/notice";
 	}
 	
 	@ResponseBody
 	@GetMapping("/notice/notices")
-	public Map<String, Object> noticeListBySearchAndCurrentPage(Pager pager) {
+	public Map<String, Object> noticeListBySearchAndCurrentPage(@RequestParam String search, @RequestParam String currentPage) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// service로 옮김
+		Pager pager = new Pager();
+		pager.setSearch(search);
+		pager.setCurrentPage(Integer.parseInt(currentPage));
 		int totalCount = noticeService.findNoticeCountByPager(pager);
+		Pager pager1 = new Pager(search, Integer.parseInt(currentPage), totalCount);
+		System.out.println("totalCount - " + totalCount);
+		System.out.println("search - " + search);
+		System.out.println("currentPage - " + currentPage);
+		System.out.println("pager - " + pager);
+		System.out.println("pager1 - " + pager1);
 		
-		pager.setTotalCount(totalCount);
-		
-		List<Notice> noticeList = noticeService.findNoticeListByPager(pager);
+		List<Notice> noticeList = noticeService.findNoticeListByPager(pager1);
 		
 		map.put("noticeList", noticeList);
-		map.put("pager", pager);
+		map.put("pager", pager1);
 		
 		return map;
 	}

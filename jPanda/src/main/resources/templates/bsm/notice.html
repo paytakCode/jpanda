@@ -32,7 +32,7 @@
   		<a href="#3">거래관리</a>
   		<a href="#4">충전/내역</a>
   		<a href="#5">마이페이지</a>
-  		<a href="talent/notice">공지사항</a>
+  		<a href="/talent/notice">공지사항</a>
 	</div>
 	<h2 id="notice-main">공지사함</h2>
 	
@@ -49,30 +49,32 @@
 	
 	
 <script type="text/javascript">
-	//$(
+	$(function() {
+		alert("asdas");
 		function noticeChange(search, currentPage){
+		alert("noticeChange");
 			$.ajax({
-				url : "talent/notice/notice",
+				url : "/talent/notice/notices",
 				type : "GET",
 				data : {
 						search : search, 
 						currentPage : currentPage
-					   },
+				},
 				dataType: 'json',
 		          	success:function(data) {
-		          		$('#notice-list-ul')
+		          		console.log(data.noticeList);
+		          		console.log(data.pager);
 		          	}
-				
 			});
 		}
-		
+		noticeChange("s", 2);
 		$('#notice-search').on('click', function(){
 			noticeChange($('#search').val(), 1);
 		});
 		$('.notice-page').on('click', function(){
 			noticeChange($('#search').val(), $(this).text());
 		});
-	//);
+	});
 </script>
 
 </body>

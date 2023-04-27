@@ -9,7 +9,7 @@ public class Pager {
 	// 전체 페이지의 수
 	private int totalPage;
 	// 페이지당 글의 수
-	private int perPage;
+	private int perPage = 10;
 	// 전체 블럭의 수
 	private int totalBlock;
 	// 페이지당 블럭의 수
@@ -28,9 +28,12 @@ public class Pager {
 	private int startRow;
 	// 페이지의 마지막 행
 	private int endRow;
+	
+	public  Pager(String search, int currentPage, int totalCount) {
+		this.search = search;
+		this.currentPage = currentPage;
+		this.totalCount = totalCount;
 		
-	public void setTotalCount(int totalCount) {
-
 		startRow = (currentPage -1) * perPage + 1;
 		endRow = startRow + perPage - 1;				
 		totalPage = (int)Math.ceil((double)totalCount / perPage);
@@ -40,6 +43,8 @@ public class Pager {
 			lastNum = totalPage;
 		}
 	}
-
+	public  Pager() {
+		
+	}
 	
 }
