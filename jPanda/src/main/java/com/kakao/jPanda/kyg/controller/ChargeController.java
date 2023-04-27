@@ -100,6 +100,7 @@ public class ChargeController {
 		return checkedcouponUseDto;
 	}
 	
+	// 총보유밤부
 	@GetMapping(path = "/members/{memberId}/total-bamboo")
 	@ResponseBody
 	public String  totalBamboo(@PathVariable String memberId) {
@@ -115,7 +116,8 @@ public class ChargeController {
 		return foundTotalBambooStr;
 	}
 	
-	
+//	@ResponseBody
+//	@GetMapping(/recharge-details-container)
 	
 }
 	
