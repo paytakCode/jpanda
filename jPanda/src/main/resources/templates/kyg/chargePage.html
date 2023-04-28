@@ -235,7 +235,7 @@
 				    <tr>
 				      <th scope="row">1</th>
 				      <td>계좌이체</td>
-				      <td>130%</td>
+				      <td>140%</td>
 				    </tr>
 				    <tr>
 				      <th scope="row">2</th>
@@ -245,17 +245,17 @@
 				    <tr>
 				      <th scope="row">3</th>
 				      <td>신용카드</td>
-				      <td>120%</td>
+				      <td>140%</td>
 				    </tr>
 				    <tr>
 				      <th scope="row">4</th>
 				      <td>상품권</td>
-				      <td>110%</td>
+				      <td>120%</td>
 				    </tr>
 				    <tr>
 				      <th scope="row">5</th>
 				      <td>휴대폰</td>
-				      <td>110%</td>
+				      <td>120%</td>
 				    </tr>
 				    <tr>
 				      <th scope="row">6</th>
@@ -270,7 +270,8 @@
 
 					<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
 					아이디	: <input type="text" id = "charger-id" name="chargerId" required="required" value="qyyswylcav4"><p/>
-					충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/>
+					<!-- 충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/> -->
+					충전 밤부	: <input type="number" id = "charge-bamboo" name="chargeBamboo" required="required" value="5"><p/>
 					<p style="font-size:12px;">최소 입력금액은 5,000원이며, 결제금액이 0원인경우 결제가 되지 않습니다.</p>
 					
 					쿠폰 입력	: <input type="text" id = "coupon-no" name="couponNo" onchange="couponInsertOnChange()" placeholder="쿠폰입력">
@@ -308,10 +309,12 @@
 			    	할인 받은 금액 : <input type="number" id = "coupon-discount" name="couponDiscount" value="0" readonly="readonly">
 			    </li>
 			    <li>
-			    	적용 결제 금액 : <input type="number" id = "real-charge-money" name="realChargeMoney" value="5000" readonly="readonly">
+			    	<!-- 적용 결제 금액 : <input type="number" id = "real-charge-money" name="realChargeMoney" value="5000" readonly="readonly"> -->
+			    	충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/>
 			    </li>
 			    <li>
-			    	충전 예상 밤부 : <input type="number" id = "estimated-bamboo" name="estimatedBamboo" value="0" readonly="readonly">
+			    	<!-- 충전 예상 밤부 : <input type="number" id = "estimated-bamboo" name="estimatedBamboo" value="0" readonly="readonly"> -->
+			    	적용 결제 금액 : <input type="number" id = "real-charge-money" name="realChargeMoney" value="5000" readonly="readonly">
 			    </li>
 			    <li>
 			    	<button id="request-pay-button"  onclick="requestPay()">결제하기</button><br/>
@@ -341,8 +344,10 @@
 		}
 
 		
+		
+		
 		// 충전 예상 밤부 계산 후 client에 update 		
-		$(function(){
+		/* $(function(){
 			function updateEstimatedBamboo(){
 				
 				let chargeMoney = $('#charge-money').val();
@@ -373,7 +378,52 @@
 			$('input[name="paymentMethod"]').change(updateEstimatedBamboo);		
 
 			updateEstimatedBamboo();											
+		}); */
+		
+		
+		
+		
+		$(function(){
+			function updateEstimatedBamboo(){
+				
+				let chargeMoney = $('#charge-money').val();
+				let chargeBamboo = $('#charge-bamboo').val();
+				let realChargeMoney = $('#real-charge-money').val();
+				let paymentMethod = $('input[name="paymentMethod"]:checked').val();
+				let ratio = 1.2;
+				let estimatedBamboo = 0;
+				
+				if (paymentMethod == '휴대폰') {
+					ratio = 1.2;
+				} else if (paymentMethod == '상품권') {
+					ratio = 1.2;
+				} else if (paymentMethod == '무통장') { 			// 가상계좌 
+					ratio = 1.3;
+				} else if (paymentMethod == '신용카드') {
+					ratio = 1.4;
+				} else if (paymentMethod == '카드사 포인트') {
+					ratio = 1.0;
+				} else if (paymentMethod == '계좌이체') {
+					ratio = 1.4;
+				}
+				
+				realChargeMoney = Math.floor(chargeBamboo * 1000 / ratio);
+				$('#real-charge-money').val(realChargeMoney);
+				
+			}
+			
+			$('#charge-bamboo').on('input', updateEstimatedBamboo);				
+			$('input[name="paymentMethod"]').change(updateEstimatedBamboo);		
+
+			updateEstimatedBamboo();											
 		});
+		
+		
+		
+		
+		
+		
+		
 
 		
 		// 쿠폰입력 onchange 쿠폰입력시 사용가능쿠폰 자동 검증 후 결제기능 노출
