@@ -9,7 +9,18 @@ spring :
     url : jdbc:oracle:thin:@localhost:1521/xe
     username : jpanda
     password : jpanda
- 
+
+  mail:
+    host: smtp.gmail.com 
+    port: 587
+    username: najungbeen@gmail.com
+    password: fefqcnloayksimad
+    properties:
+      mail:
+        smtp:
+          auth: true 
+          starttls:
+            enable: true
   #HttpHiddenMethod
   mvc: 
     hiddenmethod:
@@ -18,7 +29,7 @@ spring :
 
 #myBatis
 mybatis: 
-  config-location: classpath:configuration/lhw.xml
+  config-location: classpath:configuration/yjh.xml
   mapper-locations: classpath:mappers/**/*.xml
 
 
