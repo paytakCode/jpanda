@@ -5,4 +5,12 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+  	
+  	<typeAliases>
+  		<typeAlias alias="Talent" type="com.kakao.jPanda.lhw.domain.Talent"/>
+  		<typeAlias alias="Notice" type="com.kakao.jPanda.lhw.domain.Notice"/>
+  		<typeAlias alias="Category" type="com.kakao.jPanda.lhw.domain.Category"/>
+  		<typeAlias alias="Review" type="com.kakao.jPanda.lhw.domain.Review"/>
+  		<typeAlias alias="Filters" type="com.kakao.jPanda.lhw.domain.Filters"/>
+  	</typeAliases>
 </configuration>

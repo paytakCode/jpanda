@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kakao.jPanda.yjh.NoticeMapper">
+	
+	<select id="selectNotice" resultType="Notice">
+		select 	* 
+		from 	notice
+	</select>
+
+	<insert id="insertNotice" parameterType="Notice">
+		insert 
+		into 	notice
+		values 	(#{noticeNo}, #{title}, #{content}, #{regDate})
+	</insert>
+	
+	<select id="selectNoticeByNoticeNo" parameterType="Long" resultType="Notice">
+		select 	* 
+		from 	notice
+		where 	notice_no = #{noticeNo}
+	</select>
+	
+	<update id="updateNotice" parameterType="Notice">
+		update 	notice
+		set 	title = #{title},
+				content = #{content},
+				reg_date = sysdate
+		where 	notice_no = #{noticeNo}
+	</update>
+	
+</mapper>
