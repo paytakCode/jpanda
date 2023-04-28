@@ -3,7 +3,7 @@ package com.kakao.jPanda.njb.domain;
 import lombok.Data;
 
 @Data
-public class Bank {
+public class BankDto {
 	private String name;
 	private String code;
 	

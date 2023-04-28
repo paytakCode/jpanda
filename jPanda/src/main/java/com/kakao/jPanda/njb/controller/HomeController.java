@@ -22,5 +22,9 @@ import lombok.RequiredArgsConstructor;
 	    	System.out.println("find start....");
 	    	return "njb/find";
 	    }
+	    @GetMapping("/mypage")
+	    public String myPage(Model model) {
+	    	return "njb/mypage";
+	    }
 	}
 

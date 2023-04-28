@@ -1,30 +1,29 @@
 package com.kakao.jPanda.njb.dao;
 
+import java.util.List;
 
+import com.kakao.jPanda.njb.domain.BankDto;
+import com.kakao.jPanda.njb.domain.MemberDto;
 
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Repository;
+public interface MemberDao {
 
-import com.kakao.jPanda.njb.domain.JoinDto;
-import com.kakao.jPanda.njb.domain.Member;
+	public void insertMember(MemberDto memberInfo);
 
-import lombok.RequiredArgsConstructor;
-
-@Repository
-@RequiredArgsConstructor    //
-public class MemberDao {
+	public List<BankDto> selectBankList();
 	
-	private final SqlSession sqlSession;
+	public int checkId(String id);
 
-	public void insertMember(JoinDto memberInfo) {
-		
-		sqlSession.insert("insertMember", memberInfo);
-		sqlSession.insert("insertAccount", memberInfo);
-	}
+	String findIdByNameAndEmail(String name, String email);
+	
+	String findPwByIdAndEmail(String id,String email);
 
-	public void insertMember(Member member) {
-		// TODO Auto-generated method stub
-		
-	}
+	public MemberDto login(MemberDto memberDto);
+
+	public MemberDto selectMember(String id);
+
+	public Object updatePasswordById(String id, String encryptedPassword);
+
+	public void deleteMemberById(String loginId, String encryptedPassword);
+
 	
 }	

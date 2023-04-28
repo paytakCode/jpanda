@@ -1,11 +1,17 @@
+<!--아이디찾기,비밀번호 찾기는 같은 페이지임
+	회원가입 누르면 회원가입 페이지로이동 
+  -->
 <!DOCTYPE html>
-<html lnag="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
 	<title>JPANDA 로그인</title>
 	<h1 align="center">JPANDA</h1>
 
 <meta charset="UTF-8">
+<script th:if="${alertMsg}" th:inline="javascript">
+    alert([[${alertMsg}]]); // 알람 창 띄우기
+</script>
 <style type="text/css">
 body{
     background-color: #f5f6f7;
@@ -90,50 +96,6 @@ a {
     border-bottom: 1px solid gainsboro;
     margin: 0px 10px 35px 10px;
 }
-/*로그인상태유지*/
-.stay-check{
-    margin-left: 7px;
-    float: left;
-}
-/*로그인상태유지 체크박스*/
-.stay-check input[type="checkbox"] {
-    /*기존 체크박스 숨기기*/
-    position: absolute;
-    width: 0px;
-    position: absolute;
-}
-.stay-check input[type="checkbox"] + label {
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    }
-.stay-check input[type="checkbox"] + label::before {
-    content: ' ';
-    display: inline-block;
-    width: 22px;
-    height: 22px;
-    line-height: 18px;
-    margin: -2px 8px 0 0;
-    text-align: center;
-    vertical-align: middle;
-    background: #fafafa;
-    border: 1px solid #cacece;
-    border-radius: 50%;
-    box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
-}
-.stay-check input[type="checkbox"]:checked + label::before {
-    content: '\2713';
-    color: white;
-    text-shadow: 1px 1px white;
-    background: #121211;
-    border-color: #121211;
-    box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
-}
-
 
 
 /*찾기 및 회원가입*/
@@ -192,22 +154,24 @@ a {
 
 		<!--로그인 부분-->
 		<section class="login-wrap">
+			<form action="/login" method="post">
+				<div class="login-id-wrap">
+					<input id="input-id" placeholder="아이디" name="id" type="text"></input>
+				</div>
+				<div class="login-pw-wrap">
+					<input id="input-pw" placeholder="비밀번호" name="password" type="password"></input>
+				</div>
+				<div class="login-btn-wrap">
+					<button type="submit" id="login-btn">로그인</button>
+				</div>
 
-			<div class="login-id-wrap">
-				<input id="input-id" placeholder="아이디" type="text"></input>
-			</div>
-			<div class="login-pw-wrap">
-				<input id="input-pw" placeholder="비밀번호" type="password"></input>
-			</div>
-			<div class="login-btn-wrap">
-				<button id="login-btn">로그인</button>
-			</div>
-			<div class="under-login">
+			</form>
+<!-- 			<div class="under-login">
 				<span class="stay-check">
 					<input id="stay-checkbox" type="checkbox"></input>
 					<label for="stay-checkbox" id="stay-text">로그인 상태 유지</label>
 				</span>
-			</div>
+			</div> -->
 
 		</section>
 
@@ -225,7 +189,7 @@ a {
 				</span>
 
 				<span class="sign-up">
-					<a href="/join" target="_blank"
+					<a href="/signup" target="_blank"
 						title="회원가입">회원가입</a>
 				</span>
 			</div>

@@ -6,15 +6,21 @@ import lombok.Data;
 
 
 @Data
-public class Member {
+public class MemberDto {
 	
 	private String id;
 	private String password;
 	private String name;
 	private String tel;
 	private String email;
+	private String birth;
 	private String gender;
 	private String status;
 	private String grade;
-	private String account;	
+	private String account;
+	private String code;
+	
+	private String year;
+	private String month;
+	private String day;
 }

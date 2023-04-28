@@ -1,6 +1,71 @@
+
+<!-- 
+	아이디찾기, 비밀번호 찾기 구현
+
+ -->
 <!DOCTYPE html>
-<html lnag="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+	$('#login-btn').click(function() {
+		  $.ajax({
+		    url: '/login',
+		    type: 'GET',
+		    success: function(response) {
+				location.href='/login';
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) {
+		      console.log('Error: ' + errorThrown);
+		    }
+		  });
+		});
+});
+	 $(document).ready(function(){
+      $("#find-id-btn").click(function(){
+        var name  = $("#input-name").val();
+        var email = $("#input-id-email").val();
+
+         $.ajax({
+            type: "GET",
+            url: "/findid?name=" + name + "&email=" + email,
+            success:function(result){
+                    $("#find-id-result").text(result);
+                   	
+            },
+            error: function(result){
+                console.log(result);
+            	$("#find-id-result").text(result.responseText);
+                
+               
+
+            }
+        });
+    });
+}); 
+
+	$(document).ready(function(){
+   	 $("#find-pw-btn").click(function(){
+  	       var id  = $("#input-id").val();
+     	   var email = $("#input-pw-email").val();
+
+        $.ajax({
+            type: "get",
+            url: "/findpw?id=" + id + "&email=" + email,
+            success:function(result){
+              	$("#find-pw-result").text(result);                
+        	    }
+            error: function(result){
+            console.log(result);
+        	$("#find-id-result").text(result.responseText);
+        }
+       	 });
+  	  });
+});
+</script>
+
+
 <style type="text/css">
 body{
     background-color: #f5f6f7;
@@ -21,7 +86,7 @@ a {
     text-align: center;
 	margin-top: 20px;
 }
-.login-id-wrap{
+.find-id-wrap{
 
     margin: 0px 10px 8px 10px;
     padding: 10px;
@@ -32,20 +97,33 @@ a {
     border: none;
     outline:none;
     width:100%;
+}#input-name{
+    border: none;
+    outline:none;
+    width:100%;
 }
-.login-pw-wrap{
+.find-pw-wrap{
 
     margin: 0px 10px 8px 10px;
     padding: 10px;
     border: solid 1px #dadada;
     background: #fff;
 }
-#input-pw{
+#input-id-email ,#input-pw-email{
     border: none;
     outline:none;
     width:100%;
 }
 .login-btn-wrap{
+	height: 52px;
+    line-height: 55px;
+    margin: 0px 10px 8px 10px;
+    border: solid 1px rgba(0,0,0,.1);
+    background-color: black;
+    color: #fff;
+    cursor: pointer;
+}
+.find-btn-wrap{
     height: 52px;
     line-height: 55px;
     margin: 0px 10px 8px 10px;
@@ -54,7 +132,16 @@ a {
     color: #fff;
     cursor: pointer;
 }
-#login-btn{
+#find-id-btn{
+    width:100px;
+    background-color: black;
+    border: none;
+    color:#fff;
+    font-size: 14px;
+    outline:none;
+    cursor: pointer;
+}
+#find-pw-btn,#login-btn{
     width:100px;
     background-color: black;
     border: none;
@@ -80,36 +167,39 @@ a {
     	<div class="main">
 		<h2 align="center">JPANDA</h2>
 		<!--로그인 부분-->
-		<section class="login-wrap">
+		<section class="find-wrap">
 
-			<div class="login-id-wrap">
-				<input id="input-id" placeholder="이름" type="text"></input>
+			<div class="find-id-wrap">
+				<input id="input-name" placeholder="이름" type="text"></input>
 			</div>
-			<div class="login-pw-wrap">
-				<input id="input-pw" placeholder="이메일" type="password"></input>
+			<div class="find-id-wrap">
+				<input id="input-id-email" placeholder="이메일" type="text"></input>
 			</div>
-			<div class="login-btn-wrap">
-				<button type="button" id="login-btn">아이디찾기</button>
+			<div class="find-btn-wrap">
+				<button type="button" id="find-id-btn">아이디찾기</button>
 			</div>
 		</section>
   	 <span>
-    "아이디 찾기시 아이디 들어갈곳."
- 	 </span>
+  	 	                	<div id="find-id-result"></div>
+  	 </span>
 	
-    		<section class="login-wrap">
+    		<section class="find-wrap">
 
-			<div class="login-id-wrap">
-				<input id="input-id" placeholder="아이디" type="text"></input>
-			</div>
-			<div class="login-pw-wrap">
-				<input id="input-pw" placeholder="이메일" type="password"></input>
-			</div>
-			<div class="login-btn-wrap">
-				<button id="login-btn">비밀번호 찾기</button>
-			</div>
-		</section>
+				<div class="find-pw-wrap">
+					<input id="input-id" placeholder="아이디" type="text"></input>
+				</div>
+				<div class="find-pw-wrap">
+					<input id="input-pw-email" placeholder="이메일" type="text"></input>
+				</div>
+				<div class="find-btn-wrap">
+					<button type="button" id="find-pw-btn">비밀번호 찾기</button>
+				</div>
+				<div class="login-btn-wrap">
+					<button type="button" id="login-btn">로그인</button>
+				</div>
+			</section>
    	 <span>
-    "비밀번호 찾기시 비밀번호 들어갈곳"
+  	 	                	<div id="find-pw-result"></div>
    	 </span>
 
 

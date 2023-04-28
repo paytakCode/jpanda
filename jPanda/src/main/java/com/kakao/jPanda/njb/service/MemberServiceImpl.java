@@ -1,14 +1,17 @@
 package com.kakao.jPanda.njb.service;
 
+
+
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.kakao.jPanda.njb.dao.BankDao;
 import com.kakao.jPanda.njb.dao.MemberDao;
-import com.kakao.jPanda.njb.domain.Bank;
-import com.kakao.jPanda.njb.domain.JoinDto;
-import com.kakao.jPanda.njb.domain.Member;
+
+
+import com.kakao.jPanda.njb.domain.BankDto;
+import com.kakao.jPanda.njb.domain.MemberDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,27 +19,81 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 	
-	private final MemberDao md;
-	private final BankDao bd;
-	@Override
-	public void joinMember(Member member) {
-		
-		md.insertMember(member);
-
-	}
-
-	@Override
-	public List<Bank> getBankList() {
-		
-		return bd.getBankList();
-	}
-
-	@Override
-	public void joinMember(JoinDto memberInfo) {
-//		memberInfo.setBirth(memberInfo.getYear() + "/" + memberInfo.getMonth() + "/" + memberInfo.getDay());
-		md.insertMember(memberInfo);		
-	}
-
+	private final MemberDao memberDao;
 
 	
+	@Override
+	public List<BankDto> selectBankList() {
+		
+		return memberDao.selectBankList();
+	}
+
+	@Override
+	public void joinMember(MemberDto memberInfo) {
+
+	    String encryptedPassword = PasswordEncryptor.encrypt(memberInfo.getPassword()); // 비밀번호 암호화
+	    memberInfo.setPassword(encryptedPassword); // 암호화된 비밀번호로 설정
+		memberDao.insertMember(memberInfo);		
+	}
+
+	@Override
+	public int checkId(String id) {
+		
+		return memberDao.checkId(id);
+	}
+
+	@Override
+	public String findPwByIdAndEmail(String id, String email) {
+
+		return memberDao.findPwByIdAndEmail(id, email);
+	
+	}
+
+	@Override
+	public String findIdByNameAndEmail(String name, String email) {
+		
+		return memberDao.findIdByNameAndEmail(name, email);
+	
+	}
+
+	@Override
+	public boolean login(MemberDto memberDto) {
+		
+	    String encryptedPassword = PasswordEncryptor.encrypt(memberDto.getPassword()); // 비밀번호 암호화
+	    memberDto.setPassword(encryptedPassword);
+		MemberDto loginMemberDto = memberDao.login(memberDto);
+  
+		System.out.println(loginMemberDto);
+		if(loginMemberDto != null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	@Override
+	public MemberDto selectMember(String id) {
+
+		
+			return memberDao.selectMember(id);
+		
+	}
+
+	@Override
+	public void updatePasswordById(String id, String newPw) {
+
+	    	String encryptedPassword = PasswordEncryptor.encrypt(newPw); // 비밀번호 암호화
+			
+	    	memberDao.updatePasswordById(id,encryptedPassword);
+	}
+
+	@Override
+	public void withdrawal(String loginId, String password) {
+	    String encryptedPassword = PasswordEncryptor.encrypt(password); // 비밀번호 암호화
+	    memberDao.deleteMemberById(loginId,encryptedPassword);
+	    
+			
+	}
+	
 }
+

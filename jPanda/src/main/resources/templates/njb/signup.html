@@ -1,3 +1,23 @@
+
+
+
+<!-- 
+	아이디중복체크 기능 구현완료
+	비밀번호는 아작스로 그자리에서 확인
+	생년월일 입력시 hidden 된 인풋에 입력되고 그거로 넘김
+	이메일인증기능 아직. DB수정필요
+	
+
+
+
+
+
+
+ -->
+
+
+
+
 <!DOCTYPE html>
 <html lnag="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -26,15 +46,18 @@
       });
     });
     
-    $(document).ready(function() {
+    
+    
+    
+     $(document).ready(function() {
         // 중복 체크 버튼 클릭 이벤트 처리
         $("#id-check").click(function() {
             var id = $("#signup-id").val(); // 입력된 아이디 값 가져오기
 
             // Ajax 요청 보내기
             $.ajax({
-                type: "POST", // 요청 방식 (POST, GET 등)
-                url: "/checkId", // 서버의 URL
+                type: "GET", // 요청 방식 (POST, GET 등)
+                url: "/members/id/id", // 서버의 URL
                 data: { id: id }, // 전송할 데이터 (아이디 값 전달)
                 success: function(response) {
                     if (response.result === "fail") {
@@ -48,10 +71,9 @@
                 }
             });
         });
-    });
+    }); 
     
-    
-  </script>
+    </script>
 ​<script type="text/javascript">
 	function addBirth() {
     	const year = document.getElementById('signup-birth-yy').value;
@@ -69,11 +91,6 @@
     	const birthText = year + month + day;
     	birth.value = birthText;
 	}
-    function showAlert(result) {
-        alert(result); // 결과를 알림창에 출력
-    }
-
-
 </script>
 <style type="text/css">
 .main-signup{
@@ -258,7 +275,7 @@ h3{
         <header>
         </header>
         <section class="signup-wrap">
-        <form action="/join" method="post">
+        <form action="/members/signup" method="post">
                 <!--아이디,비번,비번재확인-->
                 <h3>아이디</h3>
                 	<div style="display: flex;">
@@ -340,12 +357,15 @@ h3{
                         <input id="signup-email" type="text" placeholder="이메일 입력" name="email"></input>
                     </span>
                     <span class="echeck-btn-wrap">
-                        <button id="echeck-btn">이메일 인증</button>
+                        <button type="button" id="echeck-btn">이메일 인증</button>
                     </span>
                 </div>
                 
-                <span class="signup-input-c" style="margin-top: 10px;">
-                    <input id="signup-echeck" type="text" placeholder="인증번호 입력하세요"></input>
+                <span class="signup-input" style="margin-top: 10px;">
+                    <input id="signup-echeck" type="text" name="emailverification" placeholder="인증번호 입력하세요"></input>
+                </span>
+                <span class="echeck-btn-wrap">
+                        <button type="button" id="echeck-btn">인증확인</button>
                 </span>
             </div>
             <div>
@@ -373,7 +393,7 @@ h3{
             <div>
                 <!--가입하기-->
                 <div class="signup-btn-wrap">
-                    <button type="submit" id="signup-btn">가입하기</button>
+                    <button type="submit" id="signup-btn" onclick="submitForm()">가입하기</button>
                 </div>
             </div>
             </form>
