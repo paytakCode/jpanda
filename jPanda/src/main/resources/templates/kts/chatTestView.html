@@ -209,7 +209,7 @@
 			method: "GET",
 			dataType : "json",
 			success: function(chatMessageList) {
-				
+				console.log("chatMessageList =>" + chatMessageList);
 				$("#chat-content").empty();
 				
 				chatMessageList.forEach((chatMessage, index) => {
@@ -281,6 +281,7 @@
 			contentType : "application/json",
 			dataType : "json",
 			success: function(result) {
+				console.log("result =>" + result);
 		   	    stompClient.send("/direct/" + selectedChat, {}, message);
 		   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				return result;
@@ -299,6 +300,7 @@
 				method: "GET",
 				dataType : "json",
 				success: function(partnerList) {
+					console.log("partnerList =>" + partnerList);
 					partnerList.forEach((partner, index) => {
 						let chatPartnerElem = $("<button>");
 						chatPartnerElem.text(partner.name);
@@ -336,6 +338,7 @@
 			method: "GET",
 			dataType : "json",
 			success: function(memberList) {
+				console.log("memberList =>" + memberList);
 				memberList.forEach((member, index) => {
 					let memberElem = $("<option>");
 					memberElem.text(member.name);
