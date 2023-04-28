@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.ProjectTest.NoticeMapper">
+	<select id="selectNoticeCountByPager" resultType="int" parameterType="RegistPager">
+		SELECT 	COUNT(*)
+		FROM	notice
+		<if test="search != '' and search != null">
+			WHERE	title LIKE '%' || #{search} || '%'
+			OR 	contains(content,'%' || #{search} || '%') > 0
+		</if>
+		
+	</select>
+	<select id="selectNoticesByPager" resultType="RegistNotice" parameterType="RegistPager">
+	SELECT 	*
+	FROM 	(SELECT	ROWNUM rn, n.*
+			 FROM	(SELECT	  * 
+			 		 FROM 	  notice 
+			 		 ORDER BY reg_date DESC) n
+			 <if test="search != '' and search != null">
+			 WHERE 	n.title LIKE '%' || #{search} || '%' 
+			 OR 	contains(n.content,'%' || #{search} || '%') > 0
+			)
+			 </if>
+	WHERE  	rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 
+		create index notice_content_index  on notice(content)
+		indextype is ctxsys.context; 
+		LONG타입 LIKE사용 불가라 인덱스 생성 후 contains사용해야 가능
+	-->
+</mapper>

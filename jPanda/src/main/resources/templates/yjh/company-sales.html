@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="/js/jquery.js"></script>
+<link th:href="@{/css/board.css}" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+</head>
+<body>
+	<h1>(주)재능판다 매출 현황</h1>
+		<input type="date" class="start-period"> ~ 
+		<input type="date" class="end-period" oninput="callData()">
+	
+	<div id="chartContainer" style="width: 900px; height: 900px;">
+		<!--차트가 그려질 부분-->
+		<canvas id="myChart">
+			
+		</canvas>
+	</div>
+</body>
+<script type="text/javascript">
+	window.onload = function() {
+		const ctx = document.getElementById('myChart').getContext('2d');
+		const myChart = new Chart(ctx, {
+			type : 'bar', //bar,line,pie,doughnut,radar
+			//labels : x축의 값
+			//datasets : data의 값, 속성들 지정
+			data : {
+				labels : [ '기간을 입력해주세요.' ],
+				datasets : [ {
+					label : '매출 현황',
+					data : 0,
+					backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)' ],
+					borderColor : [ 'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)' ],
+					borderWidth : 3
+				} ]
+			},
+			options : {
+				scales : {
+					y : {
+						beginAtZero : true
+					}
+				}
+			}
+		});
+
+	}
+
+	function callData() {
+		$("#myChart").remove();
+		$("#chartContainer").append('<canvas id="myChart"></canvas>');
+
+		const startPeriod = $(".start-period");
+		const startPeriodValue = startPeriod.val();
+
+		const endPeriod = $(".end-period");
+		const endPeriodValue = endPeriod.val();
+
+		const startDate = startPeriodValue.split("-").join("");
+		const endDate = endPeriodValue.split("-").join("");
+
+		if (!startDate) {
+			alert("시작일을 입력해주세요");
+			location.href="/admin/company-sales";
+			$(".start-period").focus();
+			return false;
+		}
+		$.ajax({
+				url : "/admin/company-sales/years",
+				type : "GET",
+				data : {startDate : startDate,
+						endDate : endDate
+						},
+				success : function(csList) {
+						var bcCountList = [];
+						var periodList = [];
+						var exCountList = [];
+
+						$.each(csList, function() {
+							bcCountList.push(this["bcCount"])
+							periodList.push(this["period"])
+							exCountList.push(this["exCount"])
+						})
+						
+						const ctx = document.getElementById('myChart').getContext('2d');
+						const myChart = new Chart(ctx, {
+							type : 'bar', //bar,line,pie,doughnut,radar
+							//labels : x축의 값
+							//datasets : data의 값, 속성들 지정
+							data : {
+								labels : periodList,
+								datasets : [ 
+								{
+									label : 'BambooPoint 판매 매출 현황',
+									data : bcCountList,
+									backgroundColor : [
+											'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderColor : [ 'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderWidth : 3
+								},
+								
+ 								{
+									label : '환전 수수료 수익 현황',
+									data : exCountList,
+									backgroundColor : [
+											'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderColor : [ 'rgba(255, 99, 132, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 206, 86, 0.2)' ],
+									borderWidth : 3
+								} 
+							  ]
+							},
+							options : {
+								scales : {
+									y : {
+										beginAtZero : true
+									}
+								}
+							}
+						});
+					}
+				});
+	}
+</script>
+</html>

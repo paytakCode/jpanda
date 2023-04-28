@@ -6,10 +6,23 @@ spring :
   #Oracle Setting
   datasource : 
     driver-class-name : oracle.jdbc.driver.OracleDriver
-    url : jdbc:oracle:thin:@localhost:1521/orcl
+    url : jdbc:oracle:thin:@localhost:1521/xe
     username : jpanda
     password : jpanda
- 
+
+
+  mail:
+    host: smtp.gmail.com 
+    port: 587
+    username: najungbeen@gmail.com
+    password: fefqcnloayksimad
+    properties:
+      mail:
+        smtp:
+          auth: true 
+          starttls:
+            enable: true
+
   #HttpHiddenMethod
   mvc: 
     hiddenmethod:
@@ -18,7 +31,6 @@ spring :
 
 #myBatis
 mybatis: 
-  config-location: classpath:configuration/configuration.xml
+  config-location: classpath:configuration.xml
   mapper-locations: classpath:mappers/**/*.xml
-
 

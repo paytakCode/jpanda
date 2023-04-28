@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+ 
+  
+<head>
+	<link rel="canonical" href="https://getbootstrap.kr/docs/5.2/examples/headers/" />
+	<link href="/css/common-layout.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container-fluid">
+	<th:block layout:fragment="style"></th:block>
+	
+	<th:block th:replace="/common/fragment/header :: headerFragment"></th:block>
+	<th:block th:replace="/common/fragment/nav :: navFragment"></th:block>
+
+    <div layout:fragment="content">
+        공통 레이아웃
+    </div>
+
+	<th:block th:replace="/common/fragment/footer :: footerFragment"></th:block>
+	
+</div>
+</body>
+</html>
