@@ -5,6 +5,7 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+    
   	<typeAliases>
   		<!-- 관리자 페이지 -->
   		<typeAlias alias="Notice" type="com.kakao.jPanda.yjh.domain.NoticeDto"/>
@@ -35,6 +36,13 @@
     	<typeAlias alias="RegistNotice" type="com.kakao.jPanda.bsm.domain.Notice"/>
     	<typeAlias alias="RegistPager" type="com.kakao.jPanda.bsm.domain.Pager"/>
 		<typeAlias alias="RegistTalent" type="com.kakao.jPanda.bsm.domain.Talent"/>    	
+      
+		<!-- 채팅 -->
+		<typeAlias type="com.kakao.jPanda.kts.domain.Chat" alias="Chat"/>
+		<typeAlias type="com.kakao.jPanda.kts.domain.ChatMessage" alias="ChatMessage"/>
+		<typeAlias type="com.kakao.jPanda.kts.domain.Partner" alias="ChatPartner"/>
+		<typeAlias type="com.kakao.jPanda.kts.domain.Member" alias="ChatMember"/>
+
   	</typeAliases>
-  	
+    
 </configuration>
