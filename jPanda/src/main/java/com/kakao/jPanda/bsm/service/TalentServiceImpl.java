@@ -1,9 +1,19 @@
 package com.kakao.jPanda.bsm.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -70,11 +80,11 @@ public class TalentServiceImpl implements TalentService{
 		System.out.println("MainController.image() 서버에 저장될 파일 이름 -> " + newFileName);
 
 		// 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
-		String realPath = request.getServletContext().getRealPath("/talentImage/");
+		String realPath = request.getServletContext().getRealPath("");
 		System.out.println("MainController.image() 현재 파일 경로 -> " + realPath);
 
 		// 현재경로/talentImage/파일명이 저장 경로
-		String savePath = realPath + newFileName;
+		String savePath = realPath + "../resources/static/image/uploadImage/" + newFileName;
 		System.out.println("MainController.image() 파일 저장 경로 + 파일 이름 -> " + savePath);
 		
 		// 해당 파일 경로에 폴더가 없을시 폴더 생성
@@ -84,21 +94,34 @@ public class TalentServiceImpl implements TalentService{
 			fileDirectory.mkdirs();
 		}
 		
-		String uploadPath = "/talentImage/" + newFileName; 
+		String uploadPath = "/image/uploadImage/" + newFileName; 
 		System.out.println("MainController.image() 경로 출력 -> " + uploadPath);
 
 		// 저장 경로로 파일 객체 생성
 		File file = new File(savePath);
-
+		
 		// 파일 업로드
 		try {
 			uploadFile.transferTo(file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// uploaded, url 값을 modelandview를 통해 보냄
+		
+//		try {
+//			String staticUpload = "/path/to/static/folder/" + newFileName;
+//			Resource resource = new UrlResource(staticUpload);
+//			
+//			mav.addObject("url", ResponseEntity.ok()
+//					.contentType(MediaType.IMAGE_JPEG)
+//					.body(new InputStreamResource(resource.getInputStream())));
+//			
+//		} catch (Exception e) {
+//		}
+		
+		
+		// uploaded, url 값을 Modelandview를 통해 보냄
 		mav.addObject("uploaded", true); // 업로드 완료
-		mav.addObject("url", uploadPath); // 업로드 파일의 경로 
+		mav.addObject("url", uploadPath); // 업로드 완료
 
 		return mav;
 	}

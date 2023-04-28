@@ -73,6 +73,7 @@ public class TalentController {
 	}
 	
 	// 이미지 서버 저장 후 상대 경로 반환
+	@ResponseBody
 	@PostMapping("/image-upload")
 	public ModelAndView talentImageUpload(MultipartHttpServletRequest request) {
 		ModelAndView modelAndView = talentService.talentImageUpload(request);

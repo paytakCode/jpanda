@@ -28,4 +28,5 @@ public class FileUploadConfig {
    	MappingJackson2JsonView jsonView() {
    		return new MappingJackson2JsonView();
    	}
+   	
 }

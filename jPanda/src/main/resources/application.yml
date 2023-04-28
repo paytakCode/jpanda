@@ -9,7 +9,6 @@ spring :
     url : jdbc:oracle:thin:@localhost:1521/xe
     username : jpanda
     password : jpanda
- 
   #HttpHiddenMethod
   mvc: 
     hiddenmethod:
@@ -20,4 +19,5 @@ spring :
 mybatis: 
   config-location: classpath:configuration/bsm.xml
   mapper-locations: classpath:mappers/bsm/*.xml
+
 

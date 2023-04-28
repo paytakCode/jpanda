@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
+
+.container{
+	margin: 0 auto;
+	width: 1000px;
+}
 .navbar {
   	display: flex; /* flexbox로 설정 */
   	justify-content: space-around; /* 링크 간 간격 일정하게 유지 */
@@ -24,14 +29,27 @@
 
 #notice-list-div {
 	margin: 0 auto;
-	width: 800px;
+	width: 600px;
 	
+}
+#notice-main{
+	margin-left: 100px;
 }
 .notice{
   display: inline-block;
 }
+.notice-no{
+	width: 40px;
+}
+.notice-title{
+	width: 340px;
+	margin-right: 100px;
+}
+.notice-reg-date{
+	width: 90px;
+}
 p {
-	margin: 5px;
+	margin: 0 5px;
 }
 li{
 	list-style: none;
@@ -40,12 +58,13 @@ ul {
 	padding: 0px;
 }
 hr {
-	margin: 0 2px;
+	margin: 2 0px;
 }
 </style>
 </head>
 <script src="/js/jquery.js"></script>
 <body>
+	<div class="container">
 	<div class="navbar">
 		<a href="/talent/write-form">재능 등록</a>
   		<a href="#2">판매게시판</a>
@@ -54,19 +73,27 @@ hr {
   		<a href="#5">마이페이지</a>
   		<a href="/talent/notice">공지사항</a>
 	</div>
-	<h2 id="notice-main">공지사함</h2>
+	<h2 id="notice-main">공지사항</h2>
 	
 	<div id="notice-list-div">
-	<p class="notice notice-head">제목</p><p class="notice notice-head">내용</p><p  class="notice notice-head">게시일</p>
+	<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-head">게시일</p>
 	<hr>
 		<ul id="notice-list-ul">
 			<li>
-				<p class="notice notice-title">제목</p><p class="notice notice-content">내용</p><p class="notice notice-reg-date">게시일</p>
+				<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-reg-date">게시일</p>
+				<hr>
+			</li>
+			<li>
+				<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-reg-date">게시일</p>
+				<hr>
+			</li>
+			<li>
+				<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-reg-date">게시일</p>
 				<hr>
 			</li>
 		</ul>
 	</div>
-	
+	</div> <!-- class="container" -->
 	
 	
 	
