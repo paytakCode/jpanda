@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- mapUnderscoreToCamelCase Setting -->
+	<settings>
+    	<setting name="mapUnderscoreToCamelCase" value="true"/>
+  	</settings>
+  	<!-- typeAliases -->
+  	<typeAliases>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TalentDto" alias="TalentDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeDto" alias="TradeDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeSearchDto" alias="TradeSearchDto"/>
+	</typeAliases>
+</configuration>
