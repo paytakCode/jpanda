@@ -28,11 +28,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket' // websocket
 	implementation 'org.springframework:spring-messaging' // stomp
 	implementation 'org.webjars:sockjs-client' // socketJS
-	implementation 'org.webjars:jquery' // jquery
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
 	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.5.1'
-
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'

@@ -43,7 +43,7 @@ public class TradeController {
 		HttpSession session = request.getSession();
 		log.info("TradeController memberId check : " + memberId);
 		session.setAttribute("memberId", memberId);
-		return "redirect:/trade/";
+		return "redirect:/trade";
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class TradeController {
 		log.info("statList id check : " + memberId);
 		List<StatDto> statList = tradeService.findStatListByMemberId(memberId);
 		model.addAttribute("statList", statList);
-		return "trade/trade";
+		return "jst/trade";
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class TradeController {
 	@GetMapping("/loginForm")
 	public String loginForm(Model model) {
 		log.info("loginForm called");
-		return "trade/loginForm";
+		return "jst/loginForm";
 	}
 	
 	/**
@@ -151,7 +151,7 @@ public class TradeController {
 	@GetMapping("/test")
 	public String test() {
 		
-		return "trade/adminTest";
+		return "jst/adminTest";
 		
 	}
 

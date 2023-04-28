@@ -42,6 +42,12 @@
 		<typeAlias type="com.kakao.jPanda.kts.domain.ChatMessage" alias="ChatMessage"/>
 		<typeAlias type="com.kakao.jPanda.kts.domain.Partner" alias="ChatPartner"/>
 		<typeAlias type="com.kakao.jPanda.kts.domain.Member" alias="ChatMember"/>
+		
+		<!-- 거래게시판 -->
+		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TalentDto" alias="TradeTalentDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeDto" alias="TradeDto"/>
+  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeSearchDto" alias="TradeSearchDto"/>
 
   	</typeAliases>
     

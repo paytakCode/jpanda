@@ -42,13 +42,13 @@
 		WHERE purchase_no = #{purchaseNo}
 	</delete>
 	
-	<select id="selectTalentByTalentNo" parameterType="String" resultType="TalentDto">
+	<select id="selectTalentByTalentNo" parameterType="String" resultType="TradeTalentDto">
 		SELECT *
 		FROM talent
 		WHERE talent_no = #{talentNo} 
 	</select>
 	
-	<insert id="insertExchangeByTalentNo" parameterType="TalentDto">
+	<insert id="insertExchangeByTalentNo" parameterType="TradeTalentDto">
 		<selectKey keyProperty="exchangeNo" order="BEFORE" resultType="Long">
 			SELECT exchange_seq.nextval
 			FROM dual
@@ -153,7 +153,7 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
-	<update id="updateTalent" parameterType="TalentDto">
+	<update id="updateTalent" parameterType="TradeTalentDto">
 		UPDATE talent
 		SET
 			talent_no = #{talentNo},
@@ -173,147 +173,4 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
-	
-	
 </mapper>
-
-<!-- 이전 코드 -->
-
-<!-- 	<select id="findSellListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
-		<![CDATA[
-			SELECT
-				talent_no
-			FROM talent
-			WHERE seller_id = #{userId}
-			AND status_date >= #{standardTime}
-		]]>
-	</select>
-	
-	<select id="findExchangeListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
-		<![CDATA[
-			SELECT
-				talent_no as exchange_talent_no
-			FROM exchange
-			WHERE id = #{userId}
-			AND approve_date >= #{standardTime}
-		]]>
-	</select>
-	
-	<select id="findRefundListByTradeSearchDto" parameterType="TradeSearchDto" resultType="TradeDto">
-		<![CDATA[
-			SELECT
-				b.talent_no as bamboo_use_talent_no
-			FROM talent_refund r
-			INNER JOIN bamboo_use b ON r.purchase_no = b.purchase_no 
-			WHERE buyer_id = #{userId}
-			AND approve_date >= #{standardTime}
-		]]>
-	</select> -->
-
-<!--
-	<select id="selectTradeListByParaMap" resultType="TradeDto" parameterType="Map">
-		SELECT
-		    t.status as talent_status, 
-		    t.title, 
-		    t.sale_bamboo, 
-		    TO_CHAR(t.reg_date,'yy-mm-dd') as REG_DATE,
-		    (SELECT count(*) FROM bamboo_use u WHERE u.talent_no = t.talent_no) AS sell_Count,
-		    TO_CHAR(u.purchase_date,'yy-mm-dd') as PURCHASE_DATE,
-		    TRUNC(sysdate) - TRUNC(u.purchase_date) AS REFUNDABLE_DATE,
-		    r.status AS refund_status, 
-		    TO_CHAR(r.submit_date,'yy-mm-dd') as REFUND_SUBMIT_DATE, 
-		    TO_CHAR(r.approve_date,'yy-mm-dd') as REFUND_APPROVE_DATE,
-		    u.buyer_id,
-		    t.seller_id,
-		    t.talent_no,
-		    r.purchase_no as refund_purchase_no,
-		    e.status as exchange_status,
-		    u.use_bamboo
-		FROM talent t
-		LEFT JOIN bamboo_use u ON t.talent_no = u.talent_no
-		LEFT JOIN talent_refund r ON u.purchase_no = r.purchase_no
-		LEFT JOIN exchange e on e.talent_no = t.talent_no
-		<choose>
-			<when test="tradeListDto.listType == 'buy'">
-				WHERE u.buyer_id = #{memberId}
-				AND r.status IS NULL
-			</when>
-			<when test="tradeListDto.listType == 'refund'">
-				WHERE u.buyer_id = #{memberId}
-				AND r.status IS NOT NULL
-			</when>
-			<when test="tradeListDto.listType == 'sell'">
-				WHERE t.seller_id = #{memberId}
-			</when>
-			<when test="tradeListDto.listType == 'all'">
-				WHERE u.buyer_id = #{memberId}
-				AND r.status IS NULL
-				OR u.buyer_id = #{memberId}
-				AND r.status IS NOT NULL
-				OR t.seller_id = #{memberId}
-			</when>
-		</choose>
-		ORDER BY reg_date DESC	
-	</select>
-
- 	<select id="selectSellList" parameterType="String" resultType="SellListDto">
-		SELECT 
-			t.status, t.title, t.sale_bamboo, 
-			t.reg_date, 
-			(SELECT count(*) FROM bamboo_use bu WHERE bu.talent_no = t.talent_no) AS sell_Count
-		FROM talent t
-		WHERE t.seller_id = #{memberId}
-		ORDER BY t.reg_date desc
-	</select>
-	
-	<select id="selectBuyList" parameterType="String" resultType="BuyListDto">
-		SELECT
-			t.title, t.sale_bamboo, u.purchase_date,
-		    TRUNC(sysdate) - TRUNC(u.purchase_date) as "REFUNDABLE_DATE"
-		FROM talent t
-		INNER JOIN bamboo_use u
-		    ON t.talent_no = u.talent_no
-		LEFT OUTER JOIN talent_refund r
-		    ON r.purchase_no = u.purchase_no  
-		WHERE u.buyer_id = #{memberId}
-		AND r.status IS null
-		ORDER BY u.purchase_date DESC
-	</select>
-	
-	<select id="selectRefundList" parameterType="String" resultType="RefundListDto">
-		SELECT
-			r.status, t.title, t.sale_bamboo,
-			r.submit_date, r.approve_date
-		FROM talent_refund r
-		INNER JOIN bamboo_use b
-		ON r.purchase_no = b.purchase_no
-		INNER JOIN talent t
-		ON b.talent_no = t.talent_no
-		WHERE b.buyer_id = #{memberId}
-		ORDER BY r.submit_date desc
-	</select>
-	
-	<select id="selectAllList" parameterType="String" resultType="TradeListDto">
-		SELECT
-		    t.status, 
-		    t.title, 
-		    t.sale_bamboo, 
-		    t.reg_date, 
-		    (SELECT count(*) FROM bamboo_use bu WHERE bu.talent_no = t.talent_no) AS sell_Count,
-		    u.purchase_date, 
-		    TRUNC(sysdate) - TRUNC(u.purchase_date) AS "REFUNDABLE_DATE",
-		    r.status AS refund_status, 
-		    r.submit_date, 
-		    r.approve_date,
-		    u.buyer_id,
-		    t.seller_id
-		FROM talent t
-		LEFT JOIN bamboo_use u ON t.talent_no = u.talent_no
-		LEFT JOIN talent_refund r ON u.purchase_no = r.purchase_no
-		WHERE u.buyer_id = #{memberId}
-		AND r.status IS NULL
-		OR u.buyer_id = #{memberId}
-		AND r.status IS NOT NULL
-		OR t.seller_id = #{memberId}
-		ORDER BY reg_date DESC
-	</select> -->
