@@ -31,5 +31,5 @@ spring :
 mybatis: 
   config-location: classpath:configuration/yjh.xml
   mapper-locations: classpath:mappers/**/*.xml
- 
+
 
