@@ -18,7 +18,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	private final BoardDao boardDao;
 	
-	// 노티스 리스트 
+	// 공지사항 리스트 
 	@Override
 	public List<Notice> findNoticeList() {
 		List<Notice> list = boardDao.selectNoticeList();

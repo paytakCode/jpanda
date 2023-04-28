@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +25,7 @@ public class BoardController {
 	
 	private final BoardService boardService;
 	
+	// 공지사항 리스트와 대분류 카테고리 리스트 불러오기
 	@GetMapping("")
 	public String boardView(Model model) {
 		System.out.println("Controller boardList Start");
@@ -49,7 +49,7 @@ public class BoardController {
 	
 	//재능 리스트 불러오기 (필터 통합)
 	@ResponseBody
-	@GetMapping("/talents-test")
+	@GetMapping("/talents-list")
 	public List<Talent> talentListTest(Filters filters){
 		System.out.println(filters.toString());
 		List<Talent> talentListByFilters = boardService.findTalentListByFilter(filters);
