@@ -73,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
 		int result = adminDao.updateNotice(notice);
 		
 		if(result > 0) {
-			resultStr = "<script>alert('공지사항 수정이 완료되었습니다.'); location.href='/admin/notice'; </script>";
+			resultStr = "<script>alert('공지사항 수정이 완료되었습니다.'); location.href='/admin/notices'; </script>";
 		} else {
 			resultStr = "<script>alert('공지사항 수정 오류'); history.back(); </script>";
 		}

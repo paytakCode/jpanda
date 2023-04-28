@@ -29,7 +29,7 @@ spring :
 
 #myBatis
 mybatis: 
-  config-location: classpath:configuration/yjh.xml
+  config-location: classpath:configuration.xml
   mapper-locations: classpath:mappers/**/*.xml
  
 
