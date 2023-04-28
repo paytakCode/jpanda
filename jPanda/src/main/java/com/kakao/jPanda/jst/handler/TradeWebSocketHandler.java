@@ -72,25 +72,3 @@ public class TradeWebSocketHandler extends TextWebSocketHandler{
 	
 	
 }//end class
-
-//이전 코드
-
-//List<TradeDto> resultList = new ArrayList<>();
-//sessionMap.keySet().forEach(key ->{
-//	for (TradeDto tradeDto : tradeDtoList) {
-//		if (key.equals(tradeDto.getMemberId())) {
-//			resultList.add(tradeDto);
-//			tradeDtoList.remove(tradeDto);
-//		}
-//	}
-//	log.info("handleMessage resultList.size() : " + resultList.size());
-//	String resultMemberId = resultList.get(0).getMemberId();
-//	log.info("handleMessage resultMemberId : " + resultMemberId);
-//	
-//	try {
-//		sessionMap.get(resultMemberId).sendMessage(new TextMessage(objectMapper.writeValueAsString(resultList)));
-//	} catch (IOException e) {
-//		e.printStackTrace();
-//	}
-//	
-//});

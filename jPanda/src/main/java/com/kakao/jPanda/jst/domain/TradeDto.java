@@ -74,5 +74,4 @@ public class TradeDto {
 		//TradeMapper.xml selectTradeListByParaMap
 	private String refundableDate;
 	
-	
 }

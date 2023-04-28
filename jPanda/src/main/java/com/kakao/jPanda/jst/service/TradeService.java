@@ -27,17 +27,3 @@ public interface TradeService {
 	String modifyExchangeStatusByTalentNo(String talentNo);
 	
 }
-
-
-//이전 코드
-
-//CompletableFuture<List<TradeDto>> tradeChangeListener(TradeSearchDto tradeSearchDto);
-
-//List<SellListDto> getSellList(String memberId);
-//
-//List<BuyListDto> getBuyList(String memberId);
-//
-//List<RefundListDto> getRefundList(String memberId);
-//
-//List<TradeListDto> getAllList(String memberId);
-//

@@ -9,16 +9,6 @@ import com.kakao.jPanda.jst.domain.TradeDto;
 
 public interface TradeDao {
 
-//	List<SellListDto> getSellListById(String memberId);
-//
-//	List<BuyListDto> getBuyListById(String memberId);
-//
-//	List<RefundListDto> getRefundListById(String memberId);
-//
-//	List<TradeListDto> getAllListById(String memberId);
-//	
-	
-
 	List<TradeDto> selectTradeListByParaMap(Map<String, Object> paraMap);
 
 	int updateTalentStatusByTalentNo(String talentNo);
@@ -48,11 +38,3 @@ public interface TradeDao {
 	int updateTalent(TalentDto talentDto);
 
 }//end class
-
-//이전코드
-
-//List<TradeDto> findSellListByTradeSearchDto(TradeSearchDto tradeSearchDto);
-//
-//List<TradeDto> findExchangeListByTradeSearchDto(TradeSearchDto tradeSearchDto);
-//
-//List<TradeDto> findRefundListByTradeSearchDto(TradeSearchDto tradeSearchDto);
