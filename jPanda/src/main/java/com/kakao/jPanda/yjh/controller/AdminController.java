@@ -1,7 +1,9 @@
 package com.kakao.jPanda.yjh.controller;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.yjh.domain.CompanySalesDto;
+import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
@@ -133,6 +136,7 @@ public class AdminController {
 	 * 	view에서 완료와 반려 버튼에 따라 각각 다른 상태가 업데이트 되게 구현
 	 * 	코드를 조금 더 간결하게 통합 후 수정 예정
 	 */
+	@ResponseBody
 	@PutMapping(value = "/exchange")
 	public String exchangeModifyByExchangeNos(@RequestParam(name = "exchangeNo") String[] exchangeNoArray, @RequestParam String status) {
 		log.info("Exchange Controller exchangeModifyByExchangeNos() start");
@@ -140,16 +144,18 @@ public class AdminController {
 		for(int i = 0; i < exchangeNoArray.length; i++) {
 			log.info("exchangeNoArray : "+exchangeNoArray[i]);
 		}
+		String returnStr = adminService.modifyExchangeStatusByExchangeNos(exchangeNoArray, status);
 		
-		adminService.modifyExchangeStatusByExchangeNos(exchangeNoArray, status);
-		
-		return "redirect:/admin";
+		return returnStr;
 	}
 
 	//coupon
 	@GetMapping(value = "/coupons-form")
-	public String couponsForm() {
+	public String couponsList(Model model) {
 		log.info("Coupon Controller couponsForm() start");
+		List<CouponDto> couponList = adminService.findCouponsExpired();
+		
+		model.addAttribute("couponList", couponList);
 		
 		return "yjh/createCoupon";
 	}
@@ -171,12 +177,26 @@ public class AdminController {
 	 * 	쿠폰 기간에 대한 논의가 부족해서 쿠폰 생성일과 사용기한을 우선 sysdate로 구현
 	 * 	통합 후 사용기한에 대한 논의 후 관련 로직 추가 예정
 	 */
-	@PostMapping(value = "/coupons") 
-	public String couponAdd(@RequestParam(name = "couponValue") String couponValue, @RequestParam(name = "couponNo") String couponNo) {
+	@ResponseBody
+	@PostMapping(value = "/coupons/{couponNo}") 
+	public Map<String, Integer> couponAdd(@PathVariable("couponNo") String couponNo, @RequestBody CouponDto couponDto) {
 		log.info("Coupon Controller couponAdd() start");
-		adminService.addCoupon(couponValue, couponNo);
+		log.info("couponDto : "+couponDto.toString());
 		
-		return "redirect:/admin";
+//		int result = adminService.addCoupon(couponDto);
+		
+		Map<String, Integer> returnMap = new HashMap<String, Integer>();
+		int valid = 0;
+		
+		if(couponDto.getCouponValue() == null) {
+			valid = -1;
+		} else {
+			valid = adminService.addCoupon(couponDto);
+		}
+		
+		returnMap.put("valid", valid);
+		
+		return returnMap;
 	}
 	
 	//company-sales
@@ -247,7 +267,7 @@ public class AdminController {
 	@ResponseBody
 	@PatchMapping(value = "/talent-refunds/{purchaseNos}")
 	public int talentRefundModifyByPurchaseNosAndStatus(@PathVariable("purchaseNos") List<String> purchaseNo, 
-														   			@RequestBody List<TalentRefundDto> talentRefundDto)
+														@RequestBody List<TalentRefundDto> talentRefundDto)
 	{
 		log.info("TalentRefund Controller talentRefundModifyTosuccessByPurchaseNos() start");
 		log.info("purchaseNos : "+purchaseNo);

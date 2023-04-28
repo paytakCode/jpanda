@@ -19,11 +19,12 @@ public interface AdminDao {
 	//exchange
 	List<ExchangeDto> selectExchange();
 	ExchangeDto selectExchangeByExchangeNo(Long exchangeNo);
-	void updateExchange(ExchangeDto exchange);
+	int updateExchange(ExchangeDto exchange);
 	
 	//coupon
+	List<CouponDto> selectCouponsExpired();
 	List<CouponDto> findCouponList();
-	void insertCoupon(CouponDto coupon);
+	int insertCoupon(CouponDto coupon);
 	
 	//company-sales
 	List<CompanySalesDto> selectCompanyByDDDate(CompanySalesDto companySalesDto);

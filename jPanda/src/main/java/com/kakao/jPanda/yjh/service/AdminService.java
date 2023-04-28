@@ -3,6 +3,7 @@ package com.kakao.jPanda.yjh.service;
 import java.util.List;
 
 import com.kakao.jPanda.yjh.domain.CompanySalesDto;
+import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
@@ -17,11 +18,12 @@ public interface AdminService {
 	
 	//exchange
 	List<ExchangeDto> findExchange();
-	void modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status);
+	String modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status);
 	
 	//coupon
+	List<CouponDto> findCouponsExpired();
 	String generateCouponNo();
-	void addCoupon(String couponValue, String couponNo);
+	int addCoupon(CouponDto couponDto);
 	
 	//company-sales
 	List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(String startDate, String endDate);
