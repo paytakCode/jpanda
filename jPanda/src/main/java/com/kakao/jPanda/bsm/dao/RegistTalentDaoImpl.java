@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @Transactional
 @RequiredArgsConstructor
-public class TalentDaoImpl implements TalentDao{
+public class RegistTalentDaoImpl implements TalentDao{
 	private final SqlSession session;
 	@Override
 	public List<Category> selectCategorys() {

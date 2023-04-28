@@ -7,16 +7,16 @@
   	</settings>
   	<typeAliases>
   		<!-- 관리자 페이지 -->
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.NoticeDto" alias="Notice"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.ExchangeDto" alias="Exchange"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.CouponDto" alias="Coupon"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.TalentDto" alias="Talent"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.CompanySalesDto" alias="CompanySales"/>
-  		<typeAlias type="com.kakao.jPanda.yjh.domain.TalentRefundDto" alias="TalentRefund"/>
+  		<typeAlias alias="Notice" type="com.kakao.jPanda.yjh.domain.NoticeDto"/>
+  		<typeAlias alias="Exchange" type="com.kakao.jPanda.yjh.domain.ExchangeDto"/>
+  		<typeAlias alias="Coupon" type="com.kakao.jPanda.yjh.domain.CouponDto"/>
+  		<typeAlias alias="Talent" type="com.kakao.jPanda.yjh.domain.TalentDto"/>
+  		<typeAlias alias="CompanySales" type="com.kakao.jPanda.yjh.domain.CompanySalesDto"/>
+  		<typeAlias alias="TalentRefund" type="com.kakao.jPanda.yjh.domain.TalentRefundDto"/>
   		
   		<!-- 로그인, 회원가입, 마이페이지 -->
-		<typeAlias type="com.kakao.jPanda.njb.domain.MemberDto" alias="MemberDto"/>
-  		<typeAlias type="com.kakao.jPanda.njb.domain.BankDto" alias="BankDto"/>
+		<typeAlias alias="MemberDto" type="com.kakao.jPanda.njb.domain.MemberDto"/>
+  		<typeAlias alias="BankDto" type="com.kakao.jPanda.njb.domain.BankDto"/>
   		
   		<!-- 판매게시판 -->
 		<typeAlias alias="BoardTalent" type="com.kakao.jPanda.lhw.domain.Talent"/>
@@ -29,6 +29,12 @@
   		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
 		<typeAlias alias="ChargeCouponUseDto" type="com.kakao.jPanda.kyg.domain.CouponUseDto"/>
 		<typeAlias alias="ChargeCouponDto" type="com.kakao.jPanda.kyg.domain.CouponDto"/>
+		
+		<!-- 판매등록, 메인페이지 -->
+		<typeAlias alias="RegistCategory" type="com.kakao.jPanda.bsm.domain.Category"/>
+    	<typeAlias alias="RegistNotice" type="com.kakao.jPanda.bsm.domain.Notice"/>
+    	<typeAlias alias="RegistPager" type="com.kakao.jPanda.bsm.domain.Pager"/>
+		<typeAlias alias="RegistTalent" type="com.kakao.jPanda.bsm.domain.Talent"/>    	
   	</typeAliases>
   	
 </configuration>

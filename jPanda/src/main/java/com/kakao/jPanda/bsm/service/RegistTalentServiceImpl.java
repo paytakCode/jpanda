@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TalentServiceImpl implements TalentService{
+public class RegistTalentServiceImpl implements TalentService{
 	private final TalentDao talentDao;
 	
 	@Override
@@ -106,18 +106,6 @@ public class TalentServiceImpl implements TalentService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-//		try {
-//			String staticUpload = "/path/to/static/folder/" + newFileName;
-//			Resource resource = new UrlResource(staticUpload);
-//			
-//			mav.addObject("url", ResponseEntity.ok()
-//					.contentType(MediaType.IMAGE_JPEG)
-//					.body(new InputStreamResource(resource.getInputStream())));
-//			
-//		} catch (Exception e) {
-//		}
-		
 		
 		// uploaded, url 값을 Modelandview를 통해 보냄
 		mav.addObject("uploaded", true); // 업로드 완료

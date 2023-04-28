@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.oracle.ProjectTest.TalentMapper">
-	<insert id="insertTalent" parameterType="Talent">
+	<insert id="insertTalent" parameterType="RegistTalent">
 		<!-- 더미 테이터 떄문에 시퀀스x MAX사용 -->
 		<!-- SELECT talent_seq.NEXTVAL FROM dual -->
 		INSERT INTO talent 
@@ -11,20 +11,20 @@
 				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
 	</insert>
 	
-	<select id="selectTalentBytalentNo" resultType="Talent" parameterType="Long">
+	<select id="selectTalentBytalentNo" resultType="RegistTalent" parameterType="Long">
 		SELECT 	* 
 		FROM 	talent 
 		WHERE 	talent_no = #{talentNo}
 	</select>
 	
-	<update id="updateTalent" parameterType="Talent">
+	<update id="updateTalent" parameterType="RegistTalent">
 		UPDATE 	talent 
 		SET 	upper_category_no = #{upperCategoryNo}, lower_category_no = #{lowerCategoryNo}, main_img = #{mainImg},
 				title = #{title}, content = #{content}, bamboo = #{bamboo}, sale_bamboo = #{saleBamboo}, summary = #{summary}
 		WHERE 	talent_no = #{talentNo}
 	</update>
 	
-	<select id="selectBestSellerTalents" resultType="Talent">
+	<select id="selectBestSellerTalents" resultType="RegistTalent">
 		SELECT 	*
 		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		         FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
@@ -41,7 +41,7 @@
 		WHERE ROWNUM BETWEEN 1 AND 5
 	</select>
 	
-	<select id="selectTopRatedTalents" resultType="Talent">
+	<select id="selectTopRatedTalents" resultType="RegistTalent">
 		SELECT *
 		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		        FROM     talent t JOIN review r ON t.talent_no = r.talent_no
@@ -58,7 +58,7 @@
 		WHERE  ROWNUM BETWEEN 1 AND 5
 	</select>
 	
-	<select id="selectNewTrendTalents" resultType="Talent">
+	<select id="selectNewTrendTalents" resultType="RegistTalent">
 		SELECT   *        
 		FROM     (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		          FROM     talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
@@ -76,7 +76,7 @@
 		WHERE 	 ROWNUM BETWEEN 1 AND 5
 	</select>
 	
-	<select id="selectRandomTalents" resultType="Talent">
+	<select id="selectRandomTalents" resultType="RegistTalent">
 		SELECT  *
 		FROM    (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		         FROM     talent t JOIN member m ON t.seller_id = m.id
