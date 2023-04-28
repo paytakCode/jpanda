@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 public class Notice {
-	private Long noticeNo;
-	private String title;
-	private String content;
-	private Timestamp regDate;
+	private Long 		noticeNo;
+	private String 		title;
+	private String 		content;
+	private Timestamp 	regDate;
 }

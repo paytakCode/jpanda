@@ -23,7 +23,7 @@ public class FileUploadConfig {
         resolver.setResolveLazily(true);
         return resolver;
     }
-	// 에디터5
+	// 에디터5 이미지 업로드
    	@Bean
    	MappingJackson2JsonView jsonView() {
    		return new MappingJackson2JsonView();

@@ -19,8 +19,8 @@ public class Talent {
 	private String 	regDate;
 	private String 	statusDate;
 	
-	private String name;
-	private double reviewAvgScore;
-	private Long reviewCount;
-	private String item;
+	private String 	name;
+	private double 	reviewAvgScore;
+	private Long 	reviewCount;
+	private String 	item;
 }

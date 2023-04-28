@@ -25,13 +25,9 @@
 			 </if>
 	WHERE  	rn BETWEEN #{startRow} AND #{endRow}
 	</select>
-	<!-- SELECT 	*
-		FROM	notice
-		      WHERE ROWNUM BETWEEN 1 AND 12
-		AND  (  title LIKE '%1%'
-		      OR      contains(content,'%ㅈ%') >0);
-		      
-		 create index notice_content_index  on notice(content)
-		 indextype is ctxsys.context; 
-	LONG타입 LIKE사용 불가라 인덱스 생성 후 contains사용해야 가능-->
+	<!-- 
+		create index notice_content_index  on notice(content)
+		indextype is ctxsys.context; 
+		LONG타입 LIKE사용 불가라 인덱스 생성 후 contains사용해야 가능
+	-->
 </mapper>

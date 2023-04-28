@@ -95,27 +95,23 @@ public class TalentController {
 	public String noticePage() {
 		return "bsm/notice";
 	}
-	
+	// 공사중
 	@ResponseBody
 	@GetMapping("/notice/notices")
-	public Map<String, Object> noticeListBySearchAndCurrentPage(@RequestParam String search, @RequestParam String currentPage) {
+	public Map<String, Object> noticeListBySearchAndCurrentPage(Pager pager) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// service로 옮김
-		Pager pager = new Pager();
-		pager.setSearch(search);
-		pager.setCurrentPage(Integer.parseInt(currentPage));
 		int totalCount = noticeService.findNoticeCountByPager(pager);
-		Pager pager1 = new Pager(search, Integer.parseInt(currentPage), totalCount);
+		pager.setTotalCount(totalCount);
 		System.out.println("totalCount - " + totalCount);
-		System.out.println("search - " + search);
-		System.out.println("currentPage - " + currentPage);
+		System.out.println("pager.getSearch() - " + pager.getSearch());
+		System.out.println("pager.getCurrentPage() - " + pager.getCurrentPage());
 		System.out.println("pager - " + pager);
-		System.out.println("pager1 - " + pager1);
 		
-		List<Notice> noticeList = noticeService.findNoticeListByPager(pager1);
+		List<Notice> noticeList = noticeService.findNoticeListByPager(pager);
 		
 		map.put("noticeList", noticeList);
-		map.put("pager", pager1);
+		map.put("pager", pager);
 		
 		return map;
 	}

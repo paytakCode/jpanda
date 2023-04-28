@@ -29,9 +29,7 @@ public class Pager {
 	// 페이지의 마지막 행
 	private int endRow;
 	
-	public  Pager(String search, int currentPage, int totalCount) {
-		this.search = search;
-		this.currentPage = currentPage;
+	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 		
 		startRow = (currentPage -1) * perPage + 1;
@@ -42,9 +40,6 @@ public class Pager {
 		if(lastNum > totalPage) {
 			lastNum = totalPage;
 		}
-	}
-	public  Pager() {
-		
 	}
 	
 }

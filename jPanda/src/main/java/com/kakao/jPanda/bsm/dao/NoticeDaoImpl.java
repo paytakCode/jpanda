@@ -19,12 +19,24 @@ public class NoticeDaoImpl implements NoticeDao {
 	
 	@Override
 	public int selectNoticeCountByPager(Pager pager) {
-		return session.selectOne("selectNoticeCountByPager", pager);
+		int result = 0;
+		try {
+			result = session.selectOne("selectNoticeCountByPager", pager);
+		} catch (Exception e) {
+			System.out.println("NoticeDaoImpl selectNoticeCountByPager e.getMessage() ->" + e.getMessage());
+		}
+		return result;
 	}
 
 	@Override
 	public List<Notice> selectNoticesByPager(Pager pager) {
-		return session.selectList("selectNoticesByPager", pager);
+		List<Notice> noticeList = null;
+		try {
+			noticeList = session.selectList("selectNoticesByPager", pager);
+		} catch (Exception e) {
+			System.out.println("NoticeDaoImpl selectNoticesByPager e.getMessage() ->" + e.getMessage());
+		}
+		return noticeList;
 	}
 
 }
