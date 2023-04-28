@@ -38,10 +38,10 @@ public class ChatController {
 		this.sqlsession = sqlsession;
 	}
 	
-	@GetMapping("/chat-stomp")
-	public String chatStompView(HttpSession session) {
-		log.info("[chatStompView] session id : {}", session.getId());
-		return "kts/chatStompView";
+	@GetMapping("/chat-test")
+	public String chatTestView(HttpSession session) {
+		log.info("[chatTestView] session id : {}", session.getId());
+		return "kts/chatTestView";
 	}
 	
 	@ResponseBody

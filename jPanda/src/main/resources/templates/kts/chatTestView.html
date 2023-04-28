@@ -1,3 +1,14 @@
+<!-- 
+	페이지 로드 후 
+	좌상단 Select List에 DB Member Table 데이터를 참조해서 유저 리스트 갱신됨
+	Connect 버튼을 누르면 connect 함수 호출하여 Sokect 연결시도 , disconnect 버튼으로 변경, 채팅 상대 갱신, 첫번째 유저의 채팅을 기본으로 설정
+	연결 후 우하단 chat-btn 클릭하면 chat-console 창 열림
+	chat-console 좌측에 채팅 상대리스트, 우측에 채팅 내용, 하단에 채팅입력창
+	채팅 입력 후 엔터키 누르면 현재 선택된 상대에게 메세지 전송
+	상대가 접속되어있고 콘솔창이 닫혀 있으면 chat-btn이 깜빡이는 애니메이션으로 표시
+	상대가 접속되어있고 콘솔창이 열려있는상태에서 메세지 보냈던 상대창에 접속되어있으면 바로 메세지 표시됨
+ -->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -12,8 +23,6 @@
 				background-color: red;
 			}
 		}
-		
-		
 		
 		/* 채팅 버튼 스타일 */
 		#chat-btn {
@@ -95,6 +104,8 @@
 			font-weight:
 		}
 	</style>
+	<!-- bootstrap css -->
+	<link href="/css/bootstrap.css" rel="stylesheet">
 </head>
 <body>
 	<select id="member-list" name="memberId">
@@ -107,19 +118,22 @@
 		<textarea id="chat-input" placeholder="메시지를 입력하세요..."></textarea>
 	</div>
 
+<!-- jquery -->
 <script type="text/javascript" src="/js/jquery.js"></script>
+
+<!-- socket, stomp js -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<!-- bootstrap js -->
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
 <script>
-	//전역 변수 선언
-	const chatBtn = $("#chat-btn"); 
-	const chatConsole = $("#chat-console");
-	const chatContent = $("#chat-content");
-	const chatInput = $("#chat-input");	
+	//전역 변수 선언	
 	let memberId = null;
 	let memberName = null;
 	let selectedChat = null;
-	let message = null;
 	let stompClient = null;
 	let blinkInterval = null;
 
@@ -138,9 +152,11 @@
 	function subscribe(memberId){
 		stompClient.subscribe('/direct/' + memberId, function (response) {
 			let messageInfo = JSON.parse(response.body);
-	        const chatMessageElem = $("<div>").text(messageInfo.senderName + ' : ' + messageInfo.message).addClass("from-other");
-	        chatContent.append(chatMessageElem);
-		    chatContent.scrollTop(chatContent.prop("scrollHeight"));
+			if ($('#selected-member').val() == messageInfo.senderId){
+		        const chatMessageElem = $("<div>").text(messageInfo.senderName + ' : ' + messageInfo.message).addClass("from-other");
+		        $("#chat-content").append(chatMessageElem);
+			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+			}
 		    
 		    if($("#chat-console").css("display") == 'none'){
 		    	$("#chat-btn").css("animation", "blink 0.5s infinite");
@@ -173,12 +189,14 @@
 
 	//채팅 버튼 클릭 시 채팅 팝업 띄우기
 	$('#chat-btn').click(function () {
-		$("#chat-btn").css("animation", "");
-	    $('#chat-console').toggle();
-	    chatContent.scrollTop(chatContent.prop("scrollHeight"));
+		if (stompClient !== null) { //연결 된 상태에서만 채팅 콘솔 작동 가능
+			$("#chat-btn").css("animation", "");
+		    $('#chat-console').toggle();
+		    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+		}
 	});
 
-	// 선택된 채팅 상대 표시 업데이트
+	//선택된 채팅 상대 표시 업데이트
 	function updateSelectedChat(element) {    
 		$('#selected-member').removeAttr('id');
 		$(element).attr('id', 'selected-member');
@@ -192,21 +210,21 @@
 			dataType : "json",
 			success: function(chatMessageList) {
 				
-				chatContent.empty();
+				$("#chat-content").empty();
 				
 				chatMessageList.forEach((chatMessage, index) => {
 					
 					if (chatMessage.receiverId == selectedChat) {
 						const chatMessageElem = $("<div>").text(chatMessage.senderName + " : " + chatMessage.message).addClass("from-me");
-	                    chatContent.append(chatMessageElem);
+	                    $("#chat-content").append(chatMessageElem);
 					} else if(chatMessage.senderId == selectedChat){
 						const chatMessageElem = $("<div>").text(chatMessage.senderName + " : " + chatMessage.message).addClass("from-other");
-	                    chatContent.append(chatMessageElem);
+	                    $("#chat-content").append(chatMessageElem);
 					}
 					
 				});
 
-			    chatContent.scrollTop(chatContent.prop("scrollHeight"));
+			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log('updateChatContent Failed');
@@ -215,9 +233,9 @@
 	}
 
 
-	// 채팅창 열기
-	chatBtn.click(function() {
-		chatConsole.css("display", "block");
+	//채팅창 열기
+	$("#chat-btn").click(function() {
+		$("#chat-console").css("display", "block");
 	});
 
 
@@ -226,18 +244,18 @@
 		$(document).on("click", function(event) {
 			if (!$(event.target).closest("#chat-console").length &&
 				!$(event.target).is("#chat-btn")) {
-				chatConsole.hide();
+				$("#chat-console").hide();
 			}
 		});
 	});
 	
 	//Enter 키로 메시지 전송
-	chatInput.keyup(function(e) {
+	$("#chat-input").keyup(function(e) {
 	    if (e.keyCode == 13 && selectedChat && $("#chat-input").val().trim() != "") {
 	    	
 	    	message = JSON.stringify({
-	    			'receiverName': $('#selected-member').val(),
-	   	            'receiverId': selectedChat,
+	    			'receiverName': selectedChat.text(),
+	   	            'receiverId': selectedChat.val(),
 	   	            'senderId' : memberId,
 	   	            'senderName' : memberName,
 	   	            'message' : $('#chat-input').val(),
@@ -247,10 +265,10 @@
 	    	saveMessage(message);
 	    	
 	    	var chatMessageElem = $("<div>");
-	    	chatMessageElem.text(memberName + ' : ' + chatInput.val());
+	    	chatMessageElem.text(memberName + ' : ' + $("#chat-input").val());
 	    	chatMessageElem.addClass("from-me");
-	    	chatContent.append(chatMessageElem);
-	    	chatInput.val("");
+	    	$("#chat-content").append(chatMessageElem);
+	    	$("#chat-input").val("");
 	    }
 	});
 	
@@ -264,7 +282,7 @@
 			dataType : "json",
 			success: function(result) {
 		   	    stompClient.send("/direct/" + selectedChat, {}, message);
-		   	    chatContent.scrollTop(chatContent.prop("scrollHeight"));
+		   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				return result;
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
@@ -273,7 +291,7 @@
 		});
 	}
 
-	//채팅 상대 리스트 업데이트  (수정중)
+	//채팅 상대 리스트 업데이트
 	function updateChatPartnerList(memberId) {
 		return new Promise(function(resolve, reject) {
 			$.ajax({
@@ -282,7 +300,7 @@
 				dataType : "json",
 				success: function(partnerList) {
 					partnerList.forEach((partner, index) => {
-						let chatPartnerElem = $("<div>");
+						let chatPartnerElem = $("<button>");
 						chatPartnerElem.text(partner.name);
 						chatPartnerElem.attr('value', partner.id);
 						chatPartnerElem.click(function() { 
@@ -291,6 +309,7 @@
 							updateChatContent();
 						});
 						 $("#chat-member-list").append(chatPartnerElem);  
+						 $("#chat-member-list").append($("<br>"));  
 					});
 					resolve();
 				},
@@ -329,7 +348,6 @@
 			}
 		});
 	});
-	
 	
 </script>
 </body>
