@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>재능 판다</title>
 <style type="text/css">
 /*GLOBALS*/
 *{margin:0; padding:0; list-style:none;}
@@ -178,11 +178,15 @@ p {
 <body>
 	<div class="navbar">
 		<a href="/talent/write-form">재능 등록</a>
-  		<a href="#2">판매게시판</a>
-  		<a href="#3">거래관리</a>
-  		<a href="#4">충전/내역</a>
-  		<a href="#5">마이페이지</a>
+  		<a href="/board">판매게시판</a>
+  		<a href="/trade">거래관리</a>
+  		<a href="/charge/">충전/내역</a>
+  		<a href="/mypage">마이페이지</a>
   		<a href="/talent/notice">공지사항</a>
+	</div>
+	<div id="login-out">
+	<a href="/logout" style="float: right; margin-right: 50px; font-size: 20px;">로그아웃</a>
+	<a href="/login" style="float: right; margin-right: 50px; font-size: 20px;">로그인</a>
 	</div>
 	<div class="container">
 	<form action="/talent/update-form">
@@ -329,7 +333,7 @@ p {
 	}
 		
 	$('.talents').on('click', function(){
-		location.href = "/talent/talents/" + $(this).val() + "/update-form";
+		location.href = "/talents/talent/" + $(this).val();
 	});
 	</script>
 </body>

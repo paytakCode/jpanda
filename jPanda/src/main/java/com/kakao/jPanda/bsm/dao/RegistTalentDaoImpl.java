@@ -41,7 +41,7 @@ public class RegistTalentDaoImpl implements TalentDao{
 	public Talent selectTalentBytalentNo(Long talentNo) {
 		Talent talent = null;
 		try {
-			talent = session.selectOne("selectTalentBytalentNo", talentNo);
+			talent = session.selectOne("RegistselectTalentBytalentNo", talentNo);
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl selectTalentBytalentNo e.getMessage() ->" + e.getMessage());
 		}

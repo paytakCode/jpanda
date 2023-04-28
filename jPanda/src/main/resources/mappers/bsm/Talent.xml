@@ -11,7 +11,7 @@
 				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
 	</insert>
 	
-	<select id="selectTalentBytalentNo" resultType="RegistTalent" parameterType="Long">
+	<select id="RegistselectTalentBytalentNo" resultType="RegistTalent" parameterType="Long">
 		SELECT 	* 
 		FROM 	talent 
 		WHERE 	talent_no = #{talentNo}

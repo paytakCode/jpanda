@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>재능 등록</title>
 <style type="text/css">
 /* Set font family and size */
 body {
@@ -126,6 +126,8 @@ table {
 		<hr>
 	<!-- 임시 아이디 설정 PK라 INSERT시 MEMBER 테이블에 ID가 존재해야함 -->
 	<input type="hidden" name="sellerId" value="test">
+	<input type="hidden" name="regDate" id="reg-date">
+	<!-- statusDate로 변경 -->
 	
 	<div id="category" class="category write-check">
 		<h4>카테고리</h4>
@@ -195,21 +197,22 @@ table {
     
     function check() {
    		var isReadyToSubmit = true;
-		var nallArea = '';
+		var nullArea = '';
    	  	$('.submit-check').each(function() {
    	    	if($(this).attr('src') !== '/image/check.png') {
    	      		isReadyToSubmit = false;
-   	      		if(nallArea !== ''){
-   	      			nallArea += ', ' + $(this).parent().prev().text();
+   	      		if(nullArea !== ''){
+   	      			nullArea += ', ' + $(this).parent().prev().text();
    	      		}else {
-   	      			nallArea += $(this).parent().prev().text();
+   	      			nullArea += $(this).parent().prev().text();
    	      		}
    	    	}
    	  	});
-
    	  	if (!isReadyToSubmit) {
-   	  		alert(nullarea + '을 다시 확인해주세요.');
+   	  		alert(nullArea + '을 다시 확인해주세요.');
    	  	}
+   	  	$('#reg-date').val(new Date(Date.now()));
+   	  	// status-date로 변경
    	  	return isReadyToSubmit;
    	}
     
