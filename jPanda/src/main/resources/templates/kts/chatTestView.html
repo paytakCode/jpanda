@@ -254,8 +254,8 @@
 	    if (e.keyCode == 13 && selectedChat && $("#chat-input").val().trim() != "") {
 	    	
 	    	message = JSON.stringify({
-	    			'receiverName': selectedChat.text(),
-	   	            'receiverId': selectedChat.val(),
+	    			'receiverName': $('#selected-member').text(),
+	   	            'receiverId': $('#selected-member').val(),
 	   	            'senderId' : memberId,
 	   	            'senderName' : memberName,
 	   	            'message' : $('#chat-input').val(),

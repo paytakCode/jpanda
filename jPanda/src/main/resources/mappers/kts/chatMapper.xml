@@ -12,7 +12,7 @@
 		ORDER BY c.chat_date ASC
 	</select>
 	
-	<select id="selectPartnerListByMemberId" parameterType="String" resultType="Partner">	
+	<select id="selectPartnerListByMemberId" parameterType="String" resultType="ChatPartner">	
 		SELECT * 
 		FROM
 			(
@@ -33,7 +33,7 @@
 			VALUES(chat_id_seq.nextval, #{senderId}, #{receiverId}, #{message}, #{chatDate})
 	</insert>
 	
-	<select id="selectMemberList" resultType="Member">
+	<select id="selectMemberList" resultType="ChatMember">
 		select *
 		FROM member
 		ORDER BY name
