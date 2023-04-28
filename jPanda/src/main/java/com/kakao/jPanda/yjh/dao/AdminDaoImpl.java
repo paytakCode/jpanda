@@ -92,34 +92,6 @@ public class AdminDaoImpl implements AdminDao {
 		sqlSession.update("updateExchange", exchange);
 	}
 	
-//	@Override
-//	public void updateExchangeByExchangeNos(List<Long> listExchangeNo) {
-//		System.out.println("===== ExchangeRepository updateExchangeByExchangeNos() start =====");
-//		System.out.println(listExchangeNo.toString());
-//		
-//		try {
-//			sqlSession.update("updateExchangeByExchangeNos", listExchangeNo);
-//			
-//		} catch(Exception e) {
-//			System.out.println("Exchangerepository updateExchangeByExchangeNos() exception : "+e.getMessage());
-//			e.printStackTrace();
-//		}
-//		
-//	}
-//
-//	@Override
-//	public void updateExchangeByExchangeNosToCompanion(List<Long> listExchangeNo) {
-//		System.out.println("===== ExchangeRepository updateExchangeByExchangeNosToCompanion() start =====");
-//		try {
-//			sqlSession.update("updateExchangeByExchangeNosToCompanion", listExchangeNo);
-//			
-//		} catch(Exception e) {
-//			System.out.println("Exchangerepository updateExchangeByExchangeNosToCompanion() exception : "+e.getMessage());
-//			e.printStackTrace();
-//		}
-//		
-//	}
-	
 	//coupon
 	@Override
 	public List<CouponDto> findCouponList() {
@@ -198,12 +170,12 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public int updateTalentRefundToSuccessByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto) {
+	public int updateTalentRefundToSuccessByPurchaseNosAndStatus(TalentRefundDto paramDto) {
 		log.info("TalentRefund Dao updateTalentRefundToSuccessByPurchaseNosAndStatus() start");
 		int result = 0;
 		
 		try {
-			result = sqlSession.update("updateTalentRefundToSuccessByPurchaseNosAndStatus", talentRefundDto);
+			result = sqlSession.update("updateTalentRefundToSuccessByPurchaseNosAndStatus", paramDto);
 			
 		} catch(Exception e) {
 			log.info("TalentRefund Dao updateTalentRefundToSuccessByPurchaseNosAndStatus() Exception : "+e.getMessage());
@@ -214,12 +186,12 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public int updateTalentRefundToCompanionByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto) {
+	public int updateTalentRefundToCompanionByPurchaseNosAndStatus(TalentRefundDto paramDto) {
 		log.info("TalentRefund Dao updateTalentRefundToCompanionByPurchaseNosAndStarus() start");
 		int result = 0;
 		
 		try {
-			result = sqlSession.update("updateTalentRefundToCompanionByPurchaseNosAndStatus", talentRefundDto);
+			result = sqlSession.update("updateTalentRefundToCompanionByPurchaseNosAndStatus", paramDto);
 		} catch(Exception e) {
 			log.info("TalentRefund Dao updateTalentRefundToCompanionByPurchaseNosAndStatus() Exception : "+e.getMessage());
 			e.printStackTrace();

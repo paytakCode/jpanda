@@ -14,9 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompanySalesDto {
-	public CompanySalesDto(CompanySalesDto ex) {
-		// TODO Auto-generated constructor stub
-	}
 	//Bamboo_charge table
 	private Long chargeNo;
 	private String chargerId;

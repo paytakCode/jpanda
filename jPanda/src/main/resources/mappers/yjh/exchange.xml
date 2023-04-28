@@ -22,23 +22,4 @@
 		where 	exchange_no = #{exchangeNo}
 	</update>
 	
-<!-- 	<update id="updateExchangeByExchangeNos" parameterType="java.util.List">
- 		update exchange
-  		set status = '환전완료',
-      	approve_date = sysdate
-  		where exchange_No in
-  			<foreach collection="list" item="listExchangeNo" open="(" close=")" separator=",">
-    			#{listExchangeNo}
-  			</foreach>
-	</update>
-	
-	<update id="updateExchangeByExchangeNosToCompanion" parameterType="java.util.List">
-		update exchange
-  		set status = '반려',
-      	approve_date = sysdate
-  		where exchange_No in
-  			<foreach collection="list" item="listExchangeNo" open="(" close=")" separator=",">
-    			#{listExchangeNo}
-  			</foreach>
-	</update> -->
 </mapper>

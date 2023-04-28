@@ -12,31 +12,17 @@
 		and		tr.status = '검토중'
 	</select>
 	
-	<update id="updateTalentRefundToSuccessByPurchaseNosAndStatus" parameterType="List">
+	<update id="updateTalentRefundToSuccessByPurchaseNosAndStatus" parameterType="TalentRefund">
 		update 	talent_refund
-		set		status = 
-						<foreach collection="list" item="talentRefundDto" open="(" close=")" separator=",">
-    						#{status}
-  						</foreach>,
+		set		status = #{status},
 				approve_date = sysdate
-		where	purchase_no in
-							<foreach collection="list" item="talentRefundDto" open="(" close=")" separator=",">
-    							#{purchaseNo}
-  							</foreach>
-				
+		where	purchase_no in #{purchaseNo}		
 	</update>
 	
-		<update id="updateTalentRefundToCompanionByPurchaseNosAndStatus" parameterType="List">
+	<update id="updateTalentRefundToCompanionByPurchaseNosAndStatus" parameterType="TalentRefund">
 		update 	talent_refund
-		set		status = 
-						<foreach collection="list" item="talentRefundDto" open="(" close=")" separator=",">
-    						#{status}
-  						</foreach>
-		where	purchase_no in
-							<foreach collection="list" item="talentRefundDto" open="(" close=")" separator=",">
-    							#{purchaseNo}
-  							</foreach>
-				
+		set		status = #{status}
+		where	purchase_no in #{purchaseNo}	
 	</update>
 
 </mapper>

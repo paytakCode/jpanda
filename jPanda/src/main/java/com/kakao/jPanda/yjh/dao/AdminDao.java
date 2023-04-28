@@ -35,6 +35,6 @@ public interface AdminDao {
 	
 	//talent-refund
 	List<TalentRefundDto> selectTalentRefund();
-	int updateTalentRefundToSuccessByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto);
-	int updateTalentRefundToCompanionByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto);
+	int updateTalentRefundToSuccessByPurchaseNosAndStatus(TalentRefundDto paramDto);
+	int updateTalentRefundToCompanionByPurchaseNosAndStatus(TalentRefundDto paramDto);
 }

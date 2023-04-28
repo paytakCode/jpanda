@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class TalentRefundDto {
+public class TalentRefundDto {	
 	private Long purchaseNo;
 	private String status;
 	private String issue;
