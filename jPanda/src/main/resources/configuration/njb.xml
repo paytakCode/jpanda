@@ -5,4 +5,8 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+  	<typeAliases>
+  		<typeAlias type="com.kakao.jPanda.njb.domain.MemberDto" alias="MemberDto"/>
+  		<typeAlias type="com.kakao.jPanda.njb.domain.BankDto" alias="BankDto"/>
+  	</typeAliases>
 </configuration>
