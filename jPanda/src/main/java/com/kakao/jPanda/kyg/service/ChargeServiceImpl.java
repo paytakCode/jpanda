@@ -22,27 +22,24 @@ public class ChargeServiceImpl implements ChargeService {
 		this.chargeDao = chargeDao;
 	}
 	
-//	  밤부 충전
+	 //밤부 충전
 	 @Override
 		public int addCharge(ChargeDto chargeDto) {
 			log.info("ChargeServiceImpl insertCharge() Start...");
 			log.info("ChargeServiceImpl insertCharge() chargeDto.toString() : " + chargeDto.toString());
 			
 			Long chargeMoney = chargeDto.getChargeMoney();
-//			String paymentMethod = chargeDto.getPaymentMethod();
 			
-			// 
 			if (chargeDto.getCouponNo() == "0") {
 				chargeDto.setCouponNo(null);
 			}
 			
-//			coupon_use insert
+			//coupon_use insert
 			int insertCouponUse = chargeDao.insertCouponUse(chargeDto);
 			log.info("insertCouponUse 결과값 : {}", insertCouponUse);
 			
-//			결제방법 선택시 보너스율 적용
+			//결제방법 선택시 보너스율 적용
 			double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-			//Long chargeBamboo = (long) (chargeMoney * bonusRatio); // 테스트용
 			Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000); 
 			
 			chargeDto.setChargeBamboo(chargeBamboo);
@@ -80,7 +77,7 @@ public class ChargeServiceImpl implements ChargeService {
 			isUsed = false;
 		} 
 		
-		/* false가 couponUse에 없는 쿠폰 */
+		// false는 couponUse에 없는 쿠폰
 		if(isUsed == false) {
 			
 			//해당 쿠폰이 기한남아있는지 확인 boolean isExpired 검증
@@ -116,35 +113,27 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 
 	@Override
-	public int getAvailAmountCoupon(CouponUseDto couponUseDto) {
+	public Long getAvailAmountCoupon(CouponUseDto couponUseDto) {
 		log.info("ChargeServiceImpl getAvailAmountCoupon() Start...");
 		log.info("ChargeServiceImpl getAvailAmountCoupon() chargeDto.toString() : {}", couponUseDto.toString());
 		
-		int findAvailAmountCoupon = chargeDao.selectAvailAmountCoupon(couponUseDto);
+		Long findAvailAmountCoupon = chargeDao.selectAvailAmountCoupon(couponUseDto);
 		log.info("ChargeServiceImpl getAvailAmountCoupon() findAvailAmountCoupon -> " + findAvailAmountCoupon);
 		
 		return findAvailAmountCoupon;
 	}
 	
 	@Override
-	public long findTotalBamboo(String memberId) {
+	public Long findTotalBamboo(String memberId) {
 		
-//		int selectedBambooChargeAmount = chargeDao.selectChargeBambooAmount(memberId);
-//		int selectedBambooUseAmount    = chargeDao.selectBambooUseAmount(memberId);
-//		int selectedTalentRefundAmount = chargeDao.selectTalentRefundAmount(memberId);
-//		log.info("ChargeServiceImpl calculateTotalBamboo findBambooChargeAmount -> {}", selectedBambooChargeAmount);
-//		log.info("ChargeServiceImpl calculateTotalBamboo findBambooUseAmount    -> {}", selectedBambooUseAmount);
-//		log.info("ChargeServiceImpl calculateTotalBamboo findTalentRefundAmount -> {}", selectedTalentRefundAmount);
-		
-		long selectedBambooChargeAmount = chargeDao.selectChargeBambooAmount(memberId);
-		long selectedBambooUseAmount    = chargeDao.selectBambooUseAmount(memberId);
-		long selectedTalentRefundAmount = chargeDao.selectTalentRefundAmount(memberId);
+		Long selectedBambooChargeAmount = chargeDao.selectChargeBambooAmount(memberId);
+		Long selectedBambooUseAmount    = chargeDao.selectBambooUseAmount(memberId);
+		Long selectedTalentRefundAmount = chargeDao.selectTalentRefundAmount(memberId);
 		log.info("ChargeServiceImpl calculateTotalBamboo findBambooChargeAmount -> {}", selectedBambooChargeAmount);
 		log.info("ChargeServiceImpl calculateTotalBamboo findBambooUseAmount    -> {}", selectedBambooUseAmount);
 		log.info("ChargeServiceImpl calculateTotalBamboo findTalentRefundAmount -> {}", selectedTalentRefundAmount);
 		
-		//int foundTotalBamboo = selectedBambooChargeAmount + selectedTalentRefundAmount - selectedBambooUseAmount;
-		long foundTotalBamboo = selectedBambooChargeAmount + selectedTalentRefundAmount - selectedBambooUseAmount;
+		Long foundTotalBamboo = selectedBambooChargeAmount + selectedTalentRefundAmount - selectedBambooUseAmount;
 		log.info("ChargeServiceImpl calculateTotalBamboo calculatedTotalBamboo  -> {}", foundTotalBamboo);
 		
 		return foundTotalBamboo;

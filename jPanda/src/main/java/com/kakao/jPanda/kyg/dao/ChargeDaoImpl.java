@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChargeDaoImpl implements ChargeDao {
 
-//	mybatis와 연결
 	private final SqlSession sqlSession;
 	
 	@Autowired
@@ -23,7 +22,7 @@ public class ChargeDaoImpl implements ChargeDao {
 		this.sqlSession = sqlSession;
 	}
 	
-//	밤부 충전시 coupon_use Insert
+	// 밤부 충전시 coupon_use Insert
 	@Override
 	public int insertCouponUse(ChargeDto chargeDto) {
 		log.info("ChargeDaoImpl insertCouponUse() Start...");
@@ -53,7 +52,7 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 	
 	
-//	밤부 충전시 bamboo_charge Insert
+	// 밤부 충전시 bamboo_charge Insert
 	@Override
 	public int insertCharge(ChargeDto chargeDto) {
 		log.info("ChargeDaoImpl insertCharge() Start...");
@@ -61,11 +60,9 @@ public class ChargeDaoImpl implements ChargeDao {
 		log.info("ChargeDaoImpl insertCharge chargeDto.toString -> {}", chargeDto.toString());
 		
 		int resultCharge = 0;
-//		int couponUseInsert = 0;
 		try {
 			resultCharge = sqlSession.insert("insertCharge", chargeDto);
 			log.info("ChargeDaoImpl insertCharge resultCharge -> {}", resultCharge);
-//			couponUseInsert = sqlSession.insert("insertCouponUse", chargeDto);
 		} catch (Exception e) {
 			log.error("ChargeDaoImpl insertCharge() Exception -> {}", e.getMessage(), e);
 		}
@@ -79,7 +76,7 @@ public class ChargeDaoImpl implements ChargeDao {
 		return resultCharge;
 	}
 	
-//	밤부 충전시 payment select 
+	// 밤부 충전시 payment select 
 	@Override
 	public double selectBonusRatio(ChargeDto chargeDto) {
 		
@@ -97,7 +94,7 @@ public class ChargeDaoImpl implements ChargeDao {
 		return selectBonusRatioResult;
 	}
 
-//	coupon_use isUsed 쿠폰 검증
+	// coupon_use isUsed 쿠폰 검증
 	@Override
 	public CouponUseDto selectCouponUse(CouponUseDto couponUseDto) {
 		log.info("ChargeDaoImpl selectCouponUse() Start...");
@@ -113,7 +110,7 @@ public class ChargeDaoImpl implements ChargeDao {
 		return selectCouponUseResult;
 	}
 
-//	coupon isExpired 쿠폰 검증
+	// coupon isExpired 쿠폰 검증
 	@Override
 	public CouponDto selectCouponByCouponNo(String couponNo) {
 		log.info("ChargeDaoImpl selectCouponByCouponNo() Start...");
@@ -131,11 +128,12 @@ public class ChargeDaoImpl implements ChargeDao {
 		return selectCouponByCouponNoResult;
 	}
 
+	// 사용 가능한 쿠폰의 금액을 검증
 	@Override
-	public int selectAvailAmountCoupon(CouponUseDto couponUseDto) {
+	public Long selectAvailAmountCoupon(CouponUseDto couponUseDto) {
 		log.info("ChargeDaoImpl selectAvailAmountCoupon() Start...");
 		
-		int selectAvailAmountCouponResult = 0;
+		Long selectAvailAmountCouponResult = (long) 0;
 		try {
 			selectAvailAmountCouponResult = sqlSession.selectOne("selectAvailAmountCoupon", couponUseDto);
 			log.info(" ChargeDaoImpl selectAvailAmountCoupon -> " + selectAvailAmountCouponResult);		
@@ -148,9 +146,9 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	// findTotalBamboo 계산 DAO
 	@Override
-	public long selectChargeBambooAmount(String memberId) {
+	public Long selectChargeBambooAmount(String memberId) {
 		log.info("ChargeDaoImpl selectChargeBambooAmount() Start...");
-		long selectChargeBambooAmountResult = 0;
+		Long selectChargeBambooAmountResult = (long) 0;
 		
 		try {
 			selectChargeBambooAmountResult = sqlSession.selectOne("selectChargeBambooAmount", memberId);
@@ -163,9 +161,9 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public long selectBambooUseAmount(String memberId) {
+	public Long selectBambooUseAmount(String memberId) {
 		log.info("ChargeDaoImpl selectBambooUseAmount() Start...");
-		long selectBambooUseAmountResult = 0;
+		Long selectBambooUseAmountResult = (long) 0;
 		
 		try {
 			selectBambooUseAmountResult = sqlSession.selectOne("selectBambooUseAmount", memberId);
@@ -178,9 +176,9 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public long selectTalentRefundAmount(String memberId) {
+	public Long selectTalentRefundAmount(String memberId) {
 		log.info("ChargeDaoImpl selectTalentRefundAmount() Start...");
-		long selectTalentRefundAmountResult = 0;
+		Long selectTalentRefundAmountResult = (long) 0;
 		
 		try {
 			selectTalentRefundAmountResult = sqlSession.selectOne("selectTalentRefundAmount", memberId);

@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/charge")		//홈 http://localhost:8888/charge/
+@RequestMapping("/charge")		
 public class ChargeController {
 	
 	private final ChargeService chargeService;
@@ -39,19 +39,13 @@ public class ChargeController {
 		return "kyg/chargePage";
 	}
 	
-
-//	충전 성공시 페이지로 이동
-	@GetMapping("/test")
-	public String test() {
-		return "kyg/test";		
-	}
 	
 	
 	
 //	밤부 충전
 	@ResponseBody
-	@PostMapping("/charge") // /charge로 수정하기
-	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto, Model model) {
+	@PostMapping("/charge") 
+	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto) {
 		
 		log.info("ChargeContoller charge() Start...");
 		
@@ -64,11 +58,9 @@ public class ChargeController {
 			 resultMap.put("result", "success");
 			return resultMap;
 			
-		// ajax에서 거르지 못한 잘못된 충전 출력
 		} else {
 			log.error("ChargeContoller charge() resultCharge 실패");
 			resultMap.put("result", "fail");
-			model.addAttribute("chargeFailMsg", "충전실패 다시 시도해주세요");
 			return resultMap;
 		}
 		
@@ -79,7 +71,7 @@ public class ChargeController {
 	@GetMapping(value = "/check-available-coupon")
 	@ResponseBody
 	public CouponUseDto checkAvailableCoupon(CouponUseDto couponUseDto) {
-		//CouponUseDto couponUseDto3 = new CouponUseDto();				// 쿠폰사용유무 결과값을 dto에 담아서 보냄
+
 		CouponUseDto checkedcouponUseDto = new CouponUseDto();				
 		log.info("ChargeContoller couponDetails() Start...");
 		log.info("ChargeContoller checkAvailableCoupon couponUseDto.toString() -> {}", couponUseDto.toString());
@@ -88,8 +80,7 @@ public class ChargeController {
 		int resultInt = chargeService.checkAvailableCoupon(couponUseDto);
 		
 		// 충전 금액과 쿠폰의 금액을 차감해 실제 충전에 사용되는 금액을 구하기 위해 쿠폰의 금액을 가져옴
-		// 쿠폰의 금액을 가져옴
-		int couponValue = chargeService.getAvailAmountCoupon(couponUseDto);
+		Long couponValue = chargeService.getAvailAmountCoupon(couponUseDto);
 		
 		checkedcouponUseDto.setResult(resultInt);
 		checkedcouponUseDto.setCouponValue(couponValue);
@@ -106,9 +97,9 @@ public class ChargeController {
 	public String  totalBamboo(@PathVariable String memberId) {
 		log.info("Controller totalBamboo Start...");
 		log.info("Controller totalBamboo memberId -> {}", memberId);
-		//int foundTotalBamboo = chargeService.findTotalBamboo(memberId);
-		long foundTotalBamboo = chargeService.findTotalBamboo(memberId);
-		//String  foundTotalBambooStr =  Integer.toString(foundTotalBamboo);
+		
+		Long foundTotalBamboo = chargeService.findTotalBamboo(memberId);
+		
 		String  foundTotalBambooStr =  Long.toString(foundTotalBamboo);
 		
 		log.info("Controller totalBamboo calculatedTotalBamboo -> {}", foundTotalBamboo);
@@ -116,8 +107,6 @@ public class ChargeController {
 		return foundTotalBambooStr;
 	}
 	
-//	@ResponseBody
-//	@GetMapping(/recharge-details-container)
 	
 }
 	

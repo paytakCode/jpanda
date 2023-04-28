@@ -9,6 +9,6 @@ public class CouponUseDto {
 
 	String	id;
 	String	couponNo;
-	int		couponValue;	// 쿠폰값
+	Long	couponValue;	// 쿠폰값
 	int		result;			// 쿠폰사용유무 리턴결과값
 }

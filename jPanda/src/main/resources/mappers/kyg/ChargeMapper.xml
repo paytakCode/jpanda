@@ -4,7 +4,7 @@
 
 <mapper namespace="com.kakao.jPanda.kyg.chargeMapper">
 
-	<insert id="insertCharge" parameterType="chargeDto">
+	<insert id="insertCharge" parameterType="ChargeDto">
 	
 		INSERT INTO bamboo_charge (
 		  charge_no,
@@ -33,7 +33,7 @@
 	
 	</insert>
 
-	<insert id="insertCouponUse" parameterType="chargeDto">
+	<insert id="insertCouponUse" parameterType="ChargeDto">
 	
 		INSERT INTO coupon_use(
 				id,
@@ -56,7 +56,7 @@
 	</select>
 	
 	
-	<select id="selectCouponUse" parameterType="CouponUseDto" resultType="CouponUseDto">
+	<select id="selectCouponUse" parameterType="ChargeCouponUseDto" resultType="ChargeCouponUseDto">
 	
 		SELECT	*
 		FROM	coupon_use
@@ -65,7 +65,7 @@
 		
 	</select>
 	
-	<select id="selectAvailAmountCoupon" parameterType="couponUseDto" resultType="int">
+	<select id="selectAvailAmountCoupon" parameterType="ChargeCouponUseDto" resultType="Long">
 	
 		SELECT	coupon_value
 		FROM	coupon
@@ -73,7 +73,7 @@
 		
 	</select>
 	
-	<select id="selectCouponByCouponNo" parameterType="String" resultType="CouponDto">
+	<select id="selectCouponByCouponNo" parameterType="String" resultType="ChargeCouponDto">
 	
 		SELECT	*
 		FROM	coupon
@@ -81,7 +81,7 @@
 		
 	</select>
 	
-	<select id="selectChargeBambooAmount" parameterType="String" resultType="long">
+	<select id="selectChargeBambooAmount" parameterType="String" resultType="Long">
 	
 		SELECT	NVL(sum(charge_bamboo),0)
 		FROM	bamboo_charge
@@ -89,7 +89,7 @@
 		
 	</select>
 	
-	<select id="selectBambooUseAmount" parameterType="String" resultType="long">
+	<select id="selectBambooUseAmount" parameterType="String" resultType="Long">
 		
 		SELECT	NVL(sum(use_bamboo),0)
 		FROM	bamboo_use
@@ -97,7 +97,7 @@
 		
 	</select>
 	
-	<select id="selectTalentRefundAmount" parameterType="String" resultType="long">
+	<select id="selectTalentRefundAmount" parameterType="String" resultType="Long">
 	
 		SELECT NVL(sum(tr.refund_bamboo),0)
 		FROM talent_refund tr

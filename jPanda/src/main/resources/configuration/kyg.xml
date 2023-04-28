@@ -8,24 +8,12 @@
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
 	<typeAliases>
-		<typeAlias alias="chargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
-		<typeAlias alias="CouponUseDto" type="com.kakao.jPanda.kyg.domain.CouponUseDto"/>
-		<typeAlias alias="CouponDto" type="com.kakao.jPanda.kyg.domain.CouponDto"/>
+		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
+		<typeAlias alias="ChargeCouponUseDto" type="com.kakao.jPanda.kyg.domain.CouponUseDto"/>
+		<typeAlias alias="ChargeCouponDto" type="com.kakao.jPanda.kyg.domain.CouponDto"/>
 	</typeAliases>
 	
 	
 </configuration>
 
 
-
-<!-- 
-<configuration>
-	mapUnderscoreToCamelCase Setting
-	<settings>
-    	<setting name="mapUnderscoreToCamelCase" value="true"/>
-  	</settings>
-  	<typeAliases>
-  		<typeAlias alias="BambooChargeDto" type="com.kakao.jPanda.kyg.domain.BambooChargeDto"/>
-  	</typeAliases>
-</configuration>
-	 -->

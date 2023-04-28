@@ -14,15 +14,15 @@ public interface ChargeDao {
 
 	CouponUseDto selectCouponUse(CouponUseDto couponUseDto);
 
-	int selectAvailAmountCoupon(CouponUseDto couponUseDto);
+	Long selectAvailAmountCoupon(CouponUseDto couponUseDto);
 
 	CouponDto selectCouponByCouponNo(String couponNo);
 
-	long selectChargeBambooAmount(String memberId);
+	Long selectChargeBambooAmount(String memberId);
 
-	long selectBambooUseAmount(String memberId);
+	Long selectBambooUseAmount(String memberId);
 
-	long selectTalentRefundAmount(String memberId);
+	Long selectTalentRefundAmount(String memberId);
 
 	
 	
