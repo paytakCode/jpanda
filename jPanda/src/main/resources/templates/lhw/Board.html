@@ -320,7 +320,7 @@ function updateList(){
 	            $('<span>').addClass('talent-seller').text('강사: '+ talent.sellerId).appendTo(li);
 	            $('<span>').addClass('talent-price').text('정상 가격: '+ talent.bamboo).appendTo(li);
 	            $('<span>').addClass('talent-sale-price').text('판매 가격: '+ talent.saleBamboo).appendTo(li);
-	            $('<span>').addClass('talent-bamboo-score').text('평균 리뷰: '+ talent.bambooScore).appendTo(li);
+	            $('<span>').addClass('talent-bamboo-score').text(talent.bambooScore).appendTo(li);
 	            $('<img>').addClass('bamboo-imges').appendTo(li);
 	            li.click(function() {
 	                location.href = '/talents/talent/' + talent.talentNo;
@@ -332,7 +332,9 @@ function updateList(){
  	            var starImages = ['bamboo0.png', 'bamboo0.5.png', 'bamboo1.png', 'bamboo1.5.png', 'bamboo2.png', 
  	          	  'bamboo2.5.png', 'bamboo3.png', 'bamboo3.5.png', 'bamboo4.png', 'bamboo4.5.png', 'bamboo5.png'];
  	            $('.talent-bamboo-score').each(function(){
+ 	            	
  	                var score = parseFloat($(this).text());
+ 	                console.log("score : " + score);
  	                if (score > 5) score = 5; // score가 5보다 크면 5로 고정
  	                var index;
  	                if (score == 0) {
@@ -358,7 +360,8 @@ function updateList(){
  	                } else { // score가 5일 때
  	                  index = 10;
  	                }
- 	                $(this).next('.bamboo-imges').attr('src', '../image/bambooScore/' + starImages[index]);
+ 	               console.log("index : " + index)
+ 	                $(this).next('.bamboo-imges').attr('src', '/image/bambooScore/' + starImages[index]);
  	           });
 	 	    });
  		},

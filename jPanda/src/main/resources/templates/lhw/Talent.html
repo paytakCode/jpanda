@@ -423,6 +423,7 @@ function sendUpdateReview(talentNo){
 		        	$('<span>').text(review.reviewDate).appendTo(li);
 		        	$('<span>').text(review.bambooScore).appendTo(li);
 		        	$('<span>').text(review.content).appendTo(li);
+		        	location.reload();
 		        	
 		        	const modifyBtn = 
 		        	$('<button>').attr('type', 'button').attr('class', 'modifyReview')
