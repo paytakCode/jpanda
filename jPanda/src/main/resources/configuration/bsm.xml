@@ -5,4 +5,10 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
+  	<typeAliases>
+    	<typeAlias alias="Category" type="com.kakao.jPanda.bsm.domain.Category"/>
+    	<typeAlias alias="Talent" 	type="com.kakao.jPanda.bsm.domain.Talent"/>
+    	<typeAlias alias="Notice" 	type="com.kakao.jPanda.bsm.domain.Notice"/>
+    	<typeAlias alias="Pager" 	type="com.kakao.jPanda.bsm.domain.Pager"/>
+    </typeAliases>
 </configuration>
