@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TradeDao">
+	<select id="selectSellStatByMemberId" parameterType="String" resultType="StatDto">
+		SELECT
+			count(CASE WHEN status = '검토중' THEN 1 END) AS submit_count,
+			count(CASE WHEN status = '게시중' THEN 1 END) AS sell_count,
+			count(CASE WHEN status = '판매종료' THEN 1 END) AS sold_count
+		FROM talent
+		WHERE seller_id = #{memberId}
+	</select>
+	
+	<select id="selectBuyStatByMemberId" parameterType="String" resultType="StatDto">
+		SELECT 
+			count(*) as buy_count
+		FROM bamboo_use u
+		LEFT OUTER JOIN talent_refund r ON u.purchase_no = r.purchase_no 
+		WHERE u.buyer_id = #{memberId}
+		AND r.status IS NULL
+	</select>
+			
+	<select id="selectRefundStatByMemberId" parameterType="String" resultType="StatDto">
+		SELECT
+			count(CASE WHEN r.status = '검토중' THEN 1 END) AS refund_submit_count,
+			count(CASE WHEN r.status = '환불완료' THEN 1 END) AS refund_approve_count,
+			count(CASE WHEN r.status = '반려' THEN 1 END) AS refund_reject_count
+		FROM talent_refund r
+		INNER JOIN bamboo_use u
+		ON u.purchase_no = r.purchase_no
+		AND u.buyer_id = #{memberId}	
+	</select>
+	
+	<update id="updateTalentStatusByTalentNo" parameterType="String">
+		UPDATE talent
+		SET status = '판매종료'
+		WHERE talent_no = #{talentNo}
+	</update>
+	
+	<delete id="deleteRefundByrefundPurchaseNo" parameterType="String">
+		DELETE
+		from talent_refund
+		WHERE purchase_no = #{purchaseNo}
+	</delete>
+	
+	<select id="selectTalentByTalentNo" parameterType="String" resultType="TradeTalentDto">
+		SELECT *
+		FROM talent
+		WHERE talent_no = #{talentNo} 
+	</select>
+	
+	<insert id="insertExchangeByTalentNo" parameterType="TradeTalentDto">
+		<selectKey keyProperty="exchangeNo" order="BEFORE" resultType="Long">
+			SELECT exchange_seq.nextval
+			FROM dual
+		</selectKey>
+		
+		INSERT INTO exchange(
+		    exchange_no, id, talent_no, sales, submit_date,
+		    approve_date, total, grade, ratio, status
+		)
+		SELECT
+			#{exchangeNo},
+		    #{sellerId},
+		    #{talentNo},
+		    COUNT(*) AS sales,
+		    SYSDATE,
+		    NULL,
+		    t.sale_bamboo * COUNT(*) AS total,
+		    m.grade,
+		    mg.ratio,
+		    '검토중' AS status
+		FROM bamboo_use u
+		INNER JOIN talent t ON u.talent_no = t.talent_no
+		INNER JOIN member m ON m.id = #{sellerId}
+		INNER JOIN member_grade mg ON m.grade = mg.grade
+		WHERE t.talent_no = #{talentNo}
+		GROUP BY m.grade, mg.ratio, t.sale_bamboo
+	</insert>
+	
+	<insert id="insertTalentRefund" parameterType="TradeDto">
+		INSERT INTO talent_refund(
+			purchase_no,
+			status,
+			issue,
+			submit_date,
+			approve_date,
+			refund_bamboo
+		)
+		SELECT
+			purchase_no,
+			'검토중',
+			#{issue},
+			sysdate,
+			NULL,
+			#{refundBamboo}
+		FROM bamboo_use
+		WHERE buyer_id = #{buyerId}
+		AND talent_no = #{talentNo}
+	</insert>
+	
+	<select id="selectTradeSellListByMemberId" parameterType="String" resultType="TradeDto">
+		SELECT DISTINCT 
+			t.talent_no,
+			t.status as talent_status,
+			t.reg_date,
+			t.status_date,
+			t.title,
+			t.sale_bamboo,
+			count(t.talent_no) AS sell_count,
+			e.status AS exchange_status
+		FROM talent t
+		LEFT OUTER JOIN exchange e ON t.talent_no = e.talent_no
+		WHERE t.seller_id = #{memberId}
+		GROUP BY t.talent_no, t.status, t.reg_date ,t.sale_bamboo, t.title, t.sale_bamboo, e.status, t.status_date
+		ORDER BY status_date desc
+	</select>
+	
+	<select id="selectTradeBuyListByMemberId" parameterType="String" resultType="TradeDto">
+		SELECT
+			'구매완료' AS talent_status,
+			u.use_bamboo,
+			TRUNC(u.purchase_date) - TRUNC(sysdate) + 7 AS refundable_date,
+			t.title,
+			t.talent_no,
+			u.purchase_date AS purchase_date
+		FROM bamboo_use u 
+		INNER JOIN talent t ON u.talent_no = t.talent_no
+		LEFT OUTER JOIN talent_refund r ON r.purchase_no = u.purchase_no
+		WHERE buyer_id = #{memberId}
+		AND r.status IS NULL
+		ORDER BY u.purchase_date desc
+	</select>
+	
+	<select id="selectTradeRefundListByMemberId" parameterType="String" resultType="TradeDto">
+		SELECT
+			r.status AS refund_status,
+			t.title,
+			u.use_bamboo,
+			r.purchase_no AS refund_purchase_no,
+			r.submit_date AS refund_submit_date,
+			r.approve_date AS refund_approve_date,
+			t.talent_no
+		FROM talent_refund r
+		INNER JOIN bamboo_use u ON r.purchase_no = u.purchase_no
+		INNER JOIN talent t ON u.talent_no = t.talent_no
+		WHERE u.buyer_id = #{memberId}
+		ORDER BY r.approve_date desc, r.submit_date desc
+	</select>
+	
+	<update id="updateExchangeStatusByTalentNo" parameterType="String">
+		UPDATE exchange
+		SET status = '검토중'
+		WHERE talent_no = #{talentNo}
+	</update>
+	
+	<update id="updateTalent" parameterType="TradeTalentDto">
+		UPDATE talent
+		SET
+			talent_no = #{talentNo},
+			seller_id = #{sellerId},
+			upper_category_no = #{upperCategoryNo},
+			lower_category_no = #{lowerCategoryNo},
+			main_img = #{mainImg},
+			title = #{title},
+			content = #{content},
+			bamboo = #{bamboo},
+			sale_bamboo = #{saleBamboo},
+			summary = #{summary},
+			status = #{status},
+			view_count = #{viewCount},
+			reg_date = #{regDate},
+			status_date = #{statusDate} 
+		WHERE talent_no = #{talentNo}
+	</update>
+	
+</mapper>

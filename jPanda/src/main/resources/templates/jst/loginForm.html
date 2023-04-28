@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	test ID : test<p />
+	<form action="/trade/login" method="post">
+		아이디 : <input type="text" name="memberId" th:value="test"><p />
+		비밀번호 : <input type="password" name="password"><p />
+		<input type="submit" value="로그인"><p />
+	</form>
+</body>
