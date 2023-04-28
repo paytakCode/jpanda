@@ -269,7 +269,7 @@
 				<div class="input-side">
 
 					<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
-					아이디	: <input type="text" id = "charger-id" name="chargerId" required="required"><p/>
+					아이디	: <input type="text" id = "charger-id" name="chargerId" required="required" value="qyyswylcav4"><p/>
 					충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/>
 					<p style="font-size:12px;">최소 입력금액은 5,000원이며, 결제금액이 0원인경우 결제가 되지 않습니다.</p>
 					
@@ -553,13 +553,13 @@
 		                console.log("chargeSubmit() AJAX 요청 성공: ", data);
 		                alert("충전 성공");
 		                setTimeout(function() {
-		                	location.replace("/charge/"); 				// redirect
+		                	//location.replace("/charge/"); 				// redirect
 			            }, 2000); 										// 2초 후 이동
 		            },
 		            error: function(data) { 							
 		                console.error("chargeSubmit() AJAX 요청 실패: ");
 		                alert("충전 실패 다시 시도해주세요");
-		                location.replace("/charge/");
+		                //location.replace("/charge/");
 		            }
 		        });
 		        
@@ -579,12 +579,12 @@
 							dataType: "json", 									
 		                    success: function(data) { 							
 		                        console.log("chargeSubmit() AJAX 요청 성공: ", data);
-		                        location.replace("/charge/"); 				
+		                        //location.replace("/charge/"); 				
 		                    },
 		                    error: function() {
 		                   	    console.error("chargeSubmit() AJAX 요청 실패: ");
 		                        alert("충전 실패 다시 시도해주세요");
-		                        location.replace("/charge/");
+		                        //location.replace("/charge/");
 		                    },
 		              
 		               });

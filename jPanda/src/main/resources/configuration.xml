@@ -24,6 +24,11 @@
   		<typeAlias alias="BoardCategory" type="com.kakao.jPanda.lhw.domain.Category"/>
   		<typeAlias alias="BoardReview" type="com.kakao.jPanda.lhw.domain.Review"/>
   		<typeAlias alias="BoardFilters" type="com.kakao.jPanda.lhw.domain.Filters"/>
+  		
+  		<!-- 충전 -->
+  		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
+		<typeAlias alias="ChargeCouponUseDto" type="com.kakao.jPanda.kyg.domain.CouponUseDto"/>
+		<typeAlias alias="ChargeCouponDto" type="com.kakao.jPanda.kyg.domain.CouponDto"/>
   	</typeAliases>
   	
 </configuration>
