@@ -5,14 +5,18 @@
 	<settings>
     	<setting name="mapUnderscoreToCamelCase" value="true"/>
   	</settings>
-  	
   	<typeAliases>
+  		<!-- 관리자 페이지 -->
   		<typeAlias type="com.kakao.jPanda.yjh.domain.NoticeDto" alias="Notice"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.ExchangeDto" alias="Exchange"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.CouponDto" alias="Coupon"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.TalentDto" alias="Talent"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.CompanySalesDto" alias="CompanySales"/>
   		<typeAlias type="com.kakao.jPanda.yjh.domain.TalentRefundDto" alias="TalentRefund"/>
+  		
+  		<!-- 로그인, 회원가입, 마이페이지 -->
+		<typeAlias type="com.kakao.jPanda.njb.domain.MemberDto" alias="MemberDto"/>
+  		<typeAlias type="com.kakao.jPanda.njb.domain.BankDto" alias="BankDto"/>
   	</typeAliases>
   	
 </configuration>
