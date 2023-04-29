@@ -1,8 +1,10 @@
 package com.kakao.jPanda.bsm.controller;
 
-import java.util.HashMap;
+import java.security.acl.NotOwnerException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,25 +35,42 @@ public class TalentController {
 	
 	// Test Main 페이지 이동
 	@GetMapping("/")
-	public String talentTest(Model model) {
-		List<Talent> bestSellerTalentList = talentService.findBestSellerTalents();
-		List<Talent> topRatedTalentList = talentService.findTopRatedTalents();
-		List<Talent> newTrendTalentList = talentService.findNewTrendTalents();
-		List<Talent> randomTalentList = talentService.findRandomTalents();
+	public String talentTest(Model model, HttpSession session) {
+//		List<Talent> bestSellerTalentList = talentService.findBestSellerTalents();
+//		List<Talent> topRatedTalentList = talentService.findTopRatedTalents();
+//		List<Talent> newTrendTalentList = talentService.findNewTrendTalents();
+//		List<Talent> randomTalentList = talentService.findRandomTalents();
+//		
+//		model.addAttribute("bestSellerTalent", bestSellerTalentList);
+//		model.addAttribute("topRatedTalent", topRatedTalentList);
+//		model.addAttribute("newTrendTalent", newTrendTalentList);
+//		model.addAttribute("randomTalent", randomTalentList);
+		model = talentService.findMainPageTalents(model);
 		
-		model.addAttribute("bestSellerTalent", bestSellerTalentList);
-		model.addAttribute("topRatedTalent", topRatedTalentList);
-		model.addAttribute("newTrendTalent", newTrendTalentList);
-		model.addAttribute("randomTalent", randomTalentList);
+		String loginId = "";
+		if(session.getAttribute("loginId") == null) {
+			loginId = "guest";
+		}else {
+			loginId = (String) session.getAttribute("loginId");
+		}
+		model.addAttribute("loginId", loginId);
 		return "bsm/talentTestMainpage";
 	}
 	
 	// 재능 등록 페이지 이동
 	@GetMapping("/write-form")
-	public String talenWritetForm(Model model) {
+	public String talenWritetForm(Model model, HttpSession session) {
 		List<Category> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		
+		String login = "";
+		if(session.getAttribute("loginId") == null) {
+			login = "guest";
+		}else {
+			login = (String) session.getAttribute("loginId");
+			
+		}
+		model.addAttribute("login", login);
 		return "bsm/talentWriteForm";
 	}
 	
@@ -83,37 +101,47 @@ public class TalentController {
 	
 	// 수정 페이지 이동
 	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
-	public String talentUpdateFrom(@PathVariable Long talentNo, Model model) { // @PathVariable
+	public String talentUpdateFrom(@PathVariable Long talentNo, Model model, HttpSession session) { // @PathVariable
 		System.out.println(talentNo);
 		Talent talent = talentService.findTalentByTalentNo(talentNo);
 		List<Category> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("talent", talent);
+		
+		String sellerId = talent.getSellerId();
+		String login = "";
+		if( session.getAttribute("loginId") == null ||sellerId.equals((String) session.getAttribute("loginId"))) {
+			login = "user";
+		}else {
+			login = (String) session.getAttribute("loginId");
+			
+		}
+		model.addAttribute("login", login);
+		
 		return "bsm/talentUpdateForm";
 	}	
 	
+	// 공지사항 페이지 이동
 	@GetMapping("/notice") 
 	public String noticePage() {
 		return "bsm/notice";
 	}
-	// 공사중
+	
+	// 공지사항 불러오기
 	@ResponseBody
 	@GetMapping("/notice/notices")
 	public Map<String, Object> noticeListBySearchAndCurrentPage(Pager pager) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		// service로 옮김
-		int totalCount = noticeService.findNoticeCountByPager(pager);
-		pager.setTotalCount(totalCount);
-		System.out.println("totalCount - " + totalCount);
-		System.out.println("pager.getSearch() - " + pager.getSearch());
-		System.out.println("pager.getCurrentPage() - " + pager.getCurrentPage());
-		System.out.println("pager - " + pager);
-		
-		List<Notice> noticeList = noticeService.findNoticeListByPager(pager);
-		
-		map.put("noticeList", noticeList);
-		map.put("pager", pager);
+		Map<String, Object> map = noticeService.findNoticeCountByPager(pager);
 		
 		return map;
+	}
+	
+	// 공지사항 세부 페이지
+	@GetMapping("/notice/{noticeNo}/detail")
+	public String noticeDetailByNoticeNo(@PathVariable Long noticeNo, Model model) {
+		Notice notice = noticeService.findNoticeByNoticeNo(noticeNo);
+		System.out.println("notice -> " + notice);
+		model.addAttribute("notice", notice);
+		return "bsm/noticeDetail";
 	}
 }

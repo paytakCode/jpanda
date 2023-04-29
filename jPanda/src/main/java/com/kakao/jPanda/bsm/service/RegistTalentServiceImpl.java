@@ -1,20 +1,11 @@
 package com.kakao.jPanda.bsm.service;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -158,6 +149,15 @@ public class RegistTalentServiceImpl implements TalentService{
 	@Override
 	public List<Talent> findRandomTalents() {
 		return talentDao.selectRandomTalents();
+	}
+
+	@Override
+	public Model findMainPageTalents(Model model) {
+		model.addAttribute("bestSellerTalent", findBestSellerTalents());
+		model.addAttribute("topRatedTalent", findTopRatedTalents());
+		model.addAttribute("newTrendTalent", findNewTrendTalents());
+		model.addAttribute("randomTalent", findRandomTalents());
+		return model;
 	}
 
 }

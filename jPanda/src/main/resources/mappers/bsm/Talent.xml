@@ -38,7 +38,7 @@
 		         GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
 		         ORDER BY  	COUNT(*) DESC, t.reg_date DESC
 		        )
-		WHERE ROWNUM BETWEEN 1 AND 5
+		WHERE ROWNUM BETWEEN 1 AND 3
 	</select>
 	
 	<select id="selectTopRatedTalents" resultType="RegistTalent">
@@ -55,7 +55,7 @@
 		        GROUP BY t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
 		        ORDER BY r.review_avg_score DESC, review_count DESC
 		       )
-		WHERE  ROWNUM BETWEEN 1 AND 5
+		WHERE  ROWNUM BETWEEN 1 AND 3
 	</select>
 	
 	<select id="selectNewTrendTalents" resultType="RegistTalent">
@@ -73,7 +73,7 @@
 		          GROUP BY t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
 		          ORDER BY COUNT(*) DESC, t.reg_date DESC
 		         )
-		WHERE 	 ROWNUM BETWEEN 1 AND 5
+		WHERE 	 ROWNUM BETWEEN 1 AND 3
 	</select>
 	
 	<select id="selectRandomTalents" resultType="RegistTalent">

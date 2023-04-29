@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>재능 수정</title>
+<script th:if="${login} == user" th:inline="javascript">
+	alert("비정상적인 이동이 감지되었습니다. 다시 로그인 해주세요.");
+	location.href = "/logout";
+</script>
 <style type="text/css">
 /* Set font family and size */
 body {
@@ -390,6 +394,8 @@ table {
 			$('#category-check').attr('src', '/image/check.png');
 		}
 	})
+	
+	$('#seller-id').val([[${login}]]);
 	</script>
 	</div> <!-- container -->
 </body>
