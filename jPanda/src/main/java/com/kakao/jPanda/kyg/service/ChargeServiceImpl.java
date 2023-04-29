@@ -1,6 +1,7 @@
 package com.kakao.jPanda.kyg.service;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class ChargeServiceImpl implements ChargeService {
 			log.info("ChargeServiceImpl insertCharge() Start...");
 			log.info("ChargeServiceImpl insertCharge() chargeDto.toString() : " + chargeDto.toString());
 			
-			Long chargeMoney = chargeDto.getChargeMoney();
+			//Long chargeMoney = chargeDto.getChargeMoney();
 			
 			if (chargeDto.getCouponNo() == "0") {
 				chargeDto.setCouponNo(null);
@@ -39,10 +40,11 @@ public class ChargeServiceImpl implements ChargeService {
 			log.info("insertCouponUse 결과값 : {}", insertCouponUse);
 			
 			//결제방법 선택시 보너스율 적용
-			double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-			Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000); 
+			//double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
+			//Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000); 
+			//Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000); 
 			
-			chargeDto.setChargeBamboo(chargeBamboo);
+			//chargeDto.setChargeBamboo(chargeBamboo);
 			
 			log.info("chargeDto.getCouponNo() : " + chargeDto.getCouponNo());
 			int resultInsertCharge = chargeDao.insertCharge(chargeDto);
@@ -63,15 +65,16 @@ public class ChargeServiceImpl implements ChargeService {
 	@Override
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
 		
+		// 사용된 쿠폰  -> true / 미사용 -> false
+		boolean isUsed = true;	
+		boolean isValid = true;
+		
 		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isUsed 검증
 		CouponUseDto selectedcouponUseDto = chargeDao.selectCouponUse(couponUseDto);
-		log.info("초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
+		log.info("ChargeServiceImpl 초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
 		
 		int returnResult = 1;
 		
-		// 사용된 쿠폰  -> true / 미사용 -> false
-		boolean isUsed = true;	
-		boolean isExpired = true;
 		//해당 DTO(id, couponId)가 Coupon_Use 테이블에 존재하면 사용 불가(0) 존재하지 않으면 사용 가능(1)
 		if(selectedcouponUseDto == null) {
 			isUsed = false;
@@ -80,29 +83,41 @@ public class ChargeServiceImpl implements ChargeService {
 		// false는 couponUse에 없는 쿠폰
 		if(isUsed == false) {
 			
-			//해당 쿠폰이 기한남아있는지 확인 boolean isExpired 검증
+			//해당 쿠폰이 기한남아있는지 확인 boolean isValid 검증
 			CouponDto selectedCouponDto = chargeDao.selectCouponByCouponNo(couponUseDto.getCouponNo());
 			log.info("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto -> "+selectedCouponDto);
 			
-			LocalDate expireDate = selectedCouponDto.getExpireDate();
-			LocalDate today = LocalDate.now();
+//			LocalDate expireDate = selectedCouponDto.getExpireDate();
+//			LocalDate today = LocalDate.now();
+			Timestamp issueDate = selectedCouponDto.getIssueDate();
+			//Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+			long currentTime = System.currentTimeMillis();
+			Timestamp expireDate = selectedCouponDto.getExpireDate();
+			log.info("issueDate -> " + issueDate);
+			log.info("today -> " + currentTime);
 			log.info("expireDate -> " + expireDate);
-			log.info("today -> " + today);
-			if(today.isBefore(expireDate)) {
-				isExpired = false;
-			} else if(today.isEqual(expireDate)) {
-				isExpired = false;
+			
+//			if(today.isBefore(expireDate)) {
+//				isValid = false;
+//			} else if(today.isEqual(expireDate)) {
+//				isValid = false;
+//			} else {
+//				isValid = true;
+//			}
+			
+			if(currentTime < expireDate.getTime() && currentTime >= issueDate.getTime()) {
+			    isValid = false;
 			} else {
-				isExpired = true;
+			    isValid = true;
 			}
 			
 			log.info("checkAvailableCoupon isUsed->"+isUsed);
-			log.info("checkAvailableCoupon isExpired->"+isExpired);
+			log.info("checkAvailableCoupon isValid->"+isValid);
 
 		}
 		 
-		// isUsed -> false, isExpired -> false인 경우 , 쿠폰 사용이 가능한 상태 1을 반환
-		if  (!isUsed && !isExpired) {
+		// isUsed -> false, isValid -> false인 경우 , 쿠폰 사용이 가능한 상태 1을 반환
+		if  (!isUsed && !isValid) {
 			returnResult = 1;
 		}   else {
 			returnResult = 0;

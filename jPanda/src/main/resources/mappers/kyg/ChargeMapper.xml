@@ -19,13 +19,14 @@
 		  bamboo_charge_SEQ.NEXTVAL,
 		  #{chargerId},
 		  #{paymentMethod},
-		  #{chargeMoney} - NVL(
+		  <!-- #{chargeMoney} - NVL(
 		  					  (
 		  					   SELECT coupon_value 
 		  					   FROM coupon 
 		  					   WHERE coupon_no = #{couponNo , jdbcType=VARCHAR}), 0
 		  					  )
-							  ,
+							  , -->
+		  #{chargeMoney},
 		  #{chargeBamboo},							
 		  SYSDATE,
 		  #{couponNo,  jdbcType=VARCHAR}
@@ -36,7 +37,8 @@
 	<insert id="insertCouponUse" parameterType="ChargeDto">
 	
 		INSERT INTO coupon_use(
-				id,
+				<!-- id, -->
+				member_id,
 				coupon_no
 			)
 			VALUES(
@@ -49,7 +51,8 @@
 	
 	<select id="selectBonusRatio" parameterType="java.lang.String" resultType="double">
 	
-		SELECT	ratio
+		<!-- SELECT	ratio -->
+		SELECT	bonus_ratio
 		FROM	payment
 		WHERE	method = #{paymentMethod}
 	
@@ -60,7 +63,8 @@
 	
 		SELECT	*
 		FROM	coupon_use
-		WHERE	id = #{id}
+		<!-- WHERE	id = #{id} -->
+		WHERE	member_id = #{memberId}
 		AND		coupon_no = #{couponNo}
 		
 	</select>

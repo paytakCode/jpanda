@@ -118,10 +118,10 @@ public class ChargeDaoImpl implements ChargeDao {
 		CouponDto selectCouponByCouponNoResult = null;
 		try {
 			selectCouponByCouponNoResult = sqlSession.selectOne("selectCouponByCouponNo", couponNo);
-			System.out.println("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponNoResult -> " + selectCouponByCouponNoResult);
+			//System.out.println("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponNoResult -> " + selectCouponByCouponNoResult);
 			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponNoResult -> {}", selectCouponByCouponNoResult);
 		} catch (Exception e) {
-			System.out.println("ChargeDaoImpl selectCouponByCouponNo() Exception -> " + e.getMessage());
+			//System.out.println("ChargeDaoImpl selectCouponByCouponNo() Exception -> " + e.getMessage());
 			log.error("ChargeDaoImpl selectCouponByCouponNo() Exception -> {}", e.getMessage(), e);
 		}
 		

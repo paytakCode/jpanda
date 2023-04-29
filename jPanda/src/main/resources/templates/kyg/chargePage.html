@@ -269,7 +269,7 @@
 				<div class="input-side">
 
 					<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
-					아이디	: <input type="text" id = "charger-id" name="chargerId" required="required" value="qyyswylcav4"><p/>
+					아이디	: <input type="text" id = "charger-id" name="chargerId" required="required" value="fveoxzxbqqn"><p/>
 					<!-- 충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/> -->
 					충전 밤부	: <input type="number" id = "charge-bamboo" name="chargeBamboo" required="required" value="5"><p/>
 					<p style="font-size:12px;">최소 입력금액은 5,000원이며, 결제금액이 0원인경우 결제가 되지 않습니다.</p>
@@ -310,7 +310,7 @@
 			    </li>
 			    <li>
 			    	<!-- 적용 결제 금액 : <input type="number" id = "real-charge-money" name="realChargeMoney" value="5000" readonly="readonly"> -->
-			    	충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/>
+			    	미할인 충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/>
 			    </li>
 			    <li>
 			    	<!-- 충전 예상 밤부 : <input type="number" id = "estimated-bamboo" name="estimatedBamboo" value="0" readonly="readonly"> -->
@@ -332,7 +332,7 @@
 
 		
 		// 금액을 1,000단위로 변환
-		function formatNumber(){
+		/* function formatNumber(){
 			let input = $('#charge-money').val();
 			if(!isNaN(input)){
 				input = Math.floor(input/1000) * 1000;
@@ -341,7 +341,7 @@
 			} else {
 				input.val() = '';
 			}
-		}
+		} */
 
 		
 		
@@ -379,6 +379,42 @@
 
 			updateEstimatedBamboo();											
 		}); */
+		
+		
+		$(function(){
+			function updateChargeMoney(){
+				
+				let chargeMoney = $('#charge-money').val();
+				let chargeBamboo = $('#charge-bamboo').val();
+				let realChargeMoney = $('#real-charge-money').val();
+				let paymentMethod = $('input[name="paymentMethod"]:checked').val();
+				let ratio = 1.0;
+				let estimatedBamboo = 0;
+				
+				if (paymentMethod == '휴대폰') {
+					ratio = 1.2;
+				} else if (paymentMethod == '상품권') {
+					ratio = 1.2;
+				} else if (paymentMethod == '무통장') { 			// 가상계좌 
+					ratio = 1.3;
+				} else if (paymentMethod == '신용카드') {
+					ratio = 1.4;
+				} else if (paymentMethod == '카드사 포인트') {
+					ratio = 1.0;
+				} else if (paymentMethod == '계좌이체') {
+					ratio = 1.4;
+				}
+				
+				chargeMoney = Math.floor(chargeBamboo * 1000);
+				$('#charge-money').val(chargeMoney);
+				
+			}
+			
+			$('#charge-bamboo').on('input', updateChargeMoney);				
+			$('input[name="paymentMethod"]').change(updateChargeMoney);		
+
+			updateChargeMoney();											
+		});
 		
 		
 		
@@ -492,12 +528,12 @@
    
 	    function requestPay() {
 	    	
-	    	let subchargeMoney = $('#charge-money').val();			 
+	    	/* let subchargeMoney = $('#charge-money').val();			 
 	    	if (subchargeMoney < 5000) {
 	    		alert("최소 입력 금액은 5000원 이상이어야 합니다.");
 	    	    console.error("Error: 충전 금액은 5000원 이상이어야 합니다.");
 	    	    return;
-	    	}
+	    	} */
 	    	
 	    	let pay_method = ''; 
 	    	let chargerNo = '';  
@@ -563,7 +599,10 @@
 			
 			let chargerId = rsp.buyer_name; 
 			let couponNo = rsp.custom_data;
-			let chargeMoney = $('#charge-money').val();
+			//let chargeMoney = $('#charge-money').val();
+			let chargeMoney = $('#real-charge-money').val();
+			//let chargeMoney = rsp.amount;
+			let chargeBamboo = $('#charge-bamboo').val();
 		    let paymentMethod = rsp.pay_method;
 		    
 		    if (paymentMethod === 'phone') {
@@ -584,6 +623,7 @@
 			console.log("rsp.success chargeSubmit couponNo : ", couponNo);
 			console.log("rsp.success chargeSubmit chargeMoney : ", chargeMoney);
 			console.log("rsp.success chargeSubmit pay_method : ", paymentMethod);
+			console.log("rsp.success chargeSubmit chargeBamboo : ", chargeBamboo);
 			
 		    if ($('#coupon-status').val() == '1') {
 		    	alert("쿠폰이 적용되었습니다.");
@@ -595,7 +635,8 @@
 		            						chargerId 	  : chargerId,	
 		            						couponNo	  : couponNo,
 		            						chargeMoney	  : chargeMoney,
-		            						paymentMethod : paymentMethod
+		            						paymentMethod : paymentMethod,
+		            						chargeBamboo  : chargeBamboo
 						}),
 					contentType: 'application/JSON',						
 					dataType: "json", 									
@@ -623,7 +664,8 @@
 		                   data: JSON.stringify({
 		                   						chargerId 	  : chargerId,		
 		                   						chargeMoney	  : chargeMoney,
-		                   						paymentMethod : paymentMethod
+		                   						paymentMethod : paymentMethod,
+		                   						chargeBamboo  : chargeBamboo
 							}),
 							contentType: 'application/JSON',						
 							dataType: "json", 									
