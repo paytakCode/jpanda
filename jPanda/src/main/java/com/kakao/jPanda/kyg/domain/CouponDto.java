@@ -8,9 +8,7 @@ import lombok.Data;
 @Data
 public class CouponDto {
 	
-	private String		couponNo;
-	//private LocalDate	issueDate;
-	//private LocalDate	expireDate;
+	private String		couponCode;
 	private Timestamp	issueDate;
 	private Timestamp	expireDate;
 	private Long		couponValue;

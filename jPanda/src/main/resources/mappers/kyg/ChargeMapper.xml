@@ -13,23 +13,16 @@
 		  payment_amount,
 		  charge_bamboo,
 		  charge_date,
-		  coupon_no
+		  coupon_code
 		)
 		VALUES (
-		  bamboo_charge_SEQ.NEXTVAL,
+		  bamboo_charge_no_SEQ.NEXTVAL,
 		  #{chargerId},
 		  #{paymentMethod},
-		  <!-- #{chargeMoney} - NVL(
-		  					  (
-		  					   SELECT coupon_value 
-		  					   FROM coupon 
-		  					   WHERE coupon_no = #{couponNo , jdbcType=VARCHAR}), 0
-		  					  )
-							  , -->
 		  #{chargeMoney},
 		  #{chargeBamboo},							
 		  SYSDATE,
-		  #{couponNo,  jdbcType=VARCHAR}
+		  #{couponCode,  jdbcType=VARCHAR}
 		)
 	
 	</insert>
@@ -37,13 +30,12 @@
 	<insert id="insertCouponUse" parameterType="ChargeDto">
 	
 		INSERT INTO coupon_use(
-				<!-- id, -->
 				member_id,
-				coupon_no
+				coupon_code
 			)
 			VALUES(
 				#{chargerId},
-	 		 	#{couponNo}
+	 		 	#{couponCode}
 			)
 		  
 	</insert>
@@ -51,7 +43,6 @@
 	
 	<select id="selectBonusRatio" parameterType="java.lang.String" resultType="double">
 	
-		<!-- SELECT	ratio -->
 		SELECT	bonus_ratio
 		FROM	payment
 		WHERE	method = #{paymentMethod}
@@ -63,9 +54,8 @@
 	
 		SELECT	*
 		FROM	coupon_use
-		<!-- WHERE	id = #{id} -->
-		WHERE	member_id = #{memberId}
-		AND		coupon_no = #{couponNo}
+		WHERE	member_id = #{memberId, jdbcType=VARCHAR}
+		AND		coupon_code = #{couponCode}
 		
 	</select>
 	
@@ -73,15 +63,15 @@
 	
 		SELECT	coupon_value
 		FROM	coupon
-		WHERE	coupon_no = #{couponNo}
+		WHERE	coupon_code = #{couponCode}
 		
 	</select>
 	
-	<select id="selectCouponByCouponNo" parameterType="String" resultType="ChargeCouponDto">
+	<select id="selectCouponByCouponCode" parameterType="String" resultType="ChargeCouponDto">
 	
 		SELECT	*
 		FROM	coupon
-		WHERE	coupon_no = #{couponNo}
+		WHERE	coupon_code = #{couponCode}
 		
 	</select>
 	
@@ -107,9 +97,13 @@
 		FROM talent_refund tr
 		LEFT JOIN bamboo_use bu
 		ON tr.purchase_no = bu.purchase_no
-		WHERE tr.status = '환불완료' 
+		WHERE tr.refund_status = '환불완료' 
 		AND bu.buyer_id = #{memberId}
 	
+	</select>
+	
+	<select id="selectPaymentList" parameterType="ChargePaymentDto" resultType="ChargePaymentDto">
+		SELECT * FROM payment
 	</select>
 	
 </mapper>
