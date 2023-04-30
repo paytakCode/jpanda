@@ -8,7 +8,7 @@ import lombok.Data;
 public class Partner {
 	
 	@NotEmpty
-	private String id;
+	private String memberId;
 	
 	@NotEmpty
 	private String name;
