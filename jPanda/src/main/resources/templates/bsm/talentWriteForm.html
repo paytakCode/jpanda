@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>재능 등록</title>
-<script th:if="${login} == guest" th:inline="javascript">
+<!-- <script th:if="${login} == guest" th:inline="javascript">
 		alert("로그인이 필요한 서비스 입니다.");
 		location.href = "/login";
-</script>
+</script> -->
 <style type="text/css">
 /* Set font family and size */
 body {
@@ -115,12 +115,12 @@ table {
 <body>
 	<div id="side">
 	  	<table id="write-check">
-	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/white.png"></td></tr>
-		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/white.png"></td></tr>
-		    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/white.png"></td></tr>
-		    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/white.png"></td></tr>
-		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/white.png"></td></tr>
-		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/white.png"></td></tr>
+	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
 	  	</table>
 	</div>
 	
@@ -203,7 +203,7 @@ table {
    		var isReadyToSubmit = true;
 		var nullArea = '';
    	  	$('.submit-check').each(function() {
-   	    	if($(this).attr('src') !== '/image/check.png') {
+   	    	if($(this).attr('src') !== '/image/talentImage/check.png') {
    	      		isReadyToSubmit = false;
    	      		if(nullArea !== ''){
    	      			nullArea += ', ' + $(this).parent().prev().text();
@@ -248,9 +248,9 @@ table {
         	}
 	    });
 		if(count === each){
-			$(check).attr('src', '/image/check.png');
+			$(check).attr('src', '/image/talentImage/check.png');
 		}else {
-			$(check).attr('src', '/image/white.png');
+			$(check).attr('src', '/image/talentImage/white.png');
 		}
 		
 	});
@@ -277,7 +277,7 @@ table {
 		var check_file_type = ['jpg','gif','png','jpeg','bmp', ''];
 		if(check_file_type.indexOf(file_type)==-1){
 		  	alert('이미지 파일만 선택할 수 있습니다.');
-		  	$('#main-image-check').attr('src', "/image/white.png");
+		  	$('#main-image-check').attr('src', "/image/talentImage/white.png");
 		  	return false;
 		}
 		
@@ -309,7 +309,7 @@ table {
 	               	$('#main-img-value').trigger('input');
 	           	},
 	           	error: function (jqXHR) { 
-	           		$('#main-image-preview').attr('src', "../image/jpandaMainImageLabel.jpg");
+	           		$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
 	           	}
 	       	});
 		}
@@ -325,9 +325,9 @@ table {
 	.then(editor => {
 		editor.model.document.on('change:data', () => {
             if (editor.getData().trim()) {
-                $('#content-check').attr('src', '/image/check.png');
+                $('#content-check').attr('src', '/image/talentImage/check.png');
             } else {
-                $('#content-check').attr('src', '/image/white.png');
+                $('#content-check').attr('src', '/image/talentImage/white.png');
             }
         });
 	})
@@ -364,7 +364,7 @@ table {
   		var selectedCategoryNo = parseInt(this.value);
     	$('#lower-category-no').html('');
     	$('#lower-category-no').append($("<option disabled selected>").text("중분류"));
-    	$('#category-check').attr('src', '/image/white.png');
+    	$('#category-check').attr('src', '/image/talentImage/white.png');
     	categoryList.forEach(function(category) {
 	      	if (category.upperCategoryNo === selectedCategoryNo) {
 	        	$('#lower-category-no').append($("<option>").val(category.categoryNo).text(category.item));
@@ -374,9 +374,9 @@ table {
   	
 	$('#lower-category-no').on('change', function(){
 		if($(this).val() === ''){
-			$('#category-check').attr('src', '/image/white.png');
+			$('#category-check').attr('src', '/image/talentImage/white.png');
 		}else {
-			$('#category-check').attr('src', '/image/check.png');
+			$('#category-check').attr('src', '/image/talentImage/check.png');
 		}
 	});
 	

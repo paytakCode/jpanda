@@ -76,7 +76,7 @@ table {
 	<h2 id="notice-main">공지사항</h2>
 	<table id="notice-detail">
 		<tr><th>제목</th><td id="title" th:text="${notice.title}"></td></tr>
-		<tr><th>등록일</th><td id="reg-date" th:text="${notice.regDate}"></td></tr>
+		<tr><th>등록일</th><td id="reg-date" th:text="${#strings.substring(notice.regDate, 0, 10)}"></td></tr>
 		<tr><td colspan="2" id="content" th:text="${notice.content}"></td></tr>
 	</table>
 	<button id="back-button">목록</button>

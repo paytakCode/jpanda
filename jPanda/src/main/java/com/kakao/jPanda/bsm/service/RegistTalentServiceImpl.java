@@ -1,9 +1,12 @@
 package com.kakao.jPanda.bsm.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegistTalentServiceImpl implements TalentService{
 	private final TalentDao talentDao;
+	private ResourceLoader resourceLoader;
 	
 	@Override
 	public List<Category> findCategorys() {
@@ -71,11 +75,19 @@ public class RegistTalentServiceImpl implements TalentService{
 		System.out.println("MainController.image() 서버에 저장될 파일 이름 -> " + newFileName);
 
 		// 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
-		String realPath = request.getServletContext().getRealPath("");
+		String realPath = request.getServletContext().getRealPath("/");
 		System.out.println("MainController.image() 현재 파일 경로 -> " + realPath);
 
+//		 try {
+//			String imagePath = resourceLoader.getResource("classpath:/static/image/").getFile().getAbsolutePath();
+//			System.out.println("imagePath " + imagePath);
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
 		// 현재경로/talentImage/파일명이 저장 경로
-		String savePath = realPath + "../resources/static/image/uploadImage/" + newFileName;
+		//String savePath = realPath + "/resources/static/image/uploadImage/" + newFileName;
+		String savePath = System.getProperty("user.dir") + "/src/main/resources/static/image/uploadImage/" + newFileName;
+		System.out.println("projectPath" + savePath);
 		System.out.println("MainController.image() 파일 저장 경로 + 파일 이름 -> " + savePath);
 		
 		// 해당 파일 경로에 폴더가 없을시 폴더 생성
@@ -98,10 +110,14 @@ public class RegistTalentServiceImpl implements TalentService{
 			e.printStackTrace();
 		}
 		
+		URL r = this.getClass().getResource("");
+
+		String path = r.getPath();
+		System.out.println("path -------------->" + path);
+		
 		// uploaded, url 값을 Modelandview를 통해 보냄
 		mav.addObject("uploaded", true); // 업로드 완료
 		mav.addObject("url", uploadPath); // 업로드 완료
-
 		return mav;
 	}
 	

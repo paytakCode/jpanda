@@ -51,7 +51,7 @@ public class RegistTalentDaoImpl implements TalentDao{
 	public int updateTalent(Talent talent) {
 		int result = 0;
 		try {
-			result = session.update("updateTalent", talent);
+			result = session.update("RegistupdateTalent", talent);
 		} catch (Exception e) {
 			System.out.println("TalentDaoImpl updateTalent e.getMessage() ->" + e.getMessage());
 		}

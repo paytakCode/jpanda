@@ -204,7 +204,7 @@ p {
       <div id="slider-wrap1" class="slider-wrap">
           <ul id="slider1" class="slider" >
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}">
-				<img th:src="${talent.mainImg}">
+				<img th:src="@{${talent.mainImg}}">
                     <p class="slide-summary" th:text="${talent.summary}"></p>
                     <div class="bamboo">
                     	<p class="price" th:text="${talent.saleBamboo}">
