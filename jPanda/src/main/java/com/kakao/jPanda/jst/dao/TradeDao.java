@@ -15,7 +15,7 @@ public interface TradeDao {
 
 	int deleteRefundByrefundPurchaseNo(String purchaseNo);
 
-	TalentDto selectTalentByTalentNo(String talentNo);
+	TalentDto selectTradeTalentByTalentNo(String talentNo);
 
 	int insertExchangeByTalentNo(TalentDto talentDto);
 	
@@ -35,6 +35,6 @@ public interface TradeDao {
 
 	int updateExchangeStatusByTalentNo(String talentNo);
 
-	int updateTalent(TalentDto talentDto);
+	int updateTradeTalent(TalentDto talentDto);
 
 }//end class
