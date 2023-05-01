@@ -39,10 +39,10 @@ public class TalentController {
 		model = talentService.findMainPageTalents(model);
 		
 		String loginId = "";
-		if(session.getAttribute("loginId") == null) {
+		if(session.getAttribute("memberId") == null) {
 			loginId = "guest";
 		}else {
-			loginId = (String) session.getAttribute("loginId");
+			loginId = (String) session.getAttribute("memberId");
 		}
 		model.addAttribute("loginId", loginId);
 		return "bsm/talentTestMainpage";
@@ -55,10 +55,10 @@ public class TalentController {
 		model.addAttribute("categoryList", categoryList);
 		
 		String login = "";
-		if(session.getAttribute("loginId") == null) {
+		if(session.getAttribute("memberId") == null) {
 			login = "guest";
 		}else {
-			login = (String) session.getAttribute("loginId");
+			login = (String) session.getAttribute("memberId");
 			
 		}
 		model.addAttribute("login", login);
@@ -101,10 +101,10 @@ public class TalentController {
 		
 		String sellerId = talent.getSellerId();
 		String login = "";
-		if( session.getAttribute("loginId") == null ||sellerId.equals((String) session.getAttribute("loginId"))) {
+		if( session.getAttribute("memberId") == null ||sellerId.equals((String) session.getAttribute("memberId"))) {
 			login = "user";
 		}else {
-			login = (String) session.getAttribute("loginId");
+			login = (String) session.getAttribute("memberId");
 			
 		}
 		model.addAttribute("login", login);

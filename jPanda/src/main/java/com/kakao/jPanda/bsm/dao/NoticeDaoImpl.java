@@ -43,7 +43,7 @@ public class NoticeDaoImpl implements NoticeDao {
 	public Notice selectNoticeByNoticeNo(Long noticeNo) {
 		Notice notice = null;
 		try {
-			notice = session.selectOne("selectNoticeByNoticeNoRegist", noticeNo);
+			notice = session.selectOne("selectRegistNoticeByNoticeNo", noticeNo);
 		} catch (Exception e) {
 			System.out.println("NoticeDaoImpl selectNoticeByNoticeNo e.getMessage() ->" + e.getMessage());
 		}

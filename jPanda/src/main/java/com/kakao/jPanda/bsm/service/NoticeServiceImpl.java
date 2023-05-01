@@ -23,11 +23,6 @@ public class NoticeServiceImpl implements NoticeService {
 		// service로 옮김
 		int totalCount = noticeDao.selectNoticeCountByPager(pager);
 		pager.setTotalCount(totalCount);
-		System.out.println("totalCount - " + totalCount);
-		System.out.println("pager.getSearch() - " + pager.getSearch());
-		System.out.println("pager.getCurrentPage() - " + pager.getCurrentPage());
-		System.out.println("pager - " + pager);
-		
 		List<Notice> noticeList = findNoticeListByPager(pager);
 		
 		map.put("noticeList", noticeList);
