@@ -9,7 +9,7 @@
     <select id="selectMemberById" parameterType="string" resultType="MemberDto">
     	SELECT * 
     	FROM member 
-    	WHERE id = #{id}
+    	WHERE member_id = #{memberId}
   	</select>
 	<select id="findIdByNameAndEmail" parameterType="Map" resultType="String">
 		SELECT id
@@ -19,38 +19,38 @@
 	<select id="findPwByIdAndEmail" parameterType="Map" resultType="String">
 		SELECT password
 		FROM member
-		WHERE id = #{id} AND email = #{email}
+		WHERE member_id = #{memberId} AND email = #{email}
 	</select>
 	<update id="updatePasswordById" parameterType="Map">
  	 	UPDATE member
  		SET password = #{newPw}
- 		WHERE id = #{id}
+ 		WHERE member_id = #{memberId}
 	</update>
 	<select id="selectMemberByIdAndPassword" parameterType="MemberDto" resultType="MemberDto">
 		SELECT *
 		FROM member
-		WHERE id = #{id} AND password = #{password}
+		WHERE member_id = #{memberId} AND password = #{password}
 	</select>
 	<insert id="insertMember" parameterType="MemberDto">
         INSERT INTO Member
-            (id, password, name, tel, email, gender ,birth)
-        VALUES (#{id},#{password}, #{name},#{tel}, #{email}, #{gender} , TO_DATE(#{birth}, 'YYYY-MM-DD'))
+            (member_id, password, name, tel, email, gender ,birth)
+        VALUES (#{memberId},#{password}, #{name},#{tel}, #{email}, #{gender} , TO_DATE(#{birth}, 'YYYY-MM-DD'))
     </insert>
 	<insert id="insertAccount" parameterType="MemberDto">
         INSERT INTO Account
-            (id, account, code)
-        VALUES (#{id},#{account}, #{code})
+            (member_id, account, code)
+        VALUES (#{memberId},#{account}, #{code})
     </insert>
     <select id="checkId" resultType="int" parameterType="MemberDto">
     	SELECT 
     	COUNT(*) 
     	FROM member 
-    	WHERE id=#{id}
+    	WHERE member_id=#{memberId}
 	</select>
 	<delete id="deleteMemberById">
   		DELETE 
   		FROM member
-  		WHERE id = #{id}
+  		WHERE member_id = #{memberId}
     	AND password = #{encryptedPassword}
 	</delete>
 </mapper>
