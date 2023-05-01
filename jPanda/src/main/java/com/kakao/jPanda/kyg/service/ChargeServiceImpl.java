@@ -59,7 +59,7 @@ public class ChargeServiceImpl implements ChargeService {
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
 		
 		boolean isAvailable = false;	
-		boolean isPeriod = false;
+		boolean isValidPeriod = false;
 		int returnResult = 0;
 		
 		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isAvailable 검증
@@ -78,9 +78,9 @@ public class ChargeServiceImpl implements ChargeService {
 			CouponDto selectedCouponDto = chargeDao.selectCouponByCouponCode(couponUseDto.getCouponCode());
 			log.info("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto -> "+selectedCouponDto);
 			
-			// coupon TB에 쿠폰이 없는경우 isPeriod = false
+			// coupon TB에 쿠폰이 없는경우 isValidPeriod = false
 			if(selectedCouponDto == null) {
-				isPeriod = false;
+				isValidPeriod = false;
 			} else {
 				
 				LocalDate today = LocalDate.now();
@@ -92,20 +92,20 @@ public class ChargeServiceImpl implements ChargeService {
 				log.info("expireDate -> " + expireDate);
 				
 				if(currentTime <= expireDate.getTime() && currentTime >= issueDate.getTime()) {
-					isPeriod = true;
+					isValidPeriod = true;
 				} else {
-					isPeriod = false;
+					isValidPeriod = false;
 				}
 				
 				log.info("checkAvailableCoupon isAvailable -> "+isAvailable);
-				log.info("checkAvailableCoupon isPeriod -> "+isPeriod);
+				log.info("checkAvailableCoupon isValidPeriod -> "+isValidPeriod);
 
 			}
 	
 		}
 		 
-		// isAvailable -> true, isPeriod -> true인 경우 , 쿠폰 사용이 가능한 상태 1을 반환
-		if  (isAvailable && isPeriod) {
+		// isAvailable -> true, isValidPeriod -> true인 경우 , 쿠폰 사용이 가능한 상태 1을 반환
+		if  (isAvailable && isValidPeriod) {
 			returnResult = 1;
 		}   else {
 			returnResult = 0;

@@ -235,8 +235,6 @@
 				<div class="input-side">
 
 					<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
-					아이디	: <input type="text" id = "charger-id" name="chargerId" required="required" value="member2"><p/>
-					<!-- 충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" onblur="formatNumber()"><p/> -->
 					충전 밤부	: <input type="number" id = "charge-bamboo" name="chargeBamboo" required="required" value="5"><p/>
 					<p style="font-size:12px;">최소 입력금액은 5,000원이며, 결제금액이 0원인경우 결제가 되지 않습니다.</p>
 					
@@ -310,8 +308,6 @@
 		});
 		
 		
-		
-		
 		$(function(){
 			function updateRealChargeMoney(){
 				
@@ -359,10 +355,9 @@
 		//사용가능한 쿠폰 validation 
 		function couponCheck() {
 			let couponCode = $("#coupon-code").val();
-			let memberId = $("#charger-id").val();
 			$.ajax({
 				type: 'GET',
-		  		url: '/charge/check-available-coupon?memberId=' + memberId + '&couponCode=' + couponCode,
+		  		url: '/charge/check-available-coupon?couponCode=' + couponCode,
 		  		dataType: 'json',															
 		  		success: function(couponUseDto) {
 					console.log(couponUseDto.result);
@@ -371,7 +366,6 @@
 			          $('#coupon-status').val('1');
 			          $('#coupon-code').attr('readonly',true);
 			          $('#charge-bamboo').attr('readonly',true);
-			  	      //$('#check-coupon').prop('disabled', true);
 			  	      $('#check-coupon').attr('readonly',true);
 			  	      $('#charge-money').prop('disabled', true);
 			  	      $('input[type=radio]').attr('disabled', true);
@@ -421,12 +415,9 @@
 	    	let pay_method = ''; 
 	    	let chargerNo = '';  
 	    	let paymentMethod = $('input[name="paymentMethod"]:checked').val();
-	    	//let chargeMoney = $('#real-charge-money').val();
 	    	let realChargeMoney = $('#real-charge-money').val();
-	    	let chargerId = $('#charger-id').val();
 	    	let couponCode = $('#coupon-code').val();
 			
-			console.log("구매자 : " + chargerId);
 			console.log("충전 금액 : " + realChargeMoney);
 			console.log("쿠폰 번호 : " + chargerNo);
 			console.log("결제 방법 : " + $("input[name='paymentMethod']:checked").val());
@@ -450,8 +441,8 @@
 	           pg : pgSelect,								
 	           pay_method : pay_method, 					// 지불 수단
 	           name : 'panda충전',							// 상품 명
-	           amount : realChargeMoney,						// 가격 숫자 타입
-	           buyer_name : chargerId,
+	           amount : realChargeMoney,					// 가격 숫자 타입
+	           buyer_name : '',
 	           buyer_email : '',
 	           buyer_tel : '',
 	           buyer_addr : '',
@@ -475,11 +466,8 @@
 		function chargeSubmit(rsp) { 
 			console.log("chargeSubmit Start...");
 			
-			let chargerId = rsp.buyer_name; 
 			let couponCode = rsp.custom_data;
-			//let chargeMoney = $('#charge-money').val();
 			let realChargeMoney = $('#real-charge-money').val();
-			//let chargeMoney = rsp.amount;
 			let chargeBamboo = $('#charge-bamboo').val();
 		    let paymentMethod = rsp.pay_method;
 		    
@@ -493,7 +481,6 @@
 				paymentMethod = '계좌이체';
 			}
 		    
-		    console.log("rsp.success chargeSubmit chargerId : ", chargerId);
 			console.log("rsp.success chargeSubmit couponCode : ", couponCode);
 			console.log("rsp.success chargeSubmit chargeMoney : ", realChargeMoney);
 			console.log("rsp.success chargeSubmit pay_method : ", paymentMethod);
@@ -506,7 +493,6 @@
 		            url: "/charge/charge", 
 		            type: "POST", 
 		            data: JSON.stringify({
-		            						chargerId 	  : chargerId,	
 		            						couponCode	  : couponCode,
 		            						chargeMoney	  : realChargeMoney,
 		            						paymentMethod : paymentMethod,
@@ -518,7 +504,7 @@
 		                console.log("chargeSubmit() AJAX 요청 성공: ", data);
 		                alert("충전 성공");
 		                setTimeout(function() {
-		                location.replace("/charge/"); 				// redirect
+		                location.replace("/charge/"); 					// redirect
 			            }, 2000); 										// 2초 후 이동
 		            },
 		            error: function(data) { 							
@@ -536,7 +522,6 @@
 		                   url: "/charge/charge", 
 		                   type: "POST",
 		                   data: JSON.stringify({
-		                   						chargerId 	  : chargerId,		
 		                   						chargeMoney	  : realChargeMoney,
 		                   						paymentMethod : paymentMethod,
 		                   						chargeBamboo  : chargeBamboo
@@ -565,10 +550,8 @@
 
 //		총 보유 밤부		
 		$(function(){
-			let memberId = $('#charger-id').val() || 0;
-			console.log("$(document).ready memberId : " + memberId);
 			$.ajax({
-				url: "/charge/members/" + memberId + "/total-bamboo",
+				url: "/charge/members/total-bamboo",
 				type: "GET",
 				dataType: "text",
 				success: function(foundTotalBambooStr){
