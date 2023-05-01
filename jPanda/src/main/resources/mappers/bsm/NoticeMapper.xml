@@ -8,7 +8,7 @@
 		FROM	notice
 		<if test="search != '' and search != null">
 			WHERE	title LIKE '%' || #{search} || '%'
-			OR 		DBMS_LOB.INSTR((n.content,'%' || #{search} || '%') > 0
+			OR 		CONTAINS(content,'%' || #{search} || '%') > 0
 		</if>
 		
 	</select>
@@ -20,7 +20,7 @@
 				 		 ORDER BY reg_date DESC) n
 				 <if test="search != '' and search != null">
 				 WHERE 	n.title LIKE '%' || #{search} || '%' 
-				 OR 	DBMS_LOB.INSTR((n.content,'%' || #{search} || '%') > 0
+				 OR 	CONTAINS(n.content,'%' || #{search} || '%') > 0
 				 </if>
 				)
 		WHERE  	rn BETWEEN #{startRow} AND #{endRow}

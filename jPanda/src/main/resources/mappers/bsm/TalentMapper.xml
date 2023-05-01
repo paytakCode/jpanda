@@ -7,8 +7,8 @@
 		<!-- 더미 테이터 떄문에 시퀀스x MAX사용 -->
 		<!-- SELECT talent_seq.NEXTVAL FROM dual -->
 		INSERT INTO talent 
-		VALUES((SELECT MAX(talent_no)+1 FROM talent), #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
-				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
+		VALUES(talent_no_seq.NEXTVAL, #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
+				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, #{regDate}, NULL)
 	</insert>
 	
 	<select id="RegistselectTalentBytalentNo" resultType="RegistTalent" parameterType="Long">

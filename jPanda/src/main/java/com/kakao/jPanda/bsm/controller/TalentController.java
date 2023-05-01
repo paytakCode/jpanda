@@ -36,15 +36,6 @@ public class TalentController {
 	// Test Main 페이지 이동
 	@GetMapping("/")
 	public String talentTest(Model model, HttpSession session) {
-//		List<Talent> bestSellerTalentList = talentService.findBestSellerTalents();
-//		List<Talent> topRatedTalentList = talentService.findTopRatedTalents();
-//		List<Talent> newTrendTalentList = talentService.findNewTrendTalents();
-//		List<Talent> randomTalentList = talentService.findRandomTalents();
-//		
-//		model.addAttribute("bestSellerTalent", bestSellerTalentList);
-//		model.addAttribute("topRatedTalent", topRatedTalentList);
-//		model.addAttribute("newTrendTalent", newTrendTalentList);
-//		model.addAttribute("randomTalent", randomTalentList);
 		model = talentService.findMainPageTalents(model);
 		
 		String loginId = "";

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>재능 수정</title>
-<!-- <script th:if="${login} == user" th:inline="javascript">
+<script th:if="${login} == user" th:inline="javascript">
 	alert("비정상적인 이동이 감지되었습니다. 다시 로그인 해주세요.");
 	location.href = "/logout";
-</script> -->
+</script>
 <style type="text/css">
 /* Set font family and size */
 body {
@@ -356,7 +356,7 @@ table {
 	<script th:inline="javascript">
 	// 카테고리 값 생성
 	
-	// model로 밭은 categoryList 값 가져오기
+	// model로 밭은 categoryList 값 가져오기C
   	var categoryList = /*[[${categoryList}]]*/ [];
  	var upperCatgoryNo = [[${talent.upperCategoryNo}]];
  	var lowerCatgoryNo = [[${talent.lowerCategoryNo}]];

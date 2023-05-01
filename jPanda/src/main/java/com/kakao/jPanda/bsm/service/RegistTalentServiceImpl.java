@@ -78,17 +78,17 @@ public class RegistTalentServiceImpl implements TalentService{
 		String realPath = request.getServletContext().getRealPath("/");
 		System.out.println("MainController.image() 현재 파일 경로 -> " + realPath);
 
-//		 try {
-//			String imagePath = resourceLoader.getResource("classpath:/static/image/").getFile().getAbsolutePath();
-//			System.out.println("imagePath " + imagePath);
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
+		System.out.println("System.getProperty(\"user.dir\") -> " + System.getProperty("user.dir"));
+		int index = System.getProperty("user.dir").indexOf("\\jPanda");
+		String path = System.getProperty("user.dir").substring(0, index);
+		System.out.println("path -> " + path);
+		
+		
+		
 		// 현재경로/talentImage/파일명이 저장 경로
-		//String savePath = realPath + "/resources/static/image/uploadImage/" + newFileName;
-		String savePath = System.getProperty("user.dir") + "/src/main/resources/static/image/uploadImage/" + newFileName;
-		System.out.println("projectPath" + savePath);
+		String savePath = path + "/uploadImage/" + newFileName;
 		System.out.println("MainController.image() 파일 저장 경로 + 파일 이름 -> " + savePath);
+		
 		
 		// 해당 파일 경로에 폴더가 없을시 폴더 생성
 		File fileDirectory = new File(savePath);
@@ -97,7 +97,7 @@ public class RegistTalentServiceImpl implements TalentService{
 			fileDirectory.mkdirs();
 		}
 		
-		String uploadPath = "/image/uploadImage/" + newFileName; 
+		String uploadPath = "/uploadImage/" + newFileName; 
 		System.out.println("MainController.image() 경로 출력 -> " + uploadPath);
 
 		// 저장 경로로 파일 객체 생성
@@ -109,11 +109,6 @@ public class RegistTalentServiceImpl implements TalentService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		URL r = this.getClass().getResource("");
-
-		String path = r.getPath();
-		System.out.println("path -------------->" + path);
 		
 		// uploaded, url 값을 Modelandview를 통해 보냄
 		mav.addObject("uploaded", true); // 업로드 완료
