@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Review {
+public class ReviewDto {
 	
 	private Long reviewNo;
 	private Long talentNo;

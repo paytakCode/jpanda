@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Talent {
+public class TalentDto {
 	// 판매 게시판
 	private Long talentNo; 
 	private String sellerId;
@@ -22,7 +22,7 @@ public class Talent {
 	private Long bamboo;
 	private Long saleBamboo;
 	private String summary;
-	private String status;
+	private String talentStatus;
 	private Long viewCount;
 	private Timestamp regDate;
 	private Timestamp statusDate;

@@ -62,8 +62,8 @@
 	
 	<!-- 리뷰 인서트  -->	
 	<insert id="insertReview" parameterType="BoardReview">
-		INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score ,review_no) 
-    	VALUES (#{talentNo}, #{reviewerId}, #{content}, #{reviewDate}, #{bambooScore}, (SELECT MAX(review_no)+1 FROM review))
+		INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score, review_no) 
+    	VALUES (#{talentNo}, #{reviewerId}, #{content}, #{reviewDate}, #{bambooScore}, REVIEW_NO_SEQ.nextval)
 	</insert>
 	
 	<!-- 리뷰 업데이트  -->	
@@ -77,6 +77,11 @@
 		DELETE FROM review
 		WHERE review_no = #{reviewNo}
 	</delete>
+	
+	<update id="updateTalent" parameterType="Long">
+		UPDATE talent SET talent_status = '판매종료'
+		WHERE talent_no = #{talentNo}
+	</update>
 	
 </mapper>
 
