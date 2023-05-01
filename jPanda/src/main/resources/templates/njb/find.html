@@ -47,19 +47,16 @@
 
 	$(document).ready(function(){
    	 $("#find-pw-btn").click(function(){
-  	       var id  = $("#input-id").val();
-     	   var email = $("#input-pw-email").val();
+  	       var memberId  = $("#input-id").val();
+     	   var email     = $("#input-pw-email").val();
 
         $.ajax({
-            type: "get",
-            url: "/findpw?id=" + id + "&email=" + email,
+            type: "GET",
+            url: "/findpw?memberId=" + memberId + "&email=" + email,
             success:function(result){
               	$("#find-pw-result").text(result);                
         	    }
-            error: function(result){
-            console.log(result);
-        	$("#find-id-result").text(result.responseText);
-        }
+           
        	 });
   	  });
 });
