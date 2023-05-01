@@ -1,20 +1,92 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="headerFragment">
-	<div style="width: 80%; margin: 0 auto;" class="py-3 mb-3 border-bottom">
-	    <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: 2fr 4fr 1fr;">
-	     	<a href="#"><div class="bi me-2 logo"></div></a>
-	      <div class="d-flex align-items-center">
-	        <form class="w-100 me-3" role="search">
-	          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-	          <button style="margin-left: 5px;" type="button" class="btn btn-warning">search</button>
-	        </form>
-	
-	      </div>
-	        <div class="text-end">
-	          <button type="button" class="btn btn-outline-light me-2">Login</button>
-	          <button type="button" class="btn btn-warning">Sign-up</button>
-	        </div>
-	    </div>
+<style>
+  #login-image { 
+	  height: 50px;
+	  width: auto;
+  }
+  #logo-image { 
+	  height: 100px;
+	  width: auto;
+  }
+  .navbar-brand:hover{
+  	cursor: pointer;
+  }
+  #header {
+  	height: 10%;
+  	width: 100%;
+  }
+</style>
+<nav id="header" class="navbar navbar-expand-lg bg-white">
+	<div class="container-fluid justify-content-between">
+ 		<img class="navbar-brand"  id="logo-image" src="/image/logo.png" onclick="location.href='/main'">
+		<div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+				<li class="nav-item  align-self-center">
+					<div class="container-fluid">
+						<form class="d-flex" role="search">
+							<input class="form-control me-2" type="search" placeholder="검색어를 입력하세요." aria-label="Search">
+							<button class="btn btn-outline-success text-nowrap" type="submit">검색</button>
+						</form>
+					</div>
+	    		</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<img id="login-image" src="">
+					</a>
+					<ul class="dropdown-menu">
+					</ul>
+				</li>
+			</ul>
+		</div>
 	</div>
-</div>
+</nav>
+	<script th:inline="javascript">
+		$(function(){
+		  if([[${loginId}]] == "" || [[${loginId}]] == null){
+		    $("#login-image").attr("src", "/image/login-before.png");
+
+		    var liElement1 = $("<li></li>");
+		    var aElement1 = $("<a></a>", {
+		      class: "dropdown-item",
+		      href: "/login",
+		      text: "로그인"
+		    });
+		    liElement1.append(aElement1);
+		    $(".dropdown-menu").append(liElement1);
+		    
+		    var liElement2 = $("<li></li>");
+		    var aElement2 = $("<a></a>", {
+		      class: "dropdown-item",
+		      href: "/signup",
+		      text: "회원가입"
+		    });
+		    liElement2.append(aElement2);
+		    $(".dropdown-menu").append(liElement2);
+		    
+		  } else {
+		    $("#login-image").attr("src", "/image/login-after.png");
+
+		    var liElement1 = $("<li></li>");
+		    var aElement1 = $("<a></a>", {
+		      class: "dropdown-item",
+		      href: "/mypage",
+		      text: "마이페이지"
+		    });
+		    liElement1.append(aElement1);
+		    $(".dropdown-menu").append(liElement1);
+		    
+		    var liElement2 = $("<li></li>");
+		    var aElement2 = $("<a></a>", {
+		      class: "dropdown-item",
+		      href: "/logout",
+		      text: "로그아웃"
+		    });
+		    liElement2.append(aElement2);
+		    $(".dropdown-menu").append(liElement2);
+		    
+		  }
+		});
+	</script>
+  </div> <!-- headerFragment -->
 </html>
