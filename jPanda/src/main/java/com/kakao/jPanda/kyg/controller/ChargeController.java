@@ -1,6 +1,7 @@
 package com.kakao.jPanda.kyg.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
+import com.kakao.jPanda.kyg.domain.PaymentDto;
 import com.kakao.jPanda.kyg.service.ChargeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,17 +34,21 @@ public class ChargeController {
 		this.chargeService = chargeService;
 	}
 	
-	
-//	충전 메인페이지
+	/*	
+	//	충전 메인페이지
 	@GetMapping("/")
 	public String chargePage() {
 		return "kyg/chargePage";
 	}
+	*/
 	
-	
-	
-	
-//	밤부 충전
+	/*
+	 * 밤부 충전
+	 * chargePage에서 ajax 요청 처리
+	 * 전달된 data를 ChargeDto에 저장 후 DB에 삽입
+	 * @param	ChargeDto
+	 * @return	resultMap	/	resultMap을 return하여 callback시 success, fail에 따라 resultMap.put()을 console에 출력 
+	 */
 	@ResponseBody
 	@PostMapping("/charge") 
 	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto) {
@@ -66,8 +72,14 @@ public class ChargeController {
 		
 	}
 	
-	
-//	이용 가능한 쿠폰 체크
+	/*
+	 *	이용 가능한 쿠폰 체크
+	 *	chargePage에서 ajax 요청 처리
+	 *	전달받은 memberId와 couponCode를 TB coupon, TB coupon_use와 비교하여 validation check
+	 *	사용 불가능한 쿠폰 : resultInt 0을 반환, 사용 가능한 쿠폰 : resultInt 1은 반환 ,couponValue를 반환
+	 *	@param	CouponUseDto
+	 *	@return	checkedcouponUseDto
+	 */
 	@GetMapping(value = "/check-available-coupon")
 	@ResponseBody
 	public CouponUseDto checkAvailableCoupon(CouponUseDto couponUseDto) {
@@ -85,28 +97,53 @@ public class ChargeController {
 		checkedcouponUseDto.setResult(resultInt);
 		checkedcouponUseDto.setCouponValue(couponValue);
 		
-		log.info("Controller checkAvailableCoupon resultInt-> {}", resultInt);
-		log.info("Controller checkAvailableCoupon couponValue-> {}", couponValue);
+		log.info("ChargeContoller checkAvailableCoupon resultInt-> {}", resultInt);
+		log.info("ChargeContoller checkAvailableCoupon couponValue-> {}", couponValue);
 		
 		return checkedcouponUseDto;
 	}
 	
-	// 총보유밤부
+	/*
+	 * 총보유밤부
+	 * chargePage에서 ajax 요청 처리
+	 * memberId에 따른 총 보유 bamboo를 계산하여 반환
+	 * @param	memberId
+	 * @return	foundTotalBambooStr
+	 */
 	@GetMapping(path = "/members/{memberId}/total-bamboo")
 	@ResponseBody
 	public String  totalBamboo(@PathVariable String memberId) {
-		log.info("Controller totalBamboo Start...");
-		log.info("Controller totalBamboo memberId -> {}", memberId);
+		log.info("ChargeContoller totalBamboo Start...");
+		log.info("ChargeContoller totalBamboo memberId -> {}", memberId);
 		
 		Long foundTotalBamboo = chargeService.findTotalBamboo(memberId);
 		
 		String  foundTotalBambooStr =  Long.toString(foundTotalBamboo);
 		
-		log.info("Controller totalBamboo calculatedTotalBamboo -> {}", foundTotalBamboo);
+		log.info("ChargeContoller totalBamboo calculatedTotalBamboo -> {}", foundTotalBamboo);
 		
 		return foundTotalBambooStr;
 	}
 	
+	/*
+	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
+	 * Model	TB payment -> method, bonusRatio 
+	 * @param	Model
+	 * @return	kyg/chargePage
+	 */
+	@GetMapping(value = "/")
+	public String paymentList(Model model) {
+		
+		PaymentDto selectMethodBonusDto = new PaymentDto();
+		log.info("ChargeContoller paymentList() Start...");
+		
+		List<PaymentDto> getPaymentList = chargeService.findPaymentList(selectMethodBonusDto);
+		log.info("ChargeContoller paymentList() listPayment.size() -> {}", getPaymentList.size());
+		
+		model.addAttribute("listPayment", getPaymentList);
+		
+		return "kyg/chargePage";
+	}
 	
 }
 	
