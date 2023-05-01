@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>공지사항</title>
+<style type="text/css">
+.container{
+	margin: 0 auto;
+	width: 1000px;
+}
+.navbar {
+  	display: flex; /* flexbox로 설정 */
+  	justify-content: space-around; /* 링크 간 간격 일정하게 유지 */
+  	align-items: center; /* 링크 수직 가운데 정렬 */
+  	margin: 0 auto;
+  	background-color: #333; /* 배경색 설정 */
+  	height: 50px; /* 높이 설정 */
+  	width: 1000px;
+}
+
+.navbar a {
+  	color: white; /* 링크 글씨 색상 설정 */
+  	text-decoration: none; /* 링크 밑줄 제거 */
+  	font-size: 15px; /* 글씨 크기 설정 */
+  	font-weight: bold; /* 글씨 굵기 설정 */
+  	padding: 15px 20px; /* 링크 좌우 여백 설정 */
+}
+th{
+	background-color: #EAEAEA;
+	width: 150px;
+	height: 45px;
+	text-align: center;
+	line-height: 45px; /* 중간 높이로 해줌  */
+}
+#notice-main{
+	margin-left: 50px;
+}
+#title, #reg-date{
+	width: 650px;
+	height: 45px;
+	line-height: 45px;
+	padding-left: 10px;
+}
+#content{
+	width: 800px;
+	height: 500px;
+	padding: 20px;
+	vertical-align: top;
+}
+table, tr, td, th {
+	border: 1px solid #EAEAEA;
+	border-collapse: collapse;
+}
+table {
+	margin: 0 auto;
+}
+#back-button{
+	float: right;
+	margin-right: 100px;
+	margin-top: 50px;
+}
+</style>
+</head>
+<body>
+<script src="/js/jquery.js"></script>
+<body>
+	<div class="container">
+	<div class="navbar">
+		<a href="/talent/write-form">재능 등록</a>
+  		<a href="#2">판매게시판</a>
+  		<a href="#3">거래관리</a>
+  		<a href="#4">충전/내역</a>
+  		<a href="#5">마이페이지</a>
+  		<a href="/talent/notice">공지사항</a>
+	</div>
+	<h2 id="notice-main">공지사항</h2>
+	<table id="notice-detail">
+		<tr><th>제목</th><td id="title" th:text="${notice.title}"></td></tr>
+		<tr><th>등록일</th><td id="reg-date" th:text="${#strings.substring(notice.regDate, 0, 10)}"></td></tr>
+		<tr><td colspan="2" id="content" th:text="${notice.content}"></td></tr>
+	</table>
+	<button id="back-button">목록</button>
+	</div> <!-- class="container" -->
+	<script type="text/javascript">
+	$('#back-button').on('click', function(){
+		history.back();
+	});
+	</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.kakao.jPanda.yjh.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public interface AdminService {
 	Map<String, Integer> addCoupon(CouponDto couponDto);
 	
 	//company-sales
-	List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(String startDate, String endDate);
+	List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(Timestamp startDate, Timestamp endDate);
 	
 	//talent
 	List<TalentDto> findTalent();

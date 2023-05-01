@@ -3,7 +3,7 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.TalentRefundMapper">
 
-	<select id="selectTalentRefund" parameterType="List" resultType="TalentRefund">
+	<select id="selectTalentRefund" parameterType="List" resultType="AdminTalentRefund">
 		select	
 				bu.buyer_id, tr.purchase_no, bu.talent_no, tr.refund_bamboo, tr.issue, 
         		tr.refund_status, tr.approve_date
@@ -12,14 +12,14 @@
 		and		tr.refund_status = '검토중'
 	</select>
 	
-	<update id="updateTalentRefundToSuccessByPurchaseNosAndStatus" parameterType="TalentRefund">
+	<update id="updateTalentRefundToSuccessByPurchaseNosAndStatus" parameterType="AdminTalentRefund">
 		update 	talent_refund
 		set		refund_status = #{refundStatus},
 				approve_date = sysdate
 		where	purchase_no in #{purchaseNo}	
 	</update>
 	
-	<update id="updateTalentRefundToCompanionByPurchaseNosAndStatus" parameterType="TalentRefund">
+	<update id="updateTalentRefundToCompanionByPurchaseNosAndStatus" parameterType="AdminTalentRefund">
 		update 	talent_refund
 		set		refund_status = #{refundStatus}
 		where	purchase_no in #{purchaseNo}

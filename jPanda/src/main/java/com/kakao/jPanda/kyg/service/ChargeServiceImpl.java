@@ -1,7 +1,9 @@
 package com.kakao.jPanda.kyg.service;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import com.kakao.jPanda.kyg.dao.ChargeDao;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
+import com.kakao.jPanda.kyg.domain.PaymentDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,23 +31,15 @@ public class ChargeServiceImpl implements ChargeService {
 			log.info("ChargeServiceImpl insertCharge() Start...");
 			log.info("ChargeServiceImpl insertCharge() chargeDto.toString() : " + chargeDto.toString());
 			
-			Long chargeMoney = chargeDto.getChargeMoney();
-			
-			if (chargeDto.getCouponNo() == "0") {
-				chargeDto.setCouponNo(null);
+			if (chargeDto.getCouponCode() == "0") {
+				chargeDto.setCouponCode(null);
 			}
 			
 			//coupon_use insert
 			int insertCouponUse = chargeDao.insertCouponUse(chargeDto);
 			log.info("insertCouponUse 결과값 : {}", insertCouponUse);
 			
-			//결제방법 선택시 보너스율 적용
-			double bonusRatio = chargeDao.selectBonusRatio(chargeDto);
-			Long chargeBamboo = (long) (chargeMoney * bonusRatio / 1000); 
-			
-			chargeDto.setChargeBamboo(chargeBamboo);
-			
-			log.info("chargeDto.getCouponNo() : " + chargeDto.getCouponNo());
+			log.info("chargeDto.getCouponCode() : " + chargeDto.getCouponCode());
 			int resultInsertCharge = chargeDao.insertCharge(chargeDto);
 			
 			if(insertCouponUse > 0) {
@@ -63,46 +58,54 @@ public class ChargeServiceImpl implements ChargeService {
 	@Override
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
 		
-		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isUsed 검증
+		boolean isAvailable = false;	
+		boolean isPeriod = false;
+		int returnResult = 0;
+		
+		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isAvailable 검증
 		CouponUseDto selectedcouponUseDto = chargeDao.selectCouponUse(couponUseDto);
-		log.info("초기 받아온 checkAvailableCoupon selectedcouponUseDto->" + selectedcouponUseDto);
+		log.info("checkAvailableCoupon selectedcouponUseDto -> {}", selectedcouponUseDto);
 		
-		int returnResult = 1;
-		
-		// 사용된 쿠폰  -> true / 미사용 -> false
-		boolean isUsed = true;	
-		boolean isExpired = true;
-		//해당 DTO(id, couponId)가 Coupon_Use 테이블에 존재하면 사용 불가(0) 존재하지 않으면 사용 가능(1)
+		//DTO(memberId, couponCode)가 Coupon_Use 테이블에 존재하면 사용 불가 / 존재하지 않으면 사용 가능
 		if(selectedcouponUseDto == null) {
-			isUsed = false;
+			isAvailable = true;
 		} 
 		
-		// false는 couponUse에 없는 쿠폰
-		if(isUsed == false) {
+		// true는 isAvailable에 없는 쿠폰
+		if(isAvailable == true) {
 			
-			//해당 쿠폰이 기한남아있는지 확인 boolean isExpired 검증
-			CouponDto selectedCouponDto = chargeDao.selectCouponByCouponNo(couponUseDto.getCouponNo());
+			// 해당 쿠폰이 기한남아있는지 확인 boolean isAvailable 검증
+			CouponDto selectedCouponDto = chargeDao.selectCouponByCouponCode(couponUseDto.getCouponCode());
 			log.info("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto -> "+selectedCouponDto);
 			
-			LocalDate expireDate = selectedCouponDto.getExpireDate();
-			LocalDate today = LocalDate.now();
-			log.info("expireDate -> " + expireDate);
-			log.info("today -> " + today);
-			if(today.isBefore(expireDate)) {
-				isExpired = false;
-			} else if(today.isEqual(expireDate)) {
-				isExpired = false;
+			// coupon TB에 쿠폰이 없는경우 isPeriod = false
+			if(selectedCouponDto == null) {
+				isPeriod = false;
 			} else {
-				isExpired = true;
-			}
-			
-			log.info("checkAvailableCoupon isUsed->"+isUsed);
-			log.info("checkAvailableCoupon isExpired->"+isExpired);
+				
+				LocalDate today = LocalDate.now();
+				Timestamp issueDate = selectedCouponDto.getIssueDate();
+				long currentTime = System.currentTimeMillis();
+				Timestamp expireDate = selectedCouponDto.getExpireDate();
+				log.info("issueDate -> " + issueDate);
+				log.info("today -> " + today);
+				log.info("expireDate -> " + expireDate);
+				
+				if(currentTime <= expireDate.getTime() && currentTime >= issueDate.getTime()) {
+					isPeriod = true;
+				} else {
+					isPeriod = false;
+				}
+				
+				log.info("checkAvailableCoupon isAvailable -> "+isAvailable);
+				log.info("checkAvailableCoupon isPeriod -> "+isPeriod);
 
+			}
+	
 		}
 		 
-		// isUsed -> false, isExpired -> false인 경우 , 쿠폰 사용이 가능한 상태 1을 반환
-		if  (!isUsed && !isExpired) {
+		// isAvailable -> true, isPeriod -> true인 경우 , 쿠폰 사용이 가능한 상태 1을 반환
+		if  (isAvailable && isPeriod) {
 			returnResult = 1;
 		}   else {
 			returnResult = 0;
@@ -115,7 +118,7 @@ public class ChargeServiceImpl implements ChargeService {
 	@Override
 	public Long getAvailAmountCoupon(CouponUseDto couponUseDto) {
 		log.info("ChargeServiceImpl getAvailAmountCoupon() Start...");
-		log.info("ChargeServiceImpl getAvailAmountCoupon() chargeDto.toString() : {}", couponUseDto.toString());
+		log.info("ChargeServiceImpl getAvailAmountCoupon() chargeDto.toString() -> {}", couponUseDto.toString());
 		
 		Long findAvailAmountCoupon = chargeDao.selectAvailAmountCoupon(couponUseDto);
 		log.info("ChargeServiceImpl getAvailAmountCoupon() findAvailAmountCoupon -> " + findAvailAmountCoupon);
@@ -137,6 +140,18 @@ public class ChargeServiceImpl implements ChargeService {
 		log.info("ChargeServiceImpl calculateTotalBamboo calculatedTotalBamboo  -> {}", foundTotalBamboo);
 		
 		return foundTotalBamboo;
+	}
+
+	@Override
+	public List<PaymentDto> findPaymentList(PaymentDto selectMethodBonusDto) {
+		
+		List<PaymentDto> selectPaymentList = null;
+		log.info("ChargeServiceImpl findPaymentList() Start...");
+		
+		selectPaymentList = chargeDao.selectPaymentList(selectMethodBonusDto);
+		log.info("ChargeServiceImpl findPaymentList() selectPaymentList.size() -> {}", selectPaymentList.size());
+		
+		return selectPaymentList;
 	}
 
 

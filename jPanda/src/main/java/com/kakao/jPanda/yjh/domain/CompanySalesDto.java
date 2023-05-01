@@ -1,6 +1,6 @@
 package com.kakao.jPanda.yjh.domain;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class CompanySalesDto {
 	private String paymentMethod;
 	private Long paymentAmount;	
 	private Long chargeBamboo;
-	private String chargeDate;
+	private Timestamp chargeDate;
 	private String couponNo;
 	
 	//Exchange table(id, grade, status, paymentAmount alias 확인후 작업하기)
@@ -28,7 +28,7 @@ public class CompanySalesDto {
 	private String exchangeId;
 	private Long talentNo;
 	private Long sales;
-	private Date submitDate;
+	private Timestamp submitDate;
 	private String approveDate;
 	private Long total;
 	private String exchangeGrade;
@@ -37,8 +37,8 @@ public class CompanySalesDto {
 	private Long exchangePaymentAmount;
 	
 	//기준 날짜
-	private String startDate;
-	private String endDate;
+	private Timestamp startDate;
+	private Timestamp endDate;
 	
 	//결과 값
 	private Long bcCount;

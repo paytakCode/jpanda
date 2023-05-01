@@ -8,15 +8,15 @@ import lombok.Data;
 @Data
 public class MemberDto {
 	
-	private String id;
+	private String memberId;
 	private String password;
 	private String name;
 	private String tel;
 	private String email;
 	private String birth;
 	private String gender;
-	private String status;
-	private String grade;
+	private String memberStatus;
+	private String memberGrade;
 	private String account;
 	private String code;
 	

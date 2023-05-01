@@ -22,4 +22,5 @@ public class TalentRefundDto {
 	//bamboo_use table join용
 	private String buyerId;
 	private Long talentNo;
+	private String listType;
 }

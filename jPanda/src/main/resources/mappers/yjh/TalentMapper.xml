@@ -3,7 +3,7 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.TalentMapper">
 
-	<select id="selectTalent" resultType="Talent">
+	<select id="selectTalent" resultType="AdminTalent">
 		select * 
 		from talent
 		where talent_status = '검토중'

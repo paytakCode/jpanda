@@ -1,5 +1,6 @@
 package com.kakao.jPanda.yjh.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -192,19 +193,21 @@ public class AdminServiceImpl implements AdminService {
 	 * 	통합 후 검증된 더미데이터로 sql검증 필요
 	 */
 	@Override
-	public List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(String startDate, String endDate) {
+	public List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(Timestamp startDate, Timestamp endDate) {
 		log.info("Service findCompanySalesByYears() start");
 		CompanySalesDto companySalesDto = new CompanySalesDto();
 		List<CompanySalesDto> csList = null;
 		
-		if(Integer.parseInt(startDate.substring(6)) > 1 && Integer.parseInt(endDate.substring(6)) > 1) {
+		if(Integer.parseInt(startDate.toString().substring(8, 10)) > 1 && Integer.parseInt(endDate.toString().substring(8, 10)) > 1) {
 			companySalesDto.setStartDate(startDate);
+			log.info("startDate : "+startDate.toString().substring(8, 10));
 			log.info("Company-sales Service 'DD' startDate : "+companySalesDto.getStartDate().toString());
 			companySalesDto.setEndDate(endDate);
 			log.info("Company-sales Service 'DD' endDate : "+companySalesDto.getEndDate().toString());
 			csList = adminDao.selectCompanyByDDDate(companySalesDto);
 			
 		} else {
+			log.info("startDate : "+startDate.toString().substring(8, 10));
 			companySalesDto.setStartDate(startDate);
 			companySalesDto.setEndDate(endDate);
 			csList = adminDao.selectCompanySalesByYYMMDate(companySalesDto);

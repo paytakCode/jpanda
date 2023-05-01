@@ -3,18 +3,18 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.CouponMapper">
 
-	<insert id="insertCoupon" parameterType="Coupon">
+	<insert id="insertCoupon" parameterType="AdminCoupon">
 		insert 
 		into coupon 
 		values (#{couponCode}, #{issueDate}, #{expireDate}, #{couponValue})
 	</insert>
 	
-	<select id="findCouponList" resultType="Coupon">
+	<select id="findCouponList" resultType="AdminCoupon">
 		select *
 		from coupon
 	</select>
 	
-	<select id="selectCouponsExpired" resultType="Coupon">
+	<select id="selectCouponsExpired" resultType="AdminCoupon">
 	<![CDATA[
 		select
             	count(cu.coupon_code) as usedcoupon_count,
