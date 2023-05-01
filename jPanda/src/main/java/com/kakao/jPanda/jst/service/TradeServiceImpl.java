@@ -117,7 +117,7 @@ public class TradeServiceImpl implements TradeService{
 	public String modifyTalentByTalentNo(String talentNo, TalentDto talentDto) {
 		int result = 0;
 		//DB에 있는 Talent 조회
-		TalentDto foundTalentDto = tradeDao.selectTalentByTalentNo(talentNo);
+		TalentDto foundTalentDto = tradeDao.selectTradeTalentByTalentNo(talentNo);
 		
 		//reflection을 통한 TalentDto field 값 목록
 		Field[] fields = TalentDto.class.getDeclaredFields();
@@ -140,7 +140,7 @@ public class TradeServiceImpl implements TradeService{
             
         }
 		
-		result = tradeDao.updateTalent(foundTalentDto);
+		result = tradeDao.updateTradeTalent(foundTalentDto);
 		
 		if (result > 0) {
 			return "수정에 성공하였습니다.";
@@ -167,7 +167,7 @@ public class TradeServiceImpl implements TradeService{
 	public TalentDto findTalentByTalentNo(String talentNo) {
 		TalentDto talentDto = null;
 		
-		talentDto = tradeDao.selectTalentByTalentNo(talentNo);
+		talentDto = tradeDao.selectTradeTalentByTalentNo(talentNo);
 		
 		return talentDto;
 	}

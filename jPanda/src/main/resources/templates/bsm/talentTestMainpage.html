@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>재능 판다</title>
 <style type="text/css">
 /*GLOBALS*/
 *{margin:0; padding:0; list-style:none;}
@@ -10,8 +10,8 @@ a{text-decoration:none; color:#666;}
 a:hover{color:#1bc1a3;}
 
 .slider-wrap{
-  	width:240px;
-  	height:300px;
+  	width:260px;
+  	height:330px;
   	position:relative;
   	overflow:hidden;
 }
@@ -25,8 +25,8 @@ a:hover{color:#1bc1a3;}
 .slider-wrap ul.slider li{
   	float:left;
   	position:relative;
-  	width:240px;
-  	height:300px; 
+  	width:260px;
+  	height:330px; 
 }
 
 .slider-wrap ul.slider li > div{
@@ -46,8 +46,8 @@ a:hover{color:#1bc1a3;}
 
 .slider-wrap ul.slider li > img{
   	display:block;
-  	width: 240px;
-  	height: 180px;
+  	width: 260px;
+  	height: 192px;
 }
 
 /*ANIMATION*/
@@ -153,7 +153,7 @@ h4 {
 	font-size: 13px;
 }
 .item-name{
-	font-size: 14px;	
+	font-size: 13px;	
 }
 p {
 	padding: 1px;
@@ -164,10 +164,16 @@ p {
 }
 .slide-summary {
 	margin: 10px;
-	width: 220px;
+	width: 240px;
 	height: 65px;
 	text-align: left;
 	overflow: hidden;
+	margin-bottom: 30px;
+}
+.login-check{
+	float: right;
+	margin-right: 50px;
+	font-size: 20px;
 }
 </style>
 </head>
@@ -178,12 +184,15 @@ p {
 <body>
 	<div class="navbar">
 		<a href="/talent/write-form">재능 등록</a>
-  		<a href="#2">판매게시판</a>
-  		<a href="#3">거래관리</a>
-  		<a href="#4">충전/내역</a>
-  		<a href="#5">마이페이지</a>
+  		<a href="/board">판매게시판</a>
+  		<a href="/trade">거래관리</a>
+  		<a href="/charge/">충전/내역</a>
+  		<a href="/mypage">마이페이지</a>
   		<a href="/talent/notice">공지사항</a>
 	</div>
+	<div id="login-out">
+	</div>
+	
 	<div class="container">
 	<form action="/talent/update-form">
 	<div>
@@ -195,7 +204,7 @@ p {
       <div id="slider-wrap1" class="slider-wrap">
           <ul id="slider1" class="slider" >
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}">
-				<img th:src="${talent.mainImg}">
+				<img th:src="@{${talent.mainImg}}">
                     <p class="slide-summary" th:text="${talent.summary}"></p>
                     <div class="bamboo">
                     	<p class="price" th:text="${talent.saleBamboo}">
@@ -329,7 +338,17 @@ p {
 	}
 		
 	$('.talents').on('click', function(){
-		location.href = "/talent/talents/" + $(this).val() + "/update-form";
+		location.href = "/talents/talent/" + $(this).val();	
+	});
+	</script>
+	<script th:inline="javascript">
+	$(function(){
+		if([[${loginId}]] == "guest"){
+			$('#login-out').html('<a class="login-check" href="/login">로그인</a>');
+		}else {
+			$('#login-out').html('<a class="login-check" href="/logout">로그아웃</a>');
+			
+		}
 	});
 	</script>
 </body>

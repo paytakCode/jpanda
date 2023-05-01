@@ -17,38 +17,38 @@ public class TradeDto {
 	private Long bamboo;
 	private Long saleBamboo;
 	private String summary;
-	private String talentStatus; //status
+	private String talentStatus;
 	private Long viewCount;
 	private Timestamp regDate;
 	private Timestamp statusDate;
 	
 	
 	//member
-	private String memberId; //id
+	private String memberId;
 	private String password;
 	private String name;
 	private String tel;
 	private String email;
 	private String birth;
 	private String gender;
-	private String memberStatus; //status
-	private String memberGrade; //grade
+	private String memberStatus;
+	private String memberGrade;
 	
 	//talent_refund
 	private String refundPurchaseNo; //purchaseNo
-	private String refundStatus; //status
+	private String refundStatus;
 	private String issue;
-	private Timestamp refundSubmitDate;
-	private Timestamp refundApproveDate;
+	private Timestamp refundSubmitDate; //submitDate
+	private Timestamp refundApproveDate; //approveDate
 	private Long refundBamboo;
 	
 	//member_grade
 	private String grade;
-	private Long gradeRatio; //ratio
+	private Long gradeRatio; //exchangeRatio
 	
 	//exchange
 	private String exchangeNo;
-	private String exchangeId; //id
+	private String exchangeId; //sellerId
 	private String exchangeTalentNo; //talentNo
 	private Long sales;
 	private Timestamp exchangeSubmitDate;

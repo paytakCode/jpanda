@@ -185,11 +185,11 @@
 		<!-- nav bar -->
 		<nav>
 		  <ul class="nav-links">
-		    <li><a href="#">재능등록</a></li>
-		    <li><a href="#">재능구매</a></li>
-		    <li><a href="trade.html">거래관리</a></li>
-		    <li><a href="charge.html">충전/내역</a></li>
-		    <li><a href="myPage.html">마이페이지</a></li>
+		    <li><a href="/talent/write-form">재능등록</a></li>
+		    <li><a href="/board">재능구매</a></li>
+		    <li><a href="/trade">거래관리</a></li>
+		    <li><a href="/charge">충전/내역</a></li>
+		    <li><a href="/mypage">마이페이지</a></li>
 		  </ul>
 		</nav> <!-- /nav bar -->
 		
@@ -383,7 +383,7 @@ $(document).on("click", ".end-sell-btn", function(){
 					dataType : 'text',
 					contentType: 'application/json',
 					data : JSON.stringify({
-						status : '판매종료',
+						talentStatus : '판매종료',
 						statusDate : Date.now()
 						}),
 					success : function(result){
@@ -413,7 +413,7 @@ $(document).on("click", ".repost-btn", function(){
 				url : "/trade/talents/" + talentNo,
 				contentType: 'application/json',
 				data : JSON.stringify({
-						status : '검토중',
+						talentStatus : '검토중',
 						statusDate : Date.now()
 						}),
 				dataType : 'text',
@@ -663,7 +663,7 @@ function getRefundList(item){
 			
 	if(item.refundStatus === '검토중'){
 		text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="refund-no-' + item.refundPurchaseNo + '">신청취소</button> </div>' +
-				'</div><div class = "card-footer text-muted">환불신청날짜 : ' + item.refundSubmitDate + '</div></div>'; 
+				'</div><div class = "card-footer text-muted">환불신청날짜 : ' + timestampToCustomFormat(item.refundSubmitDate) + '</div></div>'; 
 			 
 			'</div>';
 	} else if(item.refundStatus === '환불완료'){

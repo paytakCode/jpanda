@@ -17,8 +17,8 @@ public class TalentServiceImpl implements TalentService {
 	
 	// 재능 상세 페이지 
 	@Override
-	public Talent findTalentByTalentNo(Long talentNo) {
-		return talentDao.selectTalentByTalentNo(talentNo);
+	public Talent findBoardTalentByTalentNo(Long talentNo) {
+		return talentDao.selectBoardTalentByTalentNo(talentNo);
 	}
 	
 	// 리뷰 리스트 불러오기

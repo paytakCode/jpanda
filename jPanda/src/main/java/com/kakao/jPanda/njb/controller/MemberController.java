@@ -138,17 +138,17 @@ public class MemberController {
     
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDto memberDto, HttpSession session,RedirectAttributes redirectAttributes) {
-    	System.out.println(memberDto.getId() + memberDto.getPassword());
+    	System.out.println(memberDto.getMemberId() + memberDto.getPassword());
     	boolean loginResult = memberservice.login(memberDto);
     	if(loginResult) {
-    		session.setAttribute("loginId", memberDto.getId());
+    		session.setAttribute("loginId", memberDto.getMemberId());
     		String loginId = (String) session.getAttribute("loginId");
     		System.out.println(loginId);
-            MemberDto member = memberservice.selectMember(memberDto.getId());
+            MemberDto member = memberservice.selectMember(memberDto.getMemberId());
             
            
             redirectAttributes.addFlashAttribute("memberInfo", member);
-    		return "redirect:/mypage";
+    		return "redirect:/main";
     	}else {
     		redirectAttributes.addFlashAttribute("alertMsg", "정보를 확인해주세요");
     		return "redirect:/login";

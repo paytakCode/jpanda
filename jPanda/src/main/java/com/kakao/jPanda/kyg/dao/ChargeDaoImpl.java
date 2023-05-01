@@ -1,5 +1,7 @@
 package com.kakao.jPanda.kyg.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
+import com.kakao.jPanda.kyg.domain.PaymentDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +32,7 @@ public class ChargeDaoImpl implements ChargeDao {
 		log.info("ChargeDaoImpl insertCouponUse chargeDto.toString -> " + chargeDto.toString());
 		int resultInsertCouponUse = 0; 
 		
-		if(chargeDto.getCouponNo() != null) {
+		if(chargeDto.getCouponCode() != null) {
 			try {
 				resultInsertCouponUse = sqlSession.insert("insertCouponUse", chargeDto);
 				log.info("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> {}", resultInsertCouponUse);
@@ -44,7 +47,7 @@ public class ChargeDaoImpl implements ChargeDao {
 				log.error("ChargeDaoImpl resultinsertCouponUse가 삽입되지 않았습니다");
 			}
 		} else {
-			log.info("ChargeDaoImpl insertCouponUse() chargeDto.getCouponNo()가 null입니다. 0을 반환합니다.");
+			log.info("ChargeDaoImpl insertCouponUse() chargeDto.getCouponCode()가 null입니다. 0을 반환합니다.");
 			return resultInsertCouponUse;
 		}
 		
@@ -110,22 +113,20 @@ public class ChargeDaoImpl implements ChargeDao {
 		return selectCouponUseResult;
 	}
 
-	// coupon isExpired 쿠폰 검증
+	// coupon isPeriod 쿠폰 검증
 	@Override
-	public CouponDto selectCouponByCouponNo(String couponNo) {
-		log.info("ChargeDaoImpl selectCouponByCouponNo() Start...");
+	public CouponDto selectCouponByCouponCode(String couponCode) {
+		log.info("ChargeDaoImpl selectCouponByCouponCode() Start...");
 		
-		CouponDto selectCouponByCouponNoResult = null;
+		CouponDto selectCouponByCouponCodeResult = null;
 		try {
-			selectCouponByCouponNoResult = sqlSession.selectOne("selectCouponByCouponNo", couponNo);
-			System.out.println("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponNoResult -> " + selectCouponByCouponNoResult);
-			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponNoResult -> {}", selectCouponByCouponNoResult);
+			selectCouponByCouponCodeResult = sqlSession.selectOne("selectCouponByCouponCode", couponCode);
+			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponCodeResult -> {}", selectCouponByCouponCodeResult);
 		} catch (Exception e) {
-			System.out.println("ChargeDaoImpl selectCouponByCouponNo() Exception -> " + e.getMessage());
-			log.error("ChargeDaoImpl selectCouponByCouponNo() Exception -> {}", e.getMessage(), e);
+			log.error("ChargeDaoImpl selectCouponByCouponCode() Exception -> {}", e.getMessage(), e);
 		}
 		
-		return selectCouponByCouponNoResult;
+		return selectCouponByCouponCodeResult;
 	}
 
 	// 사용 가능한 쿠폰의 금액을 검증
@@ -182,12 +183,27 @@ public class ChargeDaoImpl implements ChargeDao {
 		
 		try {
 			selectTalentRefundAmountResult = sqlSession.selectOne("selectTalentRefundAmount", memberId);
-			log.info(" ChargeDaoImpl selectTalentRefundAmount -> " + selectTalentRefundAmountResult);		
+			log.info("ChargeDaoImpl selectTalentRefundAmount -> {}", selectTalentRefundAmountResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectTalentRefundAmount() Exception -> " + e.getMessage(), e);
+			log.error("ChargeDaoImpl selectTalentRefundAmount() Exception -> {}", e.getMessage(), e);
 		}
 		
 		return selectTalentRefundAmountResult;
+	}
+
+	@Override
+	public List<PaymentDto> selectPaymentList(PaymentDto selectMethodBonusDto) {
+		
+		List<PaymentDto> selectPaymentListResult = null;
+		log.info("ChargeDaoImpl selectPaymentList Start...");
+		try {
+			selectPaymentListResult = sqlSession.selectList("selectPaymentList", selectMethodBonusDto);	 
+			log.info("ChargeDaoImpl selectPaymentList() selectPaymentListResult.size() -> {}", selectPaymentListResult.size());
+		} catch (Exception e) {
+			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
+		}
+		
+		return selectPaymentListResult;
 	}
 
 }

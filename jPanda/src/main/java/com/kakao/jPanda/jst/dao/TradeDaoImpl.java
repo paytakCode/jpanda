@@ -48,10 +48,10 @@ public class TradeDaoImpl implements TradeDao{
 	}
 
 	@Override
-	public TalentDto selectTalentByTalentNo(String talentNo) {
-		log.info("selectTalentByTalentNo talentNo : " + talentNo);
-		TalentDto talentDto = sqlSession.selectOne("selectTalentByTalentNo", talentNo);
-		log.info("selectTalentByTalentNo talentDto.getTalentNo() : " + talentDto.getTalentNo());
+	public TalentDto selectTradeTalentByTalentNo(String talentNo) {
+		log.info("selectTradeTalentByTalentNo talentNo : " + talentNo);
+		TalentDto talentDto = sqlSession.selectOne("selectTradeTalentByTalentNo", talentNo);
+		log.info("selectTradeTalentByTalentNo talentDto.getTalentNo() : " + talentDto.getTalentNo());
 		return talentDto;
 	}
 
@@ -130,10 +130,10 @@ public class TradeDaoImpl implements TradeDao{
 	}
 
 	@Override
-	public int updateTalent(TalentDto talentDto) {
-		log.info("updateTalent talentDto : " + talentDto);
-		int result = sqlSession.update("updateTalent", talentDto);
-		log.info("updateTalent result : " + result);
+	public int updateTradeTalent(TalentDto talentDto) {
+		log.info("updateTradeTalent talentDto : " + talentDto);
+		int result = sqlSession.update("updateTradeTalent", talentDto);
+		log.info("updateTradeTalent result : " + result);
 		return result;
 	}
 
