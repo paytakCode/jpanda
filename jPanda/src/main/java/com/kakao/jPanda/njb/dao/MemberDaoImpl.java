@@ -92,10 +92,10 @@ public class MemberDaoImpl implements MemberDao {
 
 
 	@Override
-	public void deleteMemberById(String loginId, String encryptedPassword) {
+	public void deleteMemberById(String memberId, String encryptedPassword) {
 		
 		Map<String, String> paramMap = new HashMap<>();
-		paramMap.put("loginId", loginId);
+		paramMap.put("memberId", memberId);
 		paramMap.put("encryptedPassword",encryptedPassword);
 		sqlSession.delete("deleteMemberById",paramMap);
 	}
