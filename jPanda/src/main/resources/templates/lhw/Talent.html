@@ -335,6 +335,33 @@ li:hover {
 
 <script type="text/javascript" src="/js/jquery.js"></script>	
 <script>
+
+/* $(document).on('click', '#report-btn', function(){
+	var getReport = 1;
+	
+}  */
+
+
+
+
+/*
+ * TimeStamp형식으로의 현재 Date 변환
+ */
+function getNow(){
+	const now = new Date(Date.now());
+	const year = now.getFullYear();
+	const month = String(now.getMonth() + 1).padStart(2, '0');
+	const day = String(now.getDate()).padStart(2, '0');
+	const hours = String(now.getHours()).padStart(2, '0');
+	const minutes = String(now.getMinutes()).padStart(2, '0');
+	const seconds = String(now.getSeconds()).padStart(2, '0');
+	
+	const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	
+	return formattedDate;
+}
+
+
 $(document).on('click', '.modifyReview', function(){
 	// 기존에 있는 인서트 폼 숨기고 업데이트 폼 보여주기
 	$('#insert-review-form').hide();
@@ -352,15 +379,15 @@ function reviewInsert(talentNo){
 	if( $("#insert-content").val().trim() == ''){
 		alert('내용을 입력해주세요');
 		return;
-};  
+	};  
 	$.ajax({
 	    type : 'POST',
 	    url : "/talents/talent/" + talentNo + "/reviews",
 	    data : JSON.stringify({
 			talentNo 	: talentNo,
-			reviewerId 	: "kzwloppneba",
 			bambooScore : $("#insert-bambooScore").val(),
-			content 	: $("#insert-content").val()
+			content 	: $("#insert-content").val(),
+			reviewDate : Date.now()
    		}),
 	    contentType : "application/json",
 	    dataType :'json',
@@ -370,7 +397,7 @@ function reviewInsert(talentNo){
 			review.forEach(function(review){
 	        	const li = $('<li>').appendTo('#review-list');
 	        	$('<span>').text(review.reviewerId).appendTo(li);
-	        	$('<span>').text(review.reviewDate).appendTo(li);
+	        	$('<span>').text(getNow()).appendTo(li);
 	        	$('<span>').text(review.bambooScore).appendTo(li);
 	        	$('<span>').text(review.content).appendTo(li);
 	        	location.reload();
@@ -408,9 +435,9 @@ function sendUpdateReview(talentNo){
 		data : JSON.stringify({
 			talentNo 	: talentNo,
 		    reviewNo 	: reviewNo,
-		    reviewerId 	: "kzwloppneba",
 		    bambooScore	: $("#update-bambooScore").val(),
-		    content		: $("#update-content").val()
+		    content		: $("#update-content").val(),
+		    reviewDate : Date.now()
  		 }),
   		    contentType : "application/json",
   			dataType : 'json',
@@ -420,7 +447,7 @@ function sendUpdateReview(talentNo){
 				review.forEach(function(review){
 					const li = $('<li>').appendTo('#review-list');
 		        	$('<span>').text(review.reviewerId).appendTo(li);
-		        	$('<span>').text(review.reviewDate).appendTo(li);
+		        	$('<span>').text(getNow()).appendTo(li);
 		        	$('<span>').text(review.bambooScore).appendTo(li);
 		        	$('<span>').text(review.content).appendTo(li);
 		        	location.reload();
@@ -466,7 +493,7 @@ $(document).on('click', '.deleteReview', function() {
 				reviews.forEach(function(review){
 					const li = $('<li>').appendTo('#review-list');
 		        	$('<span>').text(review.reviewerId).appendTo(li);
-		        	$('<span>').text(review.reviewDate).appendTo(li);
+		        	$('<span>').text(getNow()).appendTo(li);
 		        	$('<span>').text(review.bambooScore).appendTo(li);
 		        	$('<span>').text(review.content).appendTo(li);
 			        location.reload();
@@ -492,6 +519,10 @@ $(document).on('click', '.deleteReview', function() {
 		});
 	}
 });
+
+
+
+
 </script>
 	
 	
@@ -511,6 +542,8 @@ $(document).on('click', '.deleteReview', function() {
 		avgBambooScore = 5;
 	}
 	$('#review-filter').text(avgBambooScore.toFixed(1) + ' / (' + reviewCount + ')');
+	
+
 </script>
 </body>
 </html>

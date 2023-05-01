@@ -21,7 +21,6 @@
   		
   		<!-- 판매게시판 -->
 		<typeAlias alias="BoardTalent" type="com.kakao.jPanda.lhw.domain.Talent"/>
-  		<typeAlias alias="BoardNotice" type="com.kakao.jPanda.lhw.domain.Notice"/>
   		<typeAlias alias="BoardCategory" type="com.kakao.jPanda.lhw.domain.Category"/>
   		<typeAlias alias="BoardReview" type="com.kakao.jPanda.lhw.domain.Review"/>
   		<typeAlias alias="BoardFilters" type="com.kakao.jPanda.lhw.domain.Filters"/>

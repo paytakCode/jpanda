@@ -1,5 +1,6 @@
 package com.kakao.jPanda.lhw.domain;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import lombok.Getter;
@@ -23,8 +24,8 @@ public class Talent {
 	private String summary;
 	private String status;
 	private Long viewCount;
-	private Date regDate;
-	private Date statusDate;
+	private Timestamp regDate;
+	private Timestamp statusDate;
 	
 	// 리뷰 테이블용 
 	private Double bambooScore;

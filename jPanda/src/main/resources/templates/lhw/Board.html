@@ -268,21 +268,6 @@ li:hover {
 			<input type="radio" id="radio5" name="group" class="radio-filter" value="sale_bambooA">
 			<label for="radio5">낮은 가격순</label><br>
     </div>
-    
-    
-	<div class="list-container">
-	   	<div class="notice">
-	   		<h2>공지사항</h2>
-	   		 <ul id="notice-list">
-	        	<li th:each="notice : ${noticeList}">
-	                <span th:text="${notice.noticeNo}"></span>
-	                <span th:text="${notice.title}"></span>
-	                <span th:text="${notice.regDate}"></span>
-	        	</li>
-	         </ul>
-		</div>
-	</div>
-	
 	
 	<div class="sell-board">
 	        	<ul id="defalut-list"></ul>
@@ -407,5 +392,22 @@ $('.topCategoryList').click(function(){
 	});
 });
 </script>
+
+<script th:inline="javascript">
+// 판매글 등록 버튼 로그인 여부 확인
+function sellInsertBtn(){
+    var loginId = /*[[${loginId}]]*/;
+    console.log(loginId);
+    
+    if (loginId != null) {
+      window.location.href = "/talent/write-form";
+    } else {
+      alert("로그인이 필요한 서비스 입니다.");
+      window.location.href = "/login";
+    }
+  }
+  document.getElementById("sell-insert").addEventListener("click", sellInsertBtn);
+</script>
+
 </body>
 </html>
