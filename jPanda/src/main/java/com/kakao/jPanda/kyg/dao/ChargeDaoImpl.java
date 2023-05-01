@@ -59,7 +59,6 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public int insertCharge(ChargeDto chargeDto) {
 		log.info("ChargeDaoImpl insertCharge() Start...");
-		
 		log.info("ChargeDaoImpl insertCharge chargeDto.toString -> {}", chargeDto.toString());
 		
 		int resultCharge = 0;
@@ -82,7 +81,6 @@ public class ChargeDaoImpl implements ChargeDao {
 	// 밤부 충전시 payment select 
 	@Override
 	public double selectBonusRatio(ChargeDto chargeDto) {
-		
 		log.info("ChargeDaoImpl selectBonusRatio() Start...");
 		log.info("ChargeDaoImpl selectBonusRatio chargeDto.toString -> {}", chargeDto.toString());
 		
@@ -101,6 +99,7 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public CouponUseDto selectCouponUse(CouponUseDto couponUseDto) {
 		log.info("ChargeDaoImpl selectCouponUse() Start...");
+		log.info("ChargeDaoImpl selectCouponUse() chargeDto.toString -> {}", couponUseDto.toString());
 		
 		CouponUseDto selectCouponUseResult = null;
 		try {
@@ -117,6 +116,7 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public CouponDto selectCouponByCouponCode(String couponCode) {
 		log.info("ChargeDaoImpl selectCouponByCouponCode() Start...");
+		log.info("ChargeDaoImpl selectCouponUse() chargeDto.toString -> {}", couponCode.toString());
 		
 		CouponDto selectCouponByCouponCodeResult = null;
 		try {
@@ -133,6 +133,7 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public Long selectAvailAmountCoupon(CouponUseDto couponUseDto) {
 		log.info("ChargeDaoImpl selectAvailAmountCoupon() Start...");
+		log.info("ChargeDaoImpl selectAvailAmountCoupon() chargeDto.toString -> {}", couponUseDto.toString());
 		
 		Long selectAvailAmountCouponResult = (long) 0;
 		try {
@@ -149,6 +150,8 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public Long selectChargeBambooAmount(String memberId) {
 		log.info("ChargeDaoImpl selectChargeBambooAmount() Start...");
+		log.info("ChargeDaoImpl selectChargeBambooAmount() memberId -> {}", memberId);
+		
 		Long selectChargeBambooAmountResult = (long) 0;
 		
 		try {
@@ -164,6 +167,8 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public Long selectBambooUseAmount(String memberId) {
 		log.info("ChargeDaoImpl selectBambooUseAmount() Start...");
+		log.info("ChargeDaoImpl selectBambooUseAmount() memberId -> {}", memberId);
+		
 		Long selectBambooUseAmountResult = (long) 0;
 		
 		try {
@@ -179,6 +184,8 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public Long selectTalentRefundAmount(String memberId) {
 		log.info("ChargeDaoImpl selectTalentRefundAmount() Start...");
+		log.info("ChargeDaoImpl selectTalentRefundAmount() memberId -> {}", memberId);
+		
 		Long selectTalentRefundAmountResult = (long) 0;
 		
 		try {
@@ -193,6 +200,8 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	@Override
 	public List<PaymentDto> selectPaymentList(PaymentDto selectMethodBonusDto) {
+		log.info("ChargeDaoImpl selectPaymentList() Start...");
+		log.info("ChargeDaoImpl selectPaymentList() selectMethodBonusDto.toString() -> {}", selectMethodBonusDto.toString());
 		
 		List<PaymentDto> selectPaymentListResult = null;
 		log.info("ChargeDaoImpl selectPaymentList Start...");

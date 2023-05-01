@@ -79,7 +79,7 @@
 	
 		SELECT	NVL(sum(charge_bamboo),0)
 		FROM	bamboo_charge
-		WHERE	charger_id = #{memberId}
+		WHERE	charger_id = #{memberId, jdbcType=VARCHAR}
 		
 	</select>
 	
@@ -87,7 +87,7 @@
 		
 		SELECT	NVL(sum(use_bamboo),0)
 		FROM	bamboo_use
-		WHERE	buyer_id = #{memberId}
+		WHERE	buyer_id = #{memberId, jdbcType=VARCHAR}
 		
 	</select>
 	
@@ -98,7 +98,7 @@
 		LEFT JOIN bamboo_use bu
 		ON tr.purchase_no = bu.purchase_no
 		WHERE tr.refund_status = '환불완료' 
-		AND bu.buyer_id = #{memberId}
+		AND bu.buyer_id = #{memberId, jdbcType=VARCHAR}
 	
 	</select>
 	

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,13 +36,28 @@ public class ChargeController {
 		this.chargeService = chargeService;
 	}
 	
-	/*	
-	//	충전 메인페이지
-	@GetMapping("/")
-	public String chargePage() {
+	
+	/*
+	 * 메인페이지 및 결제수단, RATIO를 테이블에 List형식으로 나타냄
+	 * Model	TB payment -> method, bonusRatio 
+	 * @param	Model
+	 * @return	kyg/chargePage
+	 */
+	@GetMapping(value = "/")
+	public String paymentList(Model model) {
+		
+		PaymentDto selectMethodBonusDto = new PaymentDto();
+		log.info("ChargeContoller paymentList() Start...");
+		
+		List<PaymentDto> getPaymentList = chargeService.findPaymentList(selectMethodBonusDto);
+		log.info("ChargeContoller paymentList() listPayment.size() -> {}", getPaymentList.size());
+		
+		model.addAttribute("listPayment", getPaymentList);
+		
 		return "kyg/chargePage";
 	}
-	*/
+	
+	
 	
 	/*
 	 * 밤부 충전
@@ -51,9 +68,12 @@ public class ChargeController {
 	 */
 	@ResponseBody
 	@PostMapping("/charge") 
-	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto) {
-		
+	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto, HttpSession session) {
+		String chargerId = (String) session.getAttribute("loginId");
 		log.info("ChargeContoller charge() Start...");
+		log.info("ChargeContoller checkAvailableCoupon() chargerId -> {}", chargerId);
+		chargeDto.setChargerId(chargerId);
+		log.info("ChargeContoller checkAvailableCoupon() couponUseDto.toString() -> {}", chargeDto.toString());
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
 		Map<String, String> resultMap = new HashMap<>();
@@ -82,11 +102,13 @@ public class ChargeController {
 	 */
 	@GetMapping(value = "/check-available-coupon")
 	@ResponseBody
-	public CouponUseDto checkAvailableCoupon(CouponUseDto couponUseDto) {
-
+	public CouponUseDto checkAvailableCoupon(HttpSession session, CouponUseDto couponUseDto) {
+		String memberId = (String) session.getAttribute("loginId");
 		CouponUseDto checkedcouponUseDto = new CouponUseDto();				
-		log.info("ChargeContoller couponDetails() Start...");
-		log.info("ChargeContoller checkAvailableCoupon couponUseDto.toString() -> {}", couponUseDto.toString());
+		log.info("ChargeContoller checkAvailableCoupon() Start...");
+		log.info("ChargeContoller checkAvailableCoupon() memberId -> {}", memberId);
+		couponUseDto.setMemberId(memberId);
+		log.info("ChargeContoller checkAvailableCoupon() couponUseDto.toString() -> {}", couponUseDto.toString());
 		
 		// 사용 결과만 가져옴 -> 사용 가능한 쿠폰, 사용 했던 쿠폰을 비교하여, 회원이 사용했던 이력이 있는 쿠폰의 결과를 가져와 사용가능 여부를 따짐
 		int resultInt = chargeService.checkAvailableCoupon(couponUseDto);
@@ -110,11 +132,14 @@ public class ChargeController {
 	 * @param	memberId
 	 * @return	foundTotalBambooStr
 	 */
-	@GetMapping(path = "/members/{memberId}/total-bamboo")
+	//@GetMapping(path = "/members/{memberId}/total-bamboo")
+	@GetMapping(path = "/members/total-bamboo")
 	@ResponseBody
-	public String  totalBamboo(@PathVariable String memberId) {
+	//public String  totalBamboo(@PathVariable String memberId, HttpSession session) {
+	public String  totalBamboo(HttpSession session) {
+		String memberId = (String) session.getAttribute("loginId");
 		log.info("ChargeContoller totalBamboo Start...");
-		log.info("ChargeContoller totalBamboo memberId -> {}", memberId);
+		log.info("ChargeContoller totalBamboo() memberId -> {}", memberId);
 		
 		Long foundTotalBamboo = chargeService.findTotalBamboo(memberId);
 		
@@ -125,25 +150,7 @@ public class ChargeController {
 		return foundTotalBambooStr;
 	}
 	
-	/*
-	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
-	 * Model	TB payment -> method, bonusRatio 
-	 * @param	Model
-	 * @return	kyg/chargePage
-	 */
-	@GetMapping(value = "/")
-	public String paymentList(Model model) {
-		
-		PaymentDto selectMethodBonusDto = new PaymentDto();
-		log.info("ChargeContoller paymentList() Start...");
-		
-		List<PaymentDto> getPaymentList = chargeService.findPaymentList(selectMethodBonusDto);
-		log.info("ChargeContoller paymentList() listPayment.size() -> {}", getPaymentList.size());
-		
-		model.addAttribute("listPayment", getPaymentList);
-		
-		return "kyg/chargePage";
-	}
+	
 	
 }
 	
