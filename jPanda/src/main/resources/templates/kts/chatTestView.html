@@ -143,7 +143,7 @@
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function (frame) {
 	        console.log('Connected: ' + frame);
-	        loadChatById(memberId);
+	        loadChatByMemberId(memberId);
 	        subscribe(memberId);
 	    });
 	}
@@ -300,13 +300,14 @@
 				method: "GET",
 				dataType : "json",
 				success: function(partnerList) {
+					$("#chat-member-list").empty();
 					console.log("partnerList =>" + partnerList);
 					partnerList.forEach((partner, index) => {
 						let chatPartnerElem = $("<button>");
 						chatPartnerElem.text(partner.name);
-						chatPartnerElem.attr('value', partner.id);
+						chatPartnerElem.attr('value', partner.memberId);
 						chatPartnerElem.click(function() { 
-							selectedChat = partner.id;
+							selectedChat = partner.memberId;
 							updateSelectedChat($(this));
 							updateChatContent();
 						});
@@ -323,7 +324,7 @@
 	}
 
 	//접속한 유저의 채팅내역 불러오는 함수
-	function loadChatById(memberId) {
+	function loadChatByMemberId(memberId) {
 		updateChatPartnerList(memberId).then(function(){
 			selectedChat = $("#chat-member-list").children().first().attr("value");
 			updateSelectedChat($("#chat-member-list").children().first());
@@ -342,7 +343,8 @@
 				memberList.forEach((member, index) => {
 					let memberElem = $("<option>");
 					memberElem.text(member.name);
-					memberElem.attr('value', member.id);
+					console.log('name : ' + member.name + ', id : ' + member.memberId);
+					memberElem.attr('value', member.memberId);
 					$("#member-list").append(memberElem);  
 				});
 			},

@@ -207,55 +207,12 @@
 	
 	
 	
-	<!-- 충전, 결제내역 필터 버튼 -->
-	<div class="filter-btn gap-2 d-md-flex justify-content-md-end" >
-	  <button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-container-btn" value="chargeContainerBtn">충전하기</button>
-	  <button type="button" class="container-filter-btn btn-secondary btn-sm" id="recharge-details-btn" value="rechargeDetailsBtn">결제내역</button>
-	</div>
-	
-	<div id="content-print">
-	</div>
-	
 	
 	<div id="charge-container">
 	
 		<div id="charge-contents">
 				
 			<h4>충전하기</h4>
-				
-				<table class="table">
-				  <thead>
-				    <tr>
-				      <th scope="col">#</th>
-				      <th scope="col">결제 수단</th>
-				      <th scope="col">충전밤부 포인트 비율</th>
-				    </tr>
-				  </thead>
-				  <tbody class="table-group-divider">
-				    <tr>
-				      <th scope="row">1</th>
-				      <td>계좌이체</td>
-				      <td>140%</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">3</th>
-				      <td>신용카드</td>
-				      <td>140%</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">4</th>
-				      <td>상품권</td>
-				      <td>120%</td>
-				    </tr>
-				    <tr>
-				      <th scope="row">5</th>
-				      <td>휴대폰</td>
-				      <td>120%</td>
-				    </tr>
-				  </tbody>
-				</table>
-				
-				<!-- 위는원본 -->
 				
 				<table class="table">
 				  <thead>
@@ -274,7 +231,6 @@
 				  </tbody>
 				</table>
 				
-				<!-- 위는 테스트 -->
 			
 				<div class="input-side">
 
@@ -302,12 +258,6 @@
 					<label for="payment-method-radio4">계좌이체</label>
 				</div>
 				
-				<!-- 
-				<div class="payment-method" th:each="paymentList : ${listPayment}">
-				    <input type="radio" th:id="'payment-method-radio' + ${paymentList.method}" name="paymentMethod" th:value="${paymentList.method}" th:checked="${paymentList.method == '휴대폰'}">
-				    <label th:for="'payment-method-radio' + ${paymentList.method}" th:text="${paymentList.method}"></label>
-				</div>
-				 -->
 				
 		</div>
 		
