@@ -5,23 +5,9 @@
 <title>Insert title here</title>
 <script src="/js/jquery.js"></script>
 <link th:href="@{/css/board.css}" rel="stylesheet"/>
-<script type="text/javascript">
-	function chk() {
-		var checkbox = $('.checkbox')
-		for(var i = 0; i < checkbox.length; i++) {
-			if(checkbox[i].checked) {
-				return true;
-			}
-		}
-		alert("하나 이상의 데이터를 체크해주세요");
-		return false;
-	}
-</script>
 </head>
 <body>
 	<h1>환전 관리</h1>
-	<form action="/admin/exchange" method="post" onsubmit="return chk()">
-	<input type="hidden" name="_method" value="put">
 		<table border="1">
 			<tr>
 				<th>선택</th>
@@ -43,11 +29,57 @@
        		</tr>
 			<tr>
 				<td colspan="7">
-					<input type="submit" th:name="exchangeStatus" value="환전완료">
-					<input type="submit" th:name="exchangeStatus" value="반려">
+					<input type="button" class="btn" th:name="exchangeStatus" th:value="환전완료">
+					<input type="button" class="btn" th:name="exchangeStatus" th:value="반려">
 				</td>
 			</tr>
 		</table>
-	</form>
 </body>
+<script type="text/javascript">
+	$(".btn").on("click", function(){
+		let exchangeNo = $("input.checkbox:checked").map(function(){
+			return $(this).val();
+		}).get();
+		
+		if(exchangeNo.length === 0) {
+			alert("하나 이상의 데이터를 선택해 주세요");
+			return;
+		}
+		
+		let exchangeDto = [];
+		let exchangeStatus = $(this).val();
+		let approveDate = Date.now();
+		
+		if(exchangeStatus == '환전완료') {
+			for(var i = 0; i < exchangeNo.length; i++) {
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
+			}
+		} else if(exchangeStatus == '반려') {
+			for(var i = 0; i < exchangeNo.length; i++) {
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
+			}
+		}
+		
+		$.ajax({
+			url : "/admin/exchange/" + exchangeNo.join(","),
+			method : "PATCH",
+			contentType : "application/json",
+			data : JSON.stringify(exchangeDto),
+			success : function(result) {
+				if(result > 0) {
+					alert("환전 신청이 정상적으로 처리되었습니다");
+					location.href="/admin/exchanges";
+				} else if(result = -1) {
+					location.href="/login"
+				} else {
+					alert("환전 신청 중 오류가 발생했습니다");
+					history.back();
+				}
+			},
+			erorr : function(jqXHR, textStatus, erorrThrown) {
+				alert("처리중 오류가 발생했습니다");
+			}
+		});
+	});
+</script>
 </html>

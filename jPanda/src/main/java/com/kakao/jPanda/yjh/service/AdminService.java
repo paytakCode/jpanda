@@ -20,7 +20,7 @@ public interface AdminService {
 	
 	//exchange
 	List<ExchangeDto> findExchange();
-	String modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status);
+	int modifyExchangeStatusByExchangeNos(List<ExchangeDto> exchangeDto);
 	
 	//coupon
 	List<CouponDto> findCouponsExpired();
@@ -32,7 +32,7 @@ public interface AdminService {
 	
 	//talent
 	List<TalentDto> findTalent();
-	String modifyTalentBySellerIds(List<String> sellerId);
+	int modifyTalentByTalentNos(List<TalentDto> talentDto);
 	
 	//talent-refund
 	List<TalentRefundDto> findTalentRefund();
