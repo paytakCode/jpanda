@@ -148,7 +148,7 @@ public class MemberController {
             
            
             redirectAttributes.addFlashAttribute("memberInfo", member);
-    		return "redirect:/talent/";
+    		return "redirect:/main";
     	}else {
     		redirectAttributes.addFlashAttribute("alertMsg", "정보를 확인해주세요");
     		return "redirect:/login";
