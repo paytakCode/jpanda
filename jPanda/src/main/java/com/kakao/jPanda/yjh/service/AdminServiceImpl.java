@@ -98,27 +98,23 @@ public class AdminServiceImpl implements AdminService {
 	 * 	통합 후 DTO로 parameter를 받아서 처리할 수 있도록 수정할 예정
 	 */
 	@Override
-	public String modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status) {
+	public int modifyExchangeStatusByExchangeNos(List<ExchangeDto> exchangeDto) {
 		log.info("Service modifyExchangeStatusByExchangeNos() start");
-		Long exchangeNo = null;
-		ExchangeDto exchange = null;
-		String returnStr = "";
+		log.info("exchangeDto : "+exchangeDto);
 		int result = 0;
 		
-		for(String exchangeNoStr : exchangeNoArray) {
-			exchangeNo = Long.parseLong(exchangeNoStr);
-			exchange = adminDao.selectExchangeByExchangeNo(exchangeNo);
-			exchange.setExchangeStatus(status);
-			log.info("exchange : "+exchange.toString());
-			result = adminDao.updateExchange(exchange);
-		}
-		if(result > 0) {
-			returnStr = "<script> alert('성공적으로 반영되었습니다'); location.href='/admin/exchanges'; </script>";
-		} else {
-			returnStr = "<script> alert('작업수행 중 오류가 발생했습니다'); history.back(); </script>";
+		for(int i = 0; i < exchangeDto.size(); i++) {
+			ExchangeDto paramDto = exchangeDto.get(i);
+			log.info("Exchange Service paramDto : "+paramDto.toString());
+			
+			if(paramDto.getExchangeStatus().equals("환전완료")) {
+				result = adminDao.updateExchange(paramDto);
+			} else {
+				result = adminDao.updateExchange(paramDto);
+			}
 		}
 		
-		return returnStr;
+		return result;
 	}
 	
 	//coupon

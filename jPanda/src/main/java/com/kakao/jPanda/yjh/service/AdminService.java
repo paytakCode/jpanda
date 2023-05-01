@@ -20,7 +20,7 @@ public interface AdminService {
 	
 	//exchange
 	List<ExchangeDto> findExchange();
-	String modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status);
+	int modifyExchangeStatusByExchangeNos(List<ExchangeDto> exchangeDto);
 	
 	//coupon
 	List<CouponDto> findCouponsExpired();

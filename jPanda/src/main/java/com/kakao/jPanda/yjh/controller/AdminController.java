@@ -176,20 +176,19 @@ public class AdminController {
 	 * 	코드를 조금 더 간결하게 통합 후 수정 예정
 	 */
 	@ResponseBody
-	@PutMapping(value = "/exchange")
-	public String exchangeModifyByExchangeNos(@RequestParam(name = "exchangeNo") String[] exchangeNoArray, @RequestParam String exchangeStatus, HttpSession session) {
+	@PatchMapping(value = "/exchange/{exchangeNo}")
+	public int exchangeModifyByExchangeNos(@PathVariable("exchangeNo") List<Long> exchangeNo, @RequestBody List<ExchangeDto> exchangeDto, HttpSession session) {
 		log.info("Exchange Controller exchangeModifyByExchangeNos() start");
+		log.info("exchangeNo : "+exchangeNo);
+		log.info("ExchangeDto : " + exchangeDto.toString());
 		
-		for(int i = 0; i < exchangeNoArray.length; i++) {
-			log.info("exchangeNoArray : "+exchangeNoArray[i]);
-		}
-		String returnStr = adminService.modifyExchangeStatusByExchangeNos(exchangeNoArray, exchangeStatus);
+		int result = adminService.modifyExchangeStatusByExchangeNos(exchangeDto);
 		
 		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
-			return "redirect:/login";
+			return -1;
 			
 		} else {
-			return returnStr;
+			return result;
 		}
 	}
 
