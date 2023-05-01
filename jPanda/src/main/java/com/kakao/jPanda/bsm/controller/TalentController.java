@@ -1,6 +1,5 @@
 package com.kakao.jPanda.bsm.controller;
 
-import java.security.acl.NotOwnerException;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class TalentController {
 		}else {
 			loginId = (String) session.getAttribute("loginId");
 		}
-		model.addAttribute("loginId", loginId);
+		model.addAttribute("logi   nId", loginId);
 		return "bsm/talentTestMainpage";
 	}
 	
@@ -93,7 +92,6 @@ public class TalentController {
 	// 수정 페이지 이동
 	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
 	public String talentUpdateFrom(@PathVariable Long talentNo, Model model, HttpSession session) { // @PathVariable
-		System.out.println(talentNo);
 		Talent talent = talentService.findTalentByTalentNo(talentNo);
 		List<Category> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);
@@ -101,7 +99,7 @@ public class TalentController {
 		
 		String sellerId = talent.getSellerId();
 		String login = "";
-		if( session.getAttribute("loginId") == null ||sellerId.equals((String) session.getAttribute("loginId"))) {
+		if( session.getAttribute("loginId") == null || sellerId.equals((String) session.getAttribute("loginId"))) {
 			login = "user";
 		}else {
 			login = (String) session.getAttribute("loginId");
@@ -131,7 +129,6 @@ public class TalentController {
 	@GetMapping("/notice/{noticeNo}/detail")
 	public String noticeDetailByNoticeNo(@PathVariable Long noticeNo, Model model) {
 		Notice notice = noticeService.findNoticeByNoticeNo(noticeNo);
-		System.out.println("notice -> " + notice);
 		model.addAttribute("notice", notice);
 		return "bsm/noticeDetail";
 	}

@@ -187,8 +187,8 @@ table {
 	
 	<div id="summary" class="summary write-check">
 		<h4>요약 설명</h4>
-		<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!<br>요약 설명은 20자 이상 40자 이하로 작성해 주세요.</p>
-		<input type="text" id="summary" name="summary" class="summary" minlength="20" maxlength="40">
+		<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!<br>요약 설명은 20자 이상 60자 이하로 작성해 주세요.</p>
+		<input type="text" id="summary" name="summary" class="summary" minlength="20" maxlength="60">
 	</div>
 		<input type="submit" value="등록하기">
 	</form>
@@ -237,7 +237,6 @@ table {
 	// 사이드바 체크
 	$('.write-check').on('input', function(){
 		var check = '#' + $(this).attr('id') + "-check";
-	    console.log(check);
 		var count = 0;
 		var each = 0;
 		var allFilled = false;
@@ -253,8 +252,8 @@ table {
 			            count++;
 	        		}
 	        	}else if($(this).attr('id') == 'discount-bamboo'){
-	        		if($('#bamboo').val() >= $('#sale-bamboo').val()){
-			            count++;
+	        		if( parseInt($('#bamboo').val()) >= parseInt($('#sale-bamboo').val())){
+	        			count++;
 	        		}
 	        	}else{
 	            	count++;
@@ -318,7 +317,6 @@ table {
 	           	data : form,
 	           	dataType: 'json',
 	           	success:function(data) {
-	            	console.log(data);
 	               	$('#main-img-value').val(data.url);
 	               	$('#main-img-value').trigger('input');
 	           	},
@@ -358,7 +356,7 @@ table {
 	    var saleBambooPrice = $('#sale-bamboo').val();
 	    
 	    var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
-	    if (isNaN(discountPercent) || discountPercent === Infinity) {
+	    if (isNaN(discountPercent) || discountPercent === Infinity || discountPercent < 0) {
 	    	discountPercent = 0;
 	    }
 	    $('#discount-bamboo').val(discountPercent);

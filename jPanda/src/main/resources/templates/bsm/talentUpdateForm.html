@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>재능 수정</title>
-<script th:if="${login} == user" th:inline="javascript">
+<!-- <script th:if="${login} == user" th:inline="javascript">
 	alert("비정상적인 이동이 감지되었습니다. 다시 로그인 해주세요.");
 	location.href = "/logout";
-</script>
+</script> -->
 <style type="text/css">
 /* Set font family and size */
 body {
@@ -127,9 +127,9 @@ table {
 	<div class="container">
 		<form action="/talent/talent" method="post" name="frm" onsubmit="return check()">
 		 <input type="hidden" name="_method" value="put">
-		<h1>재능 등록</h1>
+		<h1>재능 수정</h1>
 		<hr>
-		<input type="hidden" name="sellerId" value="test">
+		<input type="hidden" name="sellerId" th:value="${talent.sellerId}">
 		<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
 	
 	<div id="category" class="category">
@@ -146,7 +146,7 @@ table {
 	
 	</div>
 	
-	<div id="main-image" class="main-img write">
+	<div id="main-image" class="main-img write-check">
 		<h4>대표 이미지</h4>
 		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율은 4:3이 가장 좋아요.</p>
 		<img id="main-image-preview" width="auto" height="250" />
@@ -154,19 +154,19 @@ table {
 		<input type="hidden" id="main-img-value" name="mainImg" th:value="${talent.mainImg}">
 	</div>
 	
-	<div id="title" class="title write">
+	<div id="title" class="title write-check">
 		<h4>제목</h4>
 		<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>제목은 15자 이상 30자 이하로  작성해주세요.</p>
 		<input type="text" id="title" name="title" class="title" th:value="${talent.title}" minlength="15" maxlength="30">
 	</div>
 	
-	<div id ="content" class="content write">
+	<div id ="content" class="content write-check">
 		<h4>강의 소개</h4>
 		<p>강의에 대한 소개를 작성해주세요.</p>
 		<textarea id ="content-area" name = "content" class="content" th:text="${talent.content}"></textarea>
 	</div>
 	
-	<div id="price" class="bamboo write">
+	<div id="price" class="bamboo write-check">
 		<h4>가격</h4>
 		<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
 	<div class="price">
@@ -183,10 +183,10 @@ table {
 	</div>
 	</div>
 	
-	<div id="summary" class="summary write">
+	<div id="summary" class="summary write-check">
 		<h4>요약 설명</h4>
-		<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!<br>요약 설명은 20자 이상 40자 이하로 작성해 주세요.</p>
-		<input type="text" id="summary" name="summary" class="summary" th:value="${talent.summary}" minlength="20" maxlength="40">
+		<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!<br>요약 설명은 20자 이상 50자 이하로 작성해 주세요.</p>
+		<input type="text" id="summary" name="summary" class="summary" th:value="${talent.summary}" minlength="20" maxlength="50">
 	</div>
 		
 		<input type="submit" value="수정하기">
@@ -218,10 +218,9 @@ table {
    	  	return isReadyToSubmit;
    	}
 	
-    // 사이드바 체크표시
-	$('.write').on('input', function(){
+    // 사이드바 체크
+	$('.write-check').on('input', function(){
 		var check = '#' + $(this).attr('id') + "-check";
-	    console.log(check);
 		var count = 0;
 		var each = 0;
 		var allFilled = false;
@@ -237,19 +236,20 @@ table {
 			            count++;
 	        		}
 	        	}else if($(this).attr('id') == 'discount-bamboo'){
-	        		if($('#bamboo').val() >= $('#sale-bamboo').val()){
-			            count++;
+	        		if( parseInt($('#bamboo').val()) >= parseInt($('#sale-bamboo').val())){
+	        			count++;
 	        		}
 	        	}else{
 	            	count++;
         		}
         	}
 	    });
-		if(count == each){
+		if(count === each){
 			$(check).attr('src', '/image/talentImage/check.png');
 		}else {
 			$(check).attr('src', '/image/talentImage/white.png');
 		}
+		
 	});
 	// input태그 엔터키 입력시 submit되는 것 방지
 	$(function() {
@@ -345,7 +345,7 @@ table {
     	var saleBambooPrice = $('#sale-bamboo').val();
     
     	var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
-    	if (isNaN(discountPercent) || discountPercent === Infinity) {
+    	if (isNaN(discountPercent) || discountPercent === Infinity || discountPercent < 0) {
       		discountPercent = 0;
 	    }
 	    
