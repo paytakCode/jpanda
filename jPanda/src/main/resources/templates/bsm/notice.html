@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>공지사항</title>
 <style type="text/css">
 
 .container{
@@ -29,11 +29,12 @@
 
 #notice-list-div {
 	margin: 0 auto;
-	width: 600px;
+	width: 800px;
+	height: 400px;
 	
 }
 #notice-main{
-	margin-left: 100px;
+	margin-left: 50px;
 }
 .notice{
   display: inline-block;
@@ -42,8 +43,10 @@
 	width: 40px;
 }
 .notice-title{
-	width: 340px;
+	width: 540px;
 	margin-right: 100px;
+	max-height: 21.33px;
+	overflow: hidden;
 }
 .notice-reg-date{
 	width: 90px;
@@ -60,6 +63,26 @@ ul {
 hr {
 	margin: 2 0px;
 }
+.notice-page {
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+.notice-page, .notice-no, .notice-reg-date{
+	text-align: center;
+	line-height: 30px; /* 중간 높이로 해줌  */
+}
+#pager{
+	text-align: center;
+	margin-top: 30px;
+}
+#search-div{
+	display: flex; 
+	justify-content: flex-end;
+	margin-right: 100px;
+}
 </style>
 </head>
 <script src="/js/jquery.js"></script>
@@ -74,34 +97,22 @@ hr {
   		<a href="/talent/notice">공지사항</a>
 	</div>
 	<h2 id="notice-main">공지사항</h2>
-	
+	<div id="search-div">
+		<input type="text" id="search">
+		<button id="search-button">검색</button>
+	</div>
 	<div id="notice-list-div">
-	<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-head">게시일</p>
-	<hr>
-		<ul id="notice-list-ul">
-			<li>
-				<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-reg-date">게시일</p>
-				<hr>
-			</li>
-			<li>
-				<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-reg-date">게시일</p>
-				<hr>
-			</li>
-			<li>
-				<p class="notice notice-no">번호</p><p class="notice notice-title">제목</p><p class="notice notice-reg-date">게시일</p>
-				<hr>
-			</li>
-		</ul>
+	<table id="notice-list-table">
+	</table>
+	</div>
+	<div id="pager">
 	</div>
 	</div> <!-- class="container" -->
 	
 	
 	
 <script type="text/javascript">
-	$(function() {
-		alert("asdas");
 		function noticeChange(search, currentPage){
-		alert("noticeChange");
 			$.ajax({
 				url : "/talent/notice/notices",
 				type : "GET",
@@ -113,16 +124,62 @@ hr {
 		          	success:function(data) {
 		          		console.log(data.noticeList);
 		          		console.log(data.pager);
+		          		
+		          		var noticeList = data.noticeList;
+		          		var noticeListTable = $('#notice-list-table');
+
+		             	// 기존 테이블 초기화
+		    			noticeListTable.empty();
+
+		    			// 테이블 헤더 생성
+		    			var tableHeader = $('<tr></tr>');
+		    			var headerNo = $('<th></th>').addClass('notice notice-no').text('번호');
+		    			var headerTitle = $('<th></th>').addClass('notice notice-title').text('제목');
+		    			var headerRegDate = $('<th></th>').addClass('notice notice-reg-date').text('등록일');
+		    			tableHeader.append(headerNo).append(headerTitle).append(headerRegDate);
+		    			noticeListTable.append(tableHeader);
+
+		    			// 받아온 데이터를 반복하며 리스트 아이템 생성
+		    			$.each(noticeList, function(index, notice) {
+		    				var tableRow = $('<tr></tr>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo);
+		    				var no = $('<td></td>').addClass('notice notice-no').text(notice.noticeNo);
+		    				var title = $('<td></td>').addClass('notice notice-title').text(notice.title);
+		    				var regDate = $('<td></td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
+
+		    				tableRow.append(no).append(title).append(regDate);
+		    				noticeListTable.append(tableRow);
+		    			});
+		    			
+		                var pager = data.pager;
+		                var startNum = parseInt(pager.startNum);
+		                var lastNum = parseInt(pager.lastNum);
+		                var pagerDiv = $('#pager');
+		    			
+		                // 기존 페이지 번호 삭제
+		                pagerDiv.empty();
+		                
+		           	  	// 페이지 번호 생성
+		                for (var i=startNum; i<=lastNum; i++) {
+		                    var page = $('<a></a>').addClass('notice-page').text(i);
+		    				if(pager.currentPage == i){
+		    					page.css('background-color', '#EAEAEA');
+		    				}
+		                    pagerDiv.append(page);
+		                }
+						$('#search-button').one('click', function(){
+							noticeChange($('#search').val(), 1);
+						});
+						$('.notice-page').on('click', function(){
+							noticeChange($('#search').val(), $(this).text());
+						});
+						$('.notice-detail').on('click', function(){
+							location.href = "/talent/notice/" + $(this).data('noticeno') + "/detail";							
+						});
 		          	}
 			});
 		}
-		noticeChange("1", 1);
-		$('#notice-search').on('click', function(){
-			noticeChange($('#search').val(), 1);
-		});
-		$('.notice-page').on('click', function(){
-			noticeChange($('#search').val(), $(this).text());
-		});
+	$(function() {
+		noticeChange("", 1);
 	});
 </script>
 

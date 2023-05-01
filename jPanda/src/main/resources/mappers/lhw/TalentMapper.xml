@@ -52,7 +52,7 @@
 	</select>
 	
 	<!-- 상세 페이지  -->
-	<select id="selectTalentByTalentNo" resultType="BoardTalent" parameterType="Long">
+	<select id="selectBoardTalentByTalentNo" resultType="BoardTalent" parameterType="Long">
 		SELECT talent_no, title, seller_id, main_img, summary, bamboo, sale_bamboo, content
 		FROM talent
 		WHERE talent_no = #{talentNo}

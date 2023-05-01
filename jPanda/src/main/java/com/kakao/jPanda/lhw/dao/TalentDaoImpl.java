@@ -18,8 +18,8 @@ public class TalentDaoImpl implements TalentDao {
 	
 	// 재능 판매 상세 페이지 불러오기
 	@Override
-	public Talent selectTalentByTalentNo(Long talentNo) {
-		return sqlSession.selectOne("selectTalentByTalentNo", talentNo);
+	public Talent selectBoardTalentByTalentNo(Long talentNo) {
+		return sqlSession.selectOne("selectBoardTalentByTalentNo", talentNo);
 	}
 	
 	// 리뷰 리스트 불러오기

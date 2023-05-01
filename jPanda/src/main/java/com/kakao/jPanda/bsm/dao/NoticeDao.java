@@ -9,5 +9,6 @@ public interface NoticeDao {
 
 	int 			selectNoticeCountByPager(Pager pager);
 	List<Notice> 	selectNoticesByPager(Pager pager);
+	Notice 			selectNoticeByNoticeNo(Long noticeNo);
 
 }
