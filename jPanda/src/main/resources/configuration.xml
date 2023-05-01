@@ -8,12 +8,12 @@
     
   	<typeAliases>
   		<!-- 관리자 페이지 -->
-  		<typeAlias alias="Notice" type="com.kakao.jPanda.yjh.domain.NoticeDto"/>
-  		<typeAlias alias="Exchange" type="com.kakao.jPanda.yjh.domain.ExchangeDto"/>
-  		<typeAlias alias="Coupon" type="com.kakao.jPanda.yjh.domain.CouponDto"/>
-  		<typeAlias alias="Talent" type="com.kakao.jPanda.yjh.domain.TalentDto"/>
-  		<typeAlias alias="CompanySales" type="com.kakao.jPanda.yjh.domain.CompanySalesDto"/>
-  		<typeAlias alias="TalentRefund" type="com.kakao.jPanda.yjh.domain.TalentRefundDto"/>
+  		<typeAlias alias="AdminNotice" type="com.kakao.jPanda.yjh.domain.NoticeDto"/>
+  		<typeAlias alias="AdminExchange" type="com.kakao.jPanda.yjh.domain.ExchangeDto"/>
+  		<typeAlias alias="AdminCoupon" type="com.kakao.jPanda.yjh.domain.CouponDto"/>
+  		<typeAlias alias="AdminTalent" type="com.kakao.jPanda.yjh.domain.TalentDto"/>
+  		<typeAlias alias="AdminCompanySales" type="com.kakao.jPanda.yjh.domain.CompanySalesDto"/>
+  		<typeAlias alias="AdminTalentRefund" type="com.kakao.jPanda.yjh.domain.TalentRefundDto"/>
   		
   		<!-- 로그인, 회원가입, 마이페이지 -->
 		<typeAlias alias="MemberDto" type="com.kakao.jPanda.njb.domain.MemberDto"/>

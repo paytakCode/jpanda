@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kakao.jPanda.yjh.CouponMapper">
+
+	<insert id="insertCoupon" parameterType="AdminCoupon">
+		insert 
+		into coupon 
+		values (#{couponCode}, #{issueDate}, #{expireDate}, #{couponValue})
+	</insert>
+	
+	<select id="findCouponList" resultType="AdminCoupon">
+		select *
+		from coupon
+	</select>
+	
+	<select id="selectCouponsExpired" resultType="AdminCoupon">
+	<![CDATA[
+		select
+            	count(cu.coupon_code) as usedcoupon_count,
+            	c.coupon_code,
+           	 	c.issue_date,
+            	c.expire_date,
+            	c.coupon_value
+		from        
+            	coupon c, coupon_use cu
+		where
+            	c.expire_date <= sysdate
+		and 
+            	c.coupon_code = cu.coupon_code
+		group by 
+            	c.coupon_code, c.issue_date, c.expire_date, c.coupon_value
+        order by
+        		c.expire_date desc
+	]]>
+	</select>
+</mapper>

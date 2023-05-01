@@ -1,5 +1,7 @@
 package com.kakao.jPanda.yjh.domain;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +25,8 @@ public class TalentDto {
 	private Long bamboo;
 	private Long saleBamboo;
 	private String summary;
-	private String status;
+	private String talentStatus;
 	private Long viewCount;
-	private String regDate;
-	private String statusDate;
+	private Timestamp regDate;
+	private Timestamp statusDate;
 }

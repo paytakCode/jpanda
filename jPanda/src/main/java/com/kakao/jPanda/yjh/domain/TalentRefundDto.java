@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class TalentRefundDto {	
 	private Long purchaseNo;
-	private String status;
+	private String refundStatus;
 	private String issue;
 	private String submitDate;
 	private String approveDate;
@@ -22,4 +22,5 @@ public class TalentRefundDto {
 	//bamboo_use table join용
 	private String buyerId;
 	private Long talentNo;
+	private String listType;
 }

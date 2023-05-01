@@ -1,6 +1,6 @@
 package com.kakao.jPanda.yjh.domain;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,14 +11,14 @@ import lombok.ToString;
 @ToString
 public class ExchangeDto {
 	private Long exchangeNo;
-	private String id;
+	private String sellerId;
 	private Long talentNo;
 	private Long sales;
-	private Date submitDate;
-	private String approveDate;
+	private Timestamp submitDate;
+	private Timestamp approveDate;
 	private Long total;
-	private String grade;
-	private Long ratio;
-	private String status;
+	private String memberGrade;
+	private Long exchangeRatio;
+	private String exchangeStatus;
 	private Long paymentAmount;
 }

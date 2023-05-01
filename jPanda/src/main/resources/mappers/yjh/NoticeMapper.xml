@@ -3,24 +3,24 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.NoticeMapper">
 	
-	<select id="selectNotice" resultType="Notice">
+	<select id="selectNotice" resultType="AdminNotice">
 		select 	* 
 		from 	notice
 	</select>
 
-	<insert id="insertNotice" parameterType="Notice">
+	<insert id="insertNotice" parameterType="AdminNotice">
 		insert 
 		into 	notice
-		values 	(#{noticeNo}, #{title}, #{content}, #{regDate})
+		values 	(notice_no_seq.nextval, #{title}, #{content}, #{regDate})
 	</insert>
 	
-	<select id="selectNoticeByNoticeNo" parameterType="Long" resultType="Notice">
+	<select id="selectNoticeByNoticeNo" parameterType="Long" resultType="AdminNotice">
 		select 	* 
 		from 	notice
 		where 	notice_no = #{noticeNo}
 	</select>
 	
-	<update id="updateNotice" parameterType="Notice">
+	<update id="updateNotice" parameterType="AdminNotice">
 		update 	notice
 		set 	title = #{title},
 				content = #{content},

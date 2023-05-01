@@ -1,9 +1,11 @@
 package com.kakao.jPanda.yjh.controller;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.yjh.domain.CompanySalesDto;
+import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
@@ -40,19 +43,29 @@ public class AdminController {
 	
 	//home
 	@GetMapping(value = "")
-	public String home() {
-		
-		return "yjh/home";
+	public String home(HttpSession session) {
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/home";
+		}	
 	}
 	
 	//notice
 	@GetMapping(value = "/notices")
-	public String noticeList(Model model) {
+	public String noticeList(Model model, HttpSession session) {
 		log.info("Notice Controller noticeList() start");
 		List<NoticeDto> noticeList = adminService.findNotice();
 		model.addAttribute("noticeList", noticeList);
 		
-		return "yjh/notice";
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			
+			return "yjh/notice";
+		}	
 	}
 	
 	/*
@@ -61,22 +74,31 @@ public class AdminController {
 	 *	시퀀스 생성전이라 필수 입력란에 noticeNo존재, 통합후 시퀀스 생성하면 수정 예정
 	 */
 	@GetMapping(value = "/notices/{noticeNo}")
-	public String noticeDetails(@PathVariable String noticeNo, Model model) {
+	public String noticeDetails(@PathVariable String noticeNo, Model model, HttpSession session) {
 		log.info("Notice Controller noticeDetails() start");
 		log.info("noticeNo : "+noticeNo);
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);	
 		model.addAttribute("notice", notice);
 		
-		return "yjh/notice-content";
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/notice-content";
+		}
 	}
 	
 	/*
 	 * 	공지사항 작성을 위한 화면으로 이동
 	 */
 	@GetMapping(value = "/notice-form")
-	public String noticeForm() {
-		
-		return "yjh/notice-form";
+	public String noticeForm(HttpSession session) {
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/notice-form";
+		}
 	}
 	
 	/*
@@ -85,24 +107,34 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PostMapping(value = "/notice")
-	public String noticeAdd(NoticeDto notice) {
+	public String noticeAdd(NoticeDto notice, HttpSession session) {
 		log.info("Notice Controller noticeAdd() start");
 		String resultStr = adminService.addNotice(notice);
-		
-		return resultStr;
+
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return resultStr;
+		}
 	}
 	
 	/*
 	 * 	noticeDetail에서 수정 버튼을 눌러 수정할 페이지에 보내는 기능
 	 */
 	@GetMapping(value = "/notice/{noticeNo}/modify-form")
-	public String noticeModifyForm(@PathVariable String noticeNo, Model model) {
+	public String noticeModifyForm(@PathVariable String noticeNo, Model model, HttpSession session) {
 		log.info("Notice Controller noticeModifyForm() start");
 		log.info("noticeNo : "+noticeNo);
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);
 		model.addAttribute("notice", notice);
 		
-		return "yjh/notice-modifyFrom";
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/notice-modifyFrom";
+		}
 	}
 	
 	/*
@@ -110,22 +142,32 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PutMapping(value = "/notice/{noticeNo}/modify")
-	public String noticeModifyByNoticeNo(NoticeDto notice) {
+	public String noticeModifyByNoticeNo(NoticeDto notice, HttpSession session) {
 		log.info("Notice Controller noticeModifyByNoticeNo() start");
 		log.info("notice : "+notice.toString());
 		String resultStr = adminService.modifyNotice(notice);
 		
-		return resultStr;
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return resultStr;
+		}
 	}
 	
 	//exchange	
 	@GetMapping(value = "/exchanges")
-	public String exchangeList(Model model) {
+	public String exchangeList(Model model, HttpSession session) {
 		log.info("Exchange Controller exchangeList() start");
 		List<ExchangeDto> exList = adminService.findExchange();
 		model.addAttribute("exList", exList);
 				
-		return "yjh/exchange";
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/exchange";
+		}
 	}
 	
 	/*
@@ -133,25 +175,38 @@ public class AdminController {
 	 * 	view에서 완료와 반려 버튼에 따라 각각 다른 상태가 업데이트 되게 구현
 	 * 	코드를 조금 더 간결하게 통합 후 수정 예정
 	 */
+	@ResponseBody
 	@PutMapping(value = "/exchange")
-	public String exchangeModifyByExchangeNos(@RequestParam(name = "exchangeNo") String[] exchangeNoArray, @RequestParam String status) {
+	public String exchangeModifyByExchangeNos(@RequestParam(name = "exchangeNo") String[] exchangeNoArray, @RequestParam String exchangeStatus, HttpSession session) {
 		log.info("Exchange Controller exchangeModifyByExchangeNos() start");
 		
 		for(int i = 0; i < exchangeNoArray.length; i++) {
 			log.info("exchangeNoArray : "+exchangeNoArray[i]);
 		}
+		String returnStr = adminService.modifyExchangeStatusByExchangeNos(exchangeNoArray, exchangeStatus);
 		
-		adminService.modifyExchangeStatusByExchangeNos(exchangeNoArray, status);
-		
-		return "redirect:/admin";
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return returnStr;
+		}
 	}
 
 	//coupon
 	@GetMapping(value = "/coupons-form")
-	public String couponsForm() {
+	public String couponsList(Model model, HttpSession session) {
 		log.info("Coupon Controller couponsForm() start");
+		List<CouponDto> couponList = adminService.findCouponsExpired();
 		
-		return "yjh/createCoupon";
+		model.addAttribute("couponList", couponList);
+		
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/createCoupon";
+		}
 	}
 	
 	
@@ -160,9 +215,9 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PostMapping(value = "/coupons/coupons-no")
-	public String genetateCouponNo() {
+	public String genetateCouponNo(HttpSession session) {
 		log.info("Coupon Controller genetateCouponNo() start");
-		
+
 		return adminService.generateCouponNo();
 	}
 	
@@ -171,19 +226,27 @@ public class AdminController {
 	 * 	쿠폰 기간에 대한 논의가 부족해서 쿠폰 생성일과 사용기한을 우선 sysdate로 구현
 	 * 	통합 후 사용기한에 대한 논의 후 관련 로직 추가 예정
 	 */
-	@PostMapping(value = "/coupons") 
-	public String couponAdd(@RequestParam(name = "couponValue") String couponValue, @RequestParam(name = "couponNo") String couponNo) {
+	@ResponseBody
+	@PostMapping(value = "/coupons/{couponNo}") 
+	public Map<String, Integer> couponAdd(@PathVariable("couponNo") String couponNo, @RequestBody CouponDto couponDto) {
 		log.info("Coupon Controller couponAdd() start");
-		adminService.addCoupon(couponValue, couponNo);
+		log.info("couponDto : "+couponDto.toString());
 		
-		return "redirect:/admin";
+		Map<String, Integer> returnMap = adminService.addCoupon(couponDto);
+		
+		return returnMap;
+		
 	}
 	
 	//company-sales
 	@GetMapping(value = "/company-sales")
-	public String companySales() {
-		
-		return "yjh/company-sales";
+	public String companySales(HttpSession session) {
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/company-sales";
+		}
 	}
 	
 	/*
@@ -191,28 +254,32 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@GetMapping(value = "/company-sales/years")
-	public List<CompanySalesDto> companySalesListByYears(HttpServletRequest request) throws ParseException {
+	public List<CompanySalesDto> companySalesListByYears(@RequestParam Timestamp startDate, @RequestParam Timestamp endDate) throws ParseException {
 		log.info("Company-sales Controller companySalesListByYears() start");
-		log.info("startDate : "+request.getParameter("startDate"));
-		log.info("endDate : "+request.getParameter("endDate"));
+		log.info("startDate : "+startDate);
+		log.info("endDate : "+endDate);
 		
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
 		
 		List<CompanySalesDto> csList = adminService.findCompanySalesByStartDateAndEndDate(startDate, endDate);
 		log.info("csList : "+csList.toString());
 		
 		return csList;
+		
 	}
 	
 	//talent
 	@GetMapping(value = "/talents") // talents
-	public String talentList(Model model) {
+	public String talentList(Model model, HttpSession session) {
 		log.info("Talent Controller talentList() start");
 		List<TalentDto> talentList =  adminService.findTalent();
 		model.addAttribute("talentList", talentList);
-		
-		return "yjh/talent";
+				
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/talent";
+		}
 	}
 	
 	/*
@@ -220,16 +287,21 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PatchMapping(value = "/talents/{sellerId}")
-	public String talentModifyBySellerIds(@PathVariable("sellerId") List<String> sellerId) {
+	public String talentModifyBySellerIds(@PathVariable("sellerId") List<String> sellerId, HttpSession session) {
 		log.info("Talent Controller talentModifyBySellerIds() start");
 		log.info("SellerIds : "+sellerId);
 		
-		return adminService.modifyTalentBySellerIds(sellerId);
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return adminService.modifyTalentBySellerIds(sellerId);
+		}
 	}
 
 	//talent-refund
 	@GetMapping(value = "/talent-refund")
-	public String talentRefundList(Model model) {
+	public String talentRefundList(Model model, HttpSession session) {
 		log.info("TalentRefund Controller talentRefundList() start");
 		
 		List<TalentRefundDto> refundList = adminService.findTalentRefund();
@@ -237,7 +309,12 @@ public class AdminController {
 		
 		model.addAttribute("refundList", refundList);
 		
-		return "yjh/talent-refund";
+		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/talent-refund";
+		}
 	}
 	
 	/*
@@ -247,7 +324,7 @@ public class AdminController {
 	@ResponseBody
 	@PatchMapping(value = "/talent-refunds/{purchaseNos}")
 	public int talentRefundModifyByPurchaseNosAndStatus(@PathVariable("purchaseNos") List<String> purchaseNo, 
-														   			@RequestBody List<TalentRefundDto> talentRefundDto)
+														@RequestBody List<TalentRefundDto> talentRefundDto)
 	{
 		log.info("TalentRefund Controller talentRefundModifyTosuccessByPurchaseNos() start");
 		log.info("purchaseNos : "+purchaseNo);

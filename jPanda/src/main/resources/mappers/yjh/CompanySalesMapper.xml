@@ -3,7 +3,7 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.CompanySalesMapper">
 
-	<select id="selectCompanyByDDDate" parameterType="CompanySales" resultType="companySales">
+	<select id="selectCompanyByDDDate" parameterType="AdminCompanySales" resultType="AdmincompanySales">
 	<![CDATA[
 	SELECT 
     			COALESCE(TA.bc_period, TB.ex_period) AS period,
@@ -14,7 +14,7 @@
         				SUM(bc.payment_amount) AS count,
         				TO_CHAR(bc.charge_date, 'YYYYMMDD') AS bc_period
     		FROM 		bamboo_charge bc
-    		WHERE 		bc.charge_date BETWEEN TO_DATE(#{startDate}, 'YYYYMMDD') AND TO_DATE(#{endDate}, 'YYYYMMDD')
+    		WHERE 		bc.charge_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
     		GROUP BY 	TO_CHAR(bc.charge_date, 'YYYYMMDD')
 		   ) TA
 	FULL OUTER JOIN (
@@ -22,7 +22,7 @@
         				SUM(ex.total) - SUM(ex.payment_amount) AS count,
         				TO_CHAR(ex.approve_date, 'YYYYMMDD') AS ex_period
     	  FROM 			exchange ex
-    	  WHERE 		ex.approve_date BETWEEN TO_DATE(#{startDate}, 'YYYYMMDD') AND TO_DATE(#{endDate}, 'YYYYMMDD')
+    	  WHERE 		ex.approve_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
     	  GROUP BY 		TO_CHAR(ex.approve_date, 'YYYYMMDD')
 	) TB 
 	ON TA.bc_period = TB.ex_period
@@ -31,7 +31,7 @@
 	]]>
 	</select>
 	
-	<select id="selectCompanySalesByYYMMDate" parameterType="CompanySales" resultType="companySales">
+	<select id="selectCompanySalesByYYMMDate" parameterType="AdminCompanySales" resultType="AdmincompanySales">
 	<![CDATA[
 	SELECT 
     			COALESCE(TA.bc_period, TB.ex_period) AS period,
@@ -42,7 +42,7 @@
         				SUM(bc.payment_amount) AS count,
         				TO_CHAR(bc.charge_date, 'YYYYMM') AS bc_period
     		FROM 		bamboo_charge bc
-    		WHERE 		bc.charge_date BETWEEN TO_DATE(#{startDate}, 'YYYYMMDD') AND TO_DATE(#{endDate}, 'YYYYMMDD')
+    		WHERE 		bc.charge_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
     		GROUP BY 	TO_CHAR(bc.charge_date, 'YYYYMM')
 		   ) TA
 	FULL OUTER JOIN (
@@ -50,7 +50,7 @@
         				SUM(ex.total) - SUM(ex.payment_amount) AS count,
         				TO_CHAR(ex.approve_date, 'YYYYMM') AS ex_period
     	  FROM 			exchange ex
-    	  WHERE 		ex.approve_date BETWEEN TO_DATE(#{startDate}, 'YYYYMMDD') AND TO_DATE(#{endDate}, 'YYYYMMDD')
+    	  WHERE 		ex.approve_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
     	  GROUP BY 		TO_CHAR(ex.approve_date, 'YYYYMM')
 	) TB 
 	ON TA.bc_period = TB.ex_period

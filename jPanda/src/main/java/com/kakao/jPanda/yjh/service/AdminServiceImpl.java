@@ -1,7 +1,10 @@
 package com.kakao.jPanda.yjh.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -35,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
 		int result = adminDao.insertNotice(notice);
 		
 		if(result > 0) {
-			resultStr = "<script>alert('공지사항 적용이 완료되었습니다.'); location.href='/admin';</script>";
+			resultStr = "<script>alert('공지사항 적용이 완료되었습니다.'); location.href='/admin/notices';</script>";
 		} else {
 			resultStr = "<script>alert('공지사항 적용 오류'); history.back();</script>";
 		}
@@ -95,18 +98,27 @@ public class AdminServiceImpl implements AdminService {
 	 * 	통합 후 DTO로 parameter를 받아서 처리할 수 있도록 수정할 예정
 	 */
 	@Override
-	public void modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status) {
+	public String modifyExchangeStatusByExchangeNos(String[] exchangeNoArray, String status) {
 		log.info("Service modifyExchangeStatusByExchangeNos() start");
 		Long exchangeNo = null;
 		ExchangeDto exchange = null;
+		String returnStr = "";
+		int result = 0;
 		
 		for(String exchangeNoStr : exchangeNoArray) {
 			exchangeNo = Long.parseLong(exchangeNoStr);
 			exchange = adminDao.selectExchangeByExchangeNo(exchangeNo);
-			exchange.setStatus(status);
+			exchange.setExchangeStatus(status);
 			log.info("exchange : "+exchange.toString());
-			adminDao.updateExchange(exchange);
+			result = adminDao.updateExchange(exchange);
 		}
+		if(result > 0) {
+			returnStr = "<script> alert('성공적으로 반영되었습니다'); location.href='/admin/exchanges'; </script>";
+		} else {
+			returnStr = "<script> alert('작업수행 중 오류가 발생했습니다'); history.back(); </script>";
+		}
+		
+		return returnStr;
 	}
 	
 	//coupon
@@ -115,6 +127,13 @@ public class AdminServiceImpl implements AdminService {
 	 * 	toString, substring작업을 한 뒤에 PK검증을 위해 조회하고, 결과에 따라 해당화면 입력부에 생성이 되거나 중복 alert띄우는 기능
 	 * 	통합 후 데이터 전송 방식과 로직을 조금 손 볼 예정
  	 */
+	@Override
+	public List<CouponDto> findCouponsExpired() {
+		List<CouponDto> couponList = adminDao.selectCouponsExpired();
+		
+		return couponList;
+	}
+	
 	@Override
 	public String generateCouponNo(){
 		log.info("Service generateCouponNo() start");
@@ -131,7 +150,7 @@ public class AdminServiceImpl implements AdminService {
 			log.info("couponList : "+couponList);
 			
 			for(CouponDto cn : couponList) {
-				if(cn.getCouponNo().equals(couponNo)) {
+				if(cn.getCouponCode().equals(couponNo)) {
 					result = false;
 				} else {
 					result = true;
@@ -147,19 +166,23 @@ public class AdminServiceImpl implements AdminService {
 	 * 	사용기한에 대한 논의가 부족해 통합 후 논의를 통해 사용기한 정하는 로직 구현 예정
 	 */
 	@Override
-	public void addCoupon(String couponValue, String couponNo) {
+	public Map<String, Integer> addCoupon(CouponDto couponDto) {
 		log.info("Service addCoupon() start");
-		Long longCouponValue = Long.parseLong(couponValue);
-		log.info("longCouponValue : "+longCouponValue.toString());
+		log.info("Service couponDto : " + couponDto.toString());
 		
-//		Coupon coupon = null;
-		CouponDto coupon = new CouponDto();
-		coupon.setCouponNo(couponNo);
-		coupon.setCouponValue(longCouponValue);
-		log.info("coupon : "+coupon);
+		Map<String, Integer> returnMap = new HashMap<String, Integer>();
+		int valid = 0;
 		
-		adminDao.insertCoupon(coupon);
+		if(couponDto.getCouponValue() == null) {
+			valid = -1;
+			
+		} else {
+			valid = adminDao.insertCoupon(couponDto);
+		}
 		
+		returnMap.put("valid", valid);
+		
+		return returnMap;
 	}
 	
 	//company-sales
@@ -170,19 +193,21 @@ public class AdminServiceImpl implements AdminService {
 	 * 	통합 후 검증된 더미데이터로 sql검증 필요
 	 */
 	@Override
-	public List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(String startDate, String endDate) {
+	public List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(Timestamp startDate, Timestamp endDate) {
 		log.info("Service findCompanySalesByYears() start");
 		CompanySalesDto companySalesDto = new CompanySalesDto();
 		List<CompanySalesDto> csList = null;
 		
-		if(Integer.parseInt(startDate.substring(6)) > 1 && Integer.parseInt(endDate.substring(6)) > 1) {
+		if(Integer.parseInt(startDate.toString().substring(8, 10)) > 1 && Integer.parseInt(endDate.toString().substring(8, 10)) > 1) {
 			companySalesDto.setStartDate(startDate);
+			log.info("startDate : "+startDate.toString().substring(8, 10));
 			log.info("Company-sales Service 'DD' startDate : "+companySalesDto.getStartDate().toString());
 			companySalesDto.setEndDate(endDate);
 			log.info("Company-sales Service 'DD' endDate : "+companySalesDto.getEndDate().toString());
 			csList = adminDao.selectCompanyByDDDate(companySalesDto);
 			
 		} else {
+			log.info("startDate : "+startDate.toString().substring(8, 10));
 			companySalesDto.setStartDate(startDate);
 			companySalesDto.setEndDate(endDate);
 			csList = adminDao.selectCompanySalesByYYMMDate(companySalesDto);
@@ -263,7 +288,7 @@ public class AdminServiceImpl implements AdminService {
 			TalentRefundDto paramDto = talentRefundDto.get(i);
 			log.info("TalentRefund Service paramDto : "+paramDto.toString());
 			
-			if(paramDto.getStatus().equals("환불완료")) {
+			if(paramDto.getRefundStatus().equals("환불완료")) {
 				result = adminDao.updateTalentRefundToSuccessByPurchaseNosAndStatus(paramDto);
 			} else {
 				result = adminDao.updateTalentRefundToCompanionByPurchaseNosAndStatus(paramDto);

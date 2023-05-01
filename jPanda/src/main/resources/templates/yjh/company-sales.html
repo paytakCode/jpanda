@@ -61,8 +61,8 @@
 		const endPeriod = $(".end-period");
 		const endPeriodValue = endPeriod.val();
 
-		const startDate = startPeriodValue.split("-").join("");
-		const endDate = endPeriodValue.split("-").join("");
+		const startDate = getStartDate(startPeriodValue);
+		const endDate = getEndDate(endPeriodValue);
 
 		if (!startDate) {
 			alert("시작일을 입력해주세요");
@@ -132,6 +132,34 @@
 						});
 					}
 				});
+	}
+	
+	function getStartDate(startDateParam){
+		const startDate = new Date(startDateParam);
+		const year = startDate.getFullYear();
+		const month = String(startDate.getMonth() + 1).padStart(2, '0');
+		const day = String(startDate.getDate()).padStart(2, '0');
+		const hours = String(startDate.getHours()).padStart(2, '0');
+		const minutes = String(startDate.getMinutes()).padStart(2, '0');
+		const seconds = String(startDate.getSeconds()).padStart(2, '0');
+		
+		const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+		
+		return formattedDate;
+	}
+	
+	function getEndDate(endDateParam){
+		const endDate = new Date(endDateParam);
+		const year = endDate.getFullYear();
+		const month = String(endDate.getMonth() + 1).padStart(2, '0');
+		const day = String(endDate.getDate()).padStart(2, '0');
+		const hours = String(endDate.getHours()).padStart(2, '0');
+		const minutes = String(endDate.getMinutes()).padStart(2, '0');
+		const seconds = String(endDate.getSeconds()).padStart(2, '0');
+		
+		const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+		
+		return formattedDate;
 	}
 </script>
 </html>

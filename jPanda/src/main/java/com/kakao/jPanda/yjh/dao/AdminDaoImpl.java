@@ -87,12 +87,27 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public void updateExchange(ExchangeDto exchange) {
+	public int updateExchange(ExchangeDto exchange) {
 		log.info("Dao updateExchange() start");
-		sqlSession.update("updateExchange", exchange);
+		return sqlSession.update("updateExchange", exchange);
 	}
 	
 	//coupon
+	@Override
+	public List<CouponDto> selectCouponsExpired() {
+		log.info("Coupon Dao selectCouponsExpired() start");
+		List<CouponDto> couponList = null;
+		
+		try {
+			couponList = sqlSession.selectList("selectCouponsExpired");
+			
+		} catch(Exception e) {
+			log.info("Coupon Dao selectCouponsExpired() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return couponList;
+	}
+
 	@Override
 	public List<CouponDto> findCouponList() {
 		log.info("Dao findCouponList() start");
@@ -110,9 +125,11 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public void insertCoupon(CouponDto coupon) {
+	public int insertCoupon(CouponDto couponDto) {
 		log.info("Dao insertCoupon() start");
-		sqlSession.insert("insertCoupon", coupon);
+		log.info("Dao couponDto : "+couponDto.toString());
+		
+		return sqlSession.insert("insertCoupon", couponDto);
 	}
 	
 	//company-sales
