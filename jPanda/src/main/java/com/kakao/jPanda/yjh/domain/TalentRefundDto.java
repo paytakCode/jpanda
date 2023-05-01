@@ -1,5 +1,7 @@
 package com.kakao.jPanda.yjh.domain;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +17,8 @@ public class TalentRefundDto {
 	private Long purchaseNo;
 	private String refundStatus;
 	private String issue;
-	private String submitDate;
-	private String approveDate;
+	private Timestamp submitDate;
+	private Timestamp approveDate;
 	private Long refundBamboo;
 	
 	//bamboo_use table join용

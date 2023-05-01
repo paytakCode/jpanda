@@ -32,14 +32,14 @@
        		</tr>
 			<tr>
 				<td colspan="8">
-					<input type="button" class="submit" th:name="refundStatus" value="환불완료">
-					<input type="button" class="submit" th:name="refundStatus" value="반려">
+					<input type="button" class="btn" th:name="refundStatus" value="환불완료">
+					<input type="button" class="btn" th:name="refundStatus" value="반려">
 				</td>
 			</tr>
 		</table>
 </body>
 <script type="text/javascript">	 
-	$(".submit").on("click", function() {
+	$(".btn").on("click", function() {
 		const purchaseNo = $("input.checkbox:checked").map(function() {
 			return $(this).val();
 		}).get();
@@ -51,15 +51,16 @@
 		
 		var talentRefundDto = [];
 		var statusValue = $(this).val();
+		var approveDate = Date.now();
 		
 		if (statusValue == "환불완료") {
 		    for (var i = 0; i < purchaseNo.length; i++) {
-		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i]});
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
 		    }
 		    
 		} else if (statusValue == "반려") {
 		    for (var i = 0; i < purchaseNo.length; i++) {
-		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i]});
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
 		    }
 		}
 		
