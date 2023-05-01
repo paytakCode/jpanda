@@ -18,25 +18,19 @@
 				<td><textarea rows="50" cols="50" name="content"></textarea></td>
 			</tr>
 			<tr>
-				<th>게시일</th>
-				<td><input type="date" name="regDate"></td>
-			</tr>
-			<tr>
-				<th>게시글 번호</th>
-				<td><input type="number" name="noticeNo"></td>
-			</tr>
-			<tr>
 				<td colspan="2"><button type="submit" value="적용">적용</button></td>
 			</tr>
 		</table>
+				<input type="hidden" class="regDate" name="regDate" pattern="YYYYMMDD">
 	</form>
-	
 <script type="text/javascript">
 	function chk() {
 		const title = $("input[name=title]");
 		const content = $("textarea[name=content]");
 		const regDate = $("input[name=regDate]");
 		const noticeNo = $("input[name=noticeNo]");
+		
+		$(".regDate").val(getNow());
 		
 		if(title.val() === null || title.val() === ""){
 			alert("제목을 입력하세요");
@@ -50,14 +44,24 @@
 			alert("게시일을 입력하세요");
 			regDate.focus();
 			return false;
-		} else if(noticeNo.val() === null || noticeNo.val() === "") {
-			alert("번호를 입력하세요");
-			noticeNo.focus();
-			return false;
 		} else {
 			return true;
 		}
 	
+	}
+	
+	function getNow(){
+		const now = new Date(Date.now());
+		const year = now.getFullYear();
+		const month = String(now.getMonth() + 1).padStart(2, '0');
+		const day = String(now.getDate()).padStart(2, '0');
+		const hours = String(now.getHours()).padStart(2, '0');
+		const minutes = String(now.getMinutes()).padStart(2, '0');
+		const seconds = String(now.getSeconds()).padStart(2, '0');
+		
+		const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+		
+		return formattedDate;
 	}
 </script>
 </body>

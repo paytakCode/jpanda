@@ -6,7 +6,7 @@
 	<insert id="insertCoupon" parameterType="Coupon">
 		insert 
 		into coupon 
-		values (#{couponNo}, #{startDate}, #{endDate}, #{couponValue})
+		values (#{couponCode}, #{issueDate}, #{expireDate}, #{couponValue})
 	</insert>
 	
 	<select id="findCouponList" resultType="Coupon">
@@ -17,8 +17,8 @@
 	<select id="selectCouponsExpired" resultType="Coupon">
 	<![CDATA[
 		select
-            	count(cu.coupon_no) as usedcoupon_count,
-            	c.coupon_no,
+            	count(cu.coupon_code) as usedcoupon_count,
+            	c.coupon_code,
            	 	c.issue_date,
             	c.expire_date,
             	c.coupon_value
@@ -27,9 +27,11 @@
 		where
             	c.expire_date <= sysdate
 		and 
-            	c.coupon_no = cu.coupon_no
+            	c.coupon_code = cu.coupon_code
 		group by 
-            	c.coupon_no, c.issue_date, c.expire_date, c.coupon_value
+            	c.coupon_code, c.issue_date, c.expire_date, c.coupon_value
+        order by
+        		c.expire_date desc
 	]]>
 	</select>
 </mapper>

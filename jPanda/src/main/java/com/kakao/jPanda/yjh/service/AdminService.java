@@ -1,6 +1,7 @@
 package com.kakao.jPanda.yjh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
@@ -23,7 +24,7 @@ public interface AdminService {
 	//coupon
 	List<CouponDto> findCouponsExpired();
 	String generateCouponNo();
-	int addCoupon(CouponDto couponDto);
+	Map<String, Integer> addCoupon(CouponDto couponDto);
 	
 	//company-sales
 	List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(String startDate, String endDate);

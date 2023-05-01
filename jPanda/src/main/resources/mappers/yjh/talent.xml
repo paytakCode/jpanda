@@ -6,12 +6,12 @@
 	<select id="selectTalent" resultType="Talent">
 		select * 
 		from talent
-		where status = '검토중'
+		where talent_status = '검토중'
 	</select>
 	
 	<update id="updateTalentBySellerIds" parameterType="List">
 		update 	talent
-		set 	status = '게시중',
+		set 	talent_status = '게시중',
 				reg_date = sysdate,
 				status_date = sysdate
 		where	seller_id in 

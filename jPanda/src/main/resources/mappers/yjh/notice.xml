@@ -11,7 +11,7 @@
 	<insert id="insertNotice" parameterType="Notice">
 		insert 
 		into 	notice
-		values 	(#{noticeNo}, #{title}, #{content}, #{regDate})
+		values 	(notice_no_seq.nextval, #{title}, #{content}, #{regDate})
 	</insert>
 	
 	<select id="selectNoticeByNoticeNo" parameterType="Long" resultType="Notice">

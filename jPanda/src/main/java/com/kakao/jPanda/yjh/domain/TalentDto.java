@@ -23,7 +23,7 @@ public class TalentDto {
 	private Long bamboo;
 	private Long saleBamboo;
 	private String summary;
-	private String status;
+	private String talentStatus;
 	private Long viewCount;
 	private String regDate;
 	private String statusDate;

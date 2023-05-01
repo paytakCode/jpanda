@@ -1,7 +1,6 @@
 package com.kakao.jPanda.yjh.controller;
 
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -183,18 +182,7 @@ public class AdminController {
 		log.info("Coupon Controller couponAdd() start");
 		log.info("couponDto : "+couponDto.toString());
 		
-//		int result = adminService.addCoupon(couponDto);
-		
-		Map<String, Integer> returnMap = new HashMap<String, Integer>();
-		int valid = 0;
-		
-		if(couponDto.getCouponValue() == null) {
-			valid = -1;
-		} else {
-			valid = adminService.addCoupon(couponDto);
-		}
-		
-		returnMap.put("valid", valid);
+		Map<String, Integer> returnMap = adminService.addCoupon(couponDto);
 		
 		return returnMap;
 	}

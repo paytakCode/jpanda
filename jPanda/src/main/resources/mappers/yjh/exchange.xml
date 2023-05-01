@@ -4,9 +4,9 @@
 <mapper namespace="com.kakao.jPanda.yjh.ExchangeMapper">
 
 	<select id="selectExchange" resultType="Exchange">
-		select 	exchange_No, talent_No, id, submit_Date, total, status
+		select 	exchange_No, talent_No, seller_id, submit_Date, total, exchange_status
 		from 	exchange
-		where 	status = '검토중'
+		where 	exchange_status = '검토중'
 	</select>
 	
 	<select id="selectExchangeByExchangeNo" parameterType="Long" resultType="Exchange">
@@ -17,7 +17,7 @@
 	
 	<update id="updateExchange" parameterType="Exchange">
 		update 	exchange
-		set 	status = #{status},
+		set 	exchange_status = #{exchangeStatus},
 				approve_date = sysdate
 		where 	exchange_no = #{exchangeNo}
 	</update>

@@ -1,0 +1,360 @@
+<!-- 
+	페이지 로드 후 
+	좌상단 Select List에 DB Member Table 데이터를 참조해서 유저 리스트 갱신됨
+	Connect 버튼을 누르면 connect 함수 호출하여 Sokect 연결시도 , disconnect 버튼으로 변경, 채팅 상대 갱신, 첫번째 유저의 채팅을 기본으로 설정
+	연결 후 우하단 chat-btn 클릭하면 chat-console 창 열림
+	chat-console 좌측에 채팅 상대리스트, 우측에 채팅 내용, 하단에 채팅입력창
+	채팅 입력 후 엔터키 누르면 현재 선택된 상대에게 메세지 전송
+	상대가 접속되어있고 콘솔창이 닫혀 있으면 chat-btn이 깜빡이는 애니메이션으로 표시
+	상대가 접속되어있고 콘솔창이 열려있는상태에서 메세지 보냈던 상대창에 접속되어있으면 바로 메세지 표시됨
+ -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+	<style>
+		/* 깜박이는 애니메이션 */
+		@keyframes blink {
+			50% {
+				color: yellow;
+				text-shadow: 0 0 5px yellow;
+				background-color: red;
+			}
+		}
+		
+		/* 채팅 버튼 스타일 */
+		#chat-btn {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			width: 60px;
+			height: 60px;
+			background-color: #4CAF50;
+			color: white;
+			border-radius: 50%;
+			text-align: center;
+			font-size: 30px;
+			line-height: 60px;
+			cursor: pointer;
+		}
+      
+		/* 채팅 입력창 스타일 */
+		#chat-input {
+			width: 100%;
+			height: 60px;
+			padding: 10px;
+			border: none;
+			border-top: 1px solid #ddd;
+			box-sizing: border-box;
+			resize: none;
+			overflow: auto;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+		}
+      
+		/* 채팅 상대 목록 스타일 */
+		#chat-member-list {
+			width: 30%;
+			height: 100%;
+			float: left;
+			box-sizing: border-box;
+			border-right: 1px solid #ddd;
+			overflow-y: auto;
+			padding: 10px;
+		}
+      
+		/* 선택된 채팅 상대 스타일 */
+		#selected-member {
+			font-weight: bold;
+		}
+		      
+		/* 채팅 대화 내용 스타일 */
+		#chat-content {
+			width: 70%;
+			height: 100%;
+			float: left;
+			box-sizing: border-box;
+			padding: 10px;
+			overflow-y: auto;
+			max-height: 200px; /* 스크롤이 필요한 최대 높이 */
+			overflow-y: auto; /* 스크롤을 표시하고 내용이 넘칠 경우 스크롤을 사용할 수 있게 함 */
+		}
+      
+	    /* 팝업 채팅창 스타일 */
+		#chat-console {
+			position: fixed;
+			right: 10px;
+			bottom: 10px;
+			width: 60%;
+			height: 70%;
+			background-color: white;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+			z-index: 9999;
+			display: none;
+		}
+	
+		#chat-header {
+			background-color: #333;
+			color: #fff;
+			font-weight:
+		}
+	</style>
+	<!-- bootstrap css -->
+	<link href="/css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+	<select id="member-list" name="memberId">
+	</select>
+	<button id="connect-btn">connect</button><br>
+	<div id="chat-btn">&#x1F4AC;</div>
+	<div id="chat-console">
+		<div id="chat-member-list"></div>
+		<div id="chat-content"></div>
+		<textarea id="chat-input" placeholder="메시지를 입력하세요..."></textarea>
+	</div>
+
+<!-- jquery -->
+<script type="text/javascript" src="/js/jquery.js"></script>
+
+<!-- socket, stomp js -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<!-- bootstrap js -->
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<script>
+	//전역 변수 선언	
+	let memberId = null;
+	let memberName = null;
+	let selectedChat = null;
+	let stompClient = null;
+	let blinkInterval = null;
+
+	//WebSocket(STOMP) 연결 함수
+	function connect(memberId) {
+	    var socket = new SockJS('/stomp/chat?' + memberId);
+	    stompClient = Stomp.over(socket);
+	    stompClient.connect({}, function (frame) {
+	        console.log('Connected: ' + frame);
+	        loadChatByMemberId(memberId);
+	        subscribe(memberId);
+	    });
+	}
+	
+	//Direct Message 를 받을 STOMP Url 구독
+	function subscribe(memberId){
+		stompClient.subscribe('/direct/' + memberId, function (response) {
+			let messageInfo = JSON.parse(response.body);
+			if ($('#selected-member').val() == messageInfo.senderId){
+		        const chatMessageElem = $("<div>").text(messageInfo.senderName + ' : ' + messageInfo.message).addClass("from-other");
+		        $("#chat-content").append(chatMessageElem);
+			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+			}
+		    
+		    if($("#chat-console").css("display") == 'none'){
+		    	$("#chat-btn").css("animation", "blink 0.5s infinite");
+		    }
+		});
+	}
+	
+	//연결 끊기
+	function disconnect() {
+	    if (stompClient !== null) {
+	        stompClient.disconnect();
+	        stompClient = null;
+	    }
+	    console.log("Disconnected");
+	}
+
+	
+	//연결 버튼 클릭 시 연결 함수 호출
+	$('#connect-btn').click(function (){
+	    if($('#connect-btn').text() === 'connect'){
+	    	memberId = $("#member-list option:selected").val();
+	    	memberName = $("#member-list option:selected").text();
+	        connect(memberId);
+	        $('#connect-btn').text('disconnect');
+	    } else if($('#connect-btn').text() === 'disconnect'){
+	        disconnect();
+	        $('#connect-btn').text('connect');
+	    }
+	});
+
+	//채팅 버튼 클릭 시 채팅 팝업 띄우기
+	$('#chat-btn').click(function () {
+		if (stompClient !== null) { //연결 된 상태에서만 채팅 콘솔 작동 가능
+			$("#chat-btn").css("animation", "");
+		    $('#chat-console').toggle();
+		    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+		}
+	});
+
+	//선택된 채팅 상대 표시 업데이트
+	function updateSelectedChat(element) {    
+		$('#selected-member').removeAttr('id');
+		$(element).attr('id', 'selected-member');
+	}
+
+	//채팅 대화 내용 업데이트
+	function updateChatContent() {
+		$.ajax({
+			url: "/chats/" + memberId + "/chatMessages",
+			method: "GET",
+			dataType : "json",
+			success: function(chatMessageList) {
+				console.log("chatMessageList =>" + chatMessageList);
+				$("#chat-content").empty();
+				
+				chatMessageList.forEach((chatMessage, index) => {
+					
+					if (chatMessage.receiverId == selectedChat) {
+						const chatMessageElem = $("<div>").text(chatMessage.senderName + " : " + chatMessage.message).addClass("from-me");
+	                    $("#chat-content").append(chatMessageElem);
+					} else if(chatMessage.senderId == selectedChat){
+						const chatMessageElem = $("<div>").text(chatMessage.senderName + " : " + chatMessage.message).addClass("from-other");
+	                    $("#chat-content").append(chatMessageElem);
+					}
+					
+				});
+
+			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('updateChatContent Failed');
+			}
+		});
+	}
+
+
+	//채팅창 열기
+	$("#chat-btn").click(function() {
+		$("#chat-console").css("display", "block");
+	});
+
+
+	//채팅창 닫기
+	$(function(){
+		$(document).on("click", function(event) {
+			if (!$(event.target).closest("#chat-console").length &&
+				!$(event.target).is("#chat-btn")) {
+				$("#chat-console").hide();
+			}
+		});
+	});
+	
+	//Enter 키로 메시지 전송
+	$("#chat-input").keyup(function(e) {
+	    if (e.keyCode == 13 && selectedChat && $("#chat-input").val().trim() != "") {
+	    	
+	    	message = JSON.stringify({
+	    			'receiverName': $('#selected-member').text(),
+	   	            'receiverId': $('#selected-member').val(),
+	   	            'senderId' : memberId,
+	   	            'senderName' : memberName,
+	   	            'message' : $('#chat-input').val(),
+	   	            'chatDate' : Date.now()
+	   	        })
+	    	
+	    	saveMessage(message);
+	    	
+	    	var chatMessageElem = $("<div>");
+	    	chatMessageElem.text(memberName + ' : ' + $("#chat-input").val());
+	    	chatMessageElem.addClass("from-me");
+	    	$("#chat-content").append(chatMessageElem);
+	    	$("#chat-input").val("");
+	    }
+	});
+	
+	//message를 DB에 저장하는 함수
+	function saveMessage(message){
+		$.ajax({
+			url: "/chat" ,
+			method: "POST",
+			data : message,
+			contentType : "application/json",
+			dataType : "json",
+			success: function(result) {
+				console.log("result =>" + result);
+		   	    stompClient.send("/direct/" + selectedChat, {}, message);
+		   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+				return result;
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('saveMessage Failed');
+			}
+		});
+	}
+
+	//채팅 상대 리스트 업데이트
+	function updateChatPartnerList(memberId) {
+		return new Promise(function(resolve, reject) {
+			$.ajax({
+				url: "/chats/" + memberId + "/partners",
+				method: "GET",
+				dataType : "json",
+				success: function(partnerList) {
+					$("#chat-member-list").empty();
+					console.log("partnerList =>" + partnerList);
+					partnerList.forEach((partner, index) => {
+						let chatPartnerElem = $("<button>");
+						chatPartnerElem.text(partner.name);
+						chatPartnerElem.attr('value', partner.memberId);
+						chatPartnerElem.click(function() { 
+							selectedChat = partner.memberId;
+							updateSelectedChat($(this));
+							updateChatContent();
+						});
+						 $("#chat-member-list").append(chatPartnerElem);  
+						 $("#chat-member-list").append($("<br>"));  
+					});
+					resolve();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.log('updateChatPartnerList Failed');
+				}
+			});
+		});
+	}
+
+	//접속한 유저의 채팅내역 불러오는 함수
+	function loadChatByMemberId(memberId) {
+		updateChatPartnerList(memberId).then(function(){
+			selectedChat = $("#chat-member-list").children().first().attr("value");
+			updateSelectedChat($("#chat-member-list").children().first());
+			updateChatContent();
+		});
+	}
+	
+	//임시  - 유저 리스트 받아오기
+	$(function(){
+		$.ajax({
+			url: "/members",
+			method: "GET",
+			dataType : "json",
+			success: function(memberList) {
+				console.log("memberList =>" + memberList);
+				memberList.forEach((member, index) => {
+					let memberElem = $("<option>");
+					memberElem.text(member.name);
+					console.log('name : ' + member.name + ', id : ' + member.memberId);
+					memberElem.attr('value', member.memberId);
+					$("#member-list").append(memberElem);  
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('memberList Load Failed');
+			}
+		});
+	});
+	
+</script>
+</body>
+</html>
+        

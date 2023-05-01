@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.ProjectTest.TalentMapper">
+	<insert id="insertTalent" parameterType="RegistTalent">
+		<!-- 더미 테이터 떄문에 시퀀스x MAX사용 -->
+		<!-- SELECT talent_seq.NEXTVAL FROM dual -->
+		INSERT INTO talent 
+		VALUES((SELECT MAX(talent_no)+1 FROM talent), #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
+				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, SYSDATE, NULL)
+	</insert>
+	
+	<select id="selectTalentBytalentNo" resultType="RegistTalent" parameterType="Long">
+		SELECT 	* 
+		FROM 	talent 
+		WHERE 	talent_no = #{talentNo}
+	</select>
+	
+	<update id="updateTalent" parameterType="RegistTalent">
+		UPDATE 	talent 
+		SET 	upper_category_no = #{upperCategoryNo}, lower_category_no = #{lowerCategoryNo}, main_img = #{mainImg},
+				title = #{title}, content = #{content}, bamboo = #{bamboo}, sale_bamboo = #{saleBamboo}, summary = #{summary}
+		WHERE 	talent_no = #{talentNo}
+	</update>
+	
+	<select id="selectBestSellerTalents" resultType="RegistTalent">
+		SELECT 	*
+		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		         FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+		                             JOIN member m 				  ON t.seller_id = m.id
+		                             LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                              FROM      review 
+		                                              GROUP BY  talent_no) r 
+		                                                          ON t.talent_no = r.talent_no
+		                             LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		         WHERE 		t.status = '게시중'
+		         GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
+		         ORDER BY  	COUNT(*) DESC, t.reg_date DESC
+		        )
+		WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectTopRatedTalents" resultType="RegistTalent">
+		SELECT *
+		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		        FROM     talent t JOIN review r ON t.talent_no = r.talent_no
+		                          JOIN member m ON t.seller_id = m.id
+		                          LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                           FROM      review 
+		                                           GROUP BY  talent_no) r 
+		                                                        ON t.talent_no = r.talent_no
+		                          LEFT OUTER JOIN category c    ON t.lower_category_no = c.category_no
+		        WHERE    t.status = '게시중'
+		        GROUP BY t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		        ORDER BY r.review_avg_score DESC, review_count DESC
+		       )
+		WHERE  ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectNewTrendTalents" resultType="RegistTalent">
+		SELECT   *        
+		FROM     (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		          FROM     talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+		                            JOIN member m                ON t.seller_id = m.id
+		                            LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                             FROM      review 
+		                                             GROUP BY  talent_no) r 
+		                                                         ON t.talent_no = r.talent_no
+		                            LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		          WHERE    b.purchase_date >= TO_DATE('2023-01-23', 'YYYY/MM/DD') - 7
+		          AND      t.status = '게시중'
+		          GROUP BY t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
+		          ORDER BY COUNT(*) DESC, t.reg_date DESC
+		         )
+		WHERE 	 ROWNUM BETWEEN 1 AND 5
+	</select>
+	
+	<select id="selectRandomTalents" resultType="RegistTalent">
+		SELECT  *
+		FROM    (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		         FROM     talent t JOIN member m ON t.seller_id = m.id
+		                           LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                            FROM      review 
+		                                            GROUP BY  talent_no) r 
+		                                                        ON t.talent_no = r.talent_no
+		                           LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		         WHERE    t.status = '게시중'
+		         GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.reg_date, m.name, r.review_avg_score, r.review_count, c.item
+		         ORDER BY DBMS_RANDOM.VALUE()
+		        )
+		WHERE   ROWNUM BETWEEN 1 AND 5
+	</select>
+</mapper>

@@ -1,7 +1,9 @@
 package com.kakao.jPanda.yjh.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -105,7 +107,7 @@ public class AdminServiceImpl implements AdminService {
 		for(String exchangeNoStr : exchangeNoArray) {
 			exchangeNo = Long.parseLong(exchangeNoStr);
 			exchange = adminDao.selectExchangeByExchangeNo(exchangeNo);
-			exchange.setStatus(status);
+			exchange.setExchangeStatus(status);
 			log.info("exchange : "+exchange.toString());
 			result = adminDao.updateExchange(exchange);
 		}
@@ -147,7 +149,7 @@ public class AdminServiceImpl implements AdminService {
 			log.info("couponList : "+couponList);
 			
 			for(CouponDto cn : couponList) {
-				if(cn.getCouponNo().equals(couponNo)) {
+				if(cn.getCouponCode().equals(couponNo)) {
 					result = false;
 				} else {
 					result = true;
@@ -163,9 +165,23 @@ public class AdminServiceImpl implements AdminService {
 	 * 	사용기한에 대한 논의가 부족해 통합 후 논의를 통해 사용기한 정하는 로직 구현 예정
 	 */
 	@Override
-	public int addCoupon(CouponDto couponDto) {
+	public Map<String, Integer> addCoupon(CouponDto couponDto) {
 		log.info("Service addCoupon() start");
-		return adminDao.insertCoupon(couponDto);
+		log.info("Service couponDto : " + couponDto.toString());
+		
+		Map<String, Integer> returnMap = new HashMap<String, Integer>();
+		int valid = 0;
+		
+		if(couponDto.getCouponValue() == null) {
+			valid = -1;
+			
+		} else {
+			valid = adminDao.insertCoupon(couponDto);
+		}
+		
+		returnMap.put("valid", valid);
+		
+		return returnMap;
 	}
 	
 	//company-sales
@@ -269,7 +285,7 @@ public class AdminServiceImpl implements AdminService {
 			TalentRefundDto paramDto = talentRefundDto.get(i);
 			log.info("TalentRefund Service paramDto : "+paramDto.toString());
 			
-			if(paramDto.getStatus().equals("환불완료")) {
+			if(paramDto.getRefundStatus().equals("환불완료")) {
 				result = adminDao.updateTalentRefundToSuccessByPurchaseNosAndStatus(paramDto);
 			} else {
 				result = adminDao.updateTalentRefundToCompanionByPurchaseNosAndStatus(paramDto);

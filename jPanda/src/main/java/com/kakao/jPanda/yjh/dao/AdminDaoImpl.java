@@ -125,10 +125,11 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public int insertCoupon(CouponDto coupon) {
+	public int insertCoupon(CouponDto couponDto) {
 		log.info("Dao insertCoupon() start");
+		log.info("Dao couponDto : "+couponDto.toString());
 		
-		return sqlSession.insert("insertCoupon", coupon);
+		return sqlSession.insert("insertCoupon", couponDto);
 	}
 	
 	//company-sales

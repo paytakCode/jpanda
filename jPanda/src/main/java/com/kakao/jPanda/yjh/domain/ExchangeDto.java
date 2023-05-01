@@ -11,14 +11,14 @@ import lombok.ToString;
 @ToString
 public class ExchangeDto {
 	private Long exchangeNo;
-	private String id;
+	private String sellerId;
 	private Long talentNo;
 	private Long sales;
 	private Date submitDate;
 	private String approveDate;
 	private Long total;
-	private String grade;
-	private Long ratio;
-	private String status;
+	private String memberGrade;
+	private Long exchangeRatio;
+	private String exchangeStatus;
 	private Long paymentAmount;
 }

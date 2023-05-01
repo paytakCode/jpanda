@@ -11,9 +11,9 @@
 		<h3>쿠폰 생성</h3>
 		<table>
 			<tr>
-				<td><label>시작일</label><input type="date" name="startDate" class="issueDate" pattern="YYYYMMDD"></td>
-				<td><label>종료일</label><input type="date" name="endDate" class="expireDate" pattern="YYYYMMDD"></td>
-				<td><input type="text" id="couponNo" th:name="couponNo">&nbsp;<input type="button" id="create-coupon" value="생성하기"></td>
+				<td><label>시작일</label><input type="date" name="issueDate" class="issueDate" pattern="YYYYMMDD"></td>
+				<td><label>종료일</label><input type="date" name="expireDate" class="expireDate" pattern="YYYYMMDD"></td>
+				<td><input type="text" id="couponCode" th:name="couponCode">&nbsp;<input type="button" id="create-coupon" value="생성하기"></td>
 				<td><select  th:name="couponValue" id="couponValue">
 						<option class="option" selected disabled>-- 쿠폰 값을 선택해주세요 --</option>
 						<option th:value="1000">1,000원</option>
@@ -36,7 +36,7 @@
 				<th>쿠폰 금액</th>
 			</tr>
 			<tr th:each="coupon : ${couponList}">
-				<td th:text="${coupon.couponNo}"></td>
+				<td th:text="${coupon.couponCode}"></td>
 				<td th:text="${coupon.issueDate}"></td>
 				<td th:text="${coupon.expireDate}"></td>
 				<td th:text="${coupon.usedCouponCount}"></td>
@@ -48,7 +48,7 @@
 	$(".submit").click(function() {
 		let issueDate = $(".issueDate").val();
 		let expireDate = $(".expireDate").val();
-		let couponNo = $("#couponNo").val();
+		let couponNo = $("#couponCode").val();
 		let couponValue = $("#couponValue").val();
 		
 		if(issueDate.length === 0) {
@@ -74,7 +74,7 @@
 		let couponDto = {
 				"issueDate" 	: issueDate,
 				"expireDate"	: expireDate,
-				"couponNo"		: couponNo,
+				"couponCode"	: couponNo,
 				"couponValue"	: couponValue
 		};
 		
@@ -100,7 +100,7 @@
 			dataType : "text",
 			success : function(data) {
 					  console.log(data);
-					  $("#couponNo").val(data);
+					  $("#couponCode").val(data);
 			}
 		});
 	});

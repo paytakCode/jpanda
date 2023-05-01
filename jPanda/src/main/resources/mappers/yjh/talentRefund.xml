@@ -6,23 +6,23 @@
 	<select id="selectTalentRefund" parameterType="List" resultType="TalentRefund">
 		select	
 				bu.buyer_id, tr.purchase_no, bu.talent_no, tr.refund_bamboo, tr.issue, 
-        		tr.status, tr.approve_date
+        		tr.refund_status, tr.approve_date
 		from 	talent_refund tr, bamboo_use bu
 		where	tr.purchase_no = bu.purchase_no
-		and		tr.status = '검토중'
+		and		tr.refund_status = '검토중'
 	</select>
 	
 	<update id="updateTalentRefundToSuccessByPurchaseNosAndStatus" parameterType="TalentRefund">
 		update 	talent_refund
-		set		status = #{status},
+		set		refund_status = #{refundStatus},
 				approve_date = sysdate
-		where	purchase_no in #{purchaseNo}		
+		where	purchase_no in #{purchaseNo}	
 	</update>
 	
 	<update id="updateTalentRefundToCompanionByPurchaseNosAndStatus" parameterType="TalentRefund">
 		update 	talent_refund
-		set		status = #{status}
-		where	purchase_no in #{purchaseNo}	
+		set		refund_status = #{refundStatus}
+		where	purchase_no in #{purchaseNo}
 	</update>
 
 </mapper>

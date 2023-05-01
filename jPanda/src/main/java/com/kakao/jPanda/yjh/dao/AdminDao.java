@@ -24,7 +24,7 @@ public interface AdminDao {
 	//coupon
 	List<CouponDto> selectCouponsExpired();
 	List<CouponDto> findCouponList();
-	int insertCoupon(CouponDto coupon);
+	int insertCoupon(CouponDto couponDto);
 	
 	//company-sales
 	List<CompanySalesDto> selectCompanyByDDDate(CompanySalesDto companySalesDto);
