@@ -52,11 +52,11 @@
 	</select>
 	
 	<!-- 상세 페이지  -->
-	<select id="selectTalentByTalentNo" resultType="BoardTalent" parameterType="Long">
+	<select id="selectTalentDetailByTalentNo" resultType="BoardTalent" parameterType="Long">
 		SELECT talent_no, title, seller_id, main_img, summary, bamboo, sale_bamboo, content
 		FROM talent
 		WHERE talent_no = #{talentNo}
-	</select>
+	</select> 
 	
 	<!-- 리뷰 리스트 셀렉트  -->
 	<select id="selectReviewListByTalentNo" parameterType="Long" resultType="BoardReview">
