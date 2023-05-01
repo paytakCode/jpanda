@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kakkao.jPanda.mappers.njb.MemberMapper">
 	   
-	<select id="findBankList" resultType="BankDto">
-        SELECT code, name
+	<select id="selectBankList" resultType="BankDto">
+        SELECT bank_code, name
         FROM bank
     </select>
     <select id="selectMemberById" parameterType="string" resultType="MemberDto">
@@ -12,7 +12,7 @@
     	WHERE member_id = #{memberId}
   	</select>
 	<select id="findIdByNameAndEmail" parameterType="Map" resultType="String">
-		SELECT id
+		SELECT member_id
 		FROM member
 		WHERE name = #{name} AND email = #{email}
 	</select> 
@@ -38,10 +38,10 @@
     </insert>
 	<insert id="insertAccount" parameterType="MemberDto">
         INSERT INTO Account
-            (member_id, account, code)
-        VALUES (#{memberId},#{account}, #{code})
+            (member_id, account, bank_code)
+        VALUES (#{memberId},#{account}, #{bankCode})
     </insert>
-    <select id="checkId" resultType="int" parameterType="MemberDto">
+    <select id="checkmemberId" resultType="int" parameterType="MemberDto">
     	SELECT 
     	COUNT(*) 
     	FROM member 

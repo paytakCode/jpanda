@@ -58,12 +58,12 @@ public class MemberController {
     
     @GetMapping("/members/id/id")
     @ResponseBody
-    public Map<String, String> checkId(@RequestParam("id") String id) {
+    public Map<String, String> checkId(@RequestParam String memberId) {
         Map<String, String> resultMap = new HashMap<>();
         System.out.println("checkId Start...");
         try {
             // 아이디 중복체크를 위해 DAO 호출
-            int count = memberDao.checkId(id);
+            int count = memberDao.checkId(memberId);
 
             if (count == 0) {
                 // 아이디가 중복되지 않은 경우
@@ -83,12 +83,13 @@ public class MemberController {
 
     @GetMapping("/findid")
     public ResponseEntity<String> findIdByNameAndEmail(@RequestParam String name, @RequestParam String email) {
-        String id = memberservice.findIdByNameAndEmail(name, email);
-        System.out.println(id);
-        if(id == null) {
+    	System.out.println("/findid start....");
+        String memberId = memberservice.findIdByNameAndEmail(name, email);
+        System.out.println(memberId);
+        if(memberId == null) {
             return new ResponseEntity<String>("해당하는 정보가 없습니다.", HttpStatus.OK);
         } else {
-        	String hiddenId = id.substring(0, id.length()-3) + "***"; // 마지막 3글자를 ***로 대체
+        	String hiddenId = memberId.substring(0, memberId.length()-3) + "***"; // 마지막 3글자를 ***로 대체
             return new ResponseEntity<String>("아이디 : "+ "[ "+hiddenId+" ]" , HttpStatus.OK);
         }
     }
@@ -98,15 +99,15 @@ public class MemberController {
   
     @GetMapping("/findpw")
     @ResponseBody
-    public ResponseEntity<String> findPwByIdAndEmail(@RequestParam String id, @RequestParam String email) {
-        String pw = memberservice.findPwByIdAndEmail(id, email);
+    public ResponseEntity<String> findPwByIdAndEmail(@RequestParam String memberId, @RequestParam String email) {
+        String pw = memberservice.findPwByIdAndEmail(memberId, email);
         System.out.println(pw);
         if(pw == null || pw.isEmpty()) {
             return new ResponseEntity<String>("해당하는 정보가 없습니다.", HttpStatus.OK);
         } else {
-
+        	System.out.println(pw);
             String newPw = generateNewPassword();
-            memberservice.updatePasswordById(id, newPw);
+            memberservice.updatePasswordById(memberId, newPw);
             String to = email; // 수신자 이메일 주소
             String subject = "비밀번호 찾기 결과"; // 이메일 제목
             String body = "비밀번호 : " + "[ " + newPw + " ]"; // 이메일 본문
@@ -138,14 +139,16 @@ public class MemberController {
     
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDto memberDto, HttpSession session,RedirectAttributes redirectAttributes) {
-    	System.out.println(memberDto.getMemberId() + memberDto.getPassword());
+    	System.out.println(memberDto.getMemberId() + memberDto.getPassword() +"1");
     	boolean loginResult = memberservice.login(memberDto);
     	if(loginResult) {
-    		session.setAttribute("loginId", memberDto.getMemberId());
-    		String loginId = (String) session.getAttribute("loginId");
-    		System.out.println(loginId);
+    		session.setAttribute("memberId", memberDto.getMemberId());
+    		String memberId = (String) session.getAttribute("memberId");
+    		System.out.println(memberId);
             MemberDto member = memberservice.selectMember(memberDto.getMemberId());
-            
+            if(memberId.equals("admin")) {
+            	return "redirect:/admin";
+            } 
            
             redirectAttributes.addFlashAttribute("memberInfo", member);
     		return "redirect:/main";

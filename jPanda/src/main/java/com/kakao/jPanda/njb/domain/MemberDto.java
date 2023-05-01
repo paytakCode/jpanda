@@ -18,7 +18,7 @@ public class MemberDto {
 	private String memberStatus;
 	private String memberGrade;
 	private String account;
-	private String code;
+	private String bankCode;
 	
 	private String year;
 	private String month;

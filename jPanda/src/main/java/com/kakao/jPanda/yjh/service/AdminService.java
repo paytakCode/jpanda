@@ -32,7 +32,7 @@ public interface AdminService {
 	
 	//talent
 	List<TalentDto> findTalent();
-	String modifyTalentBySellerIds(List<String> sellerId);
+	int modifyTalentByTalentNos(List<TalentDto> talentDto);
 	
 	//talent-refund
 	List<TalentRefundDto> findTalentRefund();

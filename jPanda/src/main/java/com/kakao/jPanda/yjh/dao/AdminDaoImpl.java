@@ -158,11 +158,11 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public int updateTalentBySellerIds(List<String> sellerId) {
+	public int updateTalentByTalentNos(TalentDto talentDto) {
 		int returnValue = 0;
 		
 		try {
-			returnValue = sqlSession.update("updateTalentBySellerIds", sellerId);
+			returnValue = sqlSession.update("updateTalentByTalentNos", talentDto);
 		} catch(Exception e) {
 			log.info("Dao updateTalentBySellerIds() Exception : "+e.getMessage());
 			e.printStackTrace();

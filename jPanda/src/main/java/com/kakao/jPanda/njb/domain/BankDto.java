@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class BankDto {
 	private String name;
-	private String code;
+	private String bankCode;
 	
 }

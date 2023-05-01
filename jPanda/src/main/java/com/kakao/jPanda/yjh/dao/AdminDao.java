@@ -32,7 +32,7 @@ public interface AdminDao {
 	
 	//talent
 	List<TalentDto> selectTalent();
-	int updateTalentBySellerIds(List<String> sellerId);
+	int updateTalentByTalentNos(TalentDto paramDto);
 	
 	//talent-refund
 	List<TalentRefundDto> selectTalentRefund();

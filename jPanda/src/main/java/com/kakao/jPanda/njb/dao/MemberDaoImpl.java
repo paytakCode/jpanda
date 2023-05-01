@@ -31,21 +31,21 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public List<BankDto> selectBankList() {
-	    return sqlSession.selectList("findBankList");
+	    return sqlSession.selectList("selectBankList");
 	}
 	
 	@Override
-	public int checkId(String id) {
+	public int checkId(String memberId) {
 		
-		return sqlSession.selectOne("checkId", id);
+		return sqlSession.selectOne("checkmemberId", memberId);
 	}
 
 
 
 	@Override
-	public String findPwByIdAndEmail(String id, String email) {
+	public String findPwByIdAndEmail(String memberId, String email) {
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("id", id);
+        paramMap.put("memberId", memberId);
         paramMap.put("email", email);
         return sqlSession.selectOne("findPwByIdAndEmail", paramMap);
     }
@@ -81,10 +81,10 @@ public class MemberDaoImpl implements MemberDao {
 
 
 	@Override
-	public Object updatePasswordById(String id, String encryptedPassword) {
+	public Object updatePasswordById(String memberId, String encryptedPassword) {
 
 	    int result = sqlSession.update("updatePasswordById", new HashMap<String, String>() {{
-	        put("id", id);
+	        put("memberId", memberId);
 	        put("newPw", encryptedPassword);
 	    }});
 	    return result;	}

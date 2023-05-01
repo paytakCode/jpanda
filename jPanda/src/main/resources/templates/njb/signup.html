@@ -52,13 +52,13 @@
      $(document).ready(function() {
         // 중복 체크 버튼 클릭 이벤트 처리
         $("#id-check").click(function() {
-            var id = $("#signup-id").val(); // 입력된 아이디 값 가져오기
+            var memberId = $("#signup-id").val(); // 입력된 아이디 값 가져오기
 
             // Ajax 요청 보내기
             $.ajax({
                 type: "GET", // 요청 방식 (POST, GET 등)
                 url: "/members/id/id", // 서버의 URL
-                data: { id: id }, // 전송할 데이터 (아이디 값 전달)
+                data: { memberId: memberId }, // 전송할 데이터 (아이디 값 전달)
                 success: function(response) {
                     if (response.result === "fail") {
                         $("#id-check-result").html("이미 사용 중인 아이디입니다.").css("color", "red");
@@ -280,7 +280,7 @@ h3{
                 <h3>아이디</h3>
                 	<div style="display: flex;">
 	                	<span class="signup-input" style="width:100%; margin: 10px 0px 0px 0px">
-	                    		<input id="signup-id" type="text" name="id"></input>
+	                    		<input id="signup-id" type="text" name="memberId"></input>
 	                    <span class="signup-at"></span>
 	                	</span>
 						<span class="id-check-btn">
@@ -362,7 +362,7 @@ h3{
                 </div>
                 
                 <span class="signup-input" style="margin-top: 10px;">
-                    <input id="signup-echeck" type="text" name="emailverification" placeholder="인증번호 입력하세요"></input>
+                    <input id="signup-echeck" type="text" name="verifCode" placeholder="인증번호 입력하세요"></input>
                 </span>
                 <span class="echeck-btn-wrap">
                         <button type="button" id="echeck-btn">인증확인</button>
@@ -380,9 +380,9 @@ h3{
                 <span class="choice">
                     <h3>계좌번호</h3>
                 </span>
-                    <select id="signup-account" class="selectbox" name="code" >
+                    <select id="signup-account" class="selectbox" name="bankCode" >
 						<option value="">은행을 선택하세요</option>
-        				<option th:each="bank : ${bankList}" th:value="${bank.code}" th:text="${bank.name + ' (' + bank.code + ')'}"></option>
+        				<option th:each="bank : ${bankList}" th:value="${bank.bankCode}" th:text="${bank.name + ' (' + bank.bankCode + ')'}"></option>
                     </select>
 
                 <span class="signup-input">
