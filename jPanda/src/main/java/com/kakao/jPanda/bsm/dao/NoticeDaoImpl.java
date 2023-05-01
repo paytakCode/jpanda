@@ -39,4 +39,15 @@ public class NoticeDaoImpl implements NoticeDao {
 		return noticeList;
 	}
 
+	@Override
+	public Notice selectNoticeByNoticeNo(Long noticeNo) {
+		Notice notice = null;
+		try {
+			notice = session.selectOne("selectNoticeByNoticeNoRegist", noticeNo);
+		} catch (Exception e) {
+			System.out.println("NoticeDaoImpl selectNoticeByNoticeNo e.getMessage() ->" + e.getMessage());
+		}
+		return notice;
+	}
+
 }

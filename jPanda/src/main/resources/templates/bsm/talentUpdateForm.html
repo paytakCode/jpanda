@@ -2,7 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>재능 수정</title>
+<script th:if="${login} == user" th:inline="javascript">
+	alert("비정상적인 이동이 감지되었습니다. 다시 로그인 해주세요.");
+	location.href = "/logout";
+</script>
 <style type="text/css">
 /* Set font family and size */
 body {
@@ -111,12 +115,12 @@ table {
 <body>
 	<div id="side">
 	  	<table id="writeCheck">
-	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/check.png"></td></tr>
-		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/check.png"></td></tr>
-		    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/check.png"></td></tr>
-		    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/check.png"></td></tr>
-		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/check.png"></td></tr>
-		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/check.png"></td></tr>
+	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+		    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+		    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
 	  	</table>
 	</div>
 	
@@ -125,7 +129,7 @@ table {
 		 <input type="hidden" name="_method" value="put">
 		<h1>재능 등록</h1>
 		<hr>
-		<input type="hidden" name="sellerId" value="ftcxbgksj5p">
+		<input type="hidden" name="sellerId" value="test">
 		<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
 	
 	<div id="category" class="category">
@@ -198,7 +202,7 @@ table {
    		var isReadyToSubmit = true;
 		var nullarea = '';
    	  	$('.submit-check').each(function() {
-   	    	if ($(this).attr('src') !== '/image/check.png') {
+   	    	if ($(this).attr('src') !== '/image/talentImage/check.png') {
    	      		isReadyToSubmit = false;
    	      		if(nullarea !== ''){
    	      			nullarea += ', ' + $(this).parent().prev().text();
@@ -242,9 +246,9 @@ table {
         	}
 	    });
 		if(count == each){
-			$(check).attr('src', '/image/check.png');
+			$(check).attr('src', '/image/talentImage/check.png');
 		}else {
-			$(check).attr('src', '/image/white.png');
+			$(check).attr('src', '/image/talentImage/white.png');
 		}
 	});
 	// input태그 엔터키 입력시 submit되는 것 방지
@@ -274,7 +278,7 @@ table {
 		var check_file_type = ['jpg','gif','png','jpeg','bmp', ''];
 		if(check_file_type.indexOf(file_type)==-1){
 		  	alert('이미지 파일만 선택할 수 있습니다.');
-		  	$('#main-image-check').attr('src', "/image/white.png");
+		  	$('#main-image-check').attr('src', "/image/talentImage/white.png");
 		  	return false;
 		}
 		
@@ -306,7 +310,7 @@ table {
 	               	$('#main-img-value').trigger('input');
 	           	},
 	           	error: function (jqXHR) { 
-	           		$('#main-image-preview').attr('src', "../image/jpandaMainImageLabel.jpg");
+	           		$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
 	           	}
 	       	});
 		}
@@ -322,9 +326,9 @@ table {
 	.then(editor => {
 		editor.model.document.on('change:data', () => {
             if (editor.getData().trim()) {
-                $('#content-check').attr('src', '/image/check.png');
+                $('#content-check').attr('src', '/image/talentImage/check.png');
             } else {
-                $('#content-check').attr('src', '/image/white.png');
+                $('#content-check').attr('src', '/image/talentImage/white.png');
             }
         });
 	})
@@ -352,7 +356,7 @@ table {
 	<script th:inline="javascript">
 	// 카테고리 값 생성
 	
-	// model로 밭은 categoryList 값 가져오기
+	// model로 밭은 categoryList 값 가져오기C
   	var categoryList = /*[[${categoryList}]]*/ [];
  	var upperCatgoryNo = [[${talent.upperCategoryNo}]];
  	var lowerCatgoryNo = [[${talent.lowerCategoryNo}]];
@@ -375,7 +379,7 @@ table {
   		var selectedCategoryNo = parseInt(this.value);
     	$('#lower-category-no').html('');
     	$('#lower-category-no').append($("<option disabled selected>").text("중분류"));
-    	$('#category-check').attr('src', '/image/white.png');
+    	$('#category-check').attr('src', '/image/talentImage/white.png');
     	categoryList.forEach(function(category) {
 	      	if (category.upperCategoryNo === selectedCategoryNo) {
 	        	$('#lower-category-no').append($("<option>").val(category.categoryNo).text(category.item));
@@ -385,11 +389,13 @@ table {
   	
 	$('#lower-category-no').on('change', function(){
 		if($(this).val() === ''){
-			$('#category-check').attr('src', '/image/white.png');
+			$('#category-check').attr('src', '/image/talentImage/white.png');
 		}else {
-			$('#category-check').attr('src', '/image/check.png');
+			$('#category-check').attr('src', '/image/talentImage/check.png');
 		}
 	})
+	
+	$('#seller-id').val([[${login}]]);
 	</script>
 	</div> <!-- container -->
 </body>
