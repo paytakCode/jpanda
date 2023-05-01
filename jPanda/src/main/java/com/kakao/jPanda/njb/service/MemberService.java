@@ -17,6 +17,6 @@ public interface MemberService {
 	boolean login(MemberDto memberDto);
 	MemberDto selectMember(String id);
 	void updatePasswordById(String memberId, String newPw);
-	void withdrawal(String loginId, String password);
+	void withdrawal(String memberId, String password);
 
 }
