@@ -43,9 +43,9 @@ public class MemberController {
     @GetMapping("/signup")
     public String signupForm(Model model) {
     	System.out.println("signup Start...");
- 	    List<BankDto> findBankList = memberservice.selectBankList();
- 	    System.out.println("findBankList.size() --> "+ findBankList.size());
- 	    model.addAttribute("bankList", findBankList);
+ 	    List<BankDto> selectBankList = memberservice.selectBankList();
+ 	    System.out.println("findBankList.size() --> "+ selectBankList.size());
+ 	    model.addAttribute("bankList", selectBankList);
     	return "njb/signup";
     }
     
@@ -58,12 +58,12 @@ public class MemberController {
     
     @GetMapping("/members/id/id")
     @ResponseBody
-    public Map<String, String> checkId(@RequestParam("id") String id) {
+    public Map<String, String> checkId(@RequestParam("memberId") String memberId) {
         Map<String, String> resultMap = new HashMap<>();
         System.out.println("checkId Start...");
         try {
             // 아이디 중복체크를 위해 DAO 호출
-            int count = memberDao.checkId(id);
+            int count = memberDao.checkId(memberId);
 
             if (count == 0) {
                 // 아이디가 중복되지 않은 경우
@@ -83,12 +83,12 @@ public class MemberController {
 
     @GetMapping("/findid")
     public ResponseEntity<String> findIdByNameAndEmail(@RequestParam String name, @RequestParam String email) {
-        String id = memberservice.findIdByNameAndEmail(name, email);
-        System.out.println(id);
-        if(id == null) {
+        String memberId = memberservice.findIdByNameAndEmail(name, email);
+        System.out.println(memberId);
+        if(memberId == null) {
             return new ResponseEntity<String>("해당하는 정보가 없습니다.", HttpStatus.OK);
         } else {
-        	String hiddenId = id.substring(0, id.length()-3) + "***"; // 마지막 3글자를 ***로 대체
+        	String hiddenId = memberId.substring(0, memberId.length()-3) + "***"; // 마지막 3글자를 ***로 대체
             return new ResponseEntity<String>("아이디 : "+ "[ "+hiddenId+" ]" , HttpStatus.OK);
         }
     }
@@ -148,7 +148,7 @@ public class MemberController {
             
            
             redirectAttributes.addFlashAttribute("memberInfo", member);
-    		return "redirect:/mypage";
+    		return "redirect:/talent/";
     	}else {
     		redirectAttributes.addFlashAttribute("alertMsg", "정보를 확인해주세요");
     		return "redirect:/login";

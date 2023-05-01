@@ -31,7 +31,7 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public List<BankDto> selectBankList() {
-	    return sqlSession.selectList("findBankList");
+	    return sqlSession.selectList("selectBankList");
 	}
 	
 	@Override

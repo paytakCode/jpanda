@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kakkao.jPanda.mappers.njb.MemberMapper">
 	   
-	<select id="findBankList" resultType="BankDto">
-        SELECT code, name
+	<select id="selectBankList" resultType="BankDto">
+        SELECT bank_code, name
         FROM bank
     </select>
     <select id="selectMemberById" parameterType="string" resultType="MemberDto">

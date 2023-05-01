@@ -58,7 +58,7 @@
             $.ajax({
                 type: "GET", // 요청 방식 (POST, GET 등)
                 url: "/members/id/id", // 서버의 URL
-                data: { id: id }, // 전송할 데이터 (아이디 값 전달)
+                data: { id: memberId }, // 전송할 데이터 (아이디 값 전달)
                 success: function(response) {
                     if (response.result === "fail") {
                         $("#id-check-result").html("이미 사용 중인 아이디입니다.").css("color", "red");
@@ -280,7 +280,7 @@ h3{
                 <h3>아이디</h3>
                 	<div style="display: flex;">
 	                	<span class="signup-input" style="width:100%; margin: 10px 0px 0px 0px">
-	                    		<input id="signup-id" type="text" name="id"></input>
+	                    		<input id="signup-id" type="text" name="memberId"></input>
 	                    <span class="signup-at"></span>
 	                	</span>
 						<span class="id-check-btn">
@@ -382,7 +382,7 @@ h3{
                 </span>
                     <select id="signup-account" class="selectbox" name="code" >
 						<option value="">은행을 선택하세요</option>
-        				<option th:each="bank : ${bankList}" th:value="${bank.code}" th:text="${bank.name + ' (' + bank.code + ')'}"></option>
+        				<option th:each="bank : ${bankList}" th:value="${bank.bankcode}" th:text="${bank.name + ' (' + bank.bankcode + ')'}"></option>
                     </select>
 
                 <span class="signup-input">
