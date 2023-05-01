@@ -11,12 +11,12 @@ public interface MemberService {
 
 	List<BankDto>selectBankList(); //find 로 바꾸기  
 	void joinMember(MemberDto memberInfo);
-	int checkId(String id);
-	String findPwByIdAndEmail(String id, String email);
+	int checkId(String memberId);
+	String findPwByIdAndEmail(String memberId, String email);
 	String findIdByNameAndEmail(String name, String email);
 	boolean login(MemberDto memberDto);
 	MemberDto selectMember(String id);
-	void updatePasswordById(String id, String passwo);
+	void updatePasswordById(String memberId, String newPw);
 	void withdrawal(String loginId, String password);
 
 }

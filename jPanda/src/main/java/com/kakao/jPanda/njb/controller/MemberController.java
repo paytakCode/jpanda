@@ -43,9 +43,9 @@ public class MemberController {
     @GetMapping("/signup")
     public String signupForm(Model model) {
     	System.out.println("signup Start...");
- 	    List<BankDto> selectBankList = memberservice.selectBankList();
- 	    System.out.println("findBankList.size() --> "+ selectBankList.size());
- 	    model.addAttribute("bankList", selectBankList);
+ 	    List<BankDto> findBankList = memberservice.selectBankList();
+ 	    System.out.println("findBankList.size() --> "+ findBankList.size());
+ 	    model.addAttribute("bankList", findBankList);
     	return "njb/signup";
     }
     
@@ -58,7 +58,7 @@ public class MemberController {
     
     @GetMapping("/members/id/id")
     @ResponseBody
-    public Map<String, String> checkId(@RequestParam("memberId") String memberId) {
+    public Map<String, String> checkId(@RequestParam String memberId) {
         Map<String, String> resultMap = new HashMap<>();
         System.out.println("checkId Start...");
         try {
@@ -83,6 +83,7 @@ public class MemberController {
 
     @GetMapping("/findid")
     public ResponseEntity<String> findIdByNameAndEmail(@RequestParam String name, @RequestParam String email) {
+    	System.out.println("/findid start....");
         String memberId = memberservice.findIdByNameAndEmail(name, email);
         System.out.println(memberId);
         if(memberId == null) {
@@ -98,15 +99,15 @@ public class MemberController {
   
     @GetMapping("/findpw")
     @ResponseBody
-    public ResponseEntity<String> findPwByIdAndEmail(@RequestParam String id, @RequestParam String email) {
-        String pw = memberservice.findPwByIdAndEmail(id, email);
+    public ResponseEntity<String> findPwByIdAndEmail(@RequestParam String memberId, @RequestParam String email) {
+        String pw = memberservice.findPwByIdAndEmail(memberId, email);
         System.out.println(pw);
         if(pw == null || pw.isEmpty()) {
             return new ResponseEntity<String>("해당하는 정보가 없습니다.", HttpStatus.OK);
         } else {
-
+        	System.out.println(pw);
             String newPw = generateNewPassword();
-            memberservice.updatePasswordById(id, newPw);
+            memberservice.updatePasswordById(memberId, newPw);
             String to = email; // 수신자 이메일 주소
             String subject = "비밀번호 찾기 결과"; // 이메일 제목
             String body = "비밀번호 : " + "[ " + newPw + " ]"; // 이메일 본문
@@ -138,17 +139,19 @@ public class MemberController {
     
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDto memberDto, HttpSession session,RedirectAttributes redirectAttributes) {
-    	System.out.println(memberDto.getMemberId() + memberDto.getPassword());
+    	System.out.println(memberDto.getMemberId() + memberDto.getPassword() +"1");
     	boolean loginResult = memberservice.login(memberDto);
     	if(loginResult) {
-    		session.setAttribute("loginId", memberDto.getMemberId());
-    		String loginId = (String) session.getAttribute("loginId");
-    		System.out.println(loginId);
+    		session.setAttribute("memberId", memberDto.getMemberId());
+    		String memberId = (String) session.getAttribute("memberId");
+    		System.out.println(memberId);
             MemberDto member = memberservice.selectMember(memberDto.getMemberId());
-            
+            if(memberId.equals("admin")) {
+            	return "redirect:/admin";
+            } 
            
             redirectAttributes.addFlashAttribute("memberInfo", member);
-    		return "redirect:/talent/";
+    		return "redirect:/main";
     	}else {
     		redirectAttributes.addFlashAttribute("alertMsg", "정보를 확인해주세요");
     		return "redirect:/login";

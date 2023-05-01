@@ -37,15 +37,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int checkId(String id) {
+	public int checkId(String memberId) {
 		
-		return memberDao.checkId(id);
+		return memberDao.checkId(memberId);
 	}
 
 	@Override
-	public String findPwByIdAndEmail(String id, String email) {
+	public String findPwByIdAndEmail(String memberId, String email) {
 
-		return memberDao.findPwByIdAndEmail(id, email);
+		return memberDao.findPwByIdAndEmail(memberId, email);
 	
 	}
 
@@ -80,11 +80,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void updatePasswordById(String id, String newPw) {
+	public void updatePasswordById(String memberId, String newPw) {
 
 	    	String encryptedPassword = PasswordEncryptor.encrypt(newPw); // 비밀번호 암호화
 			
-	    	memberDao.updatePasswordById(id,encryptedPassword);
+	    	memberDao.updatePasswordById(memberId,encryptedPassword);
 	}
 
 	@Override

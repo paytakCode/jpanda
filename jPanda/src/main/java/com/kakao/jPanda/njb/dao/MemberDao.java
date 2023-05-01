@@ -11,17 +11,17 @@ public interface MemberDao {
 
 	public List<BankDto> selectBankList();
 	
-	public int checkId(String id);
+	public int checkId(String memberId);
 
 	String findIdByNameAndEmail(String name, String email);
 	
-	String findPwByIdAndEmail(String id,String email);
+	String findPwByIdAndEmail(String memberId,String email);
 
 	public MemberDto login(MemberDto memberDto);
 
 	public MemberDto selectMember(String id);
 
-	public Object updatePasswordById(String id, String encryptedPassword);
+	public Object updatePasswordById(String memberId, String encryptedPassword);
 
 	public void deleteMemberById(String loginId, String encryptedPassword);
 

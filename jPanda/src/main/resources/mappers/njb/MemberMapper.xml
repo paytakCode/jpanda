@@ -12,7 +12,7 @@
     	WHERE member_id = #{memberId}
   	</select>
 	<select id="findIdByNameAndEmail" parameterType="Map" resultType="String">
-		SELECT id
+		SELECT member_id
 		FROM member
 		WHERE name = #{name} AND email = #{email}
 	</select> 
@@ -38,10 +38,10 @@
     </insert>
 	<insert id="insertAccount" parameterType="MemberDto">
         INSERT INTO Account
-            (member_id, account, code)
-        VALUES (#{memberId},#{account}, #{code})
+            (member_id, account, bank_code)
+        VALUES (#{memberId},#{account}, #{bankCode})
     </insert>
-    <select id="checkId" resultType="int" parameterType="MemberDto">
+    <select id="checkmemberId" resultType="int" parameterType="MemberDto">
     	SELECT 
     	COUNT(*) 
     	FROM member 
