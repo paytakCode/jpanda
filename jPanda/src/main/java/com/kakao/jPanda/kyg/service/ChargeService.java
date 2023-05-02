@@ -17,9 +17,9 @@ public interface ChargeService {
 
 	Long findTotalBamboo(String memberId);
 
-	List<PaymentDto> findPaymentList(PaymentDto selectMethodBonusDto);
+	List<PaymentDto> findPaymentList(PaymentDto paymentDto);
 
-	List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto selectChargeHistoryDto);
+	List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto chargeHistoryListDto);
 
 
 

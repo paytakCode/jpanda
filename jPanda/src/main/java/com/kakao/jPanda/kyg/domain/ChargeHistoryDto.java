@@ -11,5 +11,6 @@ public class ChargeHistoryDto {
 	private Timestamp	chargeDate;
 	private String		paymentMethod;
 	private Long		paymentAmount;
+	private int			chargeBamboo;
 	
 }

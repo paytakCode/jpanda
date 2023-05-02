@@ -144,23 +144,23 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 
 	@Override
-	public List<PaymentDto> findPaymentList(PaymentDto selectMethodBonusDto) {
+	public List<PaymentDto> findPaymentList(PaymentDto paymentDto) {
 		
 		List<PaymentDto> selectPaymentList = null;
 		log.info("ChargeServiceImpl findPaymentList() Start...");
 		
-		selectPaymentList = chargeDao.selectPaymentList(selectMethodBonusDto);
+		selectPaymentList = chargeDao.selectPaymentList(paymentDto);
 		log.info("ChargeServiceImpl findPaymentList() selectPaymentList.size() -> {}", selectPaymentList.size());
 		
 		return selectPaymentList;
 	}
 
 	@Override
-	public List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto selectChargeHistoryDto) {
+	public List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto chargeHistoryListDto) {
 		List<ChargeHistoryDto> selectChargeHistoryList = null;
 		log.info("ChargeServiceImpl findChargeHistoryList() Start...");
 		
-		selectChargeHistoryList = chargeDao.selectChargeHistoryList(selectChargeHistoryDto);
+		selectChargeHistoryList = chargeDao.selectChargeHistoryList(chargeHistoryListDto);
 		log.info("ChargeServiceImpl findPaymentList() selectChargeHistoryList.size() -> {}", selectChargeHistoryList.size());
 		
 		return selectChargeHistoryList;
