@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.lhw.dao.TalentDao;
-import com.kakao.jPanda.lhw.domain.Review;
-import com.kakao.jPanda.lhw.domain.Talent;
+import com.kakao.jPanda.lhw.domain.ReviewDto;
+import com.kakao.jPanda.lhw.domain.TalentDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,31 +17,41 @@ public class TalentServiceImpl implements TalentService {
 	
 	// 재능 상세 페이지 
 	@Override
-	public Talent findTalentByTalentNo(Long talentNo) {
+	public TalentDto findBoardTalentByTalentNo(Long talentNo) {
 		return talentDao.selectBoardTalentByTalentNo(talentNo);
 	}
 	
 	// 리뷰 리스트 불러오기
 	@Override
-	public List<Review> findReviewListByTalentNo(Long talentNo) {
+	public List<ReviewDto> findReviewListByTalentNo(Long talentNo) {
 		return talentDao.selectReivewListByTalentNo(talentNo);
 	}
 	
 	// 리뷰 인서트
 	@Override
-	public int addReview(Review review) {
+	public int addReview(ReviewDto review) {
+		
+		
+		
+		
+		
 		return talentDao.insertReview(review);
 	}
 	
 	// 리뷰 업데이트
 	@Override
-	public int modifyReview(Review review) {
+	public int modifyReview(ReviewDto review) {
 		return talentDao.updateReview(review);
 	}
 	
 	// 리뷰 삭제
 	@Override
-	public int removeReview(Review review) {
+	public int removeReview(ReviewDto review) {
 		return talentDao.deleteReview(review);
+	}
+
+	@Override
+	public int updateTalentStatus(Long talentNo) {
+		return talentDao.updateTalent(talentNo);
 	}
 }
