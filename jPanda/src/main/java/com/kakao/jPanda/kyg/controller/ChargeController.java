@@ -42,11 +42,11 @@ public class ChargeController {
 	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
 	 * 충전내역, chargeHistory를 테이블에 List형식으로 나타냄
 	 * Model	TB payment -> method, bonusRatio 
-	 * @param	Model
+	 * @param	HttpSession, ChargeHistoryDto, Model
 	 * @return	kyg/chargePage
 	 */
 	
-	@GetMapping(value = "/")
+	@GetMapping(value = "")
 	public String chargePage(HttpSession session, ChargeHistoryDto chargeHistoryDto, Model model) {
 		String chargerId = (String) session.getAttribute("memberId");
 		PaymentDto selectMethodBonusDto = new PaymentDto();
@@ -143,10 +143,8 @@ public class ChargeController {
 	 * @param	memberId
 	 * @return	foundTotalBambooStr
 	 */
-	//@GetMapping(path = "/members/{memberId}/total-bamboo")
 	@GetMapping(path = "/members/total-bamboo")
 	@ResponseBody
-	//public String  totalBamboo(@PathVariable String memberId, HttpSession session) {
 	public String  totalBamboo(HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
 		log.info("ChargeContoller totalBamboo Start...");

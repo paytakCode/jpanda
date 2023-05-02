@@ -296,14 +296,15 @@
 			    <tr>
 			      <th scope="col">#</th>
 			      <th scope="col">충전날짜</th>
-			      <th scope="col">충전금액</th>
 			      <th scope="col">충전방법</th>
+			      <th scope="col">충전금액</th>
 			    </tr>
 			  </thead>
 			  <tbody class="table-group-divider2" th:each="chargeHistoryList, i : ${listChargeHistory}">
 			    <tr>
 			      <th scope="row" th:text="${listChargeHistory.size() - i.index}"></th>
-				  <td th:text="${chargeHistoryList.chargeDate}"></td>
+				  <td th:if="${chargeHistoryList.chargeDate != null}" th:text="${#dates.format(chargeHistoryList.chargeDate, 'yyyy-MM-dd')}"></td>
+			      <td th:if="${chargeHistoryList.chargeDate == null}" th:text=""></td>
 				  <td th:text="${chargeHistoryList.paymentMethod}"></td>
 				  <td th:text="${chargeHistoryList.paymentAmount}"></td>
 			    </tr>
@@ -312,7 +313,9 @@
 		
 			
 	</div>	<!-- /id="recharge-details-container" -->
-	
+
+
+
 
 <script type="text/javascript">
 
@@ -630,6 +633,8 @@
 		});
 		
 
+		
+		
 		
 </script>
 </body>

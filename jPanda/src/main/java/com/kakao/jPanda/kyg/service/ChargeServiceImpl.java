@@ -2,7 +2,6 @@ package com.kakao.jPanda.kyg.service;
 
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -84,13 +83,16 @@ public class ChargeServiceImpl implements ChargeService {
 				isValidPeriod = false;
 			} else {
 				
-				LocalDate today = LocalDate.now();
+				//LocalDate today = LocalDate.now();
 				Timestamp issueDate = selectedCouponDto.getIssueDate();
-				long currentTime = System.currentTimeMillis();
+				long currentTime = System.currentTimeMillis();		// Long
+				Timestamp timestamp = new Timestamp(currentTime);
 				Timestamp expireDate = selectedCouponDto.getExpireDate();
 				log.info("issueDate -> " + issueDate);
-				log.info("today -> " + today);
+				//log.info("today -> " + today);
+				log.info("Current Time Stamp: " + timestamp);
 				log.info("expireDate -> " + expireDate);
+				
 				
 				if(currentTime <= expireDate.getTime() && currentTime >= issueDate.getTime()) {
 					isValidPeriod = true;
@@ -165,6 +167,8 @@ public class ChargeServiceImpl implements ChargeService {
 		
 		return selectChargeHistoryList;
 	}
+	
+	
 
 
 }
