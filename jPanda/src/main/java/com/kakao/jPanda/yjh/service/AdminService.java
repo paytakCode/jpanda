@@ -8,6 +8,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 
@@ -33,9 +34,13 @@ public interface AdminService {
 	//talent
 	List<TalentDto> findTalent();
 	int modifyTalentByTalentNos(List<TalentDto> talentDto);
+	TalentDto findTalentByTalentNo(Long talentNo);
 	
 	//talent-refund
 	List<TalentRefundDto> findTalentRefund();
 	int modifyTalentRefundByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto);
+	
+	//report
+	List<ReportDto> findReport();
 
 }

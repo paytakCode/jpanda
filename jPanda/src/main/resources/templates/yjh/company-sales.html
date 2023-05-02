@@ -1,173 +1,215 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="/js/jquery.js"></script>
-<link th:href="@{/css/board.css}" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-</head>
-<body>
-	<h1>(주)재능판다 매출 현황</h1>
-		<label>연간 매출<input type="radio" class="periodicData" th:name="periodicData" th:value="Y"></label>
-		<label>월간 매출<input type="radio" class="periodicData" th:name="periodicData" th:value="M"></label>
-		<label>일간 매출<input type="radio" class="periodicData" th:name="periodicData" th:value="D"></label><br><br>
-		<label>매출 집계 시작일<input type="date" class="start-period"> ~ </label>
-		<label>매출 집계 종료일<input type="date" class="end-period" oninput="callData()"></label><br><br>
-	
-	<div id="chartContainer" style="width: 900px; height: 900px; display: block; margin: 0 auto;">
-		<!--차트가 그려질 부분-->
-		<canvas id="myChart" style="display: block; margin: 0 auto;">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>페이지 제목</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+css
+
+ 
+
+영역
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<h1>(주)재능판다 매출 현황</h1>
+			<label>연간 매출<input type="radio" class="periodicData"
+				th:name="periodicData" th:value="Y"></label>
+			<label>월간 매출<input type="radio" class="periodicData"
+				th:name="periodicData" th:value="M"></label>
+			<label>일간 매출<input type="radio" class="periodicData"
+				th:name="periodicData" th:value="D"></label>
+			<br>
+			<br>
+			<label>매출 집계 시작일<input type="date" class="start-period">
+				~
+			</label>
+			<label>매출 집계 종료일<input type="date" class="end-period"
+				oninput="callData()"></label>
+			<br>
+			<br>
+
+			<div id="chartContainer"
+				style="width: 900px; height: 900px; display: block; margin: 0 auto;">
+				<!--차트가 그려질 부분-->
+				<canvas id="myChart" style="display: block; margin: 0 auto;">
 			
 		</canvas>
-	</div>
-</body>
-<script type="text/javascript">
-	window.onload = function() {
-		const ctx = document.getElementById('myChart').getContext('2d');
-		const myChart = new Chart(ctx, {
-			type : 'bar', //bar,line,pie,doughnut,radar
-			//labels : x축의 값
-			//datasets : data의 값, 속성들 지정
-			data : {
-				labels : [ '기간을 입력해주세요.' ],
-				datasets : [ {
-					label : '매출 현황',
-					data : 0,
-					backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
-							'rgba(54, 162, 235, 0.2)',
-							'rgba(255, 206, 86, 0.2)' ],
-					borderColor : [ 'rgba(255, 99, 132, 0.2)',
-							'rgba(54, 162, 235, 0.2)',
-							'rgba(255, 206, 86, 0.2)' ],
-					borderWidth : 3
-				} ]
-			},
-			options : {
-				scales : {
-					y : {
-						beginAtZero : true
+			</div>
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+	<script th:inline="javascript">
+		window.onload = function() {
+			const ctx = document.getElementById('myChart').getContext('2d');
+			const myChart = new Chart(ctx, {
+				type : 'bar', //bar,line,pie,doughnut,radar
+				//labels : x축의 값
+				//datasets : data의 값, 속성들 지정
+				data : {
+					labels : [ '기간을 입력해주세요.' ],
+					datasets : [ {
+						label : '매출 현황',
+						data : 0,
+						backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
+								'rgba(54, 162, 235, 0.2)',
+								'rgba(255, 206, 86, 0.2)' ],
+						borderColor : [ 'rgba(255, 99, 132, 0.2)',
+								'rgba(54, 162, 235, 0.2)',
+								'rgba(255, 206, 86, 0.2)' ],
+						borderWidth : 3
+					} ]
+				},
+				options : {
+					scales : {
+						y : {
+							beginAtZero : true
+						}
 					}
 				}
-			}
-		});
+			});
 
-	}
-
-	function callData() {
-		$("#myChart").remove();
-		$("#chartContainer").append('<canvas id="myChart"></canvas>');
-
-		let startPeriod = $(".start-period");
-		let startPeriodValue = startPeriod.val();
-
-		let endPeriod = $(".end-period");
-		let endPeriodValue = endPeriod.val();
-
-		let startDate = getStartDate(startPeriodValue);
-		let endDate = getEndDate(endPeriodValue);
-		
-		let periodicData = $("input.periodicData:checked").val();
-		
-
-		if (!startDate) {
-			alert("시작일을 입력해주세요");
-			location.href="/admin/company-sales";
-			$(".start-period").focus();
-			return false;
 		}
-		
-		$.ajax({
+
+		function callData() {
+			$("#myChart").remove();
+			$("#chartContainer").append('<canvas id="myChart"></canvas>');
+
+			let startPeriod = $(".start-period");
+			let startPeriodValue = startPeriod.val();
+
+			let endPeriod = $(".end-period");
+			let endPeriodValue = endPeriod.val();
+
+			let startDate = getStartDate(startPeriodValue);
+			let endDate = getEndDate(endPeriodValue);
+
+			let periodicData = $("input.periodicData:checked").val();
+
+			if (!startDate) {
+				alert("시작일을 입력해주세요");
+				location.href = "/admin/company-sales";
+				$(".start-period").focus();
+				return false;
+			}
+
+			$.ajax({
 				url : "/admin/company-sales/years",
 				method : "GET",
-				data : {startDate : startDate,
-						endDate : endDate,
-						periodicData : periodicData
-						},
+				data : {
+					startDate : startDate,
+					endDate : endDate,
+					periodicData : periodicData
+				},
 				success : function(csList) {
-						var bcCountList = [];
-						var periodList = [];
-						var exCountList = [];
+					var bcCountList = [];
+					var periodList = [];
+					var exCountList = [];
 
-						$.each(csList, function() {
-							bcCountList.push(this["bcCount"])
-							periodList.push(this["period"])
-							exCountList.push(this["exCount"])
-						})
-						
-						const ctx = document.getElementById('myChart').getContext('2d');
-						const myChart = new Chart(ctx, {
-							type : 'bar', //bar,line,pie,doughnut,radar
-							//labels : x축의 값
-							//datasets : data의 값, 속성들 지정
-							data : {
-								labels : periodList,
-								datasets : [ 
-								{
-									label : 'BambooPoint 판매 매출 현황',
-									data : bcCountList,
-									backgroundColor : [
-											'rgba(255, 99, 132, 0.2)',
-											'rgba(54, 162, 235, 0.2)',
-											'rgba(255, 206, 86, 0.2)' ],
-									borderColor : [ 'rgba(255, 99, 132, 0.2)',
-											'rgba(54, 162, 235, 0.2)',
-											'rgba(255, 206, 86, 0.2)' ],
-									borderWidth : 3
-								},
-								
- 								{
-									label : '환전 수수료 수익 현황',
-									data : exCountList,
-									backgroundColor : [
-											'rgba(255, 99, 132, 0.2)',
-											'rgba(54, 162, 235, 0.2)',
-											'rgba(255, 206, 86, 0.2)' ],
-									borderColor : [ 'rgba(255, 99, 132, 0.2)',
-											'rgba(54, 162, 235, 0.2)',
-											'rgba(255, 206, 86, 0.2)' ],
-									borderWidth : 3
-								} 
-							  ]
-							},
-							options : {
-								scales : {
-									y : {
-										beginAtZero : true
-									}
+					$.each(csList, function() {
+						bcCountList.push(this["bcCount"])
+						periodList.push(this["period"])
+						exCountList.push(this["exCount"])
+					})
+
+					const ctx = document.getElementById('myChart').getContext(
+							'2d');
+					const myChart = new Chart(ctx, {
+						type : 'bar', //bar,line,pie,doughnut,radar
+						//labels : x축의 값
+						//datasets : data의 값, 속성들 지정
+						data : {
+							labels : periodList,
+							datasets : [
+									{
+										label : 'BambooPoint 판매 매출 현황',
+										data : bcCountList,
+										backgroundColor : [
+												'rgba(255, 99, 132, 0.2)',
+												'rgba(54, 162, 235, 0.2)',
+												'rgba(255, 206, 86, 0.2)' ],
+										borderColor : [
+												'rgba(255, 99, 132, 0.2)',
+												'rgba(54, 162, 235, 0.2)',
+												'rgba(255, 206, 86, 0.2)' ],
+										borderWidth : 3
+									},
+
+									{
+										label : '환전 수수료 수익 현황',
+										data : exCountList,
+										backgroundColor : [
+												'rgba(255, 99, 132, 0.2)',
+												'rgba(54, 162, 235, 0.2)',
+												'rgba(255, 206, 86, 0.2)' ],
+										borderColor : [
+												'rgba(255, 99, 132, 0.2)',
+												'rgba(54, 162, 235, 0.2)',
+												'rgba(255, 206, 86, 0.2)' ],
+										borderWidth : 3
+									} ]
+						},
+						options : {
+							scales : {
+								y : {
+									beginAtZero : true
 								}
 							}
-						});
-					}
-				});
-	}
-	
-	function getStartDate(startDateParam){
-		const startDate = new Date(startDateParam);
-		const year = startDate.getFullYear();
-		const month = String(startDate.getMonth() + 1).padStart(2, '0');
-		const day = String(startDate.getDate()).padStart(2, '0');
-		const hours = String(startDate.getHours()).padStart(2, '0');
-		const minutes = String(startDate.getMinutes()).padStart(2, '0');
-		const seconds = String(startDate.getSeconds()).padStart(2, '0');
-		
-		const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-		
-		return formattedDate;
-	}
-	
-	function getEndDate(endDateParam){
-		const endDate = new Date(endDateParam);
-		const year = endDate.getFullYear();
-		const month = String(endDate.getMonth() + 1).padStart(2, '0');
-		const day = String(endDate.getDate()).padStart(2, '0');
-		const hours = String(endDate.getHours()).padStart(2, '0');
-		const minutes = String(endDate.getMinutes()).padStart(2, '0');
-		const seconds = String(endDate.getSeconds()).padStart(2, '0');
-		
-		const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-		
-		return formattedDate;
-	}
-</script>
+						}
+					});
+				}
+			});
+		}
+
+		function getStartDate(startDateParam) {
+			const startDate = new Date(startDateParam);
+			const year = startDate.getFullYear();
+			const month = String(startDate.getMonth() + 1).padStart(2, '0');
+			const day = String(startDate.getDate()).padStart(2, '0');
+			const hours = String(startDate.getHours()).padStart(2, '0');
+			const minutes = String(startDate.getMinutes()).padStart(2, '0');
+			const seconds = String(startDate.getSeconds()).padStart(2, '0');
+
+			const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+			return formattedDate;
+		}
+
+		function getEndDate(endDateParam) {
+			const endDate = new Date(endDateParam);
+			const year = endDate.getFullYear();
+			const month = String(endDate.getMonth() + 1).padStart(2, '0');
+			const day = String(endDate.getDate()).padStart(2, '0');
+			const hours = String(endDate.getHours()).padStart(2, '0');
+			const minutes = String(endDate.getMinutes()).padStart(2, '0');
+			const seconds = String(endDate.getSeconds()).padStart(2, '0');
+
+			const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+			return formattedDate;
+		}
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>

@@ -1,110 +1,137 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="/js/jquery.js"></script>
-<link th:href="@{/css/board.css}" rel="stylesheet"/>
-</head>
-<body>
-	<form action="/admin/coupons" method="post">
-		<h3>쿠폰 생성</h3>
-		<table>
-			<tr>
-				<td><label>시작일</label><input type="date" name="issueDate" class="issueDate" pattern="YYYYMMDD"></td>
-				<td><label>종료일</label><input type="date" name="expireDate" class="expireDate" pattern="YYYYMMDD"></td>
-				<td><input type="text" id="couponCode" th:name="couponCode">&nbsp;<input type="button" id="create-coupon" value="생성하기"></td>
-				<td><select  th:name="couponValue" id="couponValue">
-						<option class="option" selected disabled>-- 쿠폰 값을 선택해주세요 --</option>
-						<option th:value="1000">1,000원</option>
-						<option th:value="3000">3,000원</option>
-						<option th:value="5000">5,000원</option>
-						<option th:value="7000">7,000원</option>
-						<option th:value="10000">10,000원</option>
-					</select>
-					<input class="submit" type="button" value="적용">
-				</td>
-			</tr>
-		</table>
-		<h3>만료된 쿠폰</h3>
-		<table border="1">
-			<tr>
-				<th>쿠폰 번호</th>
-				<th>발급일</th>
-				<th>사용 기한</th>
-				<th>사용 회수</th>
-				<th>쿠폰 금액</th>
-			</tr>
-			<tr th:each="coupon : ${couponList}">
-				<td th:text="${coupon.couponCode}"></td>
-				<td th:text="${coupon.issueDate}"></td>
-				<td th:text="${coupon.expireDate}"></td>
-				<td th:text="${coupon.usedCouponCount}"></td>
-				<td th:text="${coupon.couponValue}"></td>
-			</tr>
-		</table>
-	</form>
-<script type="text/javascript">
-	$(".submit").click(function() {
-		let issueDate = $(".issueDate").val();
-		let expireDate = $(".expireDate").val();
-		let couponNo = $("#couponCode").val();
-		let couponValue = $("#couponValue").val();
-		
-		if(issueDate.length === 0) {
-			alert("시작일을 입력하세요");
-			$(".issueDate").focus();
-			return false;
-			
-		} else if(expireDate === "") {
-			alert("종료일을 입력하세요");
-			$(".expireDate").focus();
-			return false;
-			
-		} else if(couponNo === "") {
-			alert("생성하기를 눌러 쿠폰 번호를 생성하세요");
-			$("#couponNo").focus();
-			return false;
-		} else if($("#couponValue").val() === "") {
-			alert("쿠폰의 금액을 설정하세요");
-			$("#couponValue").focus();
-			return false;
-		}
-		
-		let couponDto = {
-				"issueDate" 	: issueDate,
-				"expireDate"	: expireDate,
-				"couponCode"	: couponNo,
-				"couponValue"	: couponValue
-		};
-		
-		$.ajax({
-			url : "/admin/coupons/" + couponNo,
-			type : "POST",
-			contentType : "application/json",
-			data : JSON.stringify(couponDto),
-			success : function(returnMap) {
-				if(returnMap.valid === 1) {
-					alert("쿠폰이 정상적으로 등록되었습니다");
-				} else {
-					alert("쿠폰의 값을 설정해주세요");
-				}
-			}
-		});
-	});
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/default-layout">
 
-	$("#create-coupon").click(function() {
-		$.ajax({
-			type : "POST",
-			url : "/admin/coupons/coupons-no",
-			dataType : "text",
-			success : function(data) {
-					  console.log(data);
-					  $("#couponCode").val(data);
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>페이지 제목</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+css
+ 
+영역
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<form action="/admin/coupons" method="post">
+				<h3>쿠폰 생성</h3>
+				<table>
+					<tr>
+						<td><label>시작일</label><input type="date" name="issueDate"
+							class="issueDate" pattern="YYYYMMDD"></td>
+						<td><label>종료일</label><input type="date" name="expireDate"
+							class="expireDate" pattern="YYYYMMDD"></td>
+						<td><input type="text" id="couponCode" th:name="couponCode">&nbsp;<input
+							type="button" id="create-coupon" value="생성하기"></td>
+						<td><select th:name="couponValue" id="couponValue">
+								<option class="option" selected disabled>-- 쿠폰 값을
+									선택해주세요 --</option>
+								<option th:value="1000">1,000원</option>
+								<option th:value="3000">3,000원</option>
+								<option th:value="5000">5,000원</option>
+								<option th:value="7000">7,000원</option>
+								<option th:value="10000">10,000원</option>
+						</select> <input class="submit" type="button" value="적용"></td>
+					</tr>
+				</table>
+				<h3>만료된 쿠폰</h3>
+				<table border="1">
+					<tr>
+						<th>쿠폰 번호</th>
+						<th>발급일</th>
+						<th>사용 기한</th>
+						<th>사용 회수</th>
+						<th>쿠폰 금액</th>
+					</tr>
+					<tr th:each="coupon : ${couponList}">
+						<td th:text="${coupon.couponCode}"></td>
+						<td th:text="${coupon.issueDate}"></td>
+						<td th:text="${coupon.expireDate}"></td>
+						<td th:text="${coupon.usedCouponCount}"></td>
+						<td th:text="${coupon.couponValue}"></td>
+					</tr>
+				</table>
+			</form>
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		$(".submit").click(function() {
+			let issueDate = $(".issueDate").val();
+			let expireDate = $(".expireDate").val();
+			let couponNo = $("#couponCode").val();
+			let couponValue = $("#couponValue").val();
+
+			if (issueDate.length === 0) {
+				alert("시작일을 입력하세요");
+				$(".issueDate").focus();
+				return false;
+
+			} else if (expireDate === "") {
+				alert("종료일을 입력하세요");
+				$(".expireDate").focus();
+				return false;
+
+			} else if (couponNo === "") {
+				alert("생성하기를 눌러 쿠폰 번호를 생성하세요");
+				$("#couponNo").focus();
+				return false;
+			} else if ($("#couponValue").val() === "") {
+				alert("쿠폰의 금액을 설정하세요");
+				$("#couponValue").focus();
+				return false;
 			}
+
+			let couponDto = {
+				"issueDate" : issueDate,
+				"expireDate" : expireDate,
+				"couponCode" : couponNo,
+				"couponValue" : couponValue
+			};
+
+			$.ajax({
+				url : "/admin/coupons/" + couponNo,
+				type : "POST",
+				contentType : "application/json",
+				data : JSON.stringify(couponDto),
+				success : function(returnMap) {
+					if (returnMap.valid === 1) {
+						alert("쿠폰이 정상적으로 등록되었습니다");
+					} else {
+						alert("쿠폰의 값을 설정해주세요");
+					}
+				}
+			});
 		});
-	});
-	
-</script>
-</body>
+
+		$("#create-coupon").click(function() {
+			$.ajax({
+				type : "POST",
+				url : "/admin/coupons/coupons-no",
+				dataType : "text",
+				success : function(data) {
+					console.log(data);
+					$("#couponCode").val(data);
+				}
+			});
+		});
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>

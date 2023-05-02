@@ -21,4 +21,6 @@ public class ExchangeDto {
 	private Long exchangeRatio;
 	private String exchangeStatus;
 	private Long paymentAmount;
+	
+	private String listType;
 }

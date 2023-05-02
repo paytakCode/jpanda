@@ -1,68 +1,97 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="/js/jquery.js"></script>
-<link th:href="@{/css/board.css}" rel="stylesheet"/>
-</head>
-<body>
-	<form action="/admin/notice" method="post" onsubmit="return chk()">
-		<table border="1">
-			<tr>
-				<th>제목</th>
-				<td><input type="text" name="title"></td>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td><textarea rows="50" cols="50" name="content"></textarea></td>
-			</tr>
-			<tr>
-				<td colspan="2"><button type="submit" value="적용">적용</button></td>
-			</tr>
-		</table>
-				<input type="hidden" class="regDate" name="regDate" pattern="YYYYMMDD">
-	</form>
-<script type="text/javascript">
-	function chk() {
-		const title = $("input[name=title]");
-		const content = $("textarea[name=content]");
-		const regDate = $("input[name=regDate]");
-		const noticeNo = $("input[name=noticeNo]");
-		
-		$(".regDate").val(getNow());
-		
-		if(title.val() === null || title.val() === ""){
-			alert("제목을 입력하세요");
-			title.focus();
-			return false;
-		} else if(content.val() === null || content.val() === "") {
-			alert("내용을 입력하세요");
-			content.focus();
-			return false;
-		} else if(regDate.val() === null || regDate.val() === "") {
-			alert("게시일을 입력하세요");
-			regDate.focus();
-			return false;
-		} else {
-			return true;
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>페이지 제목</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+css
+ 
+영역
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<form action="/admin/notice" method="post" onsubmit="return chk()">
+				<table border="1">
+					<tr>
+						<th>제목</th>
+						<td><input type="text" name="title"></td>
+					</tr>
+					<tr>
+						<th>내용</th>
+						<td><textarea rows="50" cols="50" name="content"></textarea></td>
+					</tr>
+					<tr>
+						<td colspan="2"><button type="submit" value="적용">적용</button></td>
+					</tr>
+				</table>
+				<input type="hidden" class="regDate" name="regDate"
+					pattern="YYYYMMDD">
+			</form>
+
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		function chk() {
+			const title = $("input[name=title]");
+			const content = $("textarea[name=content]");
+			const regDate = $("input[name=regDate]");
+			const noticeNo = $("input[name=noticeNo]");
+
+			$(".regDate").val(getNow());
+
+			if (title.val() === null || title.val() === "") {
+				alert("제목을 입력하세요");
+				title.focus();
+				return false;
+			} else if (content.val() === null || content.val() === "") {
+				alert("내용을 입력하세요");
+				content.focus();
+				return false;
+			} else if (regDate.val() === null || regDate.val() === "") {
+				alert("게시일을 입력하세요");
+				regDate.focus();
+				return false;
+			} else {
+				return true;
+			}
+
 		}
-	
-	}
-	
-	function getNow(){
-		const now = new Date(Date.now());
-		const year = now.getFullYear();
-		const month = String(now.getMonth() + 1).padStart(2, '0');
-		const day = String(now.getDate()).padStart(2, '0');
-		const hours = String(now.getHours()).padStart(2, '0');
-		const minutes = String(now.getMinutes()).padStart(2, '0');
-		const seconds = String(now.getSeconds()).padStart(2, '0');
-		
-		const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-		
-		return formattedDate;
-	}
-</script>
-</body>
+
+		function getNow() {
+			const now = new Date(Date.now());
+			const year = now.getFullYear();
+			const month = String(now.getMonth() + 1).padStart(2, '0');
+			const day = String(now.getDate()).padStart(2, '0');
+			const hours = String(now.getHours()).padStart(2, '0');
+			const minutes = String(now.getMinutes()).padStart(2, '0');
+			const seconds = String(now.getSeconds()).padStart(2, '0');
+
+			const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+			return formattedDate;
+		}
+	</script>
+
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>

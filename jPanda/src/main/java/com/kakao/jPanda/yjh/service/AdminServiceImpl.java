@@ -14,6 +14,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 
@@ -208,22 +209,6 @@ public class AdminServiceImpl implements AdminService {
 			csList = adminDao.selectCompanySalesByDDDate(companySalesDto);
 		}
 		
-//		if(Integer.parseInt(startDate.toString().substring(8, 10)) > 1 && Integer.parseInt(endDate.toString().substring(8, 10)) > 1) {
-//			companySalesDto.setStartDate(startDate);
-//			log.info("startDate : "+startDate.toString().substring(8, 10));
-//			log.info("Company-sales Service 'DD' startDate : "+companySalesDto.getStartDate().toString());
-//			companySalesDto.setEndDate(endDate);
-//			log.info("Company-sales Service 'DD' endDate : "+companySalesDto.getEndDate().toString());
-//			csList = adminDao.selectCompanyByDDDate(companySalesDto);
-//			
-//		} else {
-//			log.info("startDate : "+startDate.toString().substring(8, 10));
-//			companySalesDto.setStartDate(startDate);
-//			companySalesDto.setEndDate(endDate);
-//			csList = adminDao.selectCompanySalesByYYMMDate(companySalesDto);
-//			log.info("Company-sales Service YYYYMM csList : "+csList.toString());
-//		}
-		
 		List<CompanySalesDto> returnList = new ArrayList<CompanySalesDto>();
 		
 		for(int i = 0; i < csList.size(); i++) {
@@ -274,6 +259,12 @@ public class AdminServiceImpl implements AdminService {
 		
 		return result;
 	}
+	
+	@Override
+	public TalentDto findTalentByTalentNo(Long talentNo) {
+		log.info("Talent Service findTalentBySellerId() start");
+		return adminDao.selectTalentByTalentNo(talentNo);
+	}
 
 	//talent-refund
 	@Override
@@ -305,5 +296,12 @@ public class AdminServiceImpl implements AdminService {
 		}
 		return result;
 	}
-
+	
+	//report
+	@Override
+	public List<ReportDto> findReport() {
+		log.info("Report Service findReport() start");
+		List<ReportDto> reportList = adminDao.selectReport();
+		return reportList;
+	}
 }
