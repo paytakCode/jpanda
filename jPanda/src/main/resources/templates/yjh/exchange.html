@@ -22,7 +22,7 @@
             	<td><input type="checkbox" class="checkbox" th:name="exchangeNo" th:value="${exchange.exchangeNo}"></td>
             	<td th:text="${exchange.exchangeNo}"></td>
            	 	<td th:text="${exchange.talentNo}"></td>
-            	<td th:text="${exchange.sellerId}"></td>
+            	<td th:text="${exchange.sellerId}"><input type="hidden" name="sellerId" th:value="${exchange.sellerId}"> </td>
             	<td th:text="${exchange.submitDate}"></td>
            		<td th:text="${exchange.total}"></td>
             	<td th:text="${exchange.exchangeStatus}"></td>
@@ -49,14 +49,21 @@
 		let exchangeDto = [];
 		let exchangeStatus = $(this).val();
 		let approveDate = Date.now();
+		let sellerId = [];
+		
+		exchangeNo.forEach(function(item) {
+			let tr = $(`input.checkbox[value='${item}']`).closest("tr");
+			let td = tr.children();
+			sellerId.push(td.eq(3).text());
+		});
 		
 		if(exchangeStatus == '환전완료') {
 			for(var i = 0; i < exchangeNo.length; i++) {
-				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate, sellerId: sellerId[i]});
 			}
 		} else if(exchangeStatus == '반려') {
 			for(var i = 0; i < exchangeNo.length; i++) {
-				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate, sellerId: sellerId[i]});
 			}
 		}
 		

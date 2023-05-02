@@ -22,7 +22,7 @@
 			</tr>
         	<tr th:each="refund : ${refundList}">
             	<td><input type="checkbox" class="checkbox" th:name="purchaseNo" th:value="${refund.purchaseNo}"></td>
-           	 	<td th:text="${refund.buyerId}"><input type="hidden" th:name="buyerId" th:value="${refund.buyerId}"></td>
+           	 	<td th:text="${refund.buyerId}"><input type="hidden" name="buyerId" th:value="${refund.buyerId}"></td>
             	<td th:text="${refund.purchaseNo}"><input type="hidden" th:name="purchaseNo" th:value="${refund.purchaseNo}"></td>
             	<td th:text="${refund.talentNo}"><input type="hidden" th:name="talentNo" th:value="${refund.talentNo}"></td>
             	<td th:text="${refund.refundBamboo}"><input type="hidden" th:name="refundBamboo" th:value="${refund.refundBamboo}"></td>
@@ -40,7 +40,7 @@
 </body>
 <script type="text/javascript">	 
 	$(".btn").on("click", function() {
-		const purchaseNo = $("input.checkbox:checked").map(function() {
+		let purchaseNo = $("input.checkbox:checked").map(function() {
 			return $(this).val();
 		}).get();
 
@@ -49,18 +49,26 @@
 			return;
 		}
 		
-		var talentRefundDto = [];
-		var statusValue = $(this).val();
-		var approveDate = Date.now();
+		let talentRefundDto = [];
+		let statusValue = $(this).val();
+		let approveDate = Date.now();
+		let buyerId = [];
+		
+		purchaseNo.forEach(function(item) {
+			let tr = $(`input.checkbox[value='${item}']`).closest("tr");
+			let td = tr.children();
+			buyerId.push(td.eq(1).text());
+		});
+		
 		
 		if (statusValue == "환불완료") {
 		    for (var i = 0; i < purchaseNo.length; i++) {
-		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate, buyerId: buyerId[i]});
 		    }
 		    
 		} else if (statusValue == "반려") {
 		    for (var i = 0; i < purchaseNo.length; i++) {
-		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate, buyerId: buyerId[i]});
 		    }
 		}
 		
@@ -84,6 +92,6 @@
 				alert("처리 중 오류가 발생했습니다.");
 			}
 		});
-	});
+	}); 
 </script>
 </html>

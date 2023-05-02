@@ -301,6 +301,14 @@ public class AdminController {
 		
 		return result;
 	}
+	
+	@GetMapping(value = "/talent/{sellerId}")
+	public String talentDetailBySellerId(@PathVariable("sellerId") String sellerId) {
+		log.info("Talent Controller talentDetailBySellerId start()");
+		log.info("sellerId : "+sellerId);
+		
+		return "";
+	}
 
 	//talent-refund
 	@GetMapping(value = "/talent-refund")
