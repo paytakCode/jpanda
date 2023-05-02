@@ -83,13 +83,11 @@ public class ChargeServiceImpl implements ChargeService {
 				isValidPeriod = false;
 			} else {
 				
-				//LocalDate today = LocalDate.now();
 				Timestamp issueDate = selectedCouponDto.getIssueDate();
 				long currentTime = System.currentTimeMillis();		// Long
 				Timestamp timestamp = new Timestamp(currentTime);
 				Timestamp expireDate = selectedCouponDto.getExpireDate();
 				log.info("issueDate -> " + issueDate);
-				//log.info("today -> " + today);
 				log.info("Current Time Stamp: " + timestamp);
 				log.info("expireDate -> " + expireDate);
 				
