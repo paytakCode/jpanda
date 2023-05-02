@@ -11,13 +11,13 @@
 				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, #{regDate}, NULL)
 	</insert>
 	
-	<select id="RegistselectTalentBytalentNo" resultType="RegistTalent" parameterType="Long">
+	<select id="selectRegistTalentBytalentNo" resultType="RegistTalent" parameterType="Long">
 		SELECT 	* 
 		FROM 	talent 
 		WHERE 	talent_no = #{talentNo}
 	</select>
 	
-	<update id="RegistupdateTalent" parameterType="RegistTalent">
+	<update id="updateRegistTalent" parameterType="RegistTalent">
 		UPDATE 	talent 
 		SET 	upper_category_no = #{upperCategoryNo}, lower_category_no = #{lowerCategoryNo}, main_img = #{mainImg},
 				title = #{title}, content = #{content}, bamboo = #{bamboo}, sale_bamboo = #{saleBamboo}, summary = #{summary}

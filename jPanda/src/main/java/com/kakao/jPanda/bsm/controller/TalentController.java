@@ -1,6 +1,5 @@
 package com.kakao.jPanda.bsm.controller;
 
-import java.security.acl.NotOwnerException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kakao.jPanda.bsm.domain.Category;
-import com.kakao.jPanda.bsm.domain.Notice;
-import com.kakao.jPanda.bsm.domain.Pager;
-import com.kakao.jPanda.bsm.domain.Talent;
+import com.kakao.jPanda.bsm.domain.CategoryDto;
+import com.kakao.jPanda.bsm.domain.NoticeDto;
+import com.kakao.jPanda.bsm.domain.PagerDto;
+import com.kakao.jPanda.bsm.domain.TalentDto;
 import com.kakao.jPanda.bsm.service.NoticeService;
 import com.kakao.jPanda.bsm.service.TalentService;
 
@@ -32,17 +31,17 @@ import lombok.RequiredArgsConstructor;
 public class TalentController {
 	private final TalentService talentService;
 	private final NoticeService noticeService;
-	
+
 	// Test Main 페이지 이동
 	@GetMapping("/")
 	public String talentTest(Model model, HttpSession session) {
 		model = talentService.findMainPageTalents(model);
 		
 		String loginId = "";
-		if(session.getAttribute("loginId") == null) {
+		if(session.getAttribute("memberId") == null) {
 			loginId = "guest";
 		}else {
-			loginId = (String) session.getAttribute("loginId");
+			loginId = (String) session.getAttribute("memberId");
 		}
 		model.addAttribute("loginId", loginId);
 		return "bsm/talentTestMainpage";
@@ -51,7 +50,7 @@ public class TalentController {
 	// 재능 등록 페이지 이동
 	@GetMapping("/write-form")
 	public String talenWritetForm(Model model, HttpSession session) {
-		List<Category> categoryList = talentService.findCategorys();
+		List<CategoryDto> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		
 		String login = "";
@@ -68,7 +67,7 @@ public class TalentController {
 	// 재능 DB Insert
 	@ResponseBody
 	@PostMapping("/talent")
-	public String talentAdd(Talent talent) {
+	public String talentAdd(TalentDto talent) {
 		String result = talentService.addTalent(talent);
 		return result;
 	}
@@ -76,7 +75,7 @@ public class TalentController {
 	// 재능 수정 Update
 	@ResponseBody
 	@PutMapping("/talent")
-	public String talentModify(Talent talent) {
+	public String talentModify(TalentDto talent) {
 		String result = talentService.modifyTalent(talent);
 		return result;
 	}
@@ -94,14 +93,15 @@ public class TalentController {
 	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
 	public String talentUpdateFrom(@PathVariable Long talentNo, Model model, HttpSession session) { // @PathVariable
 		System.out.println(talentNo);
-		Talent talent = talentService.findTalentByTalentNo(talentNo);
-		List<Category> categoryList = talentService.findCategorys();
+		TalentDto talent = talentService.findTalentByTalentNo(talentNo);
+		List<CategoryDto> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("talent", talent);
 		
 		String sellerId = talent.getSellerId();
 		String login = "";
-		if( session.getAttribute("memberId") == null ||sellerId.equals((String) session.getAttribute("memberId"))) {
+
+		if( session.getAttribute("memberId") == null || !sellerId.equals((String) session.getAttribute("memberId"))) {
 			login = "user";
 		}else {
 			login = (String) session.getAttribute("memberId");
@@ -121,7 +121,7 @@ public class TalentController {
 	// 공지사항 불러오기
 	@ResponseBody
 	@GetMapping("/notice/notices")
-	public Map<String, Object> noticeListBySearchAndCurrentPage(Pager pager) {
+	public Map<String, Object> noticeListBySearchAndCurrentPage(PagerDto pager) {
 		Map<String, Object> map = noticeService.findNoticeCountByPager(pager);
 		
 		return map;
@@ -130,9 +130,9 @@ public class TalentController {
 	// 공지사항 세부 페이지
 	@GetMapping("/notice/{noticeNo}/detail")
 	public String noticeDetailByNoticeNo(@PathVariable Long noticeNo, Model model) {
-		Notice notice = noticeService.findNoticeByNoticeNo(noticeNo);
-		System.out.println("notice -> " + notice);
+		NoticeDto notice = noticeService.findNoticeByNoticeNo(noticeNo);
 		model.addAttribute("notice", notice);
 		return "bsm/noticeDetail";
 	}
+	
 }

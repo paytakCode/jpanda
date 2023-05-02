@@ -7,20 +7,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kakao.jPanda.bsm.domain.Category;
-import com.kakao.jPanda.bsm.domain.Talent;
+import com.kakao.jPanda.bsm.domain.CategoryDto;
+import com.kakao.jPanda.bsm.domain.TalentDto;
 
 public interface TalentService {
 
-	List<Category> 	findCategorys();
-	String 			addTalent(Talent talent);
+	List<CategoryDto> 	findCategorys();
+	String 			addTalent(TalentDto talent);
 	ModelAndView 	talentImageUpload(MultipartHttpServletRequest request);
-	Talent 			findTalentByTalentNo(Long talentNo);
-	String 			modifyTalent(Talent talent);
-	List<Talent> 	findBestSellerTalents();
-	List<Talent> 	findTopRatedTalents();
-	List<Talent> 	findNewTrendTalents();
-	List<Talent> 	findRandomTalents();
+	TalentDto 			findTalentByTalentNo(Long talentNo);
+	String 			modifyTalent(TalentDto talent);
+	List<TalentDto> 	findBestSellerTalents();
+	List<TalentDto> 	findTopRatedTalents();
+	List<TalentDto> 	findNewTrendTalents();
+	List<TalentDto> 	findRandomTalents();
 	Model			findMainPageTalents(Model model);
 	
 }

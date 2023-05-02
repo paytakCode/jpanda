@@ -199,6 +199,10 @@ li:hover {
   background-color: #0069d9;
 }
 
+#main-image {
+  width: 420px;
+  height: 450px;
+}
 
 
 
@@ -232,7 +236,7 @@ li:hover {
 		<!-- 판매 정보  -->
 	<div class="container">
 		<h1 id="top-title" th:text="${talent.title}"></h1>
-		<img id="main-image" src="https://via.placeholder.com/400x300.png" alt="상품 이미지">
+		<img id="main-image" th:src="${talent.mainImg}" alt="상품 이미지">
 		
 		<div class="side-info">
 			  강사 : 		<div th:text="${talent.sellerId}"></div>
@@ -375,48 +379,6 @@ function getNow(){
 	
 	return formattedDate;
 };
-
-
-/* /* 별점 평균에 따라  밤부 스코어 이미지 출력 
- $(function rivewImg() {
-     var starImages = ['bamboo0.png', 'bamboo0.5.png', 'bamboo1.png', 'bamboo1.5.png', 'bamboo2.png', 
-   	  'bamboo2.5.png', 'bamboo3.png', 'bamboo3.5.png', 'bamboo4.png', 'bamboo4.5.png', 'bamboo5.png'];
-     $('.review-bamboo-score').each(function(){
-     	
-         var score = parseFloat($(this).text());
-         console.log("score : " + score);
-         if (score > 5) score = 5; // score가 5보다 크면 5로 고정
-         var index;
-         if (score == 0) {
-           index = 0;
-         } else if (score == 0.5) {
-           index = 1;
-         } else if (score == 1) {
-           index = 2;
-         } else if (score == 1.5) {
-           index = 3;
-         } else if (score == 2) {
-           index = 4;
-         } else if (score == 2.5) {
-           index = 5;
-         } else if (score == 3) {
-           index = 6;
-         } else if (score == 3.5) {
-           index = 7;
-         } else if (score == 4) {
-           index = 8;
-         } else if (score == 4.5) {
-           index = 9;
-         } else { // score가 5일 때
-           index = 10;
-         }
-        console.log("index : " + index)
-         $(this).next('.bamboo-imges').attr('src', '/image/bambooScore/' + starImages[index]);
-    });
- }); */
-
-
-
 
 
 $(document).on('click', '.modifyReview', function(){

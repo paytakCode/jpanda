@@ -2,13 +2,13 @@ package com.kakao.jPanda.kyg.service;
 
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.kyg.dao.ChargeDao;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
+import com.kakao.jPanda.kyg.domain.ChargeHistoryDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
@@ -83,13 +83,14 @@ public class ChargeServiceImpl implements ChargeService {
 				isValidPeriod = false;
 			} else {
 				
-				LocalDate today = LocalDate.now();
 				Timestamp issueDate = selectedCouponDto.getIssueDate();
-				long currentTime = System.currentTimeMillis();
+				long currentTime = System.currentTimeMillis();		// Long
+				Timestamp timestamp = new Timestamp(currentTime);
 				Timestamp expireDate = selectedCouponDto.getExpireDate();
 				log.info("issueDate -> " + issueDate);
-				log.info("today -> " + today);
+				log.info("Current Time Stamp: " + timestamp);
 				log.info("expireDate -> " + expireDate);
+				
 				
 				if(currentTime <= expireDate.getTime() && currentTime >= issueDate.getTime()) {
 					isValidPeriod = true;
@@ -153,6 +154,19 @@ public class ChargeServiceImpl implements ChargeService {
 		
 		return selectPaymentList;
 	}
+
+	@Override
+	public List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto selectChargeHistoryDto) {
+		List<ChargeHistoryDto> selectChargeHistoryList = null;
+		log.info("ChargeServiceImpl findChargeHistoryList() Start...");
+		
+		selectChargeHistoryList = chargeDao.selectChargeHistoryList(selectChargeHistoryDto);
+		log.info("ChargeServiceImpl findPaymentList() selectChargeHistoryList.size() -> {}", selectChargeHistoryList.size());
+		
+		return selectChargeHistoryList;
+	}
+	
+	
 
 
 }
