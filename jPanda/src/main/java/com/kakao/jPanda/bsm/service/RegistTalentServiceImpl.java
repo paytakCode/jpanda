@@ -1,12 +1,9 @@
 package com.kakao.jPanda.bsm.service;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,12 +20,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegistTalentServiceImpl implements TalentService{
 	private final TalentDao talentDao;
-	private ResourceLoader resourceLoader;
 	
 	@Override
 	public List<Category> findCategorys() {
 		List<Category> categoryList = talentDao.selectCategorys();
-		System.out.println("TalentDao.categoryList() categoryList.size() -> " + categoryList.size());
 		return categoryList;
 	}
 	
@@ -64,30 +59,18 @@ public class RegistTalentServiceImpl implements TalentService{
 		
 		// 파일의 오리지널 네임
 		String originalFileName = uploadFile.getOriginalFilename();
-		System.out.println("MainController.image() 파일의 오리지널 네임 -> " + originalFileName);
 		
         // 파일의 확장자 추출
 		String ext = originalFileName.substring(originalFileName.indexOf("."));
-		System.out.println("MainController.image() 파일의 확장자 -> " + ext);
 		
         // 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
 		String newFileName = UUID.randomUUID() + ext;
-		System.out.println("MainController.image() 서버에 저장될 파일 이름 -> " + newFileName);
 
-		// 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
-		String realPath = request.getServletContext().getRealPath("/");
-		System.out.println("MainController.image() 현재 파일 경로 -> " + realPath);
-
-		System.out.println("System.getProperty(\"user.dir\") -> " + System.getProperty("user.dir"));
 		int index = System.getProperty("user.dir").indexOf("\\jPanda");
 		String path = System.getProperty("user.dir").substring(0, index);
-		System.out.println("path -> " + path);
-		
-		
 		
 		// 현재경로/talentImage/파일명이 저장 경로
 		String savePath = path + "/uploadImage/" + newFileName;
-		System.out.println("MainController.image() 파일 저장 경로 + 파일 이름 -> " + savePath);
 		
 		
 		// 해당 파일 경로에 폴더가 없을시 폴더 생성
@@ -98,7 +81,6 @@ public class RegistTalentServiceImpl implements TalentService{
 		}
 		
 		String uploadPath = "/uploadImage/" + newFileName; 
-		System.out.println("MainController.image() 경로 출력 -> " + uploadPath);
 
 		// 저장 경로로 파일 객체 생성
 		File file = new File(savePath);
