@@ -9,15 +9,12 @@
 		where talent_status = '검토중'
 	</select>
 	
-	<update id="updateTalentBySellerIds" parameterType="List">
+	<update id="updateTalentByTalentNos" parameterType="AdminTalent">
 		update 	talent
 		set 	talent_status = '게시중',
-				reg_date = sysdate,
-				status_date = sysdate
-		where	seller_id in 
-						  <foreach collection="list" item="sellerId" open="(" close=")" separator=",">
-    						#{sellerId}
-  						  </foreach>
+				reg_date = #{regDate},
+				status_date = #{statusDate}
+		where	talent_no = #{talentNo}					 
 	</update>
 	
 </mapper>

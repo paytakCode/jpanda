@@ -37,17 +37,8 @@ public class TradeController {
 		this.tradeService = tradeService;
 	}
 	
-	@PostMapping("/login")
-	public String login(@RequestParam(name = "memberId") String memberId,
-						HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		log.info("TradeController memberId check : " + memberId);
-		session.setAttribute("memberId", memberId);
-		return "redirect:/trade";
-	}
-	
 	/**
-	 * Model에 statDto setting
+	 * 페이지 로딩시 Stat창 출력
 	 * @param session
 	 * @param model
 	 * @return trade페이지 url 매핑
@@ -55,7 +46,7 @@ public class TradeController {
 	@GetMapping("")
 	public String statList(HttpSession session, Model model) {
 		if (session.getAttribute("memberId") == null) {
-			return "redirect:/trade/loginForm";
+			return "redirect:/login";
 		}
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("statList id check : " + memberId);
@@ -65,17 +56,7 @@ public class TradeController {
 	}
 	
 	/**
-	 * @param login정보
-	 * @return login정보수집용 임시 페이지
-	 */
-	@GetMapping("/loginForm")
-	public String loginForm(Model model) {
-		log.info("loginForm called");
-		return "jst/loginForm";
-	}
-	
-	/**
-	 * trade페이지에서의 ajax요청 처리
+	 * 전체/판매/구매/환불 필터링 Btn
 	 * status에 따른 다른 service 호출
 	 * @param session
 	 * @param model
@@ -91,7 +72,14 @@ public class TradeController {
 		
 		return tradeService.findTradeListByMemberId(memberId, listType);
 	}
-		
+	
+	/**
+	 * 재등록, 판매종료 Btn
+	 * talent 통합 Update
+	 * @param talentNo
+	 * @param talentDto
+	 * @return resultMessage
+	 */
 	@PutMapping("/talents/{talent-no}")
 	@ResponseBody
 	public String tradesByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
@@ -103,6 +91,11 @@ public class TradeController {
 		return resultMessage; 
 	}
 	
+	/**
+	 * 환전신청 Btn
+	 * @param talentNo
+	 * @return resultMessage
+	 */
 	@PostMapping("/exchanges/{talent-no}")
 	@ResponseBody
 	public String exchangeAddByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
@@ -114,6 +107,12 @@ public class TradeController {
 		return resultMessage;
 	}
 	
+	/**
+	 * 환전 재신청 Btn
+	 * talent_refund TB refund_status '반려' → '검토중' 
+	 * @param talentNo
+	 * @return resultMessage
+	 */
 	@PutMapping("/exchanges/{talent-no}/status")
 	@ResponseBody
 	public String exchangeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
@@ -123,7 +122,13 @@ public class TradeController {
 		
 		return resultMessage;
 	}
-
+	
+	/**
+	 * 환전 신청 Btn
+	 * @param session
+	 * @param tradeDto
+	 * @return resultMessage
+	 */
 	@PostMapping("/refund")
 	@ResponseBody
 	public String refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
@@ -134,6 +139,12 @@ public class TradeController {
 		return resultMessage;
 	}
 	
+	/**
+	 * 환전 신청 취소 Btn
+	 * @param session
+	 * @param tradeDto
+	 * @return resultMessage
+	 */
 	@DeleteMapping("/refunds/{refund-purchase-no}")
 	@ResponseBody
 	public String refundRemoveByrefundPurchaseNo(@PathVariable(name = "refund-purchase-no") String refundPurchaseNo) {
@@ -144,16 +155,5 @@ public class TradeController {
 		return resultMessage;
 		
 	}
-	
-	/**
-	 * TEST PAGE
-	 */
-	@GetMapping("/test")
-	public String test() {
-		
-		return "jst/adminTest";
-		
-	}
-
 	
 }//end class

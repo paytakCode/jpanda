@@ -167,8 +167,8 @@ public class MemberController {
    
     @PostMapping("/withdrawal")
     public String withdrawal(HttpSession session, @RequestParam String password) {
-        String loginId = (String) session.getAttribute("loginId");
-        memberservice.withdrawal(loginId, password);
+        String memberId = (String) session.getAttribute("memberId");
+        memberservice.withdrawal(memberId, password);
         session.invalidate(); // 세션 무효화
         return "redirect:/login"; // 탈퇴 후 리다이렉트할 페이지
     }

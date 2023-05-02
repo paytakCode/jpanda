@@ -18,7 +18,7 @@
 	<update id="updateExchange" parameterType="AdminExchange">
 		update 	exchange
 		set 	exchange_status = #{exchangeStatus},
-				approve_date = sysdate
+				approve_date = #{approveDate}
 		where 	exchange_no = #{exchangeNo}
 	</update>
 	
