@@ -45,21 +45,21 @@ public class ChargeController {
 	 * @param	HttpSession, ChargeHistoryDto, Model
 	 * @return	kyg/chargePage
 	 */
-	
 	@GetMapping(value = "")
 	public String chargePage(HttpSession session, ChargeHistoryDto chargeHistoryDto, Model model) {
 		String chargerId = (String) session.getAttribute("memberId");
-		PaymentDto selectMethodBonusDto = new PaymentDto();
-		ChargeHistoryDto selectChargeHistoryDto = new ChargeHistoryDto();
+		PaymentDto paymentDto = new PaymentDto();
+		//ChargeHistoryDto selectChargeHistoryDto = new ChargeHistoryDto();
+		ChargeHistoryDto chargeHistoryListDto = new ChargeHistoryDto();
 		log.info("ChargeContoller chargePage() Start...");
 		
-		selectChargeHistoryDto.setChargerId(chargerId);
+		chargeHistoryListDto.setChargerId(chargerId);
 		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
 		
-		List<PaymentDto> getPaymentList = chargeService.findPaymentList(selectMethodBonusDto);
+		List<PaymentDto> getPaymentList = chargeService.findPaymentList(paymentDto);
 		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
 		
-		List<ChargeHistoryDto> getChargeHistoryList = chargeService.findChargeHistoryList(selectChargeHistoryDto);
+		List<ChargeHistoryDto> getChargeHistoryList = chargeService.findChargeHistoryList(chargeHistoryListDto);
 		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getChargeHistoryList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
@@ -67,8 +67,6 @@ public class ChargeController {
 		
 		return "kyg/chargePage";
 	}
-	
-	
 	
 	/*
 	 * 밤부 충전

@@ -79,22 +79,6 @@ public class ChargeDaoImpl implements ChargeDao {
 		return resultCharge;
 	}
 	
-	// 밤부 충전시 payment select 
-	@Override
-	public double selectBonusRatio(ChargeDto chargeDto) {
-		log.info("ChargeDaoImpl selectBonusRatio() Start...");
-		log.info("ChargeDaoImpl selectBonusRatio chargeDto.toString -> {}", chargeDto.toString());
-		
-		double selectBonusRatioResult = (double) 0;
-		try {
-			selectBonusRatioResult = sqlSession.selectOne("selectBonusRatio", chargeDto);
-			log.info("ChargeDaoImpl ChargeDaoImpl selectBonusRatioResult -> {}", selectBonusRatioResult);
-		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectBonusRatio() Exception -> {}", e.getMessage(), e);
-		}
-		
-		return selectBonusRatioResult;
-	}
 
 	// coupon_use isUsed 쿠폰 검증
 	@Override
@@ -200,14 +184,14 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public List<PaymentDto> selectPaymentList(PaymentDto selectMethodBonusDto) {
+	public List<PaymentDto> selectPaymentList(PaymentDto paymentDto) {
 		log.info("ChargeDaoImpl selectPaymentList() Start...");
-		log.info("ChargeDaoImpl selectPaymentList() selectMethodBonusDto.toString() -> {}", selectMethodBonusDto.toString());
+		log.info("ChargeDaoImpl selectPaymentList() paymentDto.toString() -> {}", paymentDto.toString());
 		
 		List<PaymentDto> selectPaymentListResult = null;
 		log.info("ChargeDaoImpl selectPaymentList Start...");
 		try {
-			selectPaymentListResult = sqlSession.selectList("selectPaymentList", selectMethodBonusDto);	 
+			selectPaymentListResult = sqlSession.selectList("selectPaymentList", paymentDto);	 
 			log.info("ChargeDaoImpl selectPaymentList() selectPaymentListResult.size() -> {}", selectPaymentListResult.size());
 		} catch (Exception e) {
 			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
@@ -217,14 +201,14 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public List<ChargeHistoryDto> selectChargeHistoryList(ChargeHistoryDto selectChargeHistoryDto) {
+	public List<ChargeHistoryDto> selectChargeHistoryList(ChargeHistoryDto chargeHistoryListDto) {
 		log.info("ChargeDaoImpl selectChargeHistoryList() Start...");
-		log.info("ChargeDaoImpl selectChargeHistoryList() selectChargeHistoryList.toString() -> {}", selectChargeHistoryDto.toString());
+		log.info("ChargeDaoImpl selectChargeHistoryList() selectChargeHistoryList.toString() -> {}", chargeHistoryListDto.toString());
 		
 		List<ChargeHistoryDto> selectChargeHistoryListResult = null;
 		log.info("ChargeDaoImpl selectPaymentList Start...");
 		try {
-			selectChargeHistoryListResult = sqlSession.selectList("selectChargeHistoryList", selectChargeHistoryDto);
+			selectChargeHistoryListResult = sqlSession.selectList("selectChargeHistoryList", chargeHistoryListDto);
 			log.info("ChargeDaoImpl selectPaymentList() selectChargeHistoryList.size() -> {}", selectChargeHistoryListResult.size());
 		} catch (Exception e) {
 			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
