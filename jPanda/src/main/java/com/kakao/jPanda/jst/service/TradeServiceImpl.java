@@ -221,5 +221,16 @@ public class TradeServiceImpl implements TradeService{
 		
 	}
 
+	@Override
+	public TradeDto findExchangeByExchangeNo(String exchangeNo) {
+		return tradeDao.selectExchangeByExchangeNo(exchangeNo);
+	}
+
+	@Override
+	public TradeDto findRefundByRefundPurchaseNo(String refundPurchaseNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }//end class

@@ -137,5 +137,13 @@ public class TradeDaoImpl implements TradeDao{
 		return result;
 	}
 
+	@Override
+	public TradeDto selectExchangeByExchangeNo(String exchangeNo) {
+		log.info("selectExchangeByExchangeNo exchangeNo : " + exchangeNo);
+		TradeDto tradeDto = sqlSession.selectOne("selectExchangeByExchangeNo", exchangeNo);
+		log.info("selectExchangeByExchangeNo tradeDto : " + tradeDto);
+		return tradeDto;
+	}
+
 
 }//end class
