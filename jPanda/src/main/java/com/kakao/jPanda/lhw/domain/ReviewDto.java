@@ -1,19 +1,21 @@
 package com.kakao.jPanda.lhw.domain;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class Review {
+@ToString
+public class ReviewDto {
 	
 	private Long reviewNo;
 	private Long talentNo;
 	private String reviewerId;
 	private String content;
-	private Date reviewDate;
+	private Timestamp reviewDate;
 	private Double bambooScore;
 
 }

@@ -107,11 +107,6 @@ li:hover {
   margin-left: 20px;
 }
 
-/* 공지사항 */
-#notice {
-  margin-bottom: 20px;
-}
-
 .bamboo-imges {
   width: 80px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
   height: 16px;
@@ -211,6 +206,14 @@ li:hover {
   box-shadow: 0px 0px 10px #ccc;
 }
 
+.sell-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  
+}
+
 
 
 </style>
@@ -268,32 +271,20 @@ li:hover {
 			<input type="radio" id="radio5" name="group" class="radio-filter" value="sale_bambooA">
 			<label for="radio5">낮은 가격순</label><br>
     </div>
-    
-    
-	<div class="list-container">
-	   	<div class="notice">
-	   		<h2>공지사항</h2>
-	   		 <ul id="notice-list">
-	        	<li th:each="notice : ${noticeList}">
-	                <span th:text="${notice.noticeNo}"></span>
-	                <span th:text="${notice.title}"></span>
-	                <span th:text="${notice.regDate}"></span>
-	        	</li>
-	         </ul>
-		</div>
+	
+	<div class="sell-btn">
+		<button id="sell-insert">판매글 등록</button>
 	</div>
-	
-	
 	<div class="sell-board">
-	        	<ul id="defalut-list"></ul>
-				<div class="sell-btn">
-					<button id="sell-insert">판매글 등록</button>
-				</div>
+	    <ul id="defalut-list"></ul>
 	</div>
 	
 
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script>
+
+
+
 
 // 재능 리스트 ajax로 불러오기
 function updateList(){
@@ -407,5 +398,26 @@ $('.topCategoryList').click(function(){
 	});
 });
 </script>
+
+<script th:inline="javascript">
+// 판매글 등록 버튼 로그인 여부 확인
+function sellInsertBtn(){
+    var memberId = [[${memberId}]];
+    console.log(memberId);
+    
+    if (memberId != null) {
+      location.href = "/talent/write-form";
+    } else {
+      alert("로그인이 필요한 서비스 입니다.");
+      location.href = "/login";
+    }
+  }
+  document.getElementById("sell-insert").addEventListener("click", sellInsertBtn);
+  
+  window.onload = function() {
+	  console.log([[${memberId}]]);
+	};
+</script>
+
 </body>
 </html>

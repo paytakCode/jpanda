@@ -245,10 +245,11 @@ li:hover {
 			    <button>구매하기</button>
  			</div>
 		</div>
-		
+		 
 		<div class="etc-btn">
-			<button id="modify-btn">게시물 수정</button>
-			<button id="delete-btn">게시물 삭제</button>
+			<input type="hidden" id="login-id" value="${memberId}">
+			<button th:if="${talent.sellerId == memberId}" id="modify-btn" th:data-talentNo="${talent.talentNo}">게시물 수정</button>
+			<button th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentNo="${talent.talentNo}" onclick="updateTalentStatus()">게시물 삭제</button>
 			<button id="report-btn">게시물 신고하기</button>
 		</div>
 		
@@ -319,10 +320,14 @@ li:hover {
 	 		<li th:each="review : ${reviewList}">
 		 		작성자 : 	<span th:text="${review.reviewerId}"></span>
 		 		작성날짜 : <span th:text="${review.reviewDate}"></span>
-		 		평점 : 	<span th:text="${review.bambooScore}"></span><br>
+		 		평점 : 	<span th:text="${review.bambooScore}"></span>
+		 		<img class="bamboo-imges"><br>
 		 		내용 : 	<span th:text="${review.content}"></span>
-		 		<button type="button" class="modifyReview" th:data-reviewNo="${review.reviewNo}" th:data-content="${review.content}">수정</button>
-		 		<button type="button" class="deleteReview" th:data-reviewNo="${review.reviewNo}" th:data-talentNo="${talent.talentNo}">삭제</button>
+		 		<div class="review-btn">
+		 			<input type="hidden" id="login-id" value="${memberId}">
+		 			<button th:if="${review.reviewerId == memberId}" type="button" class="modifyReview" th:data-reviewNo="${review.reviewNo}" th:data-content="${review.content}" th:data-reviewerId="${review.reviewerId}">수정</button>
+					<button th:if="${review.reviewerId == memberId}" type="button" class="deleteReview" th:data-reviewNo="${review.reviewNo}" th:data-talentNo="${talent.talentNo}" th:data-reviewerId="${review.reviewerId}">삭제</button>
+	 			</div>
 	 		</li>
 		</ul>
 	</div>
@@ -335,6 +340,133 @@ li:hover {
 
 <script type="text/javascript" src="/js/jquery.js"></script>	
 <script>
+
+// 게시글 수정 버튼 눌렀을때 수정 페이지로 이동
+$(document).on('click', '#modify-btn', function(){
+	// talentNo 값 가져오기
+	var talentNo = $(this).data('talentno');
+	location.href = '/talent/talents/' + talentNo + '/update-form';
+});
+
+
+// 게시글 삭제 버튼 눌렀을때 업데이트로 판매 상태를 판매 종료로 변경
+function updateTalentStatus() {
+    // talentNo 값 가져오기
+    var talentNo = $("#delete-btn").data('talentno');
+    if (confirm('정말로 게시물을 삭제하시겠습니까?')) {
+        // 컨트롤러 이동
+        location.href = '/talents/talent/updateStatus/' + talentNo;
+    }
+}
+
+
+
+/*
+ * TimeStamp형식으로의 현재 Date 변환
+ */
+function getNow(){
+	const now = new Date(Date.now());
+	const year = now.getFullYear();
+	const month = String(now.getMonth() + 1).padStart(2, '0');
+	const day = String(now.getDate()).padStart(2, '0');
+	const hours = String(now.getHours()).padStart(2, '0');
+	const minutes = String(now.getMinutes()).padStart(2, '0');
+	const seconds = String(now.getSeconds()).padStart(2, '0');
+	
+	const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	
+	return formattedDate;
+};
+
+//리뷰 인서트 
+function reviewInsert(talentNo){
+	if( $("#insert-content").val().trim() == ''){
+		alert('내용을 입력해주세요');
+		return;
+	};  
+	$.ajax({
+	    type : 'POST',
+	    url : "/talents/talent/" + talentNo + "/reviews",
+	    data : JSON.stringify({
+			talentNo 	: talentNo,
+			bambooScore : $("#insert-bambooScore").val(),
+			content 	: $("#insert-content").val(),
+			reviewDate 	: Date.now()
+   		}),
+	    contentType : "application/json",
+	    dataType :'json',
+	    success : function(review) {
+	    	$('#review-list').empty();
+			console.log(review);
+			review.forEach(function(review){
+	        	const li = $('<li>').appendTo('#review-list');
+	        	$('<span>').text(review.reviewerId).appendTo(li);
+	        	$('<span>').text(getNow()).appendTo(li);
+	        	$('<span>').text(review.bambooScore).appendTo(li);
+	        	$('<span>').text(review.content).appendTo(li);
+	        	location.reload();
+	        	
+	        	const modifyBtn = 
+	        	$('<button>').attr('type', 'button').attr('class', 'modifyReview')
+	            .attr('data-reviewNo', review.reviewNo).attr('data-content', review.content).text('수정');
+	        	
+				const deleteBtn = 
+				$('<button>').attr('type', 'button').attr('class', 'deleteReview').text('삭제');
+				$('<br>').appendTo(li);
+				modifyBtn.appendTo(li);
+				deleteBtn.appendTo(li);
+			}); 
+		},
+	    error : function(xhr, status, error) {
+	        console.log(xhr);
+	        alert('리뷰 작성에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+	    }
+	});
+}
+
+
+/* /* 별점 평균에 따라  밤부 스코어 이미지 출력 
+ $(function rivewImg() {
+     var starImages = ['bamboo0.png', 'bamboo0.5.png', 'bamboo1.png', 'bamboo1.5.png', 'bamboo2.png', 
+   	  'bamboo2.5.png', 'bamboo3.png', 'bamboo3.5.png', 'bamboo4.png', 'bamboo4.5.png', 'bamboo5.png'];
+     $('.review-bamboo-score').each(function(){
+     	
+         var score = parseFloat($(this).text());
+         console.log("score : " + score);
+         if (score > 5) score = 5; // score가 5보다 크면 5로 고정
+         var index;
+         if (score == 0) {
+           index = 0;
+         } else if (score == 0.5) {
+           index = 1;
+         } else if (score == 1) {
+           index = 2;
+         } else if (score == 1.5) {
+           index = 3;
+         } else if (score == 2) {
+           index = 4;
+         } else if (score == 2.5) {
+           index = 5;
+         } else if (score == 3) {
+           index = 6;
+         } else if (score == 3.5) {
+           index = 7;
+         } else if (score == 4) {
+           index = 8;
+         } else if (score == 4.5) {
+           index = 9;
+         } else { // score가 5일 때
+           index = 10;
+         }
+        console.log("index : " + index)
+         $(this).next('.bamboo-imges').attr('src', '/image/bambooScore/' + starImages[index]);
+    });
+ }); */
+
+
+
+
+
 $(document).on('click', '.modifyReview', function(){
 	// 기존에 있는 인서트 폼 숨기고 업데이트 폼 보여주기
 	$('#insert-review-form').hide();
@@ -352,15 +484,15 @@ function reviewInsert(talentNo){
 	if( $("#insert-content").val().trim() == ''){
 		alert('내용을 입력해주세요');
 		return;
-};  
+	};  
 	$.ajax({
 	    type : 'POST',
 	    url : "/talents/talent/" + talentNo + "/reviews",
 	    data : JSON.stringify({
 			talentNo 	: talentNo,
-			reviewerId 	: "kzwloppneba",
 			bambooScore : $("#insert-bambooScore").val(),
-			content 	: $("#insert-content").val()
+			content 	: $("#insert-content").val(),
+			reviewDate 	: Date.now()
    		}),
 	    contentType : "application/json",
 	    dataType :'json',
@@ -370,7 +502,7 @@ function reviewInsert(talentNo){
 			review.forEach(function(review){
 	        	const li = $('<li>').appendTo('#review-list');
 	        	$('<span>').text(review.reviewerId).appendTo(li);
-	        	$('<span>').text(review.reviewDate).appendTo(li);
+	        	$('<span>').text(getNow()).appendTo(li);
 	        	$('<span>').text(review.bambooScore).appendTo(li);
 	        	$('<span>').text(review.content).appendTo(li);
 	        	location.reload();
@@ -408,9 +540,9 @@ function sendUpdateReview(talentNo){
 		data : JSON.stringify({
 			talentNo 	: talentNo,
 		    reviewNo 	: reviewNo,
-		    reviewerId 	: "kzwloppneba",
 		    bambooScore	: $("#update-bambooScore").val(),
-		    content		: $("#update-content").val()
+		    content		: $("#update-content").val(),
+		    reviewDate 	: Date.now()
  		 }),
   		    contentType : "application/json",
   			dataType : 'json',
@@ -420,7 +552,7 @@ function sendUpdateReview(talentNo){
 				review.forEach(function(review){
 					const li = $('<li>').appendTo('#review-list');
 		        	$('<span>').text(review.reviewerId).appendTo(li);
-		        	$('<span>').text(review.reviewDate).appendTo(li);
+		        	$('<span>').text(getNow()).appendTo(li);
 		        	$('<span>').text(review.bambooScore).appendTo(li);
 		        	$('<span>').text(review.content).appendTo(li);
 		        	location.reload();
@@ -466,7 +598,7 @@ $(document).on('click', '.deleteReview', function() {
 				reviews.forEach(function(review){
 					const li = $('<li>').appendTo('#review-list');
 		        	$('<span>').text(review.reviewerId).appendTo(li);
-		        	$('<span>').text(review.reviewDate).appendTo(li);
+		        	$('<span>').text(getNow()).appendTo(li);
 		        	$('<span>').text(review.bambooScore).appendTo(li);
 		        	$('<span>').text(review.content).appendTo(li);
 			        location.reload();
@@ -492,6 +624,10 @@ $(document).on('click', '.deleteReview', function() {
 		});
 	}
 });
+
+
+
+
 </script>
 	
 	
@@ -511,6 +647,12 @@ $(document).on('click', '.deleteReview', function() {
 		avgBambooScore = 5;
 	}
 	$('#review-filter').text(avgBambooScore.toFixed(1) + ' / (' + reviewCount + ')');
+	
+	
+window.onload = function() {
+	console.log([[${memberId}]]);
+	};
+
 </script>
 </body>
 </html>
