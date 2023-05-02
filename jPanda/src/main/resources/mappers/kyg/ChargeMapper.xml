@@ -93,17 +93,28 @@
 	
 	<select id="selectTalentRefundAmount" parameterType="String" resultType="Long">
 	
-		SELECT NVL(sum(tr.refund_bamboo),0)
-		FROM talent_refund tr
-		LEFT JOIN bamboo_use bu
-		ON tr.purchase_no = bu.purchase_no
-		WHERE tr.refund_status = '환불완료' 
-		AND bu.buyer_id = #{memberId, jdbcType=VARCHAR}
+		SELECT		NVL(sum(tr.refund_bamboo),0)
+		FROM		talent_refund tr
+		LEFT JOIN	bamboo_use bu
+		ON			tr.purchase_no = bu.purchase_no
+		WHERE		tr.refund_status = '환불완료' 
+		AND			bu.buyer_id = #{memberId, jdbcType=VARCHAR}
 	
 	</select>
 	
 	<select id="selectPaymentList" parameterType="ChargePaymentDto" resultType="ChargePaymentDto">
+	
 		SELECT * FROM payment
+		
 	</select>
 	
+	<select id="selectChargeHistoryList" parameterType="ChargeHistoryDto" resultType="ChargeHistoryDto">
+	
+		SELECT  charge_date, payment_method, payment_amount
+		<!-- SELECT  * -->
+		FROM    bamboo_charge
+		WHERE   charger_id = #{chargerId, jdbcType=VARCHAR}
+		ORDER BY charge_date DESC
+		
+	</select>
 </mapper>

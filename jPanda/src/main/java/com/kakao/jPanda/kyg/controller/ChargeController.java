@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
+import com.kakao.jPanda.kyg.domain.ChargeHistoryDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
 import com.kakao.jPanda.kyg.service.ChargeService;
@@ -38,21 +38,32 @@ public class ChargeController {
 	
 	
 	/*
-	 * 메인페이지 및 결제수단, RATIO를 테이블에 List형식으로 나타냄
+	 * 메인페이지
+	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
+	 * 충전내역, chargeHistory를 테이블에 List형식으로 나타냄
 	 * Model	TB payment -> method, bonusRatio 
 	 * @param	Model
 	 * @return	kyg/chargePage
 	 */
+	
 	@GetMapping(value = "/")
-	public String paymentList(Model model) {
-		
+	public String chargePage(HttpSession session, ChargeHistoryDto chargeHistoryDto, Model model) {
+		String chargerId = (String) session.getAttribute("memberId");
 		PaymentDto selectMethodBonusDto = new PaymentDto();
-		log.info("ChargeContoller paymentList() Start...");
+		ChargeHistoryDto selectChargeHistoryDto = new ChargeHistoryDto();
+		log.info("ChargeContoller chargePage() Start...");
+		
+		selectChargeHistoryDto.setChargerId(chargerId);
+		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
 		
 		List<PaymentDto> getPaymentList = chargeService.findPaymentList(selectMethodBonusDto);
-		log.info("ChargeContoller paymentList() listPayment.size() -> {}", getPaymentList.size());
+		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
+		
+		List<ChargeHistoryDto> getChargeHistoryList = chargeService.findChargeHistoryList(selectChargeHistoryDto);
+		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getChargeHistoryList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
+		model.addAttribute("listChargeHistory", getChargeHistoryList);
 		
 		return "kyg/chargePage";
 	}
@@ -69,7 +80,7 @@ public class ChargeController {
 	@ResponseBody
 	@PostMapping("/charge") 
 	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto, HttpSession session) {
-		String chargerId = (String) session.getAttribute("loginId");
+		String chargerId = (String) session.getAttribute("memberId");
 		log.info("ChargeContoller charge() Start...");
 		log.info("ChargeContoller checkAvailableCoupon() chargerId -> {}", chargerId);
 		chargeDto.setChargerId(chargerId);
@@ -103,7 +114,7 @@ public class ChargeController {
 	@GetMapping(value = "/check-available-coupon")
 	@ResponseBody
 	public CouponUseDto checkAvailableCoupon(HttpSession session, CouponUseDto couponUseDto) {
-		String memberId = (String) session.getAttribute("loginId");
+		String memberId = (String) session.getAttribute("memberId");
 		CouponUseDto checkedcouponUseDto = new CouponUseDto();				
 		log.info("ChargeContoller checkAvailableCoupon() Start...");
 		log.info("ChargeContoller checkAvailableCoupon() memberId -> {}", memberId);
@@ -137,7 +148,7 @@ public class ChargeController {
 	@ResponseBody
 	//public String  totalBamboo(@PathVariable String memberId, HttpSession session) {
 	public String  totalBamboo(HttpSession session) {
-		String memberId = (String) session.getAttribute("loginId");
+		String memberId = (String) session.getAttribute("memberId");
 		log.info("ChargeContoller totalBamboo Start...");
 		log.info("ChargeContoller totalBamboo() memberId -> {}", memberId);
 		

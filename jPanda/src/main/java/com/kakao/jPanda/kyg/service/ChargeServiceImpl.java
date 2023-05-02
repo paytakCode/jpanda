@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.kyg.dao.ChargeDao;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
+import com.kakao.jPanda.kyg.domain.ChargeHistoryDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
@@ -152,6 +153,17 @@ public class ChargeServiceImpl implements ChargeService {
 		log.info("ChargeServiceImpl findPaymentList() selectPaymentList.size() -> {}", selectPaymentList.size());
 		
 		return selectPaymentList;
+	}
+
+	@Override
+	public List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto selectChargeHistoryDto) {
+		List<ChargeHistoryDto> selectChargeHistoryList = null;
+		log.info("ChargeServiceImpl findChargeHistoryList() Start...");
+		
+		selectChargeHistoryList = chargeDao.selectChargeHistoryList(selectChargeHistoryDto);
+		log.info("ChargeServiceImpl findPaymentList() selectChargeHistoryList.size() -> {}", selectChargeHistoryList.size());
+		
+		return selectChargeHistoryList;
 	}
 
 
