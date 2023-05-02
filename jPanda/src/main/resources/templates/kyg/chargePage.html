@@ -171,6 +171,7 @@
 			</div>
 			
 			<div class="payment-method">
+			
 				<input type="radio" id="payment-method-radio1" name="paymentMethod" value="휴대폰" checked="checked">
 				<label for="payment-method-radio1">휴대폰</label>
 				<input type="radio" id="payment-method-radio2" name="paymentMethod" value="상품권">
@@ -179,6 +180,7 @@
 				<label for="payment-method-radio3">신용카드</label>
 				<input type="radio" id="payment-method-radio4" name="paymentMethod" value="계좌이체">
 				<label for="payment-method-radio4">계좌이체</label>
+				
 			</div>
 				
 		</div>	<!-- /id="charge-contents" -->
@@ -312,7 +314,8 @@
 	
 	function couponInsertOnBlur(){
 		let couponCode = $("#coupon-code").val(); 
-		if(couponCode == '' || couponCode == null)  {
+		let couponStatus = $('#coupon-status').val();
+		if(couponCode == '' || couponCode == null || couponStatus == '1')  {
 			$("#request-pay-button").show();
 		} else {
 			$('#onchange-check-coupon').html('쿠폰검사를 클릭해주세요.').css('color', 'green');
@@ -336,7 +339,8 @@
 		          $('#result-check-coupon').html('사용 가능한 쿠폰입니다. 쿠폰이 적용되었습니다.').css('color', 'green');
 		          $('#coupon-status').val('1');
 		          $('#coupon-code').attr('readonly',true);
-		  	      $('#check-coupon').attr('readonly',true);
+ 				  $('#check-coupon').prop('disabled', true);
+		  	      //$('#check-coupon').attr('readonly',true);
 		          //$('#charge-bamboo').attr('readonly',true);
 		  	      //$('#charge-money').prop('disabled', true);
 		  	      //$('input[type=radio]').attr('disabled', true);
@@ -463,7 +467,8 @@
 	            type: "POST", 
 	            data: JSON.stringify({
 	            						couponCode	  : couponCode,
-	            						chargeMoney	  : realChargeMoney,
+	            						//chargeMoney	  : realChargeMoney,
+	            						paymentAmount : realChargeMoney,
 	            						paymentMethod : paymentMethod,
 	            						chargeBamboo  : chargeBamboo
 					}),

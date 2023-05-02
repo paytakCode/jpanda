@@ -15,11 +15,11 @@ public interface ChargeService {
 
 	Long getAvailAmountCoupon(CouponUseDto couponUseDto);
 
-	Long findTotalBamboo(String memberId);
+	Long findTotalBambooByMemberId(String memberId);
 
-	List<PaymentDto> findPaymentList(PaymentDto paymentDto);
+	List<PaymentDto> findPaymentList();
 
-	List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto chargeHistoryListDto);
+	List<ChargeDto> findBambooChargeListbyChargerId(String chargerId);
 
 
 

@@ -45,25 +45,49 @@ public class ChargeController {
 	 * @param	HttpSession, ChargeHistoryDto, Model
 	 * @return	kyg/chargePage
 	 */
+//	@GetMapping(value = "")
+//	public String chargePage(HttpSession session, ChargeHistoryDto chargeHistoryDto, Model model) {
+//		String chargerId = (String) session.getAttribute("memberId");
+//		PaymentDto paymentDto = new PaymentDto();
+//		//ChargeHistoryDto selectChargeHistoryDto = new ChargeHistoryDto();
+//		ChargeHistoryDto chargeHistoryListDto = new ChargeHistoryDto();
+//		log.info("ChargeContoller chargePage() Start...");
+//		
+//		chargeHistoryListDto.setChargerId(chargerId);
+//		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
+//		
+//		List<PaymentDto> getPaymentList = chargeService.findPaymentList(paymentDto);
+//		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
+//		
+//		List<ChargeHistoryDto> getChargeHistoryList = chargeService.findChargeHistoryList(chargeHistoryListDto);
+//		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getChargeHistoryList.size());
+//		
+//		model.addAttribute("listPayment", getPaymentList);
+//		model.addAttribute("listChargeHistory", getChargeHistoryList);
+//		
+//		return "kyg/chargePage";
+//	}
+	
 	@GetMapping(value = "")
-	public String chargePage(HttpSession session, ChargeHistoryDto chargeHistoryDto, Model model) {
+	public String chargePage(HttpSession session, Model model) {
 		String chargerId = (String) session.getAttribute("memberId");
-		PaymentDto paymentDto = new PaymentDto();
+		//PaymentDto paymentDto = new PaymentDto();
 		//ChargeHistoryDto selectChargeHistoryDto = new ChargeHistoryDto();
-		ChargeHistoryDto chargeHistoryListDto = new ChargeHistoryDto();
+		ChargeDto chargeDto = new ChargeDto();
 		log.info("ChargeContoller chargePage() Start...");
 		
-		chargeHistoryListDto.setChargerId(chargerId);
+		chargeDto.setChargerId(chargerId);
 		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
 		
-		List<PaymentDto> getPaymentList = chargeService.findPaymentList(paymentDto);
+		List<PaymentDto> getPaymentList = chargeService.findPaymentList();
 		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
 		
-		List<ChargeHistoryDto> getChargeHistoryList = chargeService.findChargeHistoryList(chargeHistoryListDto);
-		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getChargeHistoryList.size());
+		//List<chargeDto> getChargeHistoryList = chargeService.findChargeHistoryList(chargerId);
+		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeListbyChargerId(chargerId);
+		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getBambooChargeList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
-		model.addAttribute("listChargeHistory", getChargeHistoryList);
+		model.addAttribute("listChargeHistory", getBambooChargeList);
 		
 		return "kyg/chargePage";
 	}
@@ -143,18 +167,18 @@ public class ChargeController {
 	 */
 	@GetMapping(path = "/members/total-bamboo")
 	@ResponseBody
-	public String  totalBamboo(HttpSession session) {
+	public String  totalBambooByMemberId(HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
-		log.info("ChargeContoller totalBamboo Start...");
-		log.info("ChargeContoller totalBamboo() memberId -> {}", memberId);
+		log.info("ChargeContoller totalBambooByMemberId Start...");
+		log.info("ChargeContoller totalBambooByMemberId() memberId -> {}", memberId);
 		
-		Long foundTotalBamboo = chargeService.findTotalBamboo(memberId);
+		Long foundTotalBambooByMemberId = chargeService.findTotalBambooByMemberId(memberId);
 		
-		String  foundTotalBambooStr =  Long.toString(foundTotalBamboo);
+		String  foundTotalBambooByMemberIdStr =  Long.toString(foundTotalBambooByMemberId);
 		
-		log.info("ChargeContoller totalBamboo calculatedTotalBamboo -> {}", foundTotalBamboo);
+		log.info("ChargeContoller totalBambooByMemberId calculatedTotalBamboo -> {}", foundTotalBambooByMemberIdStr);
 		
-		return foundTotalBambooStr;
+		return foundTotalBambooByMemberIdStr;
 	}
 	
 	

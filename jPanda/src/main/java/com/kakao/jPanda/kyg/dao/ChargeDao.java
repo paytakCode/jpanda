@@ -20,15 +20,15 @@ public interface ChargeDao {
 
 	CouponDto selectCouponByCouponCode(String couponCode);
 
-	Long selectChargeBambooAmount(String memberId);
+	Long selectChargeBambooAmountByMemberId(String memberId);
 
-	Long selectBambooUseAmount(String memberId);
+	Long selectBambooUseAmountByMemberId(String memberId);
 
-	Long selectTalentRefundAmount(String memberId);
+	Long selectTalentRefundAmountByMemberId(String memberId);
 
-	List<PaymentDto> selectPaymentList(PaymentDto paymentDto);
+	List<PaymentDto> selectPaymentList();
 
-	List<ChargeHistoryDto> selectChargeHistoryList(ChargeHistoryDto chargeHistoryListDto);
+	List<ChargeDto> selectBambooChargeListbyChargerId(String chargerId);
 
 	
 	

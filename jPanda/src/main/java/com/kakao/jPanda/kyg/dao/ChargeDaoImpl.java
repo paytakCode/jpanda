@@ -133,65 +133,65 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	// findTotalBamboo 계산 DAO
 	@Override
-	public Long selectChargeBambooAmount(String memberId) {
-		log.info("ChargeDaoImpl selectChargeBambooAmount() Start...");
-		log.info("ChargeDaoImpl selectChargeBambooAmount() memberId -> {}", memberId);
+	public Long selectChargeBambooAmountByMemberId(String memberId) {
+		log.info("ChargeDaoImpl selectChargeBambooAmountByMemberId() Start...");
+		log.info("ChargeDaoImpl selectChargeBambooAmountByMemberId() memberId -> {}", memberId);
 		
-		Long selectChargeBambooAmountResult = (long) 0;
+		Long selectChargeBambooAmountByMemberIdResult = (long) 0;
 		
 		try {
-			selectChargeBambooAmountResult = sqlSession.selectOne("selectChargeBambooAmount", memberId);
-			log.info(" ChargeDaoImpl selectChargeBambooAmount -> " + selectChargeBambooAmountResult);		
+			selectChargeBambooAmountByMemberIdResult = sqlSession.selectOne("selectChargeBambooAmountByMemberId", memberId);
+			log.info(" ChargeDaoImpl selectChargeBambooAmountByMemberId -> " + selectChargeBambooAmountByMemberIdResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectChargeBambooAmount() Exception -> " + e.getMessage(), e);
+			log.error("ChargeDaoImpl selectChargeBambooAmountByMemberId() Exception -> " + e.getMessage(), e);
 		}
 		
-		return selectChargeBambooAmountResult;
+		return selectChargeBambooAmountByMemberIdResult;
 	}
 
 	@Override
-	public Long selectBambooUseAmount(String memberId) {
+	public Long selectBambooUseAmountByMemberId(String memberId) {
 		log.info("ChargeDaoImpl selectBambooUseAmount() Start...");
 		log.info("ChargeDaoImpl selectBambooUseAmount() memberId -> {}", memberId);
 		
-		Long selectBambooUseAmountResult = (long) 0;
+		Long selectBambooUseAmountByMemberIdResult = (long) 0;
 		
 		try {
-			selectBambooUseAmountResult = sqlSession.selectOne("selectBambooUseAmount", memberId);
-			log.info(" ChargeDaoImpl selectBambooUseAmount -> " + selectBambooUseAmountResult);		
+			selectBambooUseAmountByMemberIdResult = sqlSession.selectOne("selectBambooUseAmountByMemberId", memberId);
+			log.info(" ChargeDaoImpl selectBambooUseAmountByMemberId -> " + selectBambooUseAmountByMemberIdResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectBambooUseAmount() Exception -> " + e.getMessage(), e);
+			log.error("ChargeDaoImpl selectBambooUseAmountByMemberId() Exception -> " + e.getMessage(), e);
 		}
 		
-		return selectBambooUseAmountResult;
+		return selectBambooUseAmountByMemberIdResult;
 	}
 
 	@Override
-	public Long selectTalentRefundAmount(String memberId) {
-		log.info("ChargeDaoImpl selectTalentRefundAmount() Start...");
-		log.info("ChargeDaoImpl selectTalentRefundAmount() memberId -> {}", memberId);
+	public Long selectTalentRefundAmountByMemberId(String memberId) {
+		log.info("ChargeDaoImpl selectTalentRefundAmountByMemberId() Start...");
+		log.info("ChargeDaoImpl selectTalentRefundAmountByMemberId() memberId -> {}", memberId);
 		
-		Long selectTalentRefundAmountResult = (long) 0;
+		Long selectTalentRefundAmountByMemberIdResult = (long) 0;
 		
 		try {
-			selectTalentRefundAmountResult = sqlSession.selectOne("selectTalentRefundAmount", memberId);
-			log.info("ChargeDaoImpl selectTalentRefundAmount -> {}", selectTalentRefundAmountResult);		
+			selectTalentRefundAmountByMemberIdResult = sqlSession.selectOne("selectTalentRefundAmountByMemberId", memberId);
+			log.info("ChargeDaoImpl selectTalentRefundAmountByMemberId -> {}", selectTalentRefundAmountByMemberIdResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectTalentRefundAmount() Exception -> {}", e.getMessage(), e);
+			log.error("ChargeDaoImpl selectTalentRefundAmountByMemberId() Exception -> {}", e.getMessage(), e);
 		}
 		
-		return selectTalentRefundAmountResult;
+		return selectTalentRefundAmountByMemberIdResult;
 	}
 
 	@Override
-	public List<PaymentDto> selectPaymentList(PaymentDto paymentDto) {
+	public List<PaymentDto> selectPaymentList() {
 		log.info("ChargeDaoImpl selectPaymentList() Start...");
-		log.info("ChargeDaoImpl selectPaymentList() paymentDto.toString() -> {}", paymentDto.toString());
+		//log.info("ChargeDaoImpl selectPaymentList() paymentDto.toString() -> {}", paymentDto.toString());
 		
 		List<PaymentDto> selectPaymentListResult = null;
 		log.info("ChargeDaoImpl selectPaymentList Start...");
 		try {
-			selectPaymentListResult = sqlSession.selectList("selectPaymentList", paymentDto);	 
+			selectPaymentListResult = sqlSession.selectList("selectPaymentList");	 
 			log.info("ChargeDaoImpl selectPaymentList() selectPaymentListResult.size() -> {}", selectPaymentListResult.size());
 		} catch (Exception e) {
 			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
@@ -201,20 +201,20 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public List<ChargeHistoryDto> selectChargeHistoryList(ChargeHistoryDto chargeHistoryListDto) {
+	public List<ChargeDto> selectBambooChargeListbyChargerId(String chargerId) {
 		log.info("ChargeDaoImpl selectChargeHistoryList() Start...");
-		log.info("ChargeDaoImpl selectChargeHistoryList() selectChargeHistoryList.toString() -> {}", chargeHistoryListDto.toString());
+		log.info("ChargeDaoImpl selectChargeHistoryList() chargerId -> {}", chargerId);
 		
-		List<ChargeHistoryDto> selectChargeHistoryListResult = null;
+		List<ChargeDto> selectBambooChargeListbyChargerIdResult = null;
 		log.info("ChargeDaoImpl selectPaymentList Start...");
 		try {
-			selectChargeHistoryListResult = sqlSession.selectList("selectChargeHistoryList", chargeHistoryListDto);
-			log.info("ChargeDaoImpl selectPaymentList() selectChargeHistoryList.size() -> {}", selectChargeHistoryListResult.size());
+			selectBambooChargeListbyChargerIdResult = sqlSession.selectList("selectBambooChargeListbyChargerId", chargerId);
+			log.info("ChargeDaoImpl selectPaymentList() selectChargeHistoryList.size() -> {}", selectBambooChargeListbyChargerIdResult.size());
 		} catch (Exception e) {
 			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
 		}
 		
-		return selectChargeHistoryListResult;
+		return selectBambooChargeListbyChargerIdResult;
 	}
 
 }
