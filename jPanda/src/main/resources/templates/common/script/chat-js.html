@@ -192,8 +192,8 @@
 		
 		//접속
 		$(function(){
-			if(memberId == 'guest'){
-				$('chat-btn').hide();
+			if(memberId == 'guest' || memberId == null){
+				$('#chat-btn').hide();
 			} else {
 				connect(memberId);
 			}
