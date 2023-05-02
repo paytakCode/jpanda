@@ -129,7 +129,7 @@ table {
 		 <input type="hidden" name="_method" value="put">
 		<h1>재능 등록</h1>
 		<hr>
-		<input type="hidden" name="sellerId" value="test">
+		<input type="hidden" name="sellerId" id="seller-id">
 		<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
 	
 	<div id="category" class="category">
@@ -237,7 +237,7 @@ table {
 			            count++;
 	        		}
 	        	}else if($(this).attr('id') == 'discount-bamboo'){
-	        		if($('#bamboo').val() >= $('#sale-bamboo').val()){
+	        		if(parseInt($('#bamboo').val()) >= parseInt($('#sale-bamboo').val())){
 			            count++;
 	        		}
 	        	}else{
@@ -345,7 +345,7 @@ table {
     	var saleBambooPrice = $('#sale-bamboo').val();
     
     	var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
-    	if (isNaN(discountPercent) || discountPercent === Infinity) {
+    	if (isNaN(discountPercent) || discountPercent === Infinity || discountPercent < 0) {
       		discountPercent = 0;
 	    }
 	    

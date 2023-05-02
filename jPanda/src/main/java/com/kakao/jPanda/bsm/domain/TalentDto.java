@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import lombok.Data;
 
 @Data
-public class Talent {
+public class TalentDto {
 	private Long 		talentNo;
 	private String 		sellerId;
 	private Long 		upperCategoryNo;
@@ -16,7 +16,7 @@ public class Talent {
 	private Long  		bamboo;
 	private Long  		saleBamboo;
 	private String 		summary;
-	private String 		status;
+	private String 		talentStatus;
 	private Long  		viewCount;
 	private Timestamp 	regDate;
 	private Timestamp 	statusDate;

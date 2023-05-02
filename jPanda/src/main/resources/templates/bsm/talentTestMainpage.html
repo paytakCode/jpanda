@@ -342,13 +342,13 @@ p {
 	});
 	</script>
 	<script th:inline="javascript">
-	$(function(){
-		if([[${loginId}]] == "guest"){
+		if([[${#session.getAttribute("memberId")}]] == null){
 			$('#login-out').html('<a class="login-check" href="/login">로그인</a>');
-		}else {
+		}else{
 			$('#login-out').html('<a class="login-check" href="/logout">로그아웃</a>');
-			
 		}
+	$(function(){
+	
 	});
 	</script>
 </body>

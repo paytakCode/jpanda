@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import lombok.Data;
 
 @Data
-public class Notice {
+public class NoticeDto {
 	private Long 		noticeNo;
 	private String 		title;
 	private String 		content;

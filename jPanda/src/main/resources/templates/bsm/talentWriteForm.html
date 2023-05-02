@@ -3,9 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>재능 등록</title>
-<script th:if="${login} == guest" th:inline="javascript">
+<!-- <script th:if="${login} == guest" th:inline="javascript">
 		alert("로그인이 필요한 서비스 입니다.");
 		location.href = "/login";
+</script> -->
+<script th:inline="javascript">
+	if([[${#session.getAttribute("memberId")}]] == null){
+		alert("로그인이 필요한 서비스 입니다.");
+		location.href = "/login";
+	}
 </script>
 <style type="text/css">
 /* Set font family and size */
@@ -128,8 +134,7 @@ table {
 		<form action="/talent/talent" method="post" name="frm" onsubmit="return check()">
 		<h1>재능 등록</h1>
 		<hr>
-	<!-- 임시 아이디 설정 PK라 INSERT시 MEMBER 테이블에 ID가 존재해야함 -->
-	<input type="hidden" name="sellerId" id="member10">
+	<input type="hidden" name="sellerId" id="seller-id">
 	<input type="hidden" name="regDate" id="reg-date">
 	<!-- statusDate로 변경 -->
 	
@@ -253,7 +258,7 @@ table {
 			            count++;
 	        		}
 	        	}else if($(this).attr('id') == 'discount-bamboo'){
-	        		if($('#bamboo').val() >= $('#sale-bamboo').val()){
+	        		if(parseInt($('#bamboo').val()) >= parseInt($('#sale-bamboo').val())){
 			            count++;
 	        		}
 	        	}else{
@@ -358,7 +363,7 @@ table {
 	    var saleBambooPrice = $('#sale-bamboo').val();
 	    
 	    var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
-	    if (isNaN(discountPercent) || discountPercent === Infinity) {
+	    if (isNaN(discountPercent) || discountPercent === Infinity || discountPercent < 0) {
 	    	discountPercent = 0;
 	    }
 	    $('#discount-bamboo').val(discountPercent);
@@ -394,7 +399,7 @@ table {
 		}
 	});
 	
-	$('#seller-id').val([[${login}]]);
+	$('#seller-id').val([[${#session.getAttribute("memberId")}]]);
 	</script>
 	</div> <!-- container -->
 </body>
