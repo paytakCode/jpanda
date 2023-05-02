@@ -1,0 +1,51 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="headerJsFragment">
+	<script th:inline="javascript">
+		$(function(){
+			let memberId = [[${#session.getAttribute("memberId")}]];
+			if(memberId == "" || memberId == null){
+				$("#login-image").attr("src", "/image/login-before.png");
+				
+				var liElement1 = $("<li></li>");
+				var aElement1 = $("<a></a>", {
+					class: "dropdown-item",
+					href: "/login",
+					text: "로그인"
+				});
+				liElement1.append(aElement1);
+				$(".dropdown-menu").append(liElement1);
+			  
+				var liElement2 = $("<li></li>");
+				var aElement2 = $("<a></a>", {
+					class: "dropdown-item",
+					href: "/signup",
+					text: "회원가입"
+				});
+				liElement2.append(aElement2);
+				$(".dropdown-menu").append(liElement2);
+			  
+			} else {
+				$("#login-image").attr("src", "/image/login-after.png");
+				
+				var liElement1 = $("<li></li>");
+				var aElement1 = $("<a></a>", {
+					class: "dropdown-item",
+					href: "/mypage",
+					text: "마이페이지"
+				});
+				liElement1.append(aElement1);
+				$(".dropdown-menu").append(liElement1);
+				
+				var liElement2 = $("<li></li>");
+				var aElement2 = $("<a></a>", {
+					class: "dropdown-item",
+					href: "/logout",
+					text: "로그아웃"
+				});
+				liElement2.append(aElement2);
+				$(".dropdown-menu").append(liElement2);
+			}
+		});
+	</script>
+</div> <!-- headerJsFragment -->
+</html>

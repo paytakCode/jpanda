@@ -19,7 +19,7 @@ public interface MemberDao {
 
 	public MemberDto login(MemberDto memberDto);
 
-	public MemberDto selectMember(String id);
+	public MemberDto selectMember(String memberId);
 
 	public Object updatePasswordById(String memberId, String encryptedPassword);
 

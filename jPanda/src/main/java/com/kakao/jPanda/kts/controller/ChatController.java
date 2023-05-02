@@ -26,21 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class ChatController {
 	
-	private final SqlSession sqlsession; // 임시
 	private final ChatService chatService;
-	private final MemberService memberservice;
 	
 	@Autowired
-	public ChatController(ChatService chatService, SqlSession sqlsession, MemberService memberservice) {
+	public ChatController(ChatService chatService) {
 		this.chatService = chatService;
-		this.sqlsession = sqlsession;
-		this.memberservice = memberservice;
-	}
-	
-	@GetMapping("/chat-test")
-	public String chatTestView(HttpSession session) {
-		log.info("[chatTestView] session id : {}", session.getId());
-		return "kts/chatTestView";
 	}
 	
 	@ResponseBody
@@ -78,29 +68,9 @@ public class ChatController {
 		}
 	}
 	
-	//테스트용 추후 삭제 예정
-	@ResponseBody
-	@GetMapping("/members")
-	public List<Member> memberList(){
-		log.info("[memberList]");
-		List<Member> memberList = sqlsession.selectList("selectMemberList");
-		return memberList;
-	}
-	
-	//모든 계정 아이디와 비밀번호 동일하게 변경하는 임시 메소드
-	@ResponseBody
-	@GetMapping("/members-init-pwd")
-	public String memberPasswordInit() {
-	    List<Member> memberList = sqlsession.selectList("selectMemberList");
-	    for(Member member : memberList) {
-	        memberservice.updatePasswordById(member.getMemberId(), member.getMemberId());
-	    }
-	    return "End";
-	}
-	
-	//chat-layout Test용
-	@GetMapping("/chat-layout")
+	//default Layout Test용
+	@GetMapping("/default-layout")
 	public String chatLayout() {
-	    return "/common/chat-sample";
+	    return "/common/default";
 	}
 }

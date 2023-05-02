@@ -3,6 +3,7 @@ package com.kakao.jPanda.kyg.service;
 import java.util.List;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
+import com.kakao.jPanda.kyg.domain.ChargeHistoryDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
 
@@ -17,6 +18,8 @@ public interface ChargeService {
 	Long findTotalBamboo(String memberId);
 
 	List<PaymentDto> findPaymentList(PaymentDto selectMethodBonusDto);
+
+	List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto selectChargeHistoryDto);
 
 
 

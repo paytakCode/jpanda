@@ -21,10 +21,10 @@ public class PageController {
 		model = talentService.findMainPageTalents(model);
 		
 		String loginId = "";
-		if(session.getAttribute("loginId") == null) {
+		if(session.getAttribute("memberId") == null) {
 			loginId = "guest";
 		}else {
-			loginId = (String) session.getAttribute("loginId");
+			loginId = (String) session.getAttribute("memberId");
 		}
 		model.addAttribute("loginId", loginId);
 		return "bsm/talentTestMainpage";

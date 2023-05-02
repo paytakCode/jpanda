@@ -1,0 +1,205 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="chatJsFragment">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script th:inline="javascript">
+	
+		//전역 변수 선언	
+		const memberId = [[${#session.getAttribute("memberId")}]];
+		let selectedChat = null;
+		let stompClient = null;
+		let blinkInterval = null;
+	
+		//WebSocket(STOMP) 연결 함수
+		function connect(memberId) {
+		    var socket = new SockJS('/stomp/chat?' + memberId);
+		    stompClient = Stomp.over(socket);
+		    stompClient.connect({}, function (frame) {
+		        console.log('Connected: ' + frame);
+		        loadChatByMemberId(memberId);
+		        subscribe(memberId);
+		    });
+		}
+		
+		//Direct Message 를 받을 STOMP Url 구독
+		function subscribe(memberId){
+			stompClient.subscribe('/direct/' + memberId, function (response) {
+				let messageInfo = JSON.parse(response.body);
+				if ($('#selected-member').val() == messageInfo.senderId){
+			        const chatMessageElem = $("<div>").text(messageInfo.message).addClass("from-other");
+			        $("#chat-content").append(chatMessageElem);
+				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+				}
+			    
+			    if($("#chat-console").css("display") == 'none'){
+			    	$("#chat-btn").css("animation", "blink 0.5s infinite");
+			    }
+			});
+		}
+		
+		//연결 끊기
+		function disconnect() {
+		    if (stompClient !== null) {
+		        stompClient.disconnect();
+		        stompClient = null;
+		    }
+		    console.log("Disconnected");
+		}
+	
+		//채팅 버튼 클릭 시 채팅 팝업 띄우기
+		$('#chat-btn').click(function () {
+			if (stompClient !== null) { //연결 된 상태에서만 채팅 콘솔 작동 가능
+				$("#chat-btn").css("animation", "");
+			    $('#chat-console').toggle();
+			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+			}
+		});
+	
+		//선택된 채팅 상대 표시 업데이트
+		function updateSelectedChat(element) {    
+			$('.list-group-item').removeClass('active');
+			$(element).addClass('active');
+		}
+	
+		//채팅 대화 내용 업데이트
+		function updateChatContent() {
+			$.ajax({
+				url: "/chats",
+				method: "GET",
+				data : {memberId : memberId},
+				dataType : "json",
+				success: function(chatList) {
+					console.log("chatList =>" + chatList);
+					$("#chat-content").empty();
+					
+					chatList.forEach((chat, index) => {
+						
+						if (chat.receiverId == selectedChat) {
+							const chatElem = $("<div>").text(chat.message).addClass("from-me");
+		                    $("#chat-content").append(chatElem);
+						} else if(chat.senderId == selectedChat){
+							const chatElem = $("<div>").text(chat.message).addClass("from-other");
+		                    $("#chat-content").append(chatElem);
+						}
+						
+					});
+	
+				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.log('updateChatContent Failed');
+				}
+			});
+		}
+	
+	
+		//채팅창 열기
+		$("#chat-btn").click(function() {
+			$("#chat-console").css("display", "block");
+		});
+	
+	
+		//채팅창 닫기
+		$(function(){
+			$(document).on("click", function(event) {
+				if (!$(event.target).closest("#chat-console").length &&
+					!$(event.target).is("#chat-btn")) {
+					$("#chat-console").hide();
+				}
+			});
+		});
+		
+		//Enter 키로 메시지 전송
+		$("#chat-input").keyup(function(e) {
+		    if (e.keyCode == 13 && selectedChat && $("#chat-input").val().trim() != "") {
+		    	
+		    	message = JSON.stringify({
+		   	            'receiverId': $('#selected-member').val(),
+		   	            'senderId' : memberId,
+		   	            'message' : $('#chat-input').val(),
+		   	            'chatDate' : Date.now()
+		   	        })
+		    	
+		    	saveMessage(message);
+		    	
+		    	var chatMessageElem = $("<div>");
+		    	chatMessageElem.text($("#chat-input").val());
+		    	chatMessageElem.addClass("from-me");
+		    	$("#chat-content").append(chatMessageElem);
+		    	$("#chat-input").val("");
+		    }
+		});
+		
+		//message를 DB에 저장하는 함수
+		function saveMessage(message){
+			$.ajax({
+				url: "/chat" ,
+				method: "POST",
+				data : message,
+				contentType : "application/json",
+				dataType : "json",
+				success: function(result) {
+					console.log("result =>" + result);
+			   	    stompClient.send("/direct/" + selectedChat, {}, message);
+			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+					return result;
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.log('saveMessage Failed');
+				}
+			});
+		}
+	
+		//채팅 상대 리스트 업데이트
+		function updateChatPartnerList(memberId) {
+			return new Promise(function(resolve, reject) {
+				$.ajax({
+					url: "/chats/" + memberId + "/partners",
+					method: "GET",
+					dataType : "json",
+					success: function(partnerList) {
+						$("#chat-member-list").empty();
+						console.log("partnerList =>" + partnerList);
+						partnerList.forEach((partner, index) => {
+							let chatPartnerElem = $("<li>");
+							chatPartnerElem.text(partner.name);
+							chatPartnerElem.attr('value', partner.memberId);
+							chatPartnerElem.attr('class', 'list-group-item');
+							chatPartnerElem.click(function() { 
+								selectedChat = partner.memberId;
+								updateSelectedChat($(this));
+								updateChatContent();
+							});
+							 $("#chat-member-list").append(chatPartnerElem);  
+						});
+						resolve();
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log('updateChatPartnerList Failed');
+					}
+				});
+			});
+		}
+	
+		//접속한 유저의 채팅내역 불러오는 함수
+		function loadChatByMemberId(memberId) {
+			updateChatPartnerList(memberId).then(function(){
+				selectedChat = $("#chat-member-list").children().first().attr("value");
+				updateSelectedChat($("#chat-member-list").children().first());
+				updateChatContent();
+			});
+		}
+		
+		//접속
+		$(function(){
+			if(memberId == 'guest'){
+				$('chat-btn').hide();
+			} else {
+				connect(memberId);
+			}
+		});
+		
+	</script>
+</div> <!-- chatJsFragment -->
+</html>
+        

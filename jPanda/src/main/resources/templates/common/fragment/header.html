@@ -1,22 +1,5 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="headerFragment">
-<style>
-  #login-image { 
-	  height: 50px;
-	  width: auto;
-  }
-  #logo-image { 
-	  height: 100px;
-	  width: auto;
-  }
-  .navbar-brand:hover{
-  	cursor: pointer;
-  }
-  #header {
-  	height: 10%;
-  	width: 100%;
-  }
-</style>
 <nav id="header" class="navbar navbar-expand-lg bg-white">
 	<div class="container-fluid justify-content-between">
  		<img class="navbar-brand"  id="logo-image" src="/image/logo.png" onclick="location.href='/main'">
@@ -41,52 +24,5 @@
 		</div>
 	</div>
 </nav>
-	<script th:inline="javascript">
-		$(function(){
-			let memberId = [[${#session.getAttribute("memberId")}]];
-			if(memberId == "" || memberId == null){
-				$("#login-image").attr("src", "/image/login-before.png");
-				
-				var liElement1 = $("<li></li>");
-				var aElement1 = $("<a></a>", {
-					class: "dropdown-item",
-					href: "/login",
-					text: "로그인"
-				});
-				liElement1.append(aElement1);
-				$(".dropdown-menu").append(liElement1);
-			  
-				var liElement2 = $("<li></li>");
-				var aElement2 = $("<a></a>", {
-					class: "dropdown-item",
-					href: "/signup",
-					text: "회원가입"
-				});
-				liElement2.append(aElement2);
-				$(".dropdown-menu").append(liElement2);
-			  
-			} else {
-				$("#login-image").attr("src", "/image/login-after.png");
-				
-				var liElement1 = $("<li></li>");
-				var aElement1 = $("<a></a>", {
-					class: "dropdown-item",
-					href: "/mypage",
-					text: "마이페이지"
-				});
-				liElement1.append(aElement1);
-				$(".dropdown-menu").append(liElement1);
-				
-				var liElement2 = $("<li></li>");
-				var aElement2 = $("<a></a>", {
-					class: "dropdown-item",
-					href: "/logout",
-					text: "로그아웃"
-				});
-				liElement2.append(aElement2);
-				$(".dropdown-menu").append(liElement2);
-			}
-		});
-	</script>
   </div> <!-- headerFragment -->
 </html>

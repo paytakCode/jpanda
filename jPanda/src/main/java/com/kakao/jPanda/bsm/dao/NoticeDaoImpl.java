@@ -6,11 +6,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kakao.jPanda.bsm.domain.Notice;
-import com.kakao.jPanda.bsm.domain.Pager;
+import com.kakao.jPanda.bsm.domain.NoticeDto;
+import com.kakao.jPanda.bsm.domain.PagerDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -18,34 +20,34 @@ public class NoticeDaoImpl implements NoticeDao {
 	private final SqlSession session;
 	
 	@Override
-	public int selectNoticeCountByPager(Pager pager) {
+	public int selectNoticeCountByPager(PagerDto pager) {
 		int result = 0;
 		try {
 			result = session.selectOne("selectNoticeCountByPager", pager);
 		} catch (Exception e) {
-			System.out.println("NoticeDaoImpl selectNoticeCountByPager e.getMessage() ->" + e.getMessage());
+			log.error("NoticeDaoImpl selectNoticeCountByPager e.getMessage() ->" + e.getMessage());
 		}
 		return result;
 	}
 
 	@Override
-	public List<Notice> selectNoticesByPager(Pager pager) {
-		List<Notice> noticeList = null;
+	public List<NoticeDto> selectNoticesByPager(PagerDto pager) {
+		List<NoticeDto> noticeList = null;
 		try {
 			noticeList = session.selectList("selectNoticesByPager", pager);
 		} catch (Exception e) {
-			System.out.println("NoticeDaoImpl selectNoticesByPager e.getMessage() ->" + e.getMessage());
+			log.error("NoticeDaoImpl selectNoticesByPager e.getMessage() ->" + e.getMessage());
 		}
 		return noticeList;
 	}
 
 	@Override
-	public Notice selectNoticeByNoticeNo(Long noticeNo) {
-		Notice notice = null;
+	public NoticeDto selectNoticeByNoticeNo(Long noticeNo) {
+		NoticeDto notice = null;
 		try {
-			notice = session.selectOne("selectNoticeByNoticeNoRegist", noticeNo);
+			notice = session.selectOne("selectRegistNoticeByNoticeNo", noticeNo);
 		} catch (Exception e) {
-			System.out.println("NoticeDaoImpl selectNoticeByNoticeNo e.getMessage() ->" + e.getMessage());
+			log.error("NoticeDaoImpl selectNoticeByNoticeNo e.getMessage() ->" + e.getMessage());
 		}
 		return notice;
 	}
