@@ -1,13 +1,10 @@
 package com.kakao.jPanda.kts.service.impl;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.kakao.jPanda.kts.dao.ChatDao;
 import com.kakao.jPanda.kts.domain.Chat;
-import com.kakao.jPanda.kts.domain.ChatMessage;
 import com.kakao.jPanda.kts.domain.Partner;
 import com.kakao.jPanda.kts.service.ChatService;
 
@@ -22,9 +19,9 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	@Override
-	public List<ChatMessage> findChatMessageListByMemberId(String memberId) {
-		List<ChatMessage> selectedChatMessageList = chatDao.selectChatMessageListByMemberId(memberId);
-		return selectedChatMessageList;
+	public List<Chat> findChatListByMemberId(String memberId) {
+		List<Chat> selectedChatList = chatDao.selectChatListByMemberId(memberId);
+		return selectedChatList;
 	}
 
 	@Override
