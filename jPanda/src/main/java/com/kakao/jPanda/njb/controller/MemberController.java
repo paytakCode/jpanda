@@ -17,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -157,11 +158,11 @@ public class MemberController {
     	}
     }
     
-    
-    @GetMapping("/logout")
+    @ResponseBody
+    @DeleteMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // 세션 무효화
-        return "redirect:/login"; // 로그아웃 후 리다이렉트할 페이지
+        session.invalidate();
+        return "Logout Success";
     }
    
     @PostMapping("/withdrawal")
@@ -184,8 +185,16 @@ public class MemberController {
             // 로그인이 되어있는 경우
             MemberDto memberInfo = memberservice.findMember(memberId);
             model.addAttribute("memberInfo", memberInfo);
+            model.addAttribute("editMode", false);
         }
         return "njb/mypage";
+    }
+    @PostMapping("/updateMember")
+    public String editMemberInfo(@ModelAttribute("memberInfo") MemberDto memberInfo, HttpSession session) {
+        
+    	memberservice.editMemberInfo(memberInfo);
+        session.setAttribute("memberInfo", memberInfo);
+        return "redirect:/mypage";
     }
 
   }

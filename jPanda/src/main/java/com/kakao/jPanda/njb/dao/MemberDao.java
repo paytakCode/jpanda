@@ -25,5 +25,7 @@ public interface MemberDao {
 
 	public boolean withdrawMemberById(String memberId, String encryptedPassword);
 
+	public void updateMemberInfo(MemberDto memberInfo);
+
 	
 }	

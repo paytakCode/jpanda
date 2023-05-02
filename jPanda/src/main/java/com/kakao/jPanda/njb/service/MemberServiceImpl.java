@@ -104,6 +104,12 @@ public class MemberServiceImpl implements MemberService {
 	        return false;
 	    }
 	}
+
+	@Override
+	public void editMemberInfo(MemberDto memberInfo) {
+		
+		memberDao.updateMemberInfo(memberInfo);
+	}
 	
 }
 
