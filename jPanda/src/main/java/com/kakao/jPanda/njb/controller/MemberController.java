@@ -143,9 +143,9 @@ public class MemberController {
     	boolean loginResult = memberservice.login(memberDto);
     	if(loginResult) {
     		session.setAttribute("memberId", memberDto.getMemberId());
-    		String memberId = (String) session.getAttribute("memberId");
-    		System.out.println(memberId);
-            MemberDto member = memberservice.selectMember(memberDto.getMemberId());
+    		String memberId = (String) session.getAttribute("memberId");   		
+            MemberDto member = memberservice.selectMember(memberId);
+            System.out.println(member);
             if(memberId.equals("admin")) {
             	return "redirect:/admin";
             } 
@@ -171,6 +171,17 @@ public class MemberController {
         memberservice.withdrawal(memberId, password);
         session.invalidate(); // 세션 무효화
         return "redirect:/login"; // 탈퇴 후 리다이렉트할 페이지
+    }
+    
+    @GetMapping("/mypage")
+    public String myPage(Model model, HttpSession session) {
+        String memberId = (String) session.getAttribute("memberId");
+        if (memberId != null) {
+            // 로그인이 되어있는 경우
+            MemberDto memberInfo = memberservice.selectMember(memberId);
+            model.addAttribute("memberInfo", memberInfo);
+        }
+        return "njb/mypage";
     }
 
   }

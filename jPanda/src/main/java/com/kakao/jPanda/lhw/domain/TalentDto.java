@@ -1,5 +1,6 @@
 package com.kakao.jPanda.lhw.domain;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Talent {
+public class TalentDto {
 	// 판매 게시판
 	private Long talentNo; 
 	private String sellerId;
@@ -21,10 +22,10 @@ public class Talent {
 	private Long bamboo;
 	private Long saleBamboo;
 	private String summary;
-	private String status;
+	private String talentStatus;
 	private Long viewCount;
-	private Date regDate;
-	private Date statusDate;
+	private Timestamp regDate;
+	private Timestamp statusDate;
 	
 	// 리뷰 테이블용 
 	private Double bambooScore;

@@ -100,6 +100,7 @@ public class TalentController {
 		
 		String sellerId = talent.getSellerId();
 		String login = "";
+
 		if( session.getAttribute("memberId") == null || !sellerId.equals((String) session.getAttribute("memberId"))) {
 			login = "user";
 		}else {
