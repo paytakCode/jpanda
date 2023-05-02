@@ -103,7 +103,6 @@
 		SELECT  charge_date, payment_method, payment_amount, charge_bamboo 
 		FROM    bamboo_charge
 		WHERE   charger_id = #{chargerId, jdbcType=VARCHAR}
-		<!-- WHERE   charger_id = #{chargerId} -->
 		ORDER BY charge_date DESC
 		
 	</select>

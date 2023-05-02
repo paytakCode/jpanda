@@ -162,7 +162,6 @@
 				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
 				충전 밤부	: <input type="number" id = "charge-bamboo" name="chargeBamboo" required="required" value="5"><p/>
 				<p style="font-size:12px;">결제금액이 0원인경우 결제가 되지 않습니다.</p>
-				<!-- 쿠폰 입력	: <input type="text" id = "coupon-code" name="couponCode" onchange="couponInsertOnChange()" placeholder="쿠폰입력"> -->
 				쿠폰 입력	: <input type="text" id = "coupon-code" name="couponCode" onblur="couponInsertOnBlur()" placeholder="쿠폰입력">
 				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
 				<div><span id="onchange-check-coupon" style="font-size:12px;"></span></div>
@@ -296,23 +295,7 @@
 		updateRealChargeMoney();											
 	});
 	
-
-	/*
 	// 쿠폰입력 onchange 쿠폰입력시 사용가능쿠폰 자동 검증 후 결제기능 노출
-	function couponInsertOnChange(){
-		let couponCode = $("#coupon-code").val(); 
-		if(couponCode = '' || couponCode == null)  {
-			$("#request-pay-button").show();
-		} else {
-			$('#onchange-check-coupon').html('쿠폰검사를 클릭해주세요.').css('color', 'green');
-			$('#check-coupon').click(function(){
-				$('#onchange-check-coupon').hide();
-			});
-	    	$("#request-pay-button").hide();
-		}
- 	}
-	*/
-	
 	function couponInsertOnBlur(){
 		let couponCode = $("#coupon-code").val(); 
 		let couponStatus = $('#coupon-status').val();
@@ -341,10 +324,6 @@
 		          $('#coupon-status').val('1');
 		          $('#coupon-code').attr('readonly',true);
  				  $('#check-coupon').prop('disabled', true);
-		  	      //$('#check-coupon').attr('readonly',true);
-		          //$('#charge-bamboo').attr('readonly',true);
-		  	      //$('#charge-money').prop('disabled', true);
-		  	      //$('input[type=radio]').attr('disabled', true);
 		          $("#request-pay-button").show();
 		  	      
 		  	      // 가져온 쿠폰액을 #coupon-discount에 할당

@@ -31,7 +31,6 @@
 		<typeAlias alias="ChargeCouponUseDto" type="com.kakao.jPanda.kyg.domain.CouponUseDto"/>
 		<typeAlias alias="ChargeCouponDto" type="com.kakao.jPanda.kyg.domain.CouponDto"/>
 		<typeAlias alias="ChargePaymentDto" type="com.kakao.jPanda.kyg.domain.PaymentDto"/>
-		<typeAlias alias="ChargeHistoryDto" type="com.kakao.jPanda.kyg.domain.ChargeHistoryDto"/>
 		
 		<!-- 판매등록, 메인페이지 -->
 		<typeAlias alias="RegistCategory" type="com.kakao.jPanda.bsm.domain.CategoryDto"/>

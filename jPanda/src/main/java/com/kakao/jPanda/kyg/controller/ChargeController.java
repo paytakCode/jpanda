@@ -44,29 +44,6 @@ public class ChargeController {
 	 * @param	HttpSession, ChargeHistoryDto, Model
 	 * @return	kyg/chargePage
 	 */
-//	@GetMapping(value = "")
-//	public String chargePage(HttpSession session, ChargeHistoryDto chargeHistoryDto, Model model) {
-//		String chargerId = (String) session.getAttribute("memberId");
-//		PaymentDto paymentDto = new PaymentDto();
-//		//ChargeHistoryDto selectChargeHistoryDto = new ChargeHistoryDto();
-//		ChargeHistoryDto chargeHistoryListDto = new ChargeHistoryDto();
-//		log.info("ChargeContoller chargePage() Start...");
-//		
-//		chargeHistoryListDto.setChargerId(chargerId);
-//		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
-//		
-//		List<PaymentDto> getPaymentList = chargeService.findPaymentList(paymentDto);
-//		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
-//		
-//		List<ChargeHistoryDto> getChargeHistoryList = chargeService.findChargeHistoryList(chargeHistoryListDto);
-//		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getChargeHistoryList.size());
-//		
-//		model.addAttribute("listPayment", getPaymentList);
-//		model.addAttribute("listChargeHistory", getChargeHistoryList);
-//		
-//		return "kyg/chargePage";
-//	}
-	
 	@GetMapping(value = "")
 	public String chargePage(HttpSession session, Model model) {
 		String chargerId = (String) session.getAttribute("memberId");

@@ -3,7 +3,6 @@ package com.kakao.jPanda.kyg.dao;
 import java.util.List;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
-import com.kakao.jPanda.kyg.domain.ChargeHistoryDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
