@@ -1,6 +1,5 @@
 package com.kakao.jPanda.bsm.controller;
 
-import java.security.acl.NotOwnerException;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +130,6 @@ public class TalentController {
 	@GetMapping("/notice/{noticeNo}/detail")
 	public String noticeDetailByNoticeNo(@PathVariable Long noticeNo, Model model) {
 		Notice notice = noticeService.findNoticeByNoticeNo(noticeNo);
-		System.out.println("notice -> " + notice);
 		model.addAttribute("notice", notice);
 		return "bsm/noticeDetail";
 	}
