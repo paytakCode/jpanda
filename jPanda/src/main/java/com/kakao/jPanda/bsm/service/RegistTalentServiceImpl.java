@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kakao.jPanda.bsm.dao.TalentDao;
-import com.kakao.jPanda.bsm.domain.Category;
-import com.kakao.jPanda.bsm.domain.Talent;
+import com.kakao.jPanda.bsm.domain.CategoryDto;
+import com.kakao.jPanda.bsm.domain.TalentDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,13 +22,13 @@ public class RegistTalentServiceImpl implements TalentService{
 	private final TalentDao talentDao;
 	
 	@Override
-	public List<Category> findCategorys() {
-		List<Category> categoryList = talentDao.selectCategorys();
+	public List<CategoryDto> findCategorys() {
+		List<CategoryDto> categoryList = talentDao.selectCategorys();
 		return categoryList;
 	}
 	
 	@Override
-	public String addTalent(Talent talent) {
+	public String addTalent(TalentDto talent) {
 		String resultStr = "";
 		int result = talentDao.insertTalent(talent);
 		if(result > 0) {
@@ -99,14 +99,14 @@ public class RegistTalentServiceImpl implements TalentService{
 	}
 	
 	@Override
-	public Talent findTalentByTalentNo(Long talentNo) {
-		Talent talent = talentDao.selectTalentBytalentNo(talentNo);
+	public TalentDto findTalentByTalentNo(Long talentNo) {
+		TalentDto talent = talentDao.selectTalentBytalentNo(talentNo);
 		
 		return talent;
 	}
 
 	@Override
-	public String modifyTalent(Talent talent) {
+	public String modifyTalent(TalentDto talent) {
 		String resultStr = "";
 		int result = talentDao.updateTalent(talent);
 		if(result > 0) {
@@ -125,22 +125,22 @@ public class RegistTalentServiceImpl implements TalentService{
 	}
 
 	@Override
-	public List<Talent> findBestSellerTalents() {
+	public List<TalentDto> findBestSellerTalents() {
 		return talentDao.selectBestSellerTalents();
 	}
 
 	@Override
-	public List<Talent> findTopRatedTalents() {
+	public List<TalentDto> findTopRatedTalents() {
 		return talentDao.selectTopRatedTalents();
 	}
 
 	@Override
-	public List<Talent> findNewTrendTalents() {
+	public List<TalentDto> findNewTrendTalents() {
 		return talentDao.selectNewTrendTalents();
 	}
 
 	@Override
-	public List<Talent> findRandomTalents() {
+	public List<TalentDto> findRandomTalents() {
 		return talentDao.selectRandomTalents();
 	}
 

@@ -7,93 +7,95 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kakao.jPanda.bsm.domain.Category;
-import com.kakao.jPanda.bsm.domain.Talent;
+import com.kakao.jPanda.bsm.domain.CategoryDto;
+import com.kakao.jPanda.bsm.domain.TalentDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @Transactional
 @RequiredArgsConstructor
 public class RegistTalentDaoImpl implements TalentDao{
 	private final SqlSession session;
 	@Override
-	public List<Category> selectCategorys() {
-		List<Category> categoryList = null;
+	public List<CategoryDto> selectCategorys() {
+		List<CategoryDto> categoryList = null;
 		try {
 			categoryList = session.selectList("selectCategorys");
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl selectCategorys e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl selectCategorys e.getMessage() ->" + e.getMessage());
 		}
 		return categoryList;
 	}
 	@Override
-	public int insertTalent(Talent talent) {
+	public int insertTalent(TalentDto talent) {
 		int result = 0;
 		try {
 			result = session.insert("insertTalent", talent);
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl insertTalent e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl insertTalent e.getMessage() ->" + e.getMessage());
 		}
 		return result;
 	}
 	@Override
-	public Talent selectTalentBytalentNo(Long talentNo) {
-		Talent talent = null;
+	public TalentDto selectTalentBytalentNo(Long talentNo) {
+		TalentDto talent = null;
 		try {
 			talent = session.selectOne("selectRegistTalentBytalentNo", talentNo);
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl selectTalentBytalentNo e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl selectTalentBytalentNo e.getMessage() ->" + e.getMessage());
 		}
 		return talent;
 	}
 	@Override
-	public int updateTalent(Talent talent) {
+	public int updateTalent(TalentDto talent) {
 		int result = 0;
 		try {
 			result = session.update("updateRegistTalent", talent);
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl updateTalent e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl updateTalent e.getMessage() ->" + e.getMessage());
 		}
 		return result;
 	}
 	@Override
-	public List<Talent> selectBestSellerTalents() {
-		List<Talent> selectBestSellerTalents = null;
+	public List<TalentDto> selectBestSellerTalents() {
+		List<TalentDto> selectBestSellerTalents = null;
 		try {
 			selectBestSellerTalents = session.selectList("selectBestSellerTalents");
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl selectBestSellerTalents e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl selectBestSellerTalents e.getMessage() ->" + e.getMessage());
 		}
 		return selectBestSellerTalents;
 	}
 	@Override
-	public List<Talent> selectTopRatedTalents() {
-		List<Talent> selectTopRatedTalents = null;
+	public List<TalentDto> selectTopRatedTalents() {
+		List<TalentDto> selectTopRatedTalents = null;
 		try {
 			selectTopRatedTalents = session.selectList("selectTopRatedTalents");
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl selectTopRatedTalentTalents e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl selectTopRatedTalentTalents e.getMessage() ->" + e.getMessage());
 		}
 		return selectTopRatedTalents;
 	}
 	@Override
-	public List<Talent> selectNewTrendTalents() {
-		List<Talent> selectNewTrendTalents = null;
+	public List<TalentDto> selectNewTrendTalents() {
+		List<TalentDto> selectNewTrendTalents = null;
 		try {
 			selectNewTrendTalents = session.selectList("selectNewTrendTalents");
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl selectNewTrendTalents e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl selectNewTrendTalents e.getMessage() ->" + e.getMessage());
 		}
 		return selectNewTrendTalents;
 	}
 	@Override
-	public List<Talent> selectRandomTalents() {
-		List<Talent> selectRandomTalents = null;
+	public List<TalentDto> selectRandomTalents() {
+		List<TalentDto> selectRandomTalents = null;
 		try {
 			selectRandomTalents = session.selectList("selectRandomTalents");
 		} catch (Exception e) {
-			System.out.println("TalentDaoImpl selectRandomTalents e.getMessage() ->" + e.getMessage());
+			log.error("TalentDaoImpl selectRandomTalents e.getMessage() ->" + e.getMessage());
 		}
 		return selectRandomTalents;
 	}

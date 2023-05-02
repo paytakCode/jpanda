@@ -3,7 +3,7 @@ package com.kakao.jPanda.bsm.domain;
 import lombok.Data;
 
 @Data
-public class Pager {
+public class PagerDto {
 	// 전체 글의 갯수
 	private int totalCount;			
 	// 전체 페이지의 수
