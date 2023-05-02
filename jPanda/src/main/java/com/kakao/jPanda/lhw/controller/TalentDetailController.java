@@ -49,7 +49,6 @@ public class TalentDetailController {
 	}
 	
 	
-	
 	// 리뷰 인서트
 	@ResponseBody
 	@PostMapping("/talent/{talentNo}/reviews")
@@ -108,6 +107,7 @@ public class TalentDetailController {
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
 	
+	
 	// 리뷰 딜리트
 	@ResponseBody
 	@DeleteMapping("/talent/{talentNo}/reviews/{reviewNo}")
@@ -118,6 +118,7 @@ public class TalentDetailController {
 		System.out.println("리뷰 삭제 완료시1-> " + reviewRemove);
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
+	
 	
 	// 게시글 삭제 버튼 눌렀을때 게시글 상태 판매 종료로 전환
 	@GetMapping("/talent/updateStatus/{talentNo}")

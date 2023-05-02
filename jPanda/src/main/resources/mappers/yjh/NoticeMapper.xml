@@ -24,7 +24,7 @@
 		update 	notice
 		set 	title = #{title},
 				content = #{content},
-				reg_date = sysdate
+				reg_date = #{regDate}
 		where 	notice_no = #{noticeNo}
 	</update>
 	

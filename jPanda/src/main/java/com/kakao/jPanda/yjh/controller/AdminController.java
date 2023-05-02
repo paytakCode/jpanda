@@ -49,7 +49,7 @@ public class AdminController {
 			
 		} else {
 			return "yjh/home";
-		}	
+		}
 	}
 	
 	//notice
@@ -253,12 +253,13 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@GetMapping(value = "/company-sales/years")
-	public List<CompanySalesDto> companySalesListByYears(@RequestParam Timestamp startDate, @RequestParam Timestamp endDate) throws ParseException {
+	public List<CompanySalesDto> companySalesListByYears(@RequestParam String periodicData, @RequestParam Timestamp startDate, @RequestParam Timestamp endDate) throws ParseException {
 		log.info("Company-sales Controller companySalesListByYears() start");
 		log.info("startDate : "+startDate);
 		log.info("endDate : "+endDate);
+		log.info("periodicData : "+periodicData);
 		
-		List<CompanySalesDto> csList = adminService.findCompanySalesByStartDateAndEndDate(startDate, endDate);
+		List<CompanySalesDto> csList = adminService.findCompanySalesByStartDateAndEndDate(startDate, endDate, periodicData);
 		log.info("csList : "+csList.toString());
 		
 		return csList;
@@ -299,6 +300,14 @@ public class AdminController {
 		}
 		
 		return result;
+	}
+	
+	@GetMapping(value = "/talent/{sellerId}")
+	public String talentDetailBySellerId(@PathVariable("sellerId") String sellerId) {
+		log.info("Talent Controller talentDetailBySellerId start()");
+		log.info("sellerId : "+sellerId);
+		
+		return "";
 	}
 
 	//talent-refund

@@ -20,9 +20,11 @@
 			</tr>
         	<tr th:each="talent : ${talentList}">
             	<td><input type="checkbox" class="checkbox" name="talentNo" th:value="${talent.talentNo}"></td>
-            	<td th:text="${talent.sellerId}"></td>
+            	<td th:text="${talent.sellerId}"><input type="hidden" class="hid" name="sellerId" th:value="${talent.sellerId}"></td>
            	 	<td th:text="${talent.talentNo}"></td>
-            	<td th:text="${talent.title}"></td>
+            	<td>
+            		<a class="detail" th:text="${talent.title}"></a>
+            	</td>
             	<td th:text="${talent.summary}"></td>
            		<td th:text="${talent.regDate}"></td>
             	<td th:text="${talent.talentStatus}"></td>
@@ -35,7 +37,9 @@
 		</table>
 </body>
 <script type="text/javascript">
-	$(".btn").on("click", function(){
+	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
+
+ 	$(".btn").on("click", function(){
 		let talentNo = $("input.checkbox:checked").map(function(){
 			return $(this).val();
 		}).get();
@@ -48,9 +52,18 @@
 		let talentDto = [];
 		let regDate = Date.now();
 		let statusDate = Date.now();
+		let sellerId = [];
+		
+		talentNo.forEach(function(item) {
+			let tr = $(`input.checkbox[value='${item}']`).closest("tr");
+			let td = tr.children();
+			sellerId.push(td.eq(1).text());
+			});
+		
+		console.log(sellerId);
 		
 		for(var i = 0; i < talentNo.length; i++) {
-			talentDto.push({regDate: regDate, statusDate: statusDate, talentNo: talentNo[i]});
+			talentDto.push({regDate: regDate, statusDate: statusDate, talentNo: talentNo[i], sellerId: sellerId[i]});
 		}
 		
 		$.ajax({
@@ -60,6 +73,7 @@
 			data : JSON.stringify(talentDto),
 			success : function(result) {
 				if(result > 0) {
+					webSocket.send(talentDto);
 					alert("성공적으로 반영되었습니다");
 					location.href="/admin/talents";
 				} else {

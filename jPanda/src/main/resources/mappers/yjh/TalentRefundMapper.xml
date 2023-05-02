@@ -15,8 +15,8 @@
 	<update id="updateTalentRefundToSuccessByPurchaseNosAndStatus" parameterType="AdminTalentRefund">
 		update 	talent_refund
 		set		refund_status = #{refundStatus},
-				approve_date = sysdate
-		where	purchase_no in #{purchaseNo}	
+				approve_date = #{approveDate}
+		where	purchase_no in #{purchaseNo}
 	</update>
 	
 	<update id="updateTalentRefundToCompanionByPurchaseNosAndStatus" parameterType="AdminTalentRefund">

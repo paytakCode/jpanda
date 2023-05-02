@@ -134,16 +134,24 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//company-sales
 	@Override
-	public List<CompanySalesDto> selectCompanySalesByYYMMDate(CompanySalesDto companySalesDto) {
-		log.info("Dao selectCompanySalesAtBambooChargeByYYMMDate() start");
-		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesByYYMMDate", companySalesDto);
+	public List<CompanySalesDto> selectCompanySalesByYYYYDate(CompanySalesDto companySalesDto) {
+		log.info("Dao selectCompanySalesByYYYYDate() start");
+		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesByYYYYDate", companySalesDto);
 		
 		return csList;
 	}
 	
 	@Override
-	public List<CompanySalesDto> selectCompanyByDDDate(CompanySalesDto companySalesDto) {
-		log.info("Dao selectCompanySalesAtBambooChargeByDDDate() start");
+	public List<CompanySalesDto> selectCompanySalesByMMDate(CompanySalesDto companySalesDto) {
+		log.info("Dao selectCompanySalesByMMDate() start");
+		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanySalesByMMDate", companySalesDto);
+		
+		return csList;
+	}
+	
+	@Override
+	public List<CompanySalesDto> selectCompanySalesByDDDate(CompanySalesDto companySalesDto) {
+		log.info("Dao selectCompanySalesByDDDate() start");
 		List<CompanySalesDto> csList = sqlSession.selectList("selectCompanyByDDDate", companySalesDto);
 		
 		return csList;

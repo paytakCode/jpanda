@@ -1,10 +1,8 @@
 package com.kakao.jPanda.kts.controller;
 
 import java.util.List;
-
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,41 +13,32 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.kakao.jPanda.kts.domain.Chat;
-import com.kakao.jPanda.kts.domain.ChatMessage;
 import com.kakao.jPanda.kts.domain.Member;
 import com.kakao.jPanda.kts.domain.Partner;
 import com.kakao.jPanda.kts.service.ChatService;
-
+import com.kakao.jPanda.njb.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 public class ChatController {
 	
-	private final SqlSession sqlsession; // 임시
 	private final ChatService chatService;
 	
 	@Autowired
-	public ChatController(ChatService chatService, SqlSession sqlsession) {
+	public ChatController(ChatService chatService) {
 		this.chatService = chatService;
-		this.sqlsession = sqlsession;
-	}
-	
-	@GetMapping("/chat-test")
-	public String chatTestView(HttpSession session) {
-		log.info("[chatTestView] session id : {}", session.getId());
-		return "kts/chatTestView";
 	}
 	
 	@ResponseBody
-	@GetMapping("/chats/{memberId}/chatMessages")
-	public List<ChatMessage> chatMessageListByMemberId(@PathVariable String memberId){
-		log.info("[chatMessageListByMemberId]");
-		List<ChatMessage> foundChatMessageList = chatService.findChatMessageListByMemberId(memberId);	
-		return foundChatMessageList;
+	@GetMapping("/chats")
+	public List<Chat> chatListByMemberId(@RequestParam String memberId){
+		log.info("[chatListByMemberId]");
+		List<Chat> foundChatList = chatService.findChatListByMemberId(memberId);	
+		return foundChatList;
 	}
 	
 	@ResponseBody
@@ -62,9 +51,9 @@ public class ChatController {
 	
 	@MessageMapping("/message")
 	@SendToUser(value = "/direct/{memberId}", broadcast = false)
-	public ChatMessage sendMessage(ChatMessage message) {
-		log.info("[sendMessage] MessageInfo {}", message.toString());
-		return message;
+	public Chat sendMessage(Chat chat) {
+		log.info("[sendMessage] chatInfo {}", chat.toString());
+		return chat;
 	}
 	
 	@ResponseBody
@@ -79,12 +68,9 @@ public class ChatController {
 		}
 	}
 	
-	//테스트용 추후 삭제 예정
-	@ResponseBody
-	@GetMapping("/members")
-	public List<Member> memberList(){
-		log.info("[memberList]");
-		List<Member> memberList = sqlsession.selectList("selectMemberList");
-		return memberList;
+	//default Layout Test용
+	@GetMapping("/default-layout")
+	public String chatLayout() {
+	    return "/common/default";
 	}
 }

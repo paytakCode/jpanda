@@ -9,12 +9,15 @@
 </head>
 <body>
 	<h1>(주)재능판다 매출 현황</h1>
-		<input type="date" class="start-period"> ~ 
-		<input type="date" class="end-period" oninput="callData()">
+		<label>연간 매출<input type="radio" class="periodicData" th:name="periodicData" th:value="Y"></label>
+		<label>월간 매출<input type="radio" class="periodicData" th:name="periodicData" th:value="M"></label>
+		<label>일간 매출<input type="radio" class="periodicData" th:name="periodicData" th:value="D"></label><br><br>
+		<label>매출 집계 시작일<input type="date" class="start-period"> ~ </label>
+		<label>매출 집계 종료일<input type="date" class="end-period" oninput="callData()"></label><br><br>
 	
-	<div id="chartContainer" style="width: 900px; height: 900px;">
+	<div id="chartContainer" style="width: 900px; height: 900px; display: block; margin: 0 auto;">
 		<!--차트가 그려질 부분-->
-		<canvas id="myChart">
+		<canvas id="myChart" style="display: block; margin: 0 auto;">
 			
 		</canvas>
 	</div>
@@ -55,14 +58,17 @@
 		$("#myChart").remove();
 		$("#chartContainer").append('<canvas id="myChart"></canvas>');
 
-		const startPeriod = $(".start-period");
-		const startPeriodValue = startPeriod.val();
+		let startPeriod = $(".start-period");
+		let startPeriodValue = startPeriod.val();
 
-		const endPeriod = $(".end-period");
-		const endPeriodValue = endPeriod.val();
+		let endPeriod = $(".end-period");
+		let endPeriodValue = endPeriod.val();
 
-		const startDate = getStartDate(startPeriodValue);
-		const endDate = getEndDate(endPeriodValue);
+		let startDate = getStartDate(startPeriodValue);
+		let endDate = getEndDate(endPeriodValue);
+		
+		let periodicData = $("input.periodicData:checked").val();
+		
 
 		if (!startDate) {
 			alert("시작일을 입력해주세요");
@@ -70,11 +76,13 @@
 			$(".start-period").focus();
 			return false;
 		}
+		
 		$.ajax({
 				url : "/admin/company-sales/years",
-				type : "GET",
+				method : "GET",
 				data : {startDate : startDate,
-						endDate : endDate
+						endDate : endDate,
+						periodicData : periodicData
 						},
 				success : function(csList) {
 						var bcCountList = [];
