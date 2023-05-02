@@ -20,7 +20,7 @@ public class TalentDto {
 	private Long  		viewCount;
 	private Timestamp 	regDate;
 	private Timestamp 	statusDate;
-	
+			
 	private String 		name;
 	private double 		reviewAvgScore;
 	private Long 		reviewCount;
