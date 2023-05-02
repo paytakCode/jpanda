@@ -72,9 +72,9 @@ public class MemberDaoImpl implements MemberDao {
 
 
 	@Override
-	public MemberDto selectMember(String id) {
+	public MemberDto selectMember(String memberId) {
 
-		return sqlSession.selectOne("selectMemberById",id);
+		return sqlSession.selectOne("selectMemberById",memberId);
 	
 	}
 

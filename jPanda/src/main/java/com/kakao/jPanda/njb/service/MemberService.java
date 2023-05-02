@@ -15,7 +15,7 @@ public interface MemberService {
 	String findPwByIdAndEmail(String memberId, String email);
 	String findIdByNameAndEmail(String name, String email);
 	boolean login(MemberDto memberDto);
-	MemberDto selectMember(String id);
+	MemberDto selectMember(String memberId);
 	void updatePasswordById(String memberId, String newPw);
 	void withdrawal(String memberId, String password);
 
