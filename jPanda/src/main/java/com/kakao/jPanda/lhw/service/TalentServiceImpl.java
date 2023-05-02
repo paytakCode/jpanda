@@ -2,9 +2,11 @@ package com.kakao.jPanda.lhw.service;
 
 import java.util.List;
 
+
 import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.lhw.dao.TalentDao;
+import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
@@ -30,11 +32,6 @@ public class TalentServiceImpl implements TalentService {
 	// 리뷰 인서트
 	@Override
 	public int addReview(ReviewDto review) {
-		
-		
-		
-		
-		
 		return talentDao.insertReview(review);
 	}
 	
@@ -50,8 +47,15 @@ public class TalentServiceImpl implements TalentService {
 		return talentDao.deleteReview(review);
 	}
 
+	// 재능 삭제(업데이트)
 	@Override
 	public int updateTalentStatus(Long talentNo) {
 		return talentDao.updateTalent(talentNo);
+	}
+	
+	// 리뷰 인서트 검증
+	@Override
+	public List<BambooUseDto> findBambooUseListByTalentNo(Long talentNo) {
+		return talentDao.selectBambooUseListByTalentNo(talentNo);
 	}
 }
