@@ -63,7 +63,7 @@ public class MemberServiceImpl implements MemberService {
 	    memberDto.setPassword(encryptedPassword);
 		MemberDto loginMemberDto = memberDao.login(memberDto);
   
-		System.out.println(loginMemberDto);
+		System.out.println("loginMemberDto = "+loginMemberDto);
 		if(loginMemberDto != null) {
 			return true;
 		}else {
@@ -72,10 +72,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberDto selectMember(String id) {
+	public MemberDto selectMember(String memberId) {
 
 		
-			return memberDao.selectMember(id);
+			return memberDao.selectMember(memberId);
 		
 	}
 
