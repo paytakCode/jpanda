@@ -28,7 +28,7 @@ public interface AdminService {
 	Map<String, Integer> addCoupon(CouponDto couponDto);
 	
 	//company-sales
-	List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(Timestamp startDate, Timestamp endDate);
+	List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(Timestamp startDate, Timestamp endDate, String periodicData);
 	
 	//talent
 	List<TalentDto> findTalent();

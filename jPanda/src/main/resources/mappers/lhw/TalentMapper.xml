@@ -78,10 +78,18 @@
 		WHERE review_no = #{reviewNo}
 	</delete>
 	
+	<!-- 게시글 삭제(업데이트) -->
 	<update id="updateTalent" parameterType="Long">
 		UPDATE talent SET talent_status = '판매종료'
 		WHERE talent_no = #{talentNo}
 	</update>
+	
+	<!-- 리뷰 인서트 검증 -->
+	<select id="selectBambooUseListByTalentNo" resultType="BoardBambooUse" parameterType="Long">
+		SELECT *
+		FROM bamboo_use
+		WHERE talent_no = #{talentNo}
+	</select>
 	
 </mapper>
 

@@ -36,6 +36,9 @@ public class CompanySalesDto {
 	private String exchangeStatus;
 	private Long exchangePaymentAmount;
 	
+	//기간 설정
+	private String periodicData;
+	
 	//기준 날짜
 	private Timestamp startDate;
 	private Timestamp endDate;

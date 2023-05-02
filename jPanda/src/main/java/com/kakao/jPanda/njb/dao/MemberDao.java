@@ -23,7 +23,7 @@ public interface MemberDao {
 
 	public Object updatePasswordById(String memberId, String encryptedPassword);
 
-	public void deleteMemberById(String memberId, String encryptedPassword);
+	public boolean withdrawMemberById(String memberId, String encryptedPassword);
 
 	
 }	

@@ -1,7 +1,5 @@
 
 
-
-
 <!-- 
 	로그인이 안되어 있을시에 로그인이 필요하다는 메세지만 나오고
 	로그인시 회원정보나
@@ -12,20 +10,25 @@
 
  -->
 
-
-
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>마이페이지</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+
 <style type="text/css">
-    div {
+/*     div {
         width: 100%;
         height: 100vh;
         
         border: 1px solid rgb(248, 248, 248);
-    }
+    } */
     div.left {
         width: 30%;
         float: left;
@@ -43,31 +46,17 @@
         background: rgb(250, 252, 252);
     }
 
-
 .left,right{
     text-align: center;
     width: 460px;
     margin: auto;
 }
-#logout-btn, #withdrawal-btn, #login-btn{
-    width:115px;
-    background-color: black;
-    border: none;
-    color:#fff;
-    font-size: 15px;
-    outline:none;
-    cursor: pointer;
-}
+
 /* ahref 밑줄없애기 */
 a {
     text-decoration: none;
     color:black;
     
-}
-ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
 }
 .left {
   display: flex;
@@ -75,38 +64,29 @@ ul {
   align-items: center;
 }
 
-.login-out-btn-wrap,
 .withdrawal-btn-wrap {
   margin-top: auto;
   margin-bottom: 10px;
 }
-.login-out-btn-wrap {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-</style>
 
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-    <h1 align="center">마이페이지</h1>
-    	    <span class="login-out-btn-wrap">
-	        <button type="button" th:if="${session.memberId == null}" id="login-btn">로그인</button>
-	        <button type="button" th:if="${session.memberId != null}" id="logout-btn">로그아웃</button>
-	     </span> 
+	</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+   <h1 align="center">마이페이지</h1>
         <div class="left" align="center">
-        <img src="/image/basic.png" alt="기본사진">
-           <ul>   
-              <li>내프로필</li>
-              <li>계정설정</li>
-              <li>거래내역</li>
-           </ul>
-
-	     <span class="withdrawal-btn-wrap" th:if="${session.memberId != null}">
-	        <button type="button" id="withdrawal-btn">회원탈퇴</button>
-         </span>
+	        <img src="/image/basic.png" alt="기본사진">
+	           <ul>   
+	              <li>내프로필</li>
+	              <li>계정설정</li>
+	              <li>거래내역</li>
+	           </ul>
+			<span class="withdrawal-btn-wrap" th:if="${session.memberId != null}">
+			  <button type="button" id="withdrawal-btn" data-bs-toggle="modal" data-bs-target="#withdrawalModal">회원탈퇴</button>
+			</span>	
         </div>
         
         <div class="right" align="center" th:if="${session.memberId != null}">
@@ -130,54 +110,86 @@ ul {
 		<div class="right" align="center" th:unless="${session.memberId != null}">
     		<h1>로그인이 필요합니다.</h1>
 		</div>
-        
-<script>
-// 로그아웃 버튼 클릭 이벤트 핸들러 등록
+		<div class="modal fade" id="withdrawalModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+		    <div class="modal-content">
+		      <div class="modal-body">
+		        <h5 class="modal-title mb-3" id="myModalLabel">회원탈퇴</h5>
+		        <form id="withdrawal-form">
+		          <div class="form-group mb-3">
+		            <label for="password" class="form-label">비밀번호</label>
+		            <input type="password" class="form-control" id="password" name="password" required>
+			        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">취소</button>
+			        <button type="button" class="btn btn-danger btn-sm" id="withdrawal-confirm-btn">탈퇴</button>
+			      </div>
+		        </form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 
-$('#logout-btn').click(function() {
-  $.ajax({
-    url: '/logout', // 로그아웃 요청을 보낼 URL
-    type: 'GET', // HTTP 요청 메서드
-    dataType: 'text', // 서버 응답 데이터 타입
-    success: function(result) {
-      alert('로그아웃 되었습니다.');
-      location.href='/login';
-    },
-    error: function(xhr, status, error) {
-      alert('로그아웃 실패: ' + error);
-    }
-  });
-});
-// 회원탈퇴 버튼 클릭 이벤트 핸들러 등록
-  $('#withdrawal-submit').click(function() {
-    var password = $('#withdrawal-password').val();
-    $.ajax({
-      url: '/withdrawal',
-      type: 'POST',
-      dataType: 'text',
-      data: {password: password},
-      success: function(result) {
-        alert('회원탈퇴 되었습니다.');
-        location.href = '/login';
-      },
-      error: function(xhr, status, error) {
-        $('#withdrawal-error').show();
-      }
-    });
-  });
-$('#login-btn').click(function() {
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	// 로그아웃 버튼 클릭 이벤트 핸들러 등록
+
+	$('#logout-btn').click(function() {
 	  $.ajax({
-	    url: '/login',
-	    type: 'GET',
-	    success: function(response) {
-			location.href='/login';
+	    url: '/logout', // 로그아웃 요청을 보낼 URL
+	    type: 'GET', // HTTP 요청 메서드
+	    dataType: 'text', // 서버 응답 데이터 타입
+	    success: function(result) {
+	      alert('로그아웃 되었습니다.');
+	      location.href='/login';
 	    },
-	    error: function(jqXHR, textStatus, errorThrown) {
-	      console.log('Error: ' + errorThrown);
+	    error: function(xhr, status, error) {
+	      alert('로그아웃 실패: ' + error);
 	    }
 	  });
 	});
-</script> 
-</body>
+	$('#withdrawal-confirm-btn').click(function() {
+		  var password = $('#password').val();
+		  if (!password) {
+		    alert("비밀번호를 입력해주세요.");
+		    return;
+		  }
+		  $.ajax({
+		    url: '/withdrawal',
+		    type: 'post',
+		    data: { password: password },
+		    success: function(response) {
+		      $("#withdrawalModal").modal("hide");
+		      alert(response);
+		      window.location.href = "/login"; // 로그인 페이지로 이동
+		    },
+		    error: function(xhr, status, error) {
+		      alert("회원탈퇴에 실패하였습니다. 비밀번호를 확인해주세요.");
+		    }
+		  });
+		});
 
+	$('#login-btn').click(function() {
+		  $.ajax({
+		    url: '/login',
+		    type: 'GET',
+		    success: function(response) {
+				location.href='/login';
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) {
+		      console.log('Error: ' + errorThrown);
+		    }
+		  });
+		});
+	</script> 
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>
+
+
+

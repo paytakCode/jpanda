@@ -14,8 +14,6 @@ public interface ChargeDao {
 	
 	int insertCharge(ChargeDto chargeDto);
 
-	double selectBonusRatio(ChargeDto chargeDto);
-
 	CouponUseDto selectCouponUse(CouponUseDto couponUseDto);
 
 	Long selectAvailAmountCoupon(CouponUseDto couponUseDto);
@@ -28,9 +26,9 @@ public interface ChargeDao {
 
 	Long selectTalentRefundAmount(String memberId);
 
-	List<PaymentDto> selectPaymentList(PaymentDto selectMethodBonusDto);
+	List<PaymentDto> selectPaymentList(PaymentDto paymentDto);
 
-	List<ChargeHistoryDto> selectChargeHistoryList(ChargeHistoryDto selectChargeHistoryDto);
+	List<ChargeHistoryDto> selectChargeHistoryList(ChargeHistoryDto chargeHistoryListDto);
 
 	
 	

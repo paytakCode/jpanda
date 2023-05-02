@@ -27,8 +27,10 @@ public interface AdminDao {
 	int insertCoupon(CouponDto couponDto);
 	
 	//company-sales
-	List<CompanySalesDto> selectCompanyByDDDate(CompanySalesDto companySalesDto);
-	List<CompanySalesDto> selectCompanySalesByYYMMDate(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> selectCompanySalesByYYYYDate(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> selectCompanySalesByMMDate(CompanySalesDto companySalesDto);
+	List<CompanySalesDto> selectCompanySalesByDDDate(CompanySalesDto companySalesDto);
+
 	
 	//talent
 	List<TalentDto> selectTalent();
@@ -38,4 +40,5 @@ public interface AdminDao {
 	List<TalentRefundDto> selectTalentRefund();
 	int updateTalentRefundToSuccessByPurchaseNosAndStatus(TalentRefundDto paramDto);
 	int updateTalentRefundToCompanionByPurchaseNosAndStatus(TalentRefundDto paramDto);
+
 }
