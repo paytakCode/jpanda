@@ -44,7 +44,7 @@ public class AdminController {
 	//home
 	@GetMapping(value = "")
 	public String home(HttpSession session) {
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -59,7 +59,7 @@ public class AdminController {
 		List<NoticeDto> noticeList = adminService.findNotice();
 		model.addAttribute("noticeList", noticeList);
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -80,7 +80,7 @@ public class AdminController {
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);	
 		model.addAttribute("notice", notice);
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -93,7 +93,7 @@ public class AdminController {
 	 */
 	@GetMapping(value = "/notice-form")
 	public String noticeForm(HttpSession session) {
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -111,7 +111,7 @@ public class AdminController {
 		log.info("Notice Controller noticeAdd() start");
 		String resultStr = adminService.addNotice(notice);
 
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -129,7 +129,7 @@ public class AdminController {
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);
 		model.addAttribute("notice", notice);
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -147,7 +147,7 @@ public class AdminController {
 		log.info("notice : "+notice.toString());
 		String resultStr = adminService.modifyNotice(notice);
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -162,7 +162,7 @@ public class AdminController {
 		List<ExchangeDto> exList = adminService.findExchange();
 		model.addAttribute("exList", exList);
 				
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -176,20 +176,19 @@ public class AdminController {
 	 * 	코드를 조금 더 간결하게 통합 후 수정 예정
 	 */
 	@ResponseBody
-	@PutMapping(value = "/exchange")
-	public String exchangeModifyByExchangeNos(@RequestParam(name = "exchangeNo") String[] exchangeNoArray, @RequestParam String exchangeStatus, HttpSession session) {
+	@PatchMapping(value = "/exchange/{exchangeNo}")
+	public int exchangeModifyByExchangeNos(@PathVariable("exchangeNo") List<Long> exchangeNo, @RequestBody List<ExchangeDto> exchangeDto, HttpSession session) {
 		log.info("Exchange Controller exchangeModifyByExchangeNos() start");
+		log.info("exchangeNo : "+exchangeNo);
+		log.info("ExchangeDto : " + exchangeDto.toString());
 		
-		for(int i = 0; i < exchangeNoArray.length; i++) {
-			log.info("exchangeNoArray : "+exchangeNoArray[i]);
-		}
-		String returnStr = adminService.modifyExchangeStatusByExchangeNos(exchangeNoArray, exchangeStatus);
+		int result = adminService.modifyExchangeStatusByExchangeNos(exchangeDto);
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
-			return "redirect:/login";
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
+			return -1;
 			
 		} else {
-			return returnStr;
+			return result;
 		}
 	}
 
@@ -201,7 +200,7 @@ public class AdminController {
 		
 		model.addAttribute("couponList", couponList);
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -241,7 +240,7 @@ public class AdminController {
 	//company-sales
 	@GetMapping(value = "/company-sales")
 	public String companySales(HttpSession session) {
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -259,7 +258,6 @@ public class AdminController {
 		log.info("startDate : "+startDate);
 		log.info("endDate : "+endDate);
 		
-		
 		List<CompanySalesDto> csList = adminService.findCompanySalesByStartDateAndEndDate(startDate, endDate);
 		log.info("csList : "+csList.toString());
 		
@@ -274,7 +272,7 @@ public class AdminController {
 		List<TalentDto> talentList =  adminService.findTalent();
 		model.addAttribute("talentList", talentList);
 				
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
@@ -286,17 +284,21 @@ public class AdminController {
 	 * 	판매등록 대기중인 건에 대해 조회한 페이지에서 체크박스로 체크 후 버튼을 누르면 상태와 게시일이 업데이트가 되는 기능
 	 */
 	@ResponseBody
-	@PatchMapping(value = "/talents/{sellerId}")
-	public String talentModifyBySellerIds(@PathVariable("sellerId") List<String> sellerId, HttpSession session) {
+	@PatchMapping(value = "/talents/{talentNo}")
+	public int talentModifyBySellerIds(@PathVariable("talentNo") List<String> talentNo, @RequestBody List<TalentDto> talentDto, HttpSession session) {
 		log.info("Talent Controller talentModifyBySellerIds() start");
-		log.info("SellerIds : "+sellerId);
+		log.info("SellerIds : "+talentNo);
+		log.info("talentDto : "+talentDto.toString());
+		int result = 0;
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
-			return "redirect:/login";
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
+			result = -1;
 			
 		} else {
-			return adminService.modifyTalentBySellerIds(sellerId);
+			result = adminService.modifyTalentByTalentNos(talentDto);
 		}
+		
+		return result;
 	}
 
 	//talent-refund
@@ -309,7 +311,7 @@ public class AdminController {
 		
 		model.addAttribute("refundList", refundList);
 		
-		if(session.getAttribute("loginId") == null || !((String)session.getAttribute("loginId")).equals("admin")) {
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {

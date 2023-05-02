@@ -93,8 +93,8 @@ ul {
 <body>
     <h1 align="center">마이페이지</h1>
     	    <span class="login-out-btn-wrap">
-	        <button type="button" th:if="${session.loginId == null}" id="login-btn">로그인</button>
-	        <button type="button" th:if="${session.loginId != null}" id="logout-btn">로그아웃</button>
+	        <button type="button" th:if="${session.memberId == null}" id="login-btn">로그인</button>
+	        <button type="button" th:if="${session.memberId != null}" id="logout-btn">로그아웃</button>
 	     </span> 
         <div class="left" align="center">
         <img src="/image/basic.png" alt="기본사진">
@@ -104,20 +104,20 @@ ul {
               <li>거래내역</li>
            </ul>
 
-	     <span class="withdrawal-btn-wrap" th:if="${session.loginId != null}">
+	     <span class="withdrawal-btn-wrap" th:if="${session.memberId != null}">
 	        <button type="button" id="withdrawal-btn">회원탈퇴</button>
          </span>
         </div>
         
-        <div class="right" align="center" th:if="${session.loginId != null}">
+        <div class="right" align="center" th:if="${session.memberId != null}">
 		    <h1>내프로필</h1>
-		    <h1 th:text="'Welcome, ' + ${session.loginId} + '님!'"></h1>
+		    <h1 th:text="'Welcome, ' + ${session.memberId} + '님!'"></h1>
 		    	<ul>
 		    		<li th:if="${memberInfo != null}" th:text="'이름 : ' + ${memberInfo.name}"></li>
 		    		<li th:if="${memberInfo != null}" th:text="'이메일 : ' + ${memberInfo.email}"></li>
 		    		<li th:if="${memberInfo != null}" th:text="'전화번호 : ' + ${memberInfo.tel}"></li>
 				</ul>
-			        <button type="button" th:if="${session.loginId != null}" id="btn">정보수정</button>
+			        <button type="button" th:if="${session.memberId != null}" id="btn">정보수정</button>
 			<div class="menu">
 				<span>
 					<a href="/" target="_blank">계정설정</a>
@@ -127,7 +127,7 @@ ul {
 				</span>
 			</div>
 		</div>
-		<div class="right" align="center" th:unless="${session.loginId != null}">
+		<div class="right" align="center" th:unless="${session.memberId != null}">
     		<h1>로그인이 필요합니다.</h1>
 		</div>
         

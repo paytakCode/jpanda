@@ -3,13 +3,14 @@
  
   
 <head>
-	<link rel="canonical" href="https://getbootstrap.kr/docs/5.2/examples/headers/" />
-	<link href="/css/common-layout.css" rel="stylesheet" />
+	<link href="/css/bootstrap.css" rel="stylesheet" />	
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+	<script src="/js/bootstrap.js"></script>	
+	<script src="/js/jquery.js"></script>
 </head>
 <body>
 <div class="container-fluid">
-	<th:block layout:fragment="style"></th:block>
-	
+
 	<th:block th:replace="/common/fragment/header :: headerFragment"></th:block>
 	<th:block th:replace="/common/fragment/nav :: navFragment"></th:block>
 

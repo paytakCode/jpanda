@@ -88,9 +88,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void withdrawal(String loginId, String password) {
+	public void withdrawal(String memberId, String password) {
 	    String encryptedPassword = PasswordEncryptor.encrypt(password); // 비밀번호 암호화
-	    memberDao.deleteMemberById(loginId,encryptedPassword);
+	    memberDao.deleteMemberById(memberId,encryptedPassword);
 	    
 			
 	}

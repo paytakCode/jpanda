@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 import com.kakao.jPanda.lhw.service.TalentService;
@@ -47,35 +48,42 @@ public class TalentDetailController {
 		return "lhw/Talent";
 	}
 	
-	// 게시글 삭제 버튼 눌렀을때 게시글 상태 판매 종료로 전환
-	@GetMapping("/talent/updateStatus/{talentNo}")
-	public String updateTalentStatus(@PathVariable Long talentNo) {
-	    talentService.updateTalentStatus(talentNo);
-	    return "redirect:/board";
-	}
-
 	
 	
 	// 리뷰 인서트
 	@ResponseBody
 	@PostMapping("/talent/{talentNo}/reviews")
-	public List<ReviewDto> reviewAdd(@PathVariable("talentNo") Long talentNo, @RequestBody ReviewDto review, HttpSession session, Model model) {
-		System.out.println("Controller reviewAdd Start");
-		review.setTalentNo(talentNo); // talentNo를 review 객체에 설정
-		review.setReviewerId((String)session.getAttribute("memberId")); // reviewerId를 review 객체에 설정
-		int reviewAdd = talentService.addReview(review);
-		System.out.println("리뷰 추가 완료시 1-> " + reviewAdd);
-		
-		String memberId = "";
-		if(session.getAttribute("memberId") == null) {
-			memberId = "guest";
-		} else {
-			memberId = (String) session.getAttribute("memberId");
-		}
-		model.addAttribute("memberId", memberId);
-		
-		return talentService.findReviewListByTalentNo(talentNo);
+	public int reviewAdd(@PathVariable("talentNo") Long talentNo, @RequestBody ReviewDto review, HttpSession session, Model model) {
+	    System.out.println("Controller reviewAdd Start");
+	    List<BambooUseDto> bambooUseList = talentService.findBambooUseListByTalentNo(talentNo);
+	    review.setTalentNo(talentNo); // talentNo를 review 객체에 설정
+	    review.setReviewerId((String)session.getAttribute("memberId")); // reviewerId를 review 객체에 설정
+
+	    String memberId = (String)session.getAttribute("memberId");
+	    int result = -1;
+
+	    for (BambooUseDto bambooUseDto : bambooUseList) {
+	        if (memberId == null) {
+	            // 로그인이 안되어 있을 때
+	            result = -1;
+	            break;
+	        } else if (bambooUseDto.getBuyerId().equals(memberId)) {
+	            // 구매자일 때
+	            if (talentService.addReview(review) == 1) {
+	                result = 1;
+	                break;
+	            }
+	        } else {
+	            // 해당 재능의 구매자가 아닐 때
+	            result = 0;
+	        }
+	    }
+	    model.addAttribute("memberId", memberId);
+	    System.out.println("리뷰 인서트 완료시1 -> " + result);
+	    
+	    return result;
 	}
+	
 	
 	// 리뷰 업데이트
 	@ResponseBody
@@ -111,6 +119,13 @@ public class TalentDetailController {
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
 	
+	// 게시글 삭제 버튼 눌렀을때 게시글 상태 판매 종료로 전환
+	@GetMapping("/talent/updateStatus/{talentNo}")
+	public String updateTalentStatus(@PathVariable Long talentNo) {
+		talentService.updateTalentStatus(talentNo);
+		return "redirect:/board";
+	}
 	
+
 	
 }
