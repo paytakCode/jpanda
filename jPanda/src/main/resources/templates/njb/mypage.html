@@ -92,12 +92,24 @@ a {
         <div class="right" align="center" th:if="${session.memberId != null}">
 		    <h1>내프로필</h1>
 		    <h1 th:text="'Welcome, ' + ${session.memberId} + '님!'"></h1>
-		    	<ul>
-		    		<li th:if="${memberInfo != null}" th:text="'이름 : ' + ${memberInfo.name}"></li>
-		    		<li th:if="${memberInfo != null}" th:text="'이메일 : ' + ${memberInfo.email}"></li>
-		    		<li th:if="${memberInfo != null}" th:text="'전화번호 : ' + ${memberInfo.tel}"></li>
-				</ul>
-			        <button type="button" th:if="${session.memberId != null}" id="btn">정보수정</button>
+				<form method="post" action="/updateMember">
+				    <ul>
+				        <li>
+				            <span>이름: </span>
+				            <input type="text" th:value="${memberInfo.name}" th:disabled="${!editMode}" name="name">
+				        </li>
+				        <li>
+				            <span>이메일: </span>
+				            <input type="text" th:value="${memberInfo.email}" th:disabled="${!editMode}" name="email">
+				        </li>
+				        <li>
+				            <span>전화번호: </span>
+				            <input type="text" th:value="${memberInfo.tel}" th:disabled="${!editMode}" name="tel">
+				        </li>
+				    </ul>
+				    <button type="submit" th:if="${editMode}">수정 완료</button>
+    				<button type="button" th:if="${!editMode}" onclick="enableEditMode()">수정하기</button>
+				</form>
 			<div class="menu">
 				<span>
 					<a href="/" target="_blank">계정설정</a>
@@ -185,6 +197,18 @@ a {
 		    }
 		  });
 		});
+	
+       function enableEditMode() {
+        var inputs = document.getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+        document.querySelector('button[type="submit"]').style.display = "block";
+        document.querySelector('button[type="button"]').style.display = "none";
+        document.querySelector('input[name="_method"]').value = "PUT";
+        document.querySelector('form').action = "/editProfile";
+        document.querySelector('button[type="submit"]').textContent = "수정 완료";
+    } 
 	</script> 
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>

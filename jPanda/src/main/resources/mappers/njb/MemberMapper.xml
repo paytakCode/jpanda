@@ -52,4 +52,9 @@
   		set member_status = 'Withdrawal'
   		WHERE member_id = #{memberId}
 	</update>
+	<update id="updateMemberInfo" parameterType="MemberDto">
+  		UPDATE member
+  		SET name = #{name}, email = #{email}, tel = #{tel}
+  		WHERE id = #{id}
+	</update>
 </mapper>

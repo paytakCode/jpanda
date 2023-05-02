@@ -18,5 +18,6 @@ public interface MemberService {
 	MemberDto findMember(String memberId);
 	void updatePasswordById(String memberId, String newPw);
 	boolean withdrawal(String memberId, String password);
+	void editMemberInfo(MemberDto memberInfo);
 
 }
