@@ -3,10 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>재능 등록</title>
-<!-- <script th:if="${login} == guest" th:inline="javascript">
-		alert("로그인이 필요한 서비스 입니다.");
-		location.href = "/login";
-</script> -->
 <script th:inline="javascript">
 	if([[${#session.getAttribute("memberId")}]] == null){
 		alert("로그인이 필요한 서비스 입니다.");
