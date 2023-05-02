@@ -47,8 +47,6 @@ public class ChargeController {
 	@GetMapping(value = "")
 	public String chargePage(HttpSession session, Model model) {
 		String chargerId = (String) session.getAttribute("memberId");
-		//PaymentDto paymentDto = new PaymentDto();
-		//ChargeHistoryDto selectChargeHistoryDto = new ChargeHistoryDto();
 		ChargeDto chargeDto = new ChargeDto();
 		log.info("ChargeContoller chargePage() Start...");
 		
@@ -58,7 +56,6 @@ public class ChargeController {
 		List<PaymentDto> getPaymentList = chargeService.findPaymentList();
 		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
 		
-		//List<chargeDto> getChargeHistoryList = chargeService.findChargeHistoryList(chargerId);
 		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeListbyChargerId(chargerId);
 		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getBambooChargeList.size());
 		
