@@ -2,10 +2,10 @@
 <div th:fragment="chatJsFragment">
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<script th:inline="javascript">
+	<script>
 	
 		//전역 변수 선언	
-		const memberId = [[${#session.getAttribute("memberId")}]];
+		const memberId = sessionStorage.key('memberId');
 		let selectedChat = null;
 		let stompClient = null;
 		let blinkInterval = null;
@@ -192,7 +192,7 @@
 		
 		//접속
 		$(function(){
-			if(memberId == 'guest' || memberId == null){
+			if(memberId == null){
 				$('#chat-btn').hide();
 			} else {
 				connect(memberId);
