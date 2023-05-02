@@ -1,101 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>공지사항</title>
-<style type="text/css">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
 
-.container{
-	margin: 0 auto;
-	width: 1000px;
-}
-.navbar {
-  	display: flex; /* flexbox로 설정 */
-  	justify-content: space-around; /* 링크 간 간격 일정하게 유지 */
-  	align-items: center; /* 링크 수직 가운데 정렬 */
-  	margin: 0 auto;
-  	background-color: #333; /* 배경색 설정 */
-  	height: 50px; /* 높이 설정 */
-  	width: 1000px;
-}
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>공지사항</title>
+</th:block>
 
-.navbar a {
-  	color: white; /* 링크 글씨 색상 설정 */
-  	text-decoration: none; /* 링크 밑줄 제거 */
-  	font-size: 15px; /* 글씨 크기 설정 */
-  	font-weight: bold; /* 글씨 굵기 설정 */
-  	padding: 15px 20px; /* 링크 좌우 여백 설정 */
-}
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style type="text/css">
+		
+		.container{
+			margin: 0 auto;
+			width: 1000px;
+		}
+		
+		#notice-list-div {
+			margin: 0 auto;
+			width: 800px;
+			height: 400px;
+			
+		}
+		#notice-main{
+			margin-left: 50px;
+		}
+		.notice{
+		  display: inline-block;
+		}
+		.notice-no{
+			width: 40px;
+		}
+		.notice-title{
+			width: 540px;
+			margin-right: 100px;
+			max-height: 21.33px;
+			overflow: hidden;
+		}
+		.notice-reg-date{
+			width: 90px;
+		}
+		p {
+			margin: 0 5px;
+		}
+		li{
+			list-style: none;
+		}
+		ul {
+			padding: 0px;
+		}
+		hr {
+			margin: 2 0px;
+		}
+		.notice-page {
+			display: inline-block;
+			border: 1px solid #EAEAEA;
+			width: 30px;
+			height: 30px;
+			cursor: pointer;
+		}
+		.notice-page, .notice-no, .notice-reg-date{
+			text-align: center;
+			line-height: 30px; /* 중간 높이로 해줌  */
+		}
+		#pager{
+			text-align: center;
+			margin-top: 30px;
+		}
+		#search-div{
+			display: flex; 
+			justify-content: flex-end;
+			margin-right: 100px;
+		}
+		.notice-page{
+			text-decoration: none;
+			color: black;
+		}
+	</style>
+		
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
 
-#notice-list-div {
-	margin: 0 auto;
-	width: 800px;
-	height: 400px;
-	
-}
-#notice-main{
-	margin-left: 50px;
-}
-.notice{
-  display: inline-block;
-}
-.notice-no{
-	width: 40px;
-}
-.notice-title{
-	width: 540px;
-	margin-right: 100px;
-	max-height: 21.33px;
-	overflow: hidden;
-}
-.notice-reg-date{
-	width: 90px;
-}
-p {
-	margin: 0 5px;
-}
-li{
-	list-style: none;
-}
-ul {
-	padding: 0px;
-}
-hr {
-	margin: 2 0px;
-}
-.notice-page {
-	display: inline-block;
-	border: 1px solid #EAEAEA;
-	width: 30px;
-	height: 30px;
-	cursor: pointer;
-}
-.notice-page, .notice-no, .notice-reg-date{
-	text-align: center;
-	line-height: 30px; /* 중간 높이로 해줌  */
-}
-#pager{
-	text-align: center;
-	margin-top: 30px;
-}
-#search-div{
-	display: flex; 
-	justify-content: flex-end;
-	margin-right: 100px;
-}
-</style>
-</head>
-<script src="/js/jquery.js"></script>
-<body>
-	<div class="container">
-	<div class="navbar">
-		<a href="/talent/write-form">재능 등록</a>
-  		<a href="#2">판매게시판</a>
-  		<a href="#3">거래관리</a>
-  		<a href="#4">충전/내역</a>
-  		<a href="#5">마이페이지</a>
-  		<a href="/talent/notice">공지사항</a>
-	</div>
+<div>
+	<th:block layout:fragment="content">
+	 <div class="container">
 	<h2 id="notice-main">공지사항</h2>
 	<div id="search-div">
 		<input type="text" id="search">
@@ -108,10 +97,14 @@ hr {
 	<div id="pager">
 	</div>
 	</div> <!-- class="container" -->
-	
-	
-	
-<script type="text/javascript">
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script type="text/javascript">
 		function noticeChange(search, currentPage){
 			$.ajax({
 				url : "/talent/notice/notices",
@@ -197,10 +190,12 @@ hr {
 		          	}
 			});
 		}
-	$(function() {
-		noticeChange("", 1);
-	});
-</script>
-
-</body>
+		$(function() {
+			noticeChange("", 1);
+		});
+	</script>
+	
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>

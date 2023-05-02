@@ -1,119 +1,120 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>재능 수정</title>
-<script th:if="${login} == user" th:inline="javascript">
-	alert("비정상적인 이동이 감지되었습니다. 다시 로그인 해주세요.");
-	location.href = "/logout";
-</script>
-<style type="text/css">
-/* Set font family and size */
-body {
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-}
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
 
-/* Center the form and set its max width */
-form {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* Set width and margin of the CKEditor */
-.ck.ck-editor {
-  width: 80%;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* Set height of the CKEditor */
-.ck-editor__editable {
-  height: 500px	;
-}
-
-/* Style the category section */
-.category {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.category h4 {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.category p {
-  margin-top: 10px;
-}
-
-/* Style the select elements */
-select {
-  width: 200px;
-  height: 30px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin: 10px;
-  padding: 5px;
-  font-size: 16px;
-}
-
-/* Style the submit button */
-button[type=submit] {
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-button[type=submit]:hover {
-  background-color: #0069d9;
-}
-form {
-	text-align: center;
-}
-table {
-  border : 1px solid #EAEAEA;
-}
-
-#side {
-  position: fixed;
-  top: 200px;
-  left: 200px;
-}
-
-.write {
-	border: 1px solid #EAEAEA;
-	margin: 20px;
-	padding: 20px;
-}
-
-#price > div {
-   display: inline-block;
-}
-
-.bamboo + p {
-  display: inline-block;
-  margin-left: 3px; /* 필요에 따라 여백을 조정하세요 */
-  vertical-align: middle;
-}
-
-#main-image-preview {
-	max-width: 600px;
-}
-</style>
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>재능 수정</title>
+</th:block>
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style type="text/css">
+		/* Set font family and size */
+		.container-update-form {
+		  font-family: Arial, sans-serif;
+		  font-size: 16px;
+		}
+		
+		#update-form {
+		  max-width: 900px;
+		  margin: 0 auto;
+		  text-align: center;
+		}
+		
+		.ck.ck-editor {
+		  width: 80%;
+		  max-width: 900px;
+		  margin: 0 auto;
+		}
+		
+		/* Set height of the CKEditor */
+		.ck-editor__editable {
+		  height: 500px	;
+		}
+		
+		/* Style the category section */
+		.categorys {
+		  margin-top: 20px;
+		  text-align: center;
+		}
+		
+		.categorys h4 {
+		  font-size: 18px;
+		  font-weight: bold;
+		}
+		
+		.categorys p {
+		  margin-top: 10px;
+		}
+		
+		.category-select {
+		  width: 200px;
+		  height: 30px;
+		  border-radius: 5px;
+		  border: 1px solid #ccc;
+		  margin: 10px;
+		  padding: 5px;
+		  font-size: 16px;
+		}
+		
+		#talent-sudmit-button {
+		  background-color: #007bff;
+		  color: white;
+		  border-radius: 5px;
+		  border: none;
+		  padding: 10px 20px;
+		  font-size: 16px;
+		  cursor: pointer;
+		  margin-top: 20px;
+		}
+		
+		#talent-sudmit-button:hover {
+		  background-color: #0069d9;
+		}
+		
+		#writeCheck {
+		  border : 1px solid #EAEAEA;
+		}
+		
+		#side {
+		  position: fixed;
+		  top: 200px;
+		  left: 200px;
+		}
+		
+		.write {
+			border: 1px solid #EAEAEA;
+			margin: 20px;
+			padding: 20px;
+		}
+		
+		.category {
+			border: 1px solid #EAEAEA;
+			margin: 20px;
+			padding: 20px;
+		}
+		
+		#price > div {
+		   display: inline-block;
+		}
+		
+		.bamboo + p {
+		  display: inline-block;
+		  margin-left: 3px; /* 필요에 따라 여백을 조정하세요 */
+		  vertical-align: middle;
+		}
+		
+		#main-image-preview {
+			max-width: 600px;
+		}
+	</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
 <!-- CKEditor5 사용 -->
-<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
-<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
-<script src="/js/jquery.js"></script>
-	
-</head>
-<body>
-	<div id="side">
+<div>
+	<th:block layout:fragment="content">
+	 	<div id="side">
 	  	<table id="writeCheck">
 	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
 		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
@@ -122,76 +123,90 @@ table {
 		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
 		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
 	  	</table>
-	</div>
+		</div>
 	
-	<div class="container">
-		<form action="/talent/talent" method="post" name="frm" onsubmit="return check()">
-		 <input type="hidden" name="_method" value="put">
-		<h1>재능 등록</h1>
-		<hr>
-		<input type="hidden" name="sellerId" id="seller-id">
-		<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
-	
-	<div id="category" class="category">
-		<h4>카테고리</h4>
-		<p>강의하실 분야를 선택해 주세요.</p>
+		<div class="container-update-form">
+		<form id="update-form" action="/talent/talent" method="post" name="frm" onsubmit="return check()">
+			 <input type="hidden" name="_method" value="put">
+			<h1>재능 등록</h1>
+			<hr>
+			<input type="hidden" name="sellerId" id="seller-id">
+			<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
 		
-		<select id="upper-category-no" name="upperCategoryNo">
-			<option disabled selected>대분류</option>
-		</select>
+			<div id="category" class="category">
+				<h4>카테고리</h4>
+				<p>강의하실 분야를 선택해 주세요.</p>
+				
+				<select id="upper-category-no" class="category-select" name="upperCategoryNo">
+					<option disabled selected>대분류</option>
+				</select>
+		
+				<select id="lower-category-no" class="category-select" name="lowerCategoryNo">
+					<option disabled selected>중분류</option>
+				</select>
+			
+			</div>
+			
+			<div id="main-image" class="main-img write">
+				<h4>대표 이미지</h4>
+				<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율은 4:3이 가장 좋아요.</p>
+				<img id="main-image-preview" width="auto" height="250" />
+				<input type="file" id="choose-image-file" accept="image/jpeg, image/png, image/gif" style="display:none;"/>
+				<input type="hidden" id="main-img-value" name="mainImg" th:value="${talent.mainImg}">
+			</div>
+			
+			<div id="title" class="title write">
+				<h4>제목</h4>
+				<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>제목은 15자 이상 30자 이하로  작성해주세요.</p>
+				<input type="text" id="title" name="title" class="title" th:value="${talent.title}" minlength="15" maxlength="30">
+			</div>
+			
+			<div id ="content" class="content write">
+				<h4>강의 소개</h4>
+				<p>강의에 대한 소개를 작성해주세요.</p>
+				<textarea id ="content-area" name = "content" class="content" th:text="${talent.content}"></textarea>
+			</div>
+			
+			<div id="price" class="bamboo write">
+				<h4>가격</h4>
+				<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
+			<div class="price">
+				<h3>정상 밤부</h3>
+				<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000" th:value="${talent.bamboo}"><p>밤부</p>
+			</div>
+			<div class="price">
+				<h3>할인 밤부</h3>
+				<input type="number" id="sale-bamboo" name="saleBamboo" class="bamboo" placeholder="900" th:value="${talent.saleBamboo}"><p>밤부</p>
+			</div>	
+			<div >
+				<h3>할인율</h3>
+				<input type="text" id="discount-bamboo" class="bamboo" placeholder="10" readonly><p>%</p>
+			</div>
+			</div>
+			
+			<div id="summary" class="summary write">
+				<h4>요약 설명</h4>
+				<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!<br>요약 설명은 20자 이상 40자 이하로 작성해 주세요.</p>
+				<input type="text" id="summary" name="summary" class="summary" th:value="${talent.summary}" minlength="20" maxlength="40">
+			</div>
+			<input id="talent-sudmit-button" type="submit" value="수정하기">
+		</form>
+		</div> <!-- container -->
+			<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+			<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+		</th:block>
+	</div>
 
-		<select id="lower-category-no" name="lowerCategoryNo">
-			<option disabled selected>중분류</option>
-		</select>
-	
-	</div>
-	
-	<div id="main-image" class="main-img write">
-		<h4>대표 이미지</h4>
-		<p>메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요<br>비율은 4:3이 가장 좋아요.</p>
-		<img id="main-image-preview" width="auto" height="250" />
-		<input type="file" id="choose-image-file" accept="image/jpeg, image/png, image/gif" style="display:none;"/>
-		<input type="hidden" id="main-img-value" name="mainImg" th:value="${talent.mainImg}">
-	</div>
-	
-	<div id="title" class="title write">
-		<h4>제목</h4>
-		<p>메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.<br>제목은 15자 이상 30자 이하로  작성해주세요.</p>
-		<input type="text" id="title" name="title" class="title" th:value="${talent.title}" minlength="15" maxlength="30">
-	</div>
-	
-	<div id ="content" class="content write">
-		<h4>강의 소개</h4>
-		<p>강의에 대한 소개를 작성해주세요.</p>
-		<textarea id ="content-area" name = "content" class="content" th:text="${talent.content}"></textarea>
-	</div>
-	
-	<div id="price" class="bamboo write">
-		<h4>가격</h4>
-		<p>정상 가격과 할인된 금액을 입력해 주세요.</p>
-	<div class="price">
-		<h3>정상 밤부</h3>
-		<input type="number" id="bamboo" name="bamboo" class="bamboo" placeholder="1000" th:value="${talent.bamboo}"><p>밤부</p>
-	</div>
-	<div class="price">
-		<h3>할인 밤부</h3>
-		<input type="number" id="sale-bamboo" name="saleBamboo" class="bamboo" placeholder="900" th:value="${talent.saleBamboo}"><p>밤부</p>
-	</div>	
-	<div >
-		<h3>할인율</h3>
-		<input type="text" id="discount-bamboo" class="bamboo" placeholder="10" readonly><p>%</p>
-	</div>
-	</div>
-	
-	<div id="summary" class="summary write">
-		<h4>요약 설명</h4>
-		<p>해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!<br>요약 설명은 20자 이상 40자 이하로 작성해 주세요.</p>
-		<input type="text" id="summary" name="summary" class="summary" th:value="${talent.summary}" minlength="20" maxlength="40">
-	</div>
-		
-		<input type="submit" value="수정하기">
-	</form>
-	
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+	<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
+	<script th:inline="javascript">
+		if([[${#session.getAttribute("memberId")}]] != [[${talent.sellerId}]]){
+			alert("비정상적인 접근이 감지되었습니다. 다시 로그인 해주세요.");
+			location.href = "/logout";
+		}
+	</script>
 	<script>
 	// 사이드바 
     $('#writeCheck tr').on('click', function() {
@@ -395,8 +410,10 @@ table {
 		}
 	})
 	
-	$('#seller-id').val([[${login}]]);
+	$('#seller-id').val([[${#session.getAttribute("memberId")}]]);
 	</script>
-	</div> <!-- container -->
-</body>
+	
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>
