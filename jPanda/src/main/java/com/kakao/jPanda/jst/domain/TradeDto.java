@@ -2,27 +2,16 @@ package com.kakao.jPanda.jst.domain;
 
 import java.sql.Timestamp;
 
-import lombok.Data;
+import groovy.transform.ToString;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-public class TradeDto {
-	//talent
-	private String talentNo;
-	private String sellerId;
-	private String upperCategory_no;
-	private String lowerCategory_no;
-	private String mainImg;
-	private String title;
-	private String content;
-	private Long bamboo;
-	private Long saleBamboo;
-	private String summary;
-	private String talentStatus;
-	private Long viewCount;
-	private Timestamp regDate;
-	private Timestamp statusDate;
-	
-	
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+public class TradeDto extends TalentDto{
 	//member
 	private String memberId;
 	private String password;

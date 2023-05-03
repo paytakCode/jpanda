@@ -22,5 +22,5 @@ public class TalentDto {
 	private Timestamp statusDate;
 	
 	//mapper.xml selectTalentByTalentNo
-	private Long exchangeNo;
+	private String exchangeNo;
 }
