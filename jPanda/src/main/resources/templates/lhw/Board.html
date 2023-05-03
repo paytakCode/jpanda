@@ -162,6 +162,30 @@ ul, li {
   justify-content: center;
   margin: auto;
 }
+
+.talent-page {
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+.talent-page{
+	text-align: center;
+	line-height: 30px; /* 중간 높이로 해줌  */
+}
+
+#page{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.talent-page {
+	text-decoration: none;
+	color: black;
+}
+
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -205,6 +229,8 @@ ul, li {
 	<div class="sell-board">
 	    <ul id="defalut-list"></ul>
 	</div>
+	
+	<div id="page"></div>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
 	</th:block>
@@ -213,24 +239,32 @@ ul, li {
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+	
+	// 검색 버튼
+	$('#search-btn').on('click', function(){
+		updateList(1);
+	});
+	
 	// 재능 리스트 ajax로 불러오기
-	function updateList(){
+	function updateList(currentPage){
 		let upperCategoryNo = $('.selected').data('uppercategoryno');
 	 	let lowerCategoryNo = $('#lower-category-list').val();
 	 	let filter =  $(".radio-filter:checked:first").val();
-	 	
+	 	let search = $("#search").val();
 	 	$.ajax({
 	 		url : "/board/talents-list",
 	 		type : 'GET',
 	 		data : {upperCategoryNo : upperCategoryNo,
 	 				lowerCategoryNo : lowerCategoryNo,
-	 				filter 			: filter
+	 				filter 			: filter,
+	 				search			: search,
+	 				currentPage		: currentPage
 	 		},
 	 		dataType : 'json',
-	 		success : function(talentList){
+	 		success : function(map){
 	 			$('#defalut-list').empty();
-	 	        console.log(talentList);
-	 	        talentList.forEach(function(talent){
+	 	        console.log(map);
+	 	       	map.talentList.forEach(function(talent){
 	       		 	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
 		            $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
 		            $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
@@ -240,6 +274,49 @@ ul, li {
 		            $('<span>').addClass('talent-sale-price').text('판매 가격: '+ talent.saleBamboo).appendTo(li);
 		            $('<span>').addClass('talent-bamboo-score').text(talent.bambooScore).appendTo(li);
 		            $('<img>').addClass('bamboo-imges').appendTo(li);
+		            
+		            // 페이징
+		            var filters = map.filters;
+	                var startNum = parseInt(filters.startNum);
+	                var lastNum = parseInt(filters.lastNum);
+	                var filtersDiv = $('#page');
+	    			
+	                // 기존 페이지 번호 삭제
+	                filtersDiv.empty();
+	                
+	                var page = $('<a></a>').addClass('talent-page').text('<');
+	                filtersDiv.append(page);
+	                
+	           	  	// 페이지 번호 생성
+	                for (var i=startNum; i<=lastNum; i++) {
+	                    var page = $('<a></a>').addClass('talent-page').text(i);
+	    				if(filters.currentPage == i){
+	    					page.css('background-color', '#EAEAEA');
+	    				}
+	                    filtersDiv.append(page);
+	                }
+	                filtersDiv.append($('<a></a>').addClass('talent-page').text('>'));
+	           	  	
+					$('#search-btn').one('click', function(){
+						updateList(1);
+					});
+					$('.talent-page').one('click', function(){
+						if($(this).text() === '<'){
+							if(parseInt(filters.currentPage) === 1){
+								updateList(filters.currentPage);
+							}else{
+								updateList(parseInt(filters.currentPage) - 1);
+							}
+						}else if($(this).text() === '>'){
+							if(parseInt(filters.currentPage) === parseInt(filters.totalPage)){
+								updateList(filters.currentPage);
+							}else{
+								updateList(parseInt(filters.currentPage) + 1);
+							}
+						}else{
+							updateList($(this).text());
+						}
+					});
 		            li.click(function() {
 		                location.href = '/talents/talent/' + talent.talentNo;
 		            });
@@ -252,7 +329,6 @@ ul, li {
 	 	            $('.talent-bamboo-score').each(function(){
 	 	            	
 	 	                var score = parseFloat($(this).text());
-	 	                console.log(score);
 	 	                if (score > 5) score = 5; // score가 5보다 크면 5로 고정
 	 	                var index;
 	 	                if (score < 0.49 || isNaN(score)) {
@@ -292,15 +368,15 @@ ul, li {
 
 	// 세부 필터 클릭 시 updateList(); 실행
 	$('.radio-filter').click(function(){	
-		updateList();
+		updateList(1);
 	});
 
 	// 중분류 카테고리 클릭 시 updateList(); 실행
 	$('#lower-category-list').on('change', function() {
-		updateList();
+		updateList(1);
 	});
 
-	updateList();	
+	updateList(1);	
 		
 
 	// 대분류 카테고리 클릭시 선택 되어 있던 대분류 카테고리 클래스 삭제 후 새로 클릭 된 카테고리 selected 클래스 추가
@@ -320,7 +396,7 @@ ul, li {
 		   		lowerCategoryList.forEach(function(lowerCategory){
 		   			$('#lower-category-list').append($('<option>').val(lowerCategory.categoryNo).text(lowerCategory.item));
 		   		});
-		   	 	updateList();
+		   	 	updateList(1);
 		   	}
 		});
 	});

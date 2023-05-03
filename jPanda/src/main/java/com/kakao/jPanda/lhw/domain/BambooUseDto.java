@@ -19,5 +19,5 @@ public class BambooUseDto {
 	
 	
 	// 잔여 포인트 조회용
-	private Long chargeBamboo;
+	private Long totalBamboo;
 }

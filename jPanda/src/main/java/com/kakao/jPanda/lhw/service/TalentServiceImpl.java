@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.lhw.dao.TalentDao;
-import com.kakao.jPanda.lhw.domain.BambooChargeDto;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
@@ -62,14 +61,27 @@ public class TalentServiceImpl implements TalentService {
 	
 	// 재능 구매자 정보 인서트
 	@Override
-	public int addBambooUseList(BambooUseDto bambooUse) {
-		return talentDao.insertBambooUse(bambooUse);
+	public int addBambooUse(BambooUseDto bambooUse, Long totalBamboo) {
+		int result = 2;
+		
+		if(isBuyBefore(bambooUse) == 1) {
+			result = -1; // 구매한 적이 있으면 -1을 리턴
+		} else if (totalBamboo == null || totalBamboo < bambooUse.getUseBamboo()) {
+			result = 0; // 포인트 잔액 검증 후 포인트 부족시 0 을 리턴 
+		} else {
+			result = talentDao.insertBambooUse(bambooUse); // 인서트 성공 Dao
+		}
+		return result;
 	}
 	
-	// 재능 구매자 잔여 포인트 조회
-	@Override
-	public List<BambooChargeDto> findChargeBambooByByuerId(String buyerId) {
-		return talentDao.selectChargeBambooByByuerId(buyerId);
+	// 구매 여부 확인 용도
+	private int isBuyBefore(BambooUseDto bambooUse) {
+		if(bambooUse == null) {
+			return 0;
+		}
+		return talentDao.selectBuyCheckByBambooUse(bambooUse);
 	}
+	
+
 
 }

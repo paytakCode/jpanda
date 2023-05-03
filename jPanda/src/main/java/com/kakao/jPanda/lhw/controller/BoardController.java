@@ -1,6 +1,7 @@
 package com.kakao.jPanda.lhw.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -26,7 +27,7 @@ public class BoardController {
 	
 	private final BoardService boardService;
 	
-	// 공지사항 리스트와 대분류 카테고리 리스트 불러오기
+	// 대분류 카테고리 리스트 불러오기
 	@GetMapping("")
 	public String boardView(Model model, HttpSession session) {
 		System.out.println("Controller boardList Start");
@@ -54,14 +55,21 @@ public class BoardController {
 	//재능 리스트 불러오기 (필터 통합)
 	@ResponseBody
 	@GetMapping("/talents-list")
-	public List<TalentDto> talentListTest(FiltersDto filters){
+	public HashMap<String, Object> talentList(FiltersDto filters){
+		System.out.println("Controller talentList Start");
 		System.out.println(filters.toString());
 		List<TalentDto> talentListByFilters = boardService.findTalentListByFilter(filters);
-		/*
-		 * for(int i = 0; i <talentListByFilters.size(); i++) {
-		 * System.out.println(talentListByFilters.get(i).toString()); }
-		 */
-		return talentListByFilters;
+		System.out.println(talentListByFilters.size());
+		filters.setTotalCount(talentListByFilters.size());
+		talentListByFilters = boardService.findTalentListByFilter(filters);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("talentList", talentListByFilters);
+		map.put("filters", filters);
+//		 for(int i = 0; i <talentListByFilters.size(); i++) {
+//		 System.out.println(talentListByFilters.get(i).toString()); }
+		 
+		return map;
 	}
 	
 	

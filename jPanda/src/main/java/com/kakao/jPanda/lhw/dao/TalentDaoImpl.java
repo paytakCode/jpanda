@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.kakao.jPanda.lhw.domain.BambooChargeDto;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
@@ -67,10 +66,12 @@ public class TalentDaoImpl implements TalentDao {
 		return sqlSession.insert("insertBambooUse", bambooUse);
 	}
 
-	// 재능 구매자 잔여 포인트 조회
+	// 구매 여부 확인 용도
 	@Override
-	public List<BambooChargeDto> selectChargeBambooByByuerId(String buyerId) {
-		return sqlSession.selectList("selectChargeBambooByByuerId", buyerId);
+	public int selectBuyCheckByBambooUse(BambooUseDto bambooUse) {
+		return sqlSession.selectOne("selectBuyCheckByBambooUse", bambooUse);
 	}
+	
+	
 	
 }

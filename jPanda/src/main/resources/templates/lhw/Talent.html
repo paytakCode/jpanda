@@ -13,8 +13,6 @@
 
 /* 페이지 전체 레이아웃 */
 body {
-  margin: 0;
-  padding: 0;
   font-family: Arial, sans-serif;
 }
 
@@ -172,10 +170,19 @@ body {
   height: 21px;
 }
 
+.quick-menu {
+  position: sticky;
+  top: 0;
+  bottom: 20px;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
-</th:block>
+</th:block> 
 
 <div>
 	<th:block layout:fragment="content">
@@ -269,7 +276,7 @@ body {
 	<ul id="review-list">
 		<li th:each="review : ${reviewList}">
 			작성자 : <span th:text="${review.reviewerId}"></span>
-			<span th:text="${review.reviewDate}"></span>
+			<span th:text="${#strings.substring(review.reviewDate, 0, 10)}"></span>
 			<span class="bamboo-score" th:text="${review.bambooScore}" style="display: none;"></span>
 			<img class="bamboo-imges"><br>
 			내용 : <span th:text="${review.content}"></span>
@@ -281,16 +288,21 @@ body {
 	 		</div>
         </li>
     </ul>
-</div>
-
-	<div>
-		<button id="load-more-button">리뷰 더보기</button>
 	</div>
 	
-		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
-		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
-	</th:block>
+	<div class="quick-menu">
+  <ul>
+    <li><a href="#">맨위로 이동</a></li>
+    <li><a href="#content">상세 내용</a></li>
+    <li><a href="#review-list">리뷰</a></li>
+  </ul>
 </div>
+	
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block> 
+</div>
+
 
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
@@ -298,7 +310,17 @@ body {
 	const userId = [[${#session.getAttribute('memberId')}]];
 	console.log(userId);
 
+	// 퀵 메뉴 설정
+	$(document).ready(function(){
+		  var currentPosition = parseInt($(".quick-menu").css("top"));
+		  $(window).scroll(function() {
+		    var position = $(window).scrollTop(); 
+		    $(".quick-menu").stop().animate({"top":position+currentPosition+"px"},1000);
+		  });
+		});
 	
+
+
 	
 	// 구매하기 버튼
 	$(document).on('click', '#buy-btn', function(){
@@ -309,14 +331,13 @@ body {
 			alert("정말로 구매 하시겠습니까? " + $(this).data('salebamboo') + " 포인트가 차감 됩니다.");
 			
 		};  
-		const buyerId = userId;
 		const talentNo = $(this).data('talentno');
 		const useBamboo = $(this).data('salebamboo');
 		
 		let bambooUse = {
-			buyerId 	: buyerId,
-	        talentNo    : talentNo,
-	        useBamboo   : useBamboo
+	        talentNo     : talentNo,
+	        useBamboo    : useBamboo,
+	        purchaseDate : new Date(Date.now())
 	    };
 		
 		console.log(bambooUse);
@@ -327,11 +348,17 @@ body {
 			data  	: JSON.stringify(bambooUse),
 			contentType: 'application/json',
 			dataType : 'json',
-			success : function(result){
-				if(result == 1){
-				alert("구매가 완료 되었습니다. 감사합니다.");
-				location.href = "/board";
-				};
+			success : function(bambooUseInsert){
+				if (bambooUseInsert === -1){
+					alert("이미 구매한 상품 입니다.");
+				} else if (bambooUseInsert === 0){
+					alert("잔액이 부족합니다. 충전 후 구매 해주세요.");
+					location.href= "/charge";
+				} else if (bambooUseInsert === 1){
+					alert("구매가 완료 되었습니다. 감사합니다.");
+				} else {
+					alert("구매 중 오류가 발생했습니다. 다시 시도해주세요.");
+				}
 			},
 			error : function(xhr, status, error){
 				console.log(xhr);
@@ -340,7 +367,8 @@ body {
 		});
 	});
 	
-	// 별점에 따른 밤부 이미지 출력
+	
+	 // 리뷰 리스트에 별점에 따른 밤부 이미지 출력
 	$(document).ready(function () {
 		  var starImages = ['bamboo0.png', 'bamboo0.5.png', 'bamboo1.png', 'bamboo1.5.png', 'bamboo2.png',
 		                    'bamboo2.5.png', 'bamboo3.png', 'bamboo3.5.png', 'bamboo4.png', 'bamboo4.5.png', 'bamboo5.png'];
@@ -510,7 +538,7 @@ body {
 	  	});
 	}
 	  
-
+	
 	// 리뷰 삭제
 	$(document).on('click', '.deleteReview', function() {
 		var reviewNo = $(this).data("reviewno");
@@ -560,6 +588,6 @@ body {
 	</script>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
-</th:block>
+</th:block> 
 </html>
 
