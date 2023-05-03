@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/common/layout/default-layout">
+	layout:decorate="/common/layout/admin-layout">
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
@@ -82,23 +82,15 @@ css
 		let talentRefundDto = [];
 		let statusValue = $(this).val();
 		let approveDate = Date.now();
-		let buyerId = [];
-		
-		purchaseNo.forEach(function(item) {
-			let tr = $(`input.checkbox[value='${item}']`).closest("tr");
-			let td = tr.children();
-			buyerId.push(td.eq(1).text());
-		});
-		
 		
 		if (statusValue == "환불완료") {
 		    for (var i = 0; i < purchaseNo.length; i++) {
-		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate, buyerId: buyerId[i], listType: 'refund'});
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
 		    }
 		    
 		} else if (statusValue == "반려") {
 		    for (var i = 0; i < purchaseNo.length; i++) {
-		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate, buyerId: buyerId[i], listType: 'refund'});
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
 		    }
 		}
 		

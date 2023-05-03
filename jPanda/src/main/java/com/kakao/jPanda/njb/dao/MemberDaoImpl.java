@@ -92,12 +92,23 @@ public class MemberDaoImpl implements MemberDao {
 
 
 	@Override
-	public void deleteMemberById(String memberId, String encryptedPassword) {
+	public boolean withdrawMemberById(String memberId, String encryptedPassword) {
 		
-		Map<String, String> paramMap = new HashMap<>();
-		paramMap.put("memberId", memberId);
-		paramMap.put("encryptedPassword",encryptedPassword);
-		sqlSession.delete("deleteMemberById",paramMap);
+		int result = sqlSession.update("updateMemberStatusByMemberId",memberId);
+		if(result == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+
+	@Override
+	public void updateMemberInfo(MemberDto memberInfo) {
+
+		sqlSession.update("updateMemberInfo",memberInfo);
+		
 	}
 
 

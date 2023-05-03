@@ -2,6 +2,8 @@ package com.kakao.jPanda.lhw.service;
 
 import java.util.List;
 
+
+import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
@@ -24,4 +26,7 @@ public interface TalentService {
 	
 	// 재능 삭제 (업데이트)
 	int updateTalentStatus(Long talentNo);
+	
+	// 리뷰 인서트 검증
+	List<BambooUseDto> findBambooUseListByTalentNo(Long talentNo);
 }

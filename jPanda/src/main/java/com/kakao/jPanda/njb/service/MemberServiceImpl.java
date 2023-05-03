@@ -64,15 +64,20 @@ public class MemberServiceImpl implements MemberService {
 		MemberDto loginMemberDto = memberDao.login(memberDto);
   
 		System.out.println("loginMemberDto = "+loginMemberDto);
-		if(loginMemberDto != null) {
-			return true;
-		}else {
-			return false;
-		}
+	    if (loginMemberDto != null) {
+	        String status = loginMemberDto.getMemberStatus();
+	        if (status.equals("Normal_role") || loginMemberDto.getMemberId().equals("admin")) { // "member_status"가 "normal_role"이거나 사용자 ID가 "admin"인 경우 로그인 허용
+	            return true;
+	        } else {
+	            return false;
+	        }
+	    } else {
+	        return false;
+	    }
 	}
 
 	@Override
-	public MemberDto selectMember(String memberId) {
+	public MemberDto findMember(String memberId) {
 
 		
 			return memberDao.selectMember(memberId);
@@ -88,11 +93,22 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void withdrawal(String memberId, String password) {
-	    String encryptedPassword = PasswordEncryptor.encrypt(password); // 비밀번호 암호화
-	    memberDao.deleteMemberById(memberId,encryptedPassword);
+	public boolean withdrawal(String memberId, String password) {
+		MemberDto member = memberDao.selectMember(memberId);
+		String SavedencryptedPassword = member.getPassword(); 
+		String encryptedPassword = PasswordEncryptor.encrypt(password); // 비밀번호 암호화하기
 	    
-			
+	    if (encryptedPassword.equals(SavedencryptedPassword)) {
+	        return memberDao.withdrawMemberById(memberId, encryptedPassword);
+	    } else {
+	        return false;
+	    }
+	}
+
+	@Override
+	public void editMemberInfo(MemberDto memberInfo) {
+		
+		memberDao.updateMemberInfo(memberInfo);
 	}
 	
 }

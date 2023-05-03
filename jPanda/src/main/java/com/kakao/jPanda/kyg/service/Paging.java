@@ -48,7 +48,6 @@ public class Paging {
 		totalPage = (int)Math.ceil((double)totalRow / rowPage);
 		startPage = currentPage - (currentPage - 1) % pageBlock;
 		
-		// 공갈Page 제거
 		if(endPage > totalPage) {
 			endPage = totalPage;
 		}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/common/layout/default-layout">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
@@ -10,35 +11,97 @@
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style>
-	 css 영역
-	</style>
+* {
+	box-sizing: border-box;
+}
+
+.que:first-child {
+	border-top: 1px solid black;
+}
+
+.que {
+	position: relative;
+	padding: 17px 0;
+	cursor: pointer;
+	font-size: 14px;
+	border-bottom: 1px solid #dddddd;
+}
+
+.que::before {
+	display: inline-block;
+	font-size: 14px;
+	color: #006633;
+	margin: 0 5px;
+}
+
+.que.on>span {
+	font-weight: bold;
+	color: #006633;
+}
+
+.anw {
+	display: none;
+	overflow: hidden;
+	font-size: 14px;
+	background-color: #f4f4f2;
+	padding: 27px 0;
+}
+
+.anw::before {
+	display: inline-block;
+	font-size: 14px;
+	font-weight: bold;
+	color: #666;
+	margin: 0 5px;
+}
+
+.arrow-wrap {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translate(0, -50%);
+}
+
+.que .arrow-top {
+	display: none;
+}
+
+.que .arrow-bottom {
+	display: block;
+}
+
+.que.on .arrow-bottom {
+	display: none;
+}
+
+.que.on .arrow-top {
+	display: block;
+}
+
+.btn {
+	border: 1px solid black;
+}
+</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
 </th:block>
 
 <div>
 	<th:block layout:fragment="content">
-	  <body>
-	  	<table>
-	  		<tr>
-	  			<th>체크</th>
-	  			<th>신고자</th>
-	  			<th>불건전 유저</th>
-	  			<th>사유</th>
-	  			<th>신고일</th>
-	  		</tr>
-	  		<tr th:each="report : ${reportList}">
-	  			<td><input type="checkbox" class="checkbox" name="reportNo" value="${report.reportNo}"></td>
-	  			<td th:text="${report.reportId}"></td>
-	  			<td th:text="${report.blackId}"></td>
-	  			<td th:text="${report.issue}"></td>
-	  			<td th:text="${report.reportDate}"></td>
-	  		</tr>
-	  		<tr>
-	  			<td><input type="button" name="memberStatus" class="btn" value="제제하기"></td>
-	  		</tr>
-	  	</table>
-	  </body>
+		<body>
+			<div th:each="report, i : ${reportList}" th:id="'aco' + ${i}">
+				<div class="que">
+					<span th:text="'불건전 유저 : ' + ${report.blackId}">
+					</span>
+					<div class="arrow-wrap">
+						<span class="arrow-top">↑</span> <span class="arrow-bottom">↓</span>
+					</div>
+				</div>
+				<div class="anw" th:data-blackId="${report.blackId}">
+					<span>This is first answer.</span>
+				</div>
+			</div>
+		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
 	</th:block>
@@ -47,10 +110,76 @@
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-	 JavaScript 영역
-	</script>
+	$(".que").click(function() {
+		  let blackId = $(this).next(".anw").data('blackid');
+		  console.log(blackId);
+		  
+		  let answer = $(this).next(".anw");
+		  answer.stop().slideToggle(300);
+		  $(this).toggleClass('on').siblings().removeClass('on');
+		  $(".anw").not(answer).slideUp(300); // 1개씩 펼치기
+		      	
+		  $.ajax({
+		      url : "/admin/report/reports/" + blackId,
+		      method : "GET",
+		      data : blackId,
+		      success : function(reportList) {
+		            console.log(reportList);
+		            
+		            var tableBody = $(".anw");
+		            tableBody.empty(); // 테이블 내용 초기화
+		            var table = $("<table>").appendTo(tableBody);
+		            var header = $("<thead>").appendTo(table);
+		            var row = $("<tr>").appendTo(header);
+		            $("<th>").text("신고자").appendTo(row);
+		            $("<th>").text("사유").appendTo(row);
+		            $("<th>").text("신고일").appendTo(row);
+		            
+		            var body = $("<tbody>").appendTo(table);
+		            for (var i = 0; i < reportList.length; i++) {
+		                var report = reportList[i];
+		                var row = $("<tr>");
+		                $("<td>").text(report.reportId).appendTo(row);
+		                $("<td>").text(report.issue).appendTo(row);
+		                $("<td>").text(report.reportDate).appendTo(row);
+		                row.appendTo(body);
+		            }
+		            
+		            var row = $("<tr>");
+		            $("<td>").append($("<input>").attr("type", "button").addClass("btn").val("제제하기")).appendTo(row);
+		            row.appendTo(body);
+		      },
+		      error : function(jqXHR, textStatus, errorThrown) {
+		          alert("안 성공");
+		      }
+		  });
+		});
+	 
+	$(document).on("click", ".btn", function(){
+		 let memberId = $(this).closest(".anw").data('blackid');
+		 console.log(memberId);
+		 
+		 $.ajax({
+			 url : "/admin/report/" + memberId,
+			 method : "PATCH",
+			 data : memberId,
+			 success : function(result){
+				 if(result > 0) {
+					 alert("불건전 유저에 대한 제제가 완료되었습니다");
+					 location.href='/admin/report';
+				 } else {
+					 alert("오류가 발생했습니다");
+				 }
+			 },
+			 error : function(){
+				 alert("에러가 발생했습니다");
+			 }
+		 })
+	});
 	
-		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>
 </html>

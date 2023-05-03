@@ -1,219 +1,206 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>재능 판다</title>
-<style type="text/css">
-/*GLOBALS*/
-*{margin:0; padding:0; list-style:none;}
-a{text-decoration:none; color:#666;}
-a:hover{color:#1bc1a3;}
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
 
-.slider-wrap{
-  	width:260px;
-  	height:330px;
-  	position:relative;
-  	overflow:hidden;
-}
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>재능 판다</title>
+</th:block>
 
-.slider-wrap ul.slider{
-  	position:absolute;
-  	top:0;
-  	left:0;   
-}
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style type="text/css">
+		/*GLOBALS*/
+		*{margin:0; padding:0; list-style:none;}
+		a{text-decoration:none; color:#666;}
+		a:hover{color:#1bc1a3;}
+		
+		.slider-wrap{
+		  	width:260px;
+		  	height:330px;
+		  	position:relative;
+		  	overflow:hidden;
+		}
+		
+		.slider-wrap ul.slider{
+		  	position:absolute;
+		  	top:0;
+		  	left:0;   
+		}
+		
+		.slider-wrap ul.slider li{
+		  	float:left;
+		  	position:relative;
+		  	width:260px;
+		  	height:330px; 
+		}
+		
+		.slider-wrap ul.slider li > div{
+		  	top:20px;
+		  	left:35px;  
+		}
+		
+		.slider-wrap ul.slider li > h3{
+		  	font-size:16px;
+		  	text-transform:uppercase; 
+		}
+		
+		.slider-wrap ul.slider li > div span{
+		  	font-family: Neucha, Arial, sans serif;
+		  	font-size:21px;
+		}
+		
+		.slider-wrap ul.slider li > img{
+		  	display:block;
+		  	width: 260px;
+		  	height: 192px;
+		}
+		
+		/*ANIMATION*/
+		.slider-wrap ul{
+		  	-webkit-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	-moz-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	-o-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	-ms-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	transition: all 0.3s cubic-bezier(1,.01,.32,1); 
+		}
+		
+		.slide{
+			display: inline-block;
+			border: 1px solid #EAEAEA;
+			margin: 20px;
+		}
+		.title{
+			font-size: 17px;
+			font-weight: bold; 
+		}
+		.random-talent {
+		    border: 1px solid #EAEAEA;
+		    margin-top: 30px;
+		    
+		    padding-left: 0px;
+		}
+		
+		.random-talent > img {
+		  	width: 160px;
+		  	height: 120px;
+		}
+		
+		.random-talent > div {
+		  	margin-left: 10px;
+		  	height: 100px;
+		  	width: 800px;
+		}
+		
+		.random-talent > img,
+		.random-talent > div {
+		  	display: inline-block;
+		  	vertical-align: middle;
+		}
+		
+		.containerMain	{
+			width: 1000px;
+		  	margin: 0 auto;
+		}
+		#talent-slide {
+			text-align: center;
+			border: 1px solid #EAEAEA;
+			margin-bottom: 50px;
+		}
+		h4 {
+			margin: 10px;
+			text-align: left;
+		}
+		.slider {
+			padding-left: 0px;
+		}
+		
+		.bamboo-score {
+			width: 15px;
+			height: 15px;
+		}
+		
+		.review-div {
+			display: flex;
+		  	align-items: center;
+		}
+		
+		.other {
+		  	display: flex;
+		  	align-items: center;
+		  	justify-content: space-between;
+		}
+		.slide-other {
+		  	display: flex;
+		  	align-items: center;
+		  	justify-content: space-between;
+		  	margin: 0 10px;
+		}
+		
+		.review {
+			font-weight: bold;
+			color: gray;
+			font-size: 13px;
+		}
+		.item-name{
+			font-size: 13px;	
+		}
+		.summary {
+			height: 45px;
+			width: 500px;
+		}
+		.slide-summary {
+			margin: 10px;
+			width: 240px;
+			height: 75px;
+			text-align: left;
+			overflow: hidden;
+			margin-bottom: 15px !important;
+		}
+		.login-check{
+			float: right;
+			margin-right: 50px;
+			font-size: 20px;
+		}
+		.pp{
+			margin-bottom: 0px;
+			padding: 1px;
+		}
+		.mainUl{
+			padding-left: 0px;
+			margin-bottom: 50px;
+		}
+		.talentseller{
+			font-size: 20px;
+		}
+	</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
 
-.slider-wrap ul.slider li{
-  	float:left;
-  	position:relative;
-  	width:260px;
-  	height:330px; 
-}
-
-.slider-wrap ul.slider li > div{
-  	top:20px;
-  	left:35px;  
-}
-
-.slider-wrap ul.slider li > h3{
-  	font-size:16px;
-  	text-transform:uppercase; 
-}
-
-.slider-wrap ul.slider li > div span{
-  	font-family: Neucha, Arial, sans serif;
-  	font-size:21px;
-}
-
-.slider-wrap ul.slider li > img{
-  	display:block;
-  	width: 260px;
-  	height: 192px;
-}
-
-/*ANIMATION*/
-.slider-wrap ul{
-  	-webkit-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  	-moz-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  	-o-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  	-ms-transition: all 0.3s cubic-bezier(1,.01,.32,1);
-  	transition: all 0.3s cubic-bezier(1,.01,.32,1); 
-}
-
-.slide{
-	display: inline-block;
-	border: 1px solid #EAEAEA;
-	margin: 20px;
-}
-.title{
-	font-size: 17px;
-	font-weight: bold; 
-}
-.random-talent {
-	border: 1px solid #EAEAEA;
-	margin-top: 30px;
-}
-
-.random-talent > img {
-	display: block;
-  	width: 160px;
-  	height: 120px;
-  	vertical-align: middle;
-}
-
-.random-talent > img,
-.random-talent > div {
-  	display: inline-block;
-  	vertical-align: middle;
-}
-
-.random-talent > div {
-  	vertical-align: middle;
-  	margin-left: 10px;
-  	height: 100px;
-  	width: 800px;
-}
-
-.container	{
-	width: 1000px;
-  	margin: 0 auto;
-}
-#talent-slide {
-	text-align: center;
-	border: 1px solid #EAEAEA;
-	margin-bottom: 50px;
-}
-h4 {
-	margin: 10px;
-	text-align: left;
-}
-
-.navbar {
-  	display: flex; /* flexbox로 설정 */
-  	justify-content: space-around; /* 링크 간 간격 일정하게 유지 */
-  	align-items: center; /* 링크 수직 가운데 정렬 */
-  	margin: 0 auto;
-  	background-color: #333; /* 배경색 설정 */
-  	height: 50px; /* 높이 설정 */
-  	width: 1000px;
-}
-
-.navbar a {
-  	color: white; /* 링크 글씨 색상 설정 */
-  	text-decoration: none; /* 링크 밑줄 제거 */
-  	font-size: 15px; /* 글씨 크기 설정 */
-  	font-weight: bold; /* 글씨 굵기 설정 */
-  	padding: 15px 20px; /* 링크 좌우 여백 설정 */
-}
-
-.bamboo-score {
-	width: 15px;
-	height: 15px;
-}
-
-.review-div {
-	display: flex;
-  	align-items: center;
-}
-
-.other {
-  	display: flex;
-  	align-items: center;
-  	justify-content: space-between;
-}
-.slide-other {
-  	display: flex;
-  	align-items: center;
-  	justify-content: space-between;
-  	margin: 0 10px;
-}
-
-.review {
-	font-weight: bold;
-	color: gray;
-	font-size: 13px;
-}
-.item-name{
-	font-size: 13px;	
-}
-p {
-	padding: 1px;
-}
-.summary {
-	height: 45px;
-	width: 500px;
-}
-.slide-summary {
-	margin: 10px;
-	width: 240px;
-	height: 65px;
-	text-align: left;
-	overflow: hidden;
-	margin-bottom: 30px;
-}
-.login-check{
-	float: right;
-	margin-right: 50px;
-	font-size: 20px;
-}
-</style>
-</head>
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Neucha' rel='stylesheet' type='text/css'>
-<script src="/js/jquery.js"></script>
-<body>
-	<div class="navbar">
-		<a href="/talent/write-form">재능 등록</a>
-  		<a href="/board">판매게시판</a>
-  		<a href="/trade">거래관리</a>
-  		<a href="/charge/">충전/내역</a>
-  		<a href="/mypage">마이페이지</a>
-  		<a href="/talent/notice">공지사항</a>
-	</div>
-	<div id="login-out">
-	</div>
-	
-	<div class="container">
+<div>
+	<th:block layout:fragment="content">
+	<div class="containerMain">
 	<form action="/talent/update-form">
 	<div>
 	</div>
 	
 	<div id="talent-slide">
 	<div id="bestSellerTalent" class="slide">
-	<h4>최다 판매</h4>
+	<h4 class="talentseller">최다 판매</h4>
       <div id="slider-wrap1" class="slider-wrap">
-          <ul id="slider1" class="slider" >
+          <ul id="slider1" class="slider mainUl" >
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}">
 				<img th:src="@{${talent.mainImg}}">
-                    <p class="slide-summary" th:text="${talent.summary}"></p>
+                    <p class="slide-summary pp" th:text="${talent.summary}"></p>
                     <div class="bamboo">
-                    	<p class="price" th:text="${talent.saleBamboo}">
+                    	<p class="price pp" th:text="${talent.saleBamboo}">
                     </div>
 		            <div class="slide-other">
-			            <p class="item-name" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+			            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
 			            <div class="review-div">
 				            <img class="bamboo-score" src="../image/bambooScore.jpg">
-				            <p class="review" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+				            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
 			            </div>
 		            </div>
              </li>
@@ -221,17 +208,17 @@ p {
       </div>
       </div>
 	<div id="topRatedTalent" class="slide">
-	<h4>최고 평점</h4>
+	<h4 class="talentseller">최고 평점</h4>
       <div id="slider-wrap2" class="slider-wrap">
-          <ul id="slider2" class="slider" >
+          <ul id="slider2" class="slider mainUl" >
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${topRatedTalent}">
 				<img th:src="${talent.mainImg}">
-                   <p class="slide-summary" th:text="${talent.summary}"></p>
+                   <p class="slide-summary pp" th:text="${talent.summary}"></p>
 		            <div class="slide-other">
-			            <p class="item-name" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+			            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
 			            <div class="review-div">
 				            <img class="bamboo-score" src="../image/bambooScore.jpg">
-				            <p class="review" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+				            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
 			            </div>
 		            </div>
              </li>
@@ -240,17 +227,17 @@ p {
       </div>
       
 	<div id="newTrendTalent" class="slide">
-	<h4>최신 트렌드</h4>
+	<h4 class="talentseller">최신 트렌드</h4>
       <div id="slider-wrap3" class="slider-wrap">
-          <ul id="slider3" class="slider" >
+          <ul id="slider3" class="slider mainUl" >
              <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${newTrendTalent}">
 				<img th:src="${talent.mainImg}">
-                   	<p class="slide-summary" th:text="${talent.summary}"></p>
+                   	<p class="slide-summary pp" th:text="${talent.summary}"></p>
 		            <div class="slide-other">
-			            <p class="item-name" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+			            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
 			            <div class="review-div">
 				            <img class="bamboo-score" src="../image/bambooScore.jpg">
-				            <p class="review" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+				            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
 			            </div>
 		            </div>
 	             </li>
@@ -260,18 +247,18 @@ p {
       </div> <!-- id="talent-slide" -->
 	
 	<div id="random-talent-div">
-	<h5>오늘의 재능</h5>
-	<ul>
+	<h4 class="talentseller">오늘의 재능</h4>
+	<ul class="mainUl">
 		<li class="talents random-talent" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
 			<img th:src="${talent.mainImg}">
 		<div>
-			<p th:text="${talent.title}" class="title"></p>
-			<p th:text="${talent.summary}" class="summary"></p>
+			<p th:text="${talent.title}" class="title pp"></p>
+			<p th:text="${talent.summary}" class="summary pp"></p>
             <div class="other">
-	            <p class="item-name" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+	            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
 	            <div class="review-div">
 		            <img class="bamboo-score" src="../image/bambooScore.jpg">
-		            <p class="review" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+		            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
 	            </div>
             </div>
 		</div>
@@ -280,6 +267,13 @@ p {
 	</div>
 	</form>
 	</div> <!-- container -->
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
 	<script type="text/javascript">
 	var sliderInfo = [
 		{
@@ -347,9 +341,8 @@ p {
 		}else{
 			$('#login-out').html('<a class="login-check" href="/logout">로그아웃</a>');
 		}
-	$(function(){
-	
-	});
 	</script>
-</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>

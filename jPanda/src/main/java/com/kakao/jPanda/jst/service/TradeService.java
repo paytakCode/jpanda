@@ -25,5 +25,9 @@ public interface TradeService {
 	String addRefund(HttpSession session ,TradeDto tradeDto);
 
 	String modifyExchangeStatusByTalentNo(String talentNo);
+
+	TradeDto findExchangeByExchangeNo(String exchangeNo);
+
+	TradeDto findRefundByRefundPurchaseNo(String refundPurchaseNo);
 	
 }

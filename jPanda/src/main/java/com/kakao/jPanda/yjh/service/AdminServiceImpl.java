@@ -304,4 +304,20 @@ public class AdminServiceImpl implements AdminService {
 		List<ReportDto> reportList = adminDao.selectReport();
 		return reportList;
 	}
+
+	@Override
+	public List<ReportDto> findReportByBlackId(String blackId) {
+		log.info("Report Service findReportByBlackId() start");
+		List<ReportDto> reportList = adminDao.selectReportByBlackId(blackId);
+		log.info("reportList : "+reportList);
+		
+		return reportList;
+	}
+
+	@Override
+	public int modifyReportByMemberId(String memberId) {
+		log.info("Report Service modifyReportByMemberId() start");
+		
+		return adminDao.updateReportByMemberId(memberId);
+	}
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/common/layout/default-layout">
+	layout:decorate="/common/layout/admin-layout">
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
@@ -43,7 +43,7 @@ css
 						th:href="'/admin/talents/' + ${talent.talentNo}"
 						th:text="${talent.title}"></a></td>
 					<td th:text="${talent.summary}"></td>
-					<td th:text="${talent.regDate}"></td>
+					<td th:text="${talent.statusDate}"></td>
 					<td th:text="${talent.talentStatus}"></td>
 				</tr>
 				<tr>
@@ -75,18 +75,9 @@ css
 		let talentDto = [];
 		let regDate = Date.now();
 		let statusDate = Date.now();
-		let sellerId = [];
-		
-		talentNo.forEach(function(item) {
-			let tr = $(`input.checkbox[value='${item}']`).closest("tr");
-			let td = tr.children();
-			sellerId.push(td.eq(1).text());
-			});
-		
-		console.log(sellerId);
 		
 		for(var i = 0; i < talentNo.length; i++) {
-			talentDto.push({regDate: regDate, statusDate: statusDate, talentNo: talentNo[i], sellerId: sellerId[i], listType: 'sell'});
+			talentDto.push({regDate: regDate, statusDate: statusDate, talentNo: talentNo[i]});
 		}
 		
 		$.ajax({

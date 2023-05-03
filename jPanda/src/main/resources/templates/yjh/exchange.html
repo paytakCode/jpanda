@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/common/layout/default-layout">
+	layout:decorate="/common/layout/admin-layout">
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
@@ -74,21 +74,19 @@ css
 		let exchangeDto = [];
 		let exchangeStatus = $(this).val();
 		let approveDate = Date.now();
-		let sellerId = [];
 		
 		exchangeNo.forEach(function(item) {
 			let tr = $(`input.checkbox[value='${item}']`).closest("tr");
 			let td = tr.children();
-			sellerId.push(td.eq(3).text());
 		});
 		
 		if(exchangeStatus == '환전완료') {
 			for(var i = 0; i < exchangeNo.length; i++) {
-				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate, sellerId: sellerId[i], listType: 'exchange'});
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
 			}
 		} else if(exchangeStatus == '반려') {
 			for(var i = 0; i < exchangeNo.length; i++) {
-				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate, sellerId: sellerId[i], listType: 'exchange'});
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
 			}
 		}
 		

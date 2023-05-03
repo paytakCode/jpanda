@@ -351,13 +351,45 @@ public class AdminController {
 	}
 	
 	@GetMapping(value = "/report")
-	public String findReport(Model model, HttpSession session) {
-		log.info("Report Controller findRepor() start");
+	public String reportList(Model model, HttpSession session) {
+		log.info("Report Controller reportList() start");
 		List<ReportDto> reportList = adminService.findReport();
-		
 		model.addAttribute("reportList", reportList);
 		
-		return "yjh/report";
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/report";
+		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/report/reports/{blackId}")
+	public List<ReportDto> ReportListByBlackId(@PathVariable("blackId") String blackId) {
+		log.info("Report Controller findReportByBlackId() start");
+		log.info("blackId : " + blackId);
+		
+		List<ReportDto> reportList = adminService.findReportByBlackId(blackId);
+		
+		return reportList;
+	}
+	
+	@ResponseBody
+	@PatchMapping(value = "/report/{memberId}")
+	public int reportModifyByMemberId(@PathVariable("memberId") String memberId, HttpSession session) {
+		log.info("Report Controller reportModifyByMemberId() start");
+		log.info("memberId : "+memberId);
+		int result = 0;
+		
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
+			result = -1;
+			
+		} else {
+			result = adminService.modifyReportByMemberId(memberId);
+		}
+		
+		return result;
 	}
 
 }	

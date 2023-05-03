@@ -42,5 +42,7 @@ public interface AdminService {
 	
 	//report
 	List<ReportDto> findReport();
+	List<ReportDto> findReportByBlackId(String blackId);
+	int modifyReportByMemberId(String memberId);
 
 }

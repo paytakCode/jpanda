@@ -2,9 +2,11 @@ package com.kakao.jPanda.lhw.dao;
 
 import java.util.List;
 
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
@@ -46,10 +48,16 @@ public class TalentDaoImpl implements TalentDao {
 		return sqlSession.delete("deleteReview", review);
 	}
 
+	// 재능 삭제 (업데이트)
 	@Override
 	public int updateTalent(Long talentNo) {
 		return sqlSession.update("updateTalent", talentNo);
 	}
-	
 
+	// 리뷰 인서트 검증용
+	@Override
+	public List<BambooUseDto> selectBambooUseListByTalentNo(Long talentNo) {
+		return sqlSession.selectList("selectBambooUseListByTalentNo", talentNo);
+	}
+	
 }

@@ -25,4 +25,7 @@ public class ReportDto {
 	
 	//권한 변경용 컬럼
 	private String memberStatus;
+	
+	//group 함수 데이터 조회용
+	private String reportCount;
 }

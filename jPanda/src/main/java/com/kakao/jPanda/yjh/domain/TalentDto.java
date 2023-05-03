@@ -30,5 +30,4 @@ public class TalentDto {
 	private Timestamp regDate;
 	private Timestamp statusDate;
 	
-	private String listType;
 }

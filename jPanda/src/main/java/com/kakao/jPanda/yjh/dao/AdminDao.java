@@ -45,5 +45,7 @@ public interface AdminDao {
 	
 	//report
 	List<ReportDto> selectReport();
+	List<ReportDto> selectReportByBlackId(String blackId);
+	int updateReportByMemberId(String memberId);
 
 }

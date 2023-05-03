@@ -10,7 +10,7 @@
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style>
-	 css 영역
+	 /*  CSS 영역  */
 	</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -18,7 +18,7 @@
 
 <div>
 	<th:block layout:fragment="content">
-	  body 영역
+	  <!-- CONTENT 영역 -->
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
 	</th:block>
@@ -27,7 +27,7 @@
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-	 JavaScript 영역
+	/*JavaScript 영역 */
 	</script>
 	
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

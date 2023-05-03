@@ -22,5 +22,4 @@ public class ExchangeDto {
 	private String exchangeStatus;
 	private Long paymentAmount;
 	
-	private String listType;
 }

@@ -114,6 +114,12 @@
 	</select>
 	
 	<!-- refund -->
+	<select id="selectTradeRefundByRefundPurchaseNo" parameterType="String" resultType="TradeDto">
+		SELECT *
+		FROM talent_refund
+		WHERE purchase_no = #{refundPurchaseNo}
+	</select>
+	
 	<delete id="deleteRefundByrefundPurchaseNo" parameterType="String">
 		DELETE
 		from talent_refund
@@ -177,4 +183,9 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
+	<select id="selectTradeExchangeByExchangeNo" parameterType="String" resultType="TradeDto">
+		SELECT *
+		FROM exchange
+		WHERE exchange_no = #{exchangeNo}
+	</select>
 </mapper>

@@ -255,4 +255,35 @@ public class AdminDaoImpl implements AdminDao {
 		}
 		return reportList;
 	}
+
+	@Override
+	public List<ReportDto> selectReportByBlackId(String blackId) {
+		log.info("Dao selectReportByBlackId() start");
+		List<ReportDto> reportList = null;
+		
+		try {
+			reportList = sqlSession.selectList("selectReportByBlackId", blackId);
+			
+		} catch(Exception e) {
+			log.info("Dao selectReportByBlackId() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return reportList;
+	}
+
+	@Override
+	public int updateReportByMemberId(String memberId) {
+		log.info("Dao updateReportByMemberId() start");
+		int result = 0;
+		
+		try {
+			result = sqlSession.update("updateReportByMemberId", memberId);
+			
+		} catch(Exception e) {
+			log.info("Dao upateReportByMemberId() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}
 }
