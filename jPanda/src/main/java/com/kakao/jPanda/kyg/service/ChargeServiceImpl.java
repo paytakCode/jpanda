@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.kyg.dao.ChargeDao;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
-import com.kakao.jPanda.kyg.domain.ChargeHistoryDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
@@ -128,42 +127,42 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 	
 	@Override
-	public Long findTotalBamboo(String memberId) {
+	public Long findTotalBambooByMemberId(String memberId) {
 		
-		Long selectedBambooChargeAmount = chargeDao.selectChargeBambooAmount(memberId);
-		Long selectedBambooUseAmount    = chargeDao.selectBambooUseAmount(memberId);
-		Long selectedTalentRefundAmount = chargeDao.selectTalentRefundAmount(memberId);
-		log.info("ChargeServiceImpl calculateTotalBamboo findBambooChargeAmount -> {}", selectedBambooChargeAmount);
-		log.info("ChargeServiceImpl calculateTotalBamboo findBambooUseAmount    -> {}", selectedBambooUseAmount);
-		log.info("ChargeServiceImpl calculateTotalBamboo findTalentRefundAmount -> {}", selectedTalentRefundAmount);
+		Long findBambooChargeAmountByMemberId = chargeDao.selectChargeBambooAmountByMemberId(memberId);
+		Long findBambooUseAmountByMemberId    = chargeDao.selectBambooUseAmountByMemberId(memberId);
+		Long findTalentRefundAmountByMemberId = chargeDao.selectTalentRefundAmountByMemberId(memberId);
+		log.info("ChargeServiceImpl calculateTotalBamboo findBambooChargeAmountMemberId -> {}", findBambooChargeAmountByMemberId);
+		log.info("ChargeServiceImpl calculateTotalBamboo findBambooUseAmountMemberId    -> {}", findBambooUseAmountByMemberId);
+		log.info("ChargeServiceImpl calculateTotalBamboo findTalentRefundAmountMemberId -> {}", findTalentRefundAmountByMemberId);
 		
-		Long foundTotalBamboo = selectedBambooChargeAmount + selectedTalentRefundAmount - selectedBambooUseAmount;
-		log.info("ChargeServiceImpl calculateTotalBamboo calculatedTotalBamboo  -> {}", foundTotalBamboo);
+		Long foundTotalBambooByMemberId = findBambooChargeAmountByMemberId + findTalentRefundAmountByMemberId - findBambooUseAmountByMemberId;
+		log.info("ChargeServiceImpl calculateTotalBamboo calculatedTotalBamboo  -> {}", foundTotalBambooByMemberId);
 		
-		return foundTotalBamboo;
+		return foundTotalBambooByMemberId;
 	}
 
 	@Override
-	public List<PaymentDto> findPaymentList(PaymentDto paymentDto) {
+	public List<PaymentDto> findPaymentList() {
 		
 		List<PaymentDto> selectPaymentList = null;
 		log.info("ChargeServiceImpl findPaymentList() Start...");
 		
-		selectPaymentList = chargeDao.selectPaymentList(paymentDto);
+		selectPaymentList = chargeDao.selectPaymentList();
 		log.info("ChargeServiceImpl findPaymentList() selectPaymentList.size() -> {}", selectPaymentList.size());
 		
 		return selectPaymentList;
 	}
 
 	@Override
-	public List<ChargeHistoryDto> findChargeHistoryList(ChargeHistoryDto chargeHistoryListDto) {
-		List<ChargeHistoryDto> selectChargeHistoryList = null;
+	public List<ChargeDto> findBambooChargeListbyChargerId(String chargerId) {
+		List<ChargeDto> selectBambooChargeListbyChargerId = null;
 		log.info("ChargeServiceImpl findChargeHistoryList() Start...");
 		
-		selectChargeHistoryList = chargeDao.selectChargeHistoryList(chargeHistoryListDto);
-		log.info("ChargeServiceImpl findPaymentList() selectChargeHistoryList.size() -> {}", selectChargeHistoryList.size());
+		selectBambooChargeListbyChargerId = chargeDao.selectBambooChargeListbyChargerId(chargerId);
+		log.info("ChargeServiceImpl findPaymentList() selectChargeHistoryList.size() -> {}", selectBambooChargeListbyChargerId.size());
 		
-		return selectChargeHistoryList;
+		return selectBambooChargeListbyChargerId;
 	}
 	
 	

@@ -19,7 +19,7 @@
 		  bamboo_charge_no_SEQ.NEXTVAL,
 		  #{chargerId},
 		  #{paymentMethod},
-		  #{chargeMoney},
+		  #{paymentAmount},
 		  #{chargeBamboo},							
 		  SYSDATE,
 		  #{couponCode,  jdbcType=VARCHAR}
@@ -65,7 +65,7 @@
 		
 	</select>
 	
-	<select id="selectChargeBambooAmount" parameterType="String" resultType="Long">
+	<select id="selectChargeBambooAmountByMemberId" parameterType="String" resultType="Long">
 	
 		SELECT	NVL(sum(charge_bamboo),0)
 		FROM	bamboo_charge
@@ -73,7 +73,7 @@
 		
 	</select>
 	
-	<select id="selectBambooUseAmount" parameterType="String" resultType="Long">
+	<select id="selectBambooUseAmountByMemberId" parameterType="String" resultType="Long">
 		
 		SELECT	NVL(sum(use_bamboo),0)
 		FROM	bamboo_use
@@ -81,7 +81,7 @@
 		
 	</select>
 	
-	<select id="selectTalentRefundAmount" parameterType="String" resultType="Long">
+	<select id="selectTalentRefundAmountByMemberId" parameterType="String" resultType="Long">
 	
 		SELECT		NVL(sum(tr.refund_bamboo),0)
 		FROM		talent_refund tr
@@ -92,13 +92,13 @@
 	
 	</select>
 	
-	<select id="selectPaymentList" parameterType="ChargePaymentDto" resultType="ChargePaymentDto">
+	<select id="selectPaymentList" resultType="ChargePaymentDto">
 	
 		SELECT * FROM payment
 		
 	</select>
 	
-	<select id="selectChargeHistoryList" parameterType="ChargeHistoryDto" resultType="ChargeHistoryDto">
+	<select id="selectBambooChargeListbyChargerId" parameterType="String" resultType="ChargeDto">
 	
 		SELECT  charge_date, payment_method, payment_amount, charge_bamboo 
 		FROM    bamboo_charge
