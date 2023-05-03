@@ -39,4 +39,6 @@ public interface TradeDao {
 
 	TradeDto selectExchangeByExchangeNo(String exchangeNo);
 
+	TradeDto selectRefundByRefundPurchaseNo(String refundPurchaseNo);
+
 }//end class

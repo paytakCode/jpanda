@@ -1,8 +1,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="headerJsFragment">
-	<script>
+	<script th:inline = 'javascript'>
 		$(function(){
-			const memberId = sessionStorage.key('memberId');
+			const memberId = [[${#session.getAttribute('memberId')}]];
 			if(memberId == "" || memberId == null){
 				$("#login-image").attr("src", "/image/login-before.png");
 				

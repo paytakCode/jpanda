@@ -228,8 +228,7 @@ public class TradeServiceImpl implements TradeService{
 
 	@Override
 	public TradeDto findRefundByRefundPurchaseNo(String refundPurchaseNo) {
-		// TODO Auto-generated method stub
-		return null;
+		return tradeDao.selectRefundByRefundPurchaseNo(refundPurchaseNo);
 	}
 
 

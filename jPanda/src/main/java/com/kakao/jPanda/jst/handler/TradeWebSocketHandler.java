@@ -1,7 +1,6 @@
 package com.kakao.jPanda.jst.handler;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +16,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
 import com.kakao.jPanda.jst.service.TradeService;
 
