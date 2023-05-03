@@ -155,17 +155,23 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 
 	@Override
-	public List<ChargeDto> findBambooChargeListbyChargerId(String chargerId) {
+	public List<ChargeDto> findBambooChargeListbyChargerId(ChargeDto chargeDto) {
 		List<ChargeDto> selectBambooChargeListbyChargerId = null;
 		log.info("ChargeServiceImpl findChargeHistoryList() Start...");
 		
-		selectBambooChargeListbyChargerId = chargeDao.selectBambooChargeListbyChargerId(chargerId);
+		selectBambooChargeListbyChargerId = chargeDao.selectBambooChargeListbyChargerId(chargeDto);
 		log.info("ChargeServiceImpl findPaymentList() selectChargeHistoryList.size() -> {}", selectBambooChargeListbyChargerId.size());
 		
 		return selectBambooChargeListbyChargerId;
 	}
-	
-	
 
+	@Override
+	public int totalChargeCnt(String chargerId) {
+		log.info("ChargeServiceImpl totalChargeCnt() Start...");
+		int totalChargeCnt = chargeDao.totalChargeCnt(chargerId);
+		log.info("ChargeServiceImpl totalChargeCnt() count -> {}", totalChargeCnt);
+		
+		return totalChargeCnt;
+	}
 
 }
