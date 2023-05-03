@@ -10,10 +10,28 @@
 
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
-	<style>
-css
- 
-영역
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+td {
+	border: 1px solid #ddd;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -33,7 +51,7 @@ css
 						<td><textarea rows="50" cols="50" name="content"></textarea></td>
 					</tr>
 					<tr>
-						<td colspan="2"><button type="submit" value="적용">적용</button></td>
+						<td colspan="2"><button type="submit" style="border: 1 solid;" value="적용">적용</button></td>
 					</tr>
 				</table>
 				<input type="hidden" class="regDate" name="regDate"
