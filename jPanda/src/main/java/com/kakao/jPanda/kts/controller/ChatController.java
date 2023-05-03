@@ -1,9 +1,9 @@
 package com.kakao.jPanda.kts.controller;
 
 import java.util.List;
-import javax.servlet.http.HttpSession;
+
 import javax.validation.Valid;
-import org.apache.ibatis.session.SqlSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.kakao.jPanda.kts.domain.Chat;
-import com.kakao.jPanda.kts.domain.Member;
 import com.kakao.jPanda.kts.domain.Partner;
 import com.kakao.jPanda.kts.service.ChatService;
-import com.kakao.jPanda.njb.service.MemberService;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

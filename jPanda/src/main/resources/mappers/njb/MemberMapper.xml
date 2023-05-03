@@ -33,8 +33,8 @@
 	</select>
 	<insert id="insertMember" parameterType="MemberDto">
         INSERT INTO Member
-            (member_id, password, name, tel, email, gender ,birth)
-        VALUES (#{memberId},#{password}, #{name},#{tel}, #{email}, #{gender} , TO_DATE(#{birth}, 'YYYY-MM-DD'))
+            (member_id, password, name, tel, email, gender ,birth, member_status, member_grade)
+        VALUES (#{memberId},#{password}, #{name},#{tel}, #{email}, #{gender} , TO_DATE(#{birth}, 'YYYY-MM-DD'), 'Normal_role', 'Bronze')
     </insert>
 	<insert id="insertAccount" parameterType="MemberDto">
         INSERT INTO Account
@@ -47,10 +47,14 @@
     	FROM member 
     	WHERE member_id=#{memberId}
 	</select>
-	<delete id="deleteMemberById">
-  		DELETE 
-  		FROM member
+	<update id="updateMemberStatusByMemberId" parameterType="String">
+  		UPDATE member
+  		set member_status = 'Withdrawal'
   		WHERE member_id = #{memberId}
-    	AND password = #{encryptedPassword}
-	</delete>
+	</update>
+	<update id="updateMemberInfo" parameterType="MemberDto">
+  		UPDATE member
+  		SET name = #{name}, email = #{email}, tel = #{tel}
+  		WHERE id = #{id}
+	</update>
 </mapper>

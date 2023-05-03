@@ -17,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -139,12 +140,11 @@ public class MemberController {
     
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDto memberDto, HttpSession session,RedirectAttributes redirectAttributes) {
-    	System.out.println(memberDto.getMemberId() + memberDto.getPassword() +"1");
     	boolean loginResult = memberservice.login(memberDto);
     	if(loginResult) {
     		session.setAttribute("memberId", memberDto.getMemberId());
     		String memberId = (String) session.getAttribute("memberId");   		
-            MemberDto member = memberservice.selectMember(memberId);
+            MemberDto member = memberservice.findMember(memberId);
             System.out.println(member);
             if(memberId.equals("admin")) {
             	return "redirect:/admin";
@@ -153,35 +153,48 @@ public class MemberController {
             redirectAttributes.addFlashAttribute("memberInfo", member);
     		return "redirect:/main";
     	}else {
-    		redirectAttributes.addFlashAttribute("alertMsg", "정보를 확인해주세요");
+    		redirectAttributes.addFlashAttribute("alertMsg", "로그인 할 수 없습니다.");
     		return "redirect:/login";
     	}
     }
     
-    
-    @GetMapping("/logout")
+    @ResponseBody
+    @DeleteMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // 세션 무효화
-        return "redirect:/login"; // 로그아웃 후 리다이렉트할 페이지
+        session.invalidate();
+        return "Logout Success";
     }
    
     @PostMapping("/withdrawal")
-    public String withdrawal(HttpSession session, @RequestParam String password) {
+    public ResponseEntity<String> withdrawal(HttpSession session, @RequestParam String password) {
         String memberId = (String) session.getAttribute("memberId");
-        memberservice.withdrawal(memberId, password);
-        session.invalidate(); // 세션 무효화
-        return "redirect:/login"; // 탈퇴 후 리다이렉트할 페이지
+        boolean isWithdrawalSuccessful = memberservice.withdrawal(memberId, password);
+
+        if (isWithdrawalSuccessful) {
+            session.invalidate();
+            return ResponseEntity.ok("탈되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호를 확인해주세요.");
+        }
     }
-    
+
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         String memberId = (String) session.getAttribute("memberId");
         if (memberId != null) {
             // 로그인이 되어있는 경우
-            MemberDto memberInfo = memberservice.selectMember(memberId);
+            MemberDto memberInfo = memberservice.findMember(memberId);
             model.addAttribute("memberInfo", memberInfo);
+            model.addAttribute("editMode", false);
         }
         return "njb/mypage";
+    }
+    @PostMapping("/updateMember")
+    public String editMemberInfo(@ModelAttribute("memberInfo") MemberDto memberInfo, HttpSession session) {
+        
+    	memberservice.editMemberInfo(memberInfo);
+        session.setAttribute("memberInfo", memberInfo);
+        return "redirect:/mypage";
     }
 
   }

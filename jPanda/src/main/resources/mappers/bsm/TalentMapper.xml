@@ -8,7 +8,7 @@
 		<!-- SELECT talent_seq.NEXTVAL FROM dual -->
 		INSERT INTO talent 
 		VALUES(talent_no_seq.NEXTVAL, #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
-				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, #{regDate}, NULL)
+				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, NULL, #{statusDate})
 	</insert>
 	
 	<select id="selectRegistTalentBytalentNo" resultType="RegistTalent" parameterType="Long">

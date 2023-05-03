@@ -16,7 +16,7 @@
 		font-family: Arial, sans-serif;
 	}
 	
-	.container {
+	#trade-container {
 		max-width: 80%;
 		margin: 0 auto;
 		padding: 20px;
@@ -55,36 +55,6 @@
 		color: #fff;
 		position: relative;
 		top: 1px;
-	}
-	
-	nav {
-		background-color: #333;
-		color: #fff;
-		border-radius: 10px;
-		padding: 10px;
-		margin-bottom: 5%;
-	}
-	
-	.nav-links {
-		display: flex;
-		justify-content: space-between;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-	
-	.nav-links li {
-		padding: 10px;
-	}
-	
-	.nav-links a {
-		color: #fff;
-		text-decoration: none;
-		font-weight: bold;
-	}
-	
-	.nav-links a:hover {
-		text-decoration: underline;
 	}
 	
 	.page-title {
@@ -186,7 +156,7 @@
 <div>
 	<th:block layout:fragment="content">
 	<!-- container -->
-	<div class="container">
+	<div id="trade-container">
 		<!-- title bar -->
 		<div class="page-title">
 			거래관리

@@ -2,6 +2,7 @@ package com.kakao.jPanda.lhw.dao;
 
 import java.util.List;
 
+import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
@@ -22,8 +23,10 @@ public interface TalentDao {
 	// 리뷰 삭제
 	int deleteReview(ReviewDto review);
 
+	// 재능 삭제(업데이트)
 	int updateTalent(Long talentNo);
-	
-	
+
+	// 리뷰 인서트 검증용
+	List<BambooUseDto> selectBambooUseListByTalentNo(Long talentNo);
 	
 }
