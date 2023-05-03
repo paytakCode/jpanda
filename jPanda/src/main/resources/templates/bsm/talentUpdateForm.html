@@ -9,7 +9,6 @@
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style type="text/css">
-		/* Set font family and size */
 		.container-update-form {
 		  font-family: Arial, sans-serif;
 		  font-size: 16px;
@@ -111,18 +110,23 @@
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
 </th:block>
-<!-- CKEditor5 사용 -->
 <div>
 	<th:block layout:fragment="content">
+	<script th:inline="javascript">
+		if([[${#session.getAttribute("memberId")}]] != [[${talent.sellerId}]]){
+			alert("비정상적인 접근이 감지되었습니다. 다시 로그인 해주세요.");
+			location.href = "/logout";
+		}
+	</script>
 	 	<div id="side">
-	  	<table id="writeCheck">
-	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
-		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
-		    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
-		    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
-		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
-		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
-	  	</table>
+		  	<table id="writeCheck">
+		    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+			    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+			    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+			    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+			    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+			    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>
+		  	</table>
 		</div>
 	
 		<div class="container-update-form">
@@ -192,21 +196,15 @@
 			<input id="talent-sudmit-button" type="submit" value="수정하기">
 		</form>
 		</div> <!-- container -->
-			<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
-			<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
-		</th:block>
-	</div>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
 
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 	<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
-	<script th:inline="javascript">
-		if([[${#session.getAttribute("memberId")}]] != [[${talent.sellerId}]]){
-			alert("비정상적인 접근이 감지되었습니다. 다시 로그인 해주세요.");
-			location.href = "/logout";
-		}
-	</script>
 	<script>
 	// 사이드바 
     $('#writeCheck tr').on('click', function() {
@@ -363,10 +361,14 @@
     	if (isNaN(discountPercent) || discountPercent === Infinity || discountPercent < 0) {
       		discountPercent = 0;
 	    }
-	    
 	    $('#discount-bamboo').val(discountPercent);
-	    
   	}
+	// 가격 입력란 숫자, backspace외 입력 불가 처리
+	$('.bamboo-input').on('keydown', function(value) {
+		  if(!((value.keyCode > 95 && value.keyCode < 106) || (value.keyCode > 47 && value.keyCode < 58) || value.keyCode == 8)) {
+			    return false;
+		  }
+	});
 	</script>
 	<script th:inline="javascript">
 	// 카테고리 값 생성
@@ -412,8 +414,7 @@
 	
 	$('#seller-id').val([[${#session.getAttribute("memberId")}]]);
 	</script>
-	
-		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>
 </html>
