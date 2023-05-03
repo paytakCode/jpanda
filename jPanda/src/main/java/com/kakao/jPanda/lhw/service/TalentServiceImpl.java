@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.lhw.dao.TalentDao;
+import com.kakao.jPanda.lhw.domain.BambooChargeDto;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
@@ -58,4 +59,17 @@ public class TalentServiceImpl implements TalentService {
 	public List<BambooUseDto> findBambooUseListByTalentNo(Long talentNo) {
 		return talentDao.selectBambooUseListByTalentNo(talentNo);
 	}
+	
+	// 재능 구매자 정보 인서트
+	@Override
+	public int addBambooUseList(BambooUseDto bambooUse) {
+		return talentDao.insertBambooUse(bambooUse);
+	}
+	
+	// 재능 구매자 잔여 포인트 조회
+	@Override
+	public List<BambooChargeDto> findChargeBambooByByuerId(String buyerId) {
+		return talentDao.selectChargeBambooByByuerId(buyerId);
+	}
+
 }

@@ -2,6 +2,7 @@ package com.kakao.jPanda.lhw.dao;
 
 import java.util.List;
 
+import com.kakao.jPanda.lhw.domain.BambooChargeDto;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
@@ -28,5 +29,11 @@ public interface TalentDao {
 
 	// 리뷰 인서트 검증용
 	List<BambooUseDto> selectBambooUseListByTalentNo(Long talentNo);
+
+	// 재능 구매자 정보 인서트
+	int insertBambooUse(BambooUseDto bambooUse);
+	
+	// 재능 구매자 잔여 포인트 조회
+	List<BambooChargeDto> selectChargeBambooByByuerId(String buyerId);
 	
 }

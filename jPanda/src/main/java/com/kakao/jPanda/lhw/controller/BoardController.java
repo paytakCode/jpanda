@@ -32,12 +32,8 @@ public class BoardController {
 		System.out.println("Controller boardList Start");
 		List<CategoryDto> upperCategoryList = boardService.findUpperCategoryList();
 		
-		String memberId = "";
-		if(session.getAttribute("memberId") == null) {
-			memberId = "guest";
-		} else {
-			memberId = (String) session.getAttribute("memberId");
-		}
+		String memberId = (String) session.getAttribute("memberId");
+		
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("upperCategoryList", upperCategoryList);
 		

@@ -16,4 +16,8 @@ public class BambooUseDto {
 	private Long talentNo;
 	private Timestamp purchaseDate;
 	private Long useBamboo;
+	
+	
+	// 잔여 포인트 조회용
+	private Long chargeBamboo;
 }

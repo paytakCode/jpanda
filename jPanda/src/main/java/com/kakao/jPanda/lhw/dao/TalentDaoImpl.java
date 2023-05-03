@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.kakao.jPanda.lhw.domain.BambooChargeDto;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
@@ -58,6 +59,18 @@ public class TalentDaoImpl implements TalentDao {
 	@Override
 	public List<BambooUseDto> selectBambooUseListByTalentNo(Long talentNo) {
 		return sqlSession.selectList("selectBambooUseListByTalentNo", talentNo);
+	}
+
+	// 재능 구매자 정보 인서트
+	@Override
+	public int insertBambooUse(BambooUseDto bambooUse) {
+		return sqlSession.insert("insertBambooUse", bambooUse);
+	}
+
+	// 재능 구매자 잔여 포인트 조회
+	@Override
+	public List<BambooChargeDto> selectChargeBambooByByuerId(String buyerId) {
+		return sqlSession.selectList("selectChargeBambooByByuerId", buyerId);
 	}
 	
 }

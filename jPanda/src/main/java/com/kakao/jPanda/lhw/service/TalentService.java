@@ -2,7 +2,7 @@ package com.kakao.jPanda.lhw.service;
 
 import java.util.List;
 
-
+import com.kakao.jPanda.lhw.domain.BambooChargeDto;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
@@ -29,4 +29,11 @@ public interface TalentService {
 	
 	// 리뷰 인서트 검증
 	List<BambooUseDto> findBambooUseListByTalentNo(Long talentNo);
+
+	// 재능 구매자 정보 인서트
+	int addBambooUseList(BambooUseDto bambooUse);
+	
+	// 재능 구매자 잔여 포인트 조회
+	List<BambooChargeDto> findChargeBambooByByuerId(String buyerId);
+	
 }

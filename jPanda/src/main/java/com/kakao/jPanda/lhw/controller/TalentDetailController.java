@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kakao.jPanda.lhw.domain.BambooChargeDto;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
@@ -35,13 +36,8 @@ public class TalentDetailController {
 		TalentDto talent = talentService.findBoardTalentByTalentNo(talentNo);
 		List<ReviewDto> reviewList = talentService.findReviewListByTalentNo(talentNo);
 		
-		String memberId = "";
-		if(session.getAttribute("memberId") == null) {
-			memberId = "guest";
-		} else {
-			memberId = (String) session.getAttribute("memberId");
-		}
-		
+		String memberId = (String)session.getAttribute("memberId");
+
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("talent", talent);
 		model.addAttribute("reviewList", reviewList);
@@ -55,10 +51,11 @@ public class TalentDetailController {
 	public int reviewAdd(@PathVariable("talentNo") Long talentNo, @RequestBody ReviewDto review, HttpSession session, Model model) {
 	    System.out.println("Controller reviewAdd Start");
 	    List<BambooUseDto> bambooUseList = talentService.findBambooUseListByTalentNo(talentNo);
-	    review.setTalentNo(talentNo); // talentNo를 review 객체에 설정
-	    review.setReviewerId((String)session.getAttribute("memberId")); // reviewerId를 review 객체에 설정
-
+	    
 	    String memberId = (String)session.getAttribute("memberId");
+	    review.setTalentNo(talentNo); // talentNo를 review 객체에 설정
+	    review.setReviewerId(memberId); // reviewerId를 review 객체에 설정
+
 	    int result = -1;
 
 	    for (BambooUseDto bambooUseDto : bambooUseList) {
@@ -79,7 +76,6 @@ public class TalentDetailController {
 	    }
 	    model.addAttribute("memberId", memberId);
 	    System.out.println("리뷰 인서트 완료시1 -> " + result);
-	    
 	    return result;
 	}
 	
@@ -92,17 +88,10 @@ public class TalentDetailController {
 		System.out.println("Controller reviewModify Start");
 		System.out.println("talentNo : " + talentNo);
 		System.out.println("reviweNo : " + reviewNo);
-		review.setReviewerId((String)session.getAttribute("memberId"));
+		String memberId = (String)session.getAttribute("memberId");
+		review.setReviewerId(memberId);
 	    int modifyReview = talentService.modifyReview(review);
 	    System.out.println("리뷰 수정 완료시 1-> " + modifyReview);
-	    
-	    String memberId = "";
-		if(session.getAttribute("memberId") == null) {
-			memberId = "guest";
-		} else {
-			memberId = (String) session.getAttribute("memberId");
-		}
-		model.addAttribute("memberId", memberId);
 	    
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
@@ -126,6 +115,23 @@ public class TalentDetailController {
 		talentService.updateTalentStatus(talentNo);
 		return "redirect:/board";
 	}
+	
+	
+	// 구매하기 버튼 눌럿을때
+	@ResponseBody
+	@PostMapping("/talent/purchase")
+	public int purchaseAdd(@RequestBody BambooUseDto bambooUse, HttpSession session, List<BambooChargeDto> bambooCharge) {
+		System.out.println("Controller purchaseAdd Start");
+		System.out.println("구매 회원 정보 -> " + bambooUse);
+		int bambooUseList = talentService.addBambooUseList(bambooUse);
+		//bambooUse = talentService.findChargeBambooByByuerId(bambooUse.getBuyerId());
+		
+		bambooCharge = talentService.findChargeBambooByByuerId(bambooUse.getBuyerId());
+		System.out.println("bambooCharge -> " + bambooCharge);
+		
+		return bambooUseList;
+	}
+	
 	
 
 	
