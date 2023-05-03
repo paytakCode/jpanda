@@ -23,6 +23,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 import com.kakao.jPanda.yjh.service.AdminService;
@@ -302,12 +303,15 @@ public class AdminController {
 		return result;
 	}
 	
-	@GetMapping(value = "/talent/{sellerId}")
-	public String talentDetailBySellerId(@PathVariable("sellerId") String sellerId) {
-		log.info("Talent Controller talentDetailBySellerId start()");
-		log.info("sellerId : "+sellerId);
+	@GetMapping(value = "/talents/{talentNo}")
+	public String talentDetailBySellerId(@PathVariable("talentNo") Long talentNo, Model model) {
+		log.info("Talent Controller talentDetailByTalentNo start()");
+		log.info("sellerId : "+talentNo);
+		TalentDto talentDto = adminService.findTalentByTalentNo(talentNo);
+		log.info("talentList : "+talentDto.toString());
+		model.addAttribute("talent", talentDto);
 		
-		return "";
+		return "yjh/talent-detail";
 	}
 
 	//talent-refund
@@ -343,6 +347,48 @@ public class AdminController {
 		
 		int result = adminService.modifyTalentRefundByPurchaseNosAndStatus(talentRefundDto);
 				
+		return result;
+	}
+	
+	@GetMapping(value = "/report")
+	public String reportList(Model model, HttpSession session) {
+		log.info("Report Controller reportList() start");
+		List<ReportDto> reportList = adminService.findReport();
+		model.addAttribute("reportList", reportList);
+		
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
+			return "redirect:/login";
+			
+		} else {
+			return "yjh/report";
+		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/report/reports/{blackId}")
+	public List<ReportDto> ReportListByBlackId(@PathVariable("blackId") String blackId) {
+		log.info("Report Controller findReportByBlackId() start");
+		log.info("blackId : " + blackId);
+		
+		List<ReportDto> reportList = adminService.findReportByBlackId(blackId);
+		
+		return reportList;
+	}
+	
+	@ResponseBody
+	@PatchMapping(value = "/report/{memberId}")
+	public int reportModifyByMemberId(@PathVariable("memberId") String memberId, HttpSession session) {
+		log.info("Report Controller reportModifyByMemberId() start");
+		log.info("memberId : "+memberId);
+		int result = 0;
+		
+		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
+			result = -1;
+			
+		} else {
+			result = adminService.modifyReportByMemberId(memberId);
+		}
+		
 		return result;
 	}
 

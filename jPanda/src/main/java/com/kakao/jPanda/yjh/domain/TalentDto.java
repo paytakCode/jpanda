@@ -29,4 +29,5 @@ public class TalentDto {
 	private Long viewCount;
 	private Timestamp regDate;
 	private Timestamp statusDate;
+	
 }

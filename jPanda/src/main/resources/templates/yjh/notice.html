@@ -1,33 +1,60 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="/js/jquery.js"></script>
-<link th:href="@{/css/board.css}" rel="stylesheet"/>
-</head>
-<body>
-	<h1>공지사항</h1>
-	<form action="/admin/notice-form" method="get">
-		<table border="1">
-			<tr>
-				<th>번호</th>
-				<th>제목</th>
-				<th>작성일</th>
-			</tr>
-        	<tr th:each="notice : ${noticeList}">
-            	<td th:text="${notice.noticeNo}"></td>
-           	 	<td>
-           	 		<a th:href="'/admin/notices/' + ${notice.noticeNo}" th:text="${notice.title}"></a>
-           	 	</td>
-            	<td th:text="${notice.regDate}"></td>
-       		</tr>
-			<tr>
-				<td colspan="7">
-					<input type="submit" class="btn" value="작성하기">
-				</td>
-			</tr>
-		</table>
-	</form>
-</body>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>페이지 제목</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+css
+ 
+영역
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<h1>공지사항</h1>
+			<form action="/admin/notice-form" method="get">
+				<table border="1">
+					<tr>
+						<th>번호</th>
+						<th>제목</th>
+						<th>작성일</th>
+					</tr>
+					<tr th:each="notice : ${noticeList}">
+						<td th:text="${notice.noticeNo}"></td>
+						<td><a th:href="'/admin/notices/' + ${notice.noticeNo}"
+							th:text="${notice.title}"></a></td>
+						<td th:text="${notice.regDate}"></td>
+					</tr>
+					<tr>
+						<td colspan="7"><input type="submit" class="btn" value="작성하기">
+						</td>
+					</tr>
+				</table>
+			</form>
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	 JavaScript 영역
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>

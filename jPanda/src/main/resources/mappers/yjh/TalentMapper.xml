@@ -17,4 +17,10 @@
 		where	talent_no = #{talentNo}					 
 	</update>
 	
+	<select id="selectTalentByTalentNo" parameterType="Long" resultType="AdminTalent">
+		select	* 
+		from 	talent
+		where	talent_no = #{talentNo}
+	</select>
+	
 </mapper>
