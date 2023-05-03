@@ -29,5 +29,7 @@ public interface TradeService {
 	TradeDto findExchangeByExchangeNo(String exchangeNo);
 
 	TradeDto findRefundByRefundPurchaseNo(String refundPurchaseNo);
+
+	TradeDto findTradeByTalentNo(String talentNo);
 	
 }

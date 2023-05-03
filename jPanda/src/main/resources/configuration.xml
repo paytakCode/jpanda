@@ -14,6 +14,7 @@
   		<typeAlias alias="AdminTalent" type="com.kakao.jPanda.yjh.domain.TalentDto"/>
   		<typeAlias alias="AdminCompanySales" type="com.kakao.jPanda.yjh.domain.CompanySalesDto"/>
   		<typeAlias alias="AdminTalentRefund" type="com.kakao.jPanda.yjh.domain.TalentRefundDto"/>
+  		<typeAlias alias="AdminReport" type="com.kakao.jPanda.yjh.domain.ReportDto"/>
   		
   		<!-- 로그인, 회원가입, 마이페이지 -->
 		<typeAlias alias="MemberDto" type="com.kakao.jPanda.njb.domain.MemberDto"/>

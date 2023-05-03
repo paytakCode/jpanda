@@ -231,5 +231,10 @@ public class TradeServiceImpl implements TradeService{
 		return tradeDao.selectRefundByRefundPurchaseNo(refundPurchaseNo);
 	}
 
+	@Override
+	public TradeDto findTradeByTalentNo(String talentNo) {
+		return tradeDao.selectTradeByTalentNo(talentNo);
+	}
+
 
 }//end class

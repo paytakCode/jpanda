@@ -153,5 +153,13 @@ public class TradeDaoImpl implements TradeDao{
 		return tradeDto;
 	}
 
+	@Override
+	public TradeDto selectTradeByTalentNo(String talentNo) {
+		log.info("selectTradeByTalentNo talentNo : " + talentNo);
+		TradeDto tradeDto = sqlSession.selectOne("selectTradeByTalentNo", talentNo);
+		log.info("selectTradeByTalentNo tradeDto : " + tradeDto);
+		return tradeDto;
+	}
+
 
 }//end class

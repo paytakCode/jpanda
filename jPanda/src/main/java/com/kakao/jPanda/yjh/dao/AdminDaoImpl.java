@@ -9,6 +9,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 
@@ -178,7 +179,22 @@ public class AdminDaoImpl implements AdminDao {
 		
 		return returnValue;
 	}
+	
+	@Override
+	public TalentDto selectTalentByTalentNo(Long talentNo) {
+		TalentDto talentDto = null;
+		
+		try {
+			talentDto = sqlSession.selectOne("selectTalentByTalentNo", talentNo);
+			
+		} catch(Exception e) {
+			log.info("Dao selectTalentBySellerId() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return talentDto;
+	}
 
+	//talent-refund
 	@Override
 	public List<TalentRefundDto> selectTalentRefund() {
 		log.info("TalentRefund Dao selectTalentRefund() start");
@@ -225,4 +241,49 @@ public class AdminDaoImpl implements AdminDao {
 		return result;
 	}
 
+	//report
+	@Override
+	public List<ReportDto> selectReport() {
+		log.info("Dao selectReport() start");
+		List<ReportDto> reportList = null;
+		try {
+			reportList = sqlSession.selectList("selectReport");
+			
+		} catch(Exception e) {
+			log.info("Dao selectReport() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return reportList;
+	}
+
+	@Override
+	public List<ReportDto> selectReportByBlackId(String blackId) {
+		log.info("Dao selectReportByBlackId() start");
+		List<ReportDto> reportList = null;
+		
+		try {
+			reportList = sqlSession.selectList("selectReportByBlackId", blackId);
+			
+		} catch(Exception e) {
+			log.info("Dao selectReportByBlackId() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return reportList;
+	}
+
+	@Override
+	public int updateReportByMemberId(String memberId) {
+		log.info("Dao updateReportByMemberId() start");
+		int result = 0;
+		
+		try {
+			result = sqlSession.update("updateReportByMemberId", memberId);
+			
+		} catch(Exception e) {
+			log.info("Dao upateReportByMemberId() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

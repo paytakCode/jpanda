@@ -50,6 +50,13 @@
 		WHERE u.buyer_id = #{memberId}
 		ORDER BY r.approve_date desc, r.submit_date desc
 	</select>
+	
+	<select id="selectTradeByTalentNo" parameterType="String" resultType="TradeDto">
+		SELECT *
+		FROM talent
+		WHERE talent_no = #{talentNo} 
+	</select>
+	
 	<!-- stat -->
 	<select id="selectSellStatByMemberId" parameterType="String" resultType="StatDto">
 		SELECT
@@ -115,8 +122,16 @@
 	
 	<!-- refund -->
 	<select id="selectTradeRefundByRefundPurchaseNo" parameterType="String" resultType="TradeDto">
-		SELECT *
-		FROM talent_refund
+		SELECT
+			r.purchase_no as refund_purchase_no,
+			r.refund_status,
+			r.issue,
+			r.submit_date as refund_r.submit_date,
+			r.approve_date as refund_approve_date,
+			r.refund_bamboo,
+			u.buyer_id
+		FROM talent_refund r
+		INNER JOIN bamboo_use u ON r.purchase_no = u.purchaseNo
 		WHERE purchase_no = #{refundPurchaseNo}
 	</select>
 	
@@ -184,8 +199,19 @@
 	</update>
 	
 	<select id="selectTradeExchangeByExchangeNo" parameterType="String" resultType="TradeDto">
-		SELECT *
-		FROM exchange
+		SELECT
+		EXCHANGE_NO
+			seller_id as exchange_id,
+			talent_no as exchange_talent_no,
+			sales,
+			submit_date as exchange_submit_date,
+			approve_date as exchange_approve_date,
+			total,
+			member_grade as exchange_grade,
+			exchange_ratio,
+			exchange_status,
+			payment_amount
+		FROM exchange e
 		WHERE exchange_no = #{exchangeNo}
 	</select>
 </mapper>

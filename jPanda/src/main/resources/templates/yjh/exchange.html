@@ -1,41 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="/js/jquery.js"></script>
-<link th:href="@{/css/board.css}" rel="stylesheet"/>
-</head>
-<body>
-	<h1>환전 관리</h1>
-		<table border="1">
-			<tr>
-				<th>선택</th>
-				<th>신청번호</th>
-				<th>재능번호</th>
-				<th>아이디</th>
-				<th>신청일</th>
-				<th>총금액</th>
-				<th>상태</th>
-			</tr>
-        	<tr th:each="exchange : ${exList}">
-            	<td><input type="checkbox" class="checkbox" th:name="exchangeNo" th:value="${exchange.exchangeNo}"></td>
-            	<td th:text="${exchange.exchangeNo}"></td>
-           	 	<td th:text="${exchange.talentNo}"></td>
-            	<td th:text="${exchange.sellerId}"><input type="hidden" name="sellerId" th:value="${exchange.sellerId}"> </td>
-            	<td th:text="${exchange.submitDate}"></td>
-           		<td th:text="${exchange.total}"></td>
-            	<td th:text="${exchange.exchangeStatus}"></td>
-       		</tr>
-			<tr>
-				<td colspan="7">
-					<input type="button" class="btn" th:name="exchangeStatus" th:value="환전완료">
-					<input type="button" class="btn" th:name="exchangeStatus" th:value="반려">
-				</td>
-			</tr>
-		</table>
-</body>
-<script type="text/javascript">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>페이지 제목</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+css
+ 
+영역
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<h1>환전 관리</h1>
+			<table border="1">
+				<tr>
+					<th>선택</th>
+					<th>신청번호</th>
+					<th>재능번호</th>
+					<th>아이디</th>
+					<th>신청일</th>
+					<th>총금액</th>
+					<th>상태</th>
+				</tr>
+				<tr th:each="exchange : ${exList}">
+					<td><input type="checkbox" class="checkbox"
+						th:name="exchangeNo" th:value="${exchange.exchangeNo}"></td>
+					<td th:text="${exchange.exchangeNo}"></td>
+					<td th:text="${exchange.talentNo}"></td>
+					<td th:text="${exchange.sellerId}"><input type="hidden"
+						name="sellerId" th:value="${exchange.sellerId}"></td>
+					<td th:text="${exchange.submitDate}"></td>
+					<td th:text="${exchange.total}"></td>
+					<td th:text="${exchange.exchangeStatus}"></td>
+				</tr>
+				<tr>
+					<td colspan="7"><input type="button" class="btn"
+						th:name="exchangeStatus" th:value="환전완료"> <input
+						type="button" class="btn" th:name="exchangeStatus" th:value="반려">
+					</td>
+				</tr>
+			</table>
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
 	$(".btn").on("click", function(){
 		let exchangeNo = $("input.checkbox:checked").map(function(){
 			return $(this).val();
@@ -49,21 +74,19 @@
 		let exchangeDto = [];
 		let exchangeStatus = $(this).val();
 		let approveDate = Date.now();
-		let sellerId = [];
 		
 		exchangeNo.forEach(function(item) {
 			let tr = $(`input.checkbox[value='${item}']`).closest("tr");
 			let td = tr.children();
-			sellerId.push(td.eq(3).text());
 		});
 		
 		if(exchangeStatus == '환전완료') {
 			for(var i = 0; i < exchangeNo.length; i++) {
-				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate, sellerId: sellerId[i]});
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
 			}
 		} else if(exchangeStatus == '반려') {
 			for(var i = 0; i < exchangeNo.length; i++) {
-				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate, sellerId: sellerId[i]});
+				exchangeDto.push({exchangeStatus: exchangeStatus, exchangeNo: exchangeNo[i], approveDate: approveDate});
 			}
 		}
 		
@@ -74,6 +97,7 @@
 			data : JSON.stringify(exchangeDto),
 			success : function(result) {
 				if(result > 0) {
+					webSocket.send(JSON.stringify(exchangeDto));
 					alert("환전 신청이 정상적으로 처리되었습니다");
 					location.href="/admin/exchanges";
 				} else if(result = -1) {
@@ -88,5 +112,9 @@
 			}
 		});
 	});
-</script>
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>
