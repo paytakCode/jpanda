@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/common/layout/default-layout">
-
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
 	<title>재능 등록</title>
 </th:block>
-
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style type="text/css">
@@ -108,6 +106,12 @@
 
 <div>
 	<th:block layout:fragment="content">
+	<script th:inline="javascript">
+		if([[${#session.getAttribute("memberId")}]] == null){
+			alert("로그인이 필요한 서비스 입니다.");
+			location.href = "/login";
+		}
+	</script>
 	 <div id="side">
 	  	<table id="write-check">
 	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
@@ -125,7 +129,6 @@
 		<hr>
 		<input type="hidden" name="sellerId" id="seller-id">
 		<input type="hidden" name="statusDate" id="status-date">
-		<!-- statusDate로 변경 -->
 		
 		<div id="category" class="category write-check">
 			<h4>카테고리</h4>
@@ -367,6 +370,12 @@
 	    }
 	    $('#discount-bamboo').val(discountPercent);
 	}
+	// 가격 입력란 숫자, backspace외 입력 불가 처리
+	$('.bamboo-input').on('keydown', function(value) {
+		  if(!((value.keyCode > 95 && value.keyCode < 106) || (value.keyCode > 47 && value.keyCode < 58) || value.keyCode == 8)) {
+			    return false;
+		  }
+	});
 	</script>
 	<script th:inline="javascript">
 	// 카테고리 설정
@@ -397,7 +406,6 @@
 			$('#category-check').attr('src', '/image/talentImage/check.png');
 		}
 	});
-	
 	$('#seller-id').val([[${#session.getAttribute("memberId")}]]);
 	</script>
 	
