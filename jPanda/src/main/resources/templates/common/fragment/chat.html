@@ -1,6 +1,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="chatFragment">
-	<div id="chat-btn"></div>
+	<div id="chat-btn">
+		<span id="chat-btn-alert" class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle visually-hidden"></span>
+	</div>
 	<div id="chat-console">
 		<ul id="chat-member-list" class="list-group list-group-flush"></ul>
 		<div id="chat-content"></div>

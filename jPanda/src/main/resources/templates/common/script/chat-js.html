@@ -25,14 +25,24 @@
 		function subscribe(memberId){
 			stompClient.subscribe('/direct/' + memberId, function (response) {
 				let messageInfo = JSON.parse(response.body);
-				if ($('#selected-member').val() == messageInfo.senderId){
-			        const chatMessageElem = $("<div>").text(messageInfo.message).addClass("from-other");
-			        $("#chat-content").append(chatMessageElem);
+				if (selectedChat == messageInfo.senderId){
+			    	const lastDate = $('#chat-content a.chat-date').last().text();
+			    	if(getDate(Date.now()) != lastDate){
+						const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled").text(getDate(messageInfo.chatDate)).attr("role","button").attr("aria-disabled","true");
+						$("#chat-content").append(chatDate);
+			    	}
+					const chatElem = $("<div>").addClass("from-other");
+					const messageElem = $("<span>").text(messageInfo.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
+					const timeElem = $("<span>").text(getTime(messageInfo.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+					chatElem.append(messageElem);
+					chatElem.append(timeElem);
+                    $("#chat-content").append(chatElem);
 				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				}
 			    
 			    if($("#chat-console").css("display") == 'none'){
-			    	$("#chat-btn").css("animation", "blink 0.5s infinite");
+			    	$("#chat-btn-alert").css("animation", "blink 1s infinite");
+			    	$("#chat-btn-alert").removeClass('visually-hidden');
 			    }
 			});
 		}
@@ -49,7 +59,8 @@
 		//채팅 버튼 클릭 시 채팅 팝업 띄우기
 		$('#chat-btn').click(function () {
 			if (stompClient !== null) { //연결 된 상태에서만 채팅 콘솔 작동 가능
-				$("#chat-btn").css("animation", "");
+				$("#chat-btn-alert").css("animation", "");
+		    	$("#chat-btn-alert").addClass('visually-hidden');
 			    $('#chat-console').toggle();
 			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 			}
@@ -73,12 +84,33 @@
 					$("#chat-content").empty();
 					
 					chatList.forEach((chat, index) => {
-						
 						if (chat.receiverId == selectedChat) {
-							const chatElem = $("<div>").text(chat.message).addClass("from-me");
+							if(index == 0){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled").text(getDate(chat.chatDate)).attr("role","button").attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled").text(getDate(chat.chatDate)).attr("role","button").attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							}
+							const chatElem = $("<div>").addClass("from-me");
+							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-end badge text-bg-success p-2 text-wrap");
+							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+							chatElem.append(timeElem);
+							chatElem.append(messageElem);
 		                    $("#chat-content").append(chatElem);
 						} else if(chat.senderId == selectedChat){
-							const chatElem = $("<div>").text(chat.message).addClass("from-other");
+							if(index == 0){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled").text(getDate(chat.chatDate)).attr("role","button").attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled").text(getDate(chat.chatDate)).attr("role","button").attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							}
+							const chatElem = $("<div>").addClass("from-other");
+							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
+							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+							chatElem.append(messageElem);
+							chatElem.append(timeElem);
 		                    $("#chat-content").append(chatElem);
 						}
 						
@@ -114,24 +146,32 @@
 		    if (e.keyCode == 13 && selectedChat && $("#chat-input").val().trim() != "") {
 		    	
 		    	message = JSON.stringify({
-		   	            'receiverId': $('#selected-member').val(),
+		   	            'receiverId': selectedChat,
 		   	            'senderId' : memberId,
 		   	            'message' : $('#chat-input').val(),
 		   	            'chatDate' : Date.now()
-		   	        })
+		   	        });
 		    	
 		    	saveMessage(message);
 		    	
-		    	var chatMessageElem = $("<div>");
-		    	chatMessageElem.text($("#chat-input").val());
-		    	chatMessageElem.addClass("from-me");
-		    	$("#chat-content").append(chatMessageElem);
+		    	const lastDate = $('#chat-content a.chat-date').last().text();
+		    	if(getDate(Date.now()) != lastDate){
+					const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled").text(getDate(Date.now())).attr("role","button").attr("aria-disabled","true");
+					$("#chat-content").append(chatDate);
+		    	}
+				const chatElem = $("<div>").addClass("from-me");
+				const messageElem = $("<span>").text($("#chat-input").val()).addClass("chat-message lh-base text-end badge text-bg-success p-2 text-wrap");
+				const timeElem = $("<span>").text(getTime(Date.now())).addClass("chat-time badge rounded-pill text-bg-light");
+				chatElem.append(timeElem);
+				chatElem.append(messageElem);
+                $("#chat-content").append(chatElem);
 		    	$("#chat-input").val("");
 		    }
 		});
 		
 		//message를 DB에 저장하는 함수
 		function saveMessage(message){
+			console.log(message);
 			$.ajax({
 				url: "/chat" ,
 				method: "POST",
@@ -164,13 +204,18 @@
 							let chatPartnerElem = $("<li>");
 							chatPartnerElem.text(partner.name);
 							chatPartnerElem.attr('value', partner.memberId);
-							chatPartnerElem.attr('class', 'list-group-item');
+							chatPartnerElem.attr('class', 'list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center');
 							chatPartnerElem.click(function() { 
 								selectedChat = partner.memberId;
 								updateSelectedChat($(this));
 								updateChatContent();
 							});
-							 $("#chat-member-list").append(chatPartnerElem);  
+							let unReadChatNoElem = $('<span>');
+							unReadChatNoElem.attr('class', 'badge bg-primary rounded-pill');
+							unReadChatNoElem.text('1');
+							
+							chatPartnerElem.append(unReadChatNoElem);
+							$("#chat-member-list").append(chatPartnerElem);  
 						});
 						resolve();
 					},
@@ -188,6 +233,35 @@
 				updateSelectedChat($("#chat-member-list").children().first());
 				updateChatContent();
 			});
+		}
+		
+		//Timestamp -> chatTime
+		function getTime(chatDate){
+			const date = new Date(chatDate);
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			
+			const formattedTime = `${hours}:${minutes}`;
+			return formattedTime;
+		}
+		
+
+		//Timestamp -> chatDate
+		function getDate(chatDate){
+			const date = new Date(chatDate);
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			
+			const formattedDate = `${month}월 ${day}일`;
+			return formattedDate;
 		}
 		
 		//접속
