@@ -27,8 +27,8 @@ public interface ChargeDao {
 
 	List<PaymentDto> selectPaymentList();
 
-	List<ChargeDto> selectBambooChargeListbyChargerId(String chargerId);
+	List<ChargeDto> selectBambooChargeListbyChargerId(ChargeDto chargeDto);
 
-	
+	int totalChargeCnt(String chargerId);
 	
 }

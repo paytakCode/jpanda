@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>충전</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+		.filter-btn{  
+			margin-right: 15%;
+		}
+		
+		.printBtn{  
+			margin-left: 30%;
+		}
+		
+		/* 충전컨테이너 */
+		#charge-container {
+			display: flex;
+		    align-items: baseline;
+		    gap: 32px;
+		    padding: 48px 0;
+		    margin-left: 15%;
+		    margin-right: 15%;
+		}
+		
+		/* 결제내역 컨테이너 */
+		#charge-details-container {
+			display: flex;
+		    align-items: baseline;
+		    gap: 32px;
+		    padding: 48px 0;
+		    margin-left: 15%;
+		    margin-right: 15%;
+		}
+		
+		/* 충전컨텐츠 */
+		#charge-contents {
+			flex: 3;
+			padding: 32px;
+			border-radius: 16px 0 0 16px;
+		}
+		
+		/* 오른쪽 사이드바 */
+		#right-sidebar {
+			flex: 1;
+			padding: 24px;
+			border-radius: 0 16px 16px 0;
+		}	
+		
+		#right-sidebar > ul > li {
+			list-style: none;
+		}
+		
+		/* 쿠폰중복 */	
+		.input-side {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			margin-top: 5%;
+			margin-left: 30%;
+		}
+		
+		#coupon-code, #check-coupon {
+			margin-left: auto;
+		}
+		
+		/* 충전방법  radio css */
+		.payment-method {
+		    padding: 15px 10px;
+		    text-align: center;
+		}
+		
+		.payment-method input[type=radio]{
+		    display: none;
+		}
+		
+		.payment-method input[type=radio]+label{
+		    display: inline-block;
+		    cursor: pointer;
+		    height: 24px;
+		    width: 90px;
+		    border: 1px solid #333;
+		    line-height: 24px;
+		    text-align: center;
+		    font-weight:bold;
+		    font-size:13px;
+		}
+		
+		.payment-method input[type=radio]+label{
+		    background-color: #fff;
+		    color: #333;
+		}
+		
+		.payment-method input[type=radio]:checked+label{
+		    background-color: #333;
+		    color: #fff;
+		}
+		 
+		th, td {
+			border: 1px solid black;
+			text-align: left;
+			padding: 8px;
+		}
+		 
+		th {
+			background-color: #cccccc;	
+		}
+	  
+		.table {
+			width: 50%;
+			margin: 0 auto;
+			border-collapse: collapse;
+	    }
+	    
+	    .table th, .table td {
+			text-align: center;
+			padding: 8px;
+		}
+	</style>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+
+	<th:block layout:fragment="content">
+	
+	<div class="filter-btn gap-2 d-md-flex justify-content-md-end">
+		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-container-btn"	value="chargeContainerBtn"	onclick="moveChargePage(0)">충전하기</button>
+		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-details-btn"		value="chargeDetailsBtn">충전내역</button>
+	</div>
+	
+	<div id="charge-details-container">
+		<h2>충전내역</h2>
+	
+		<table class="table">
+			<thead>
+				<tr>
+				<th scope="col">#</th>
+				<th scope="col">충전날짜</th>
+				<th scope="col">충전방법</th>
+				<th scope="col">충전밤부</th>
+				<th scope="col">충전금액</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider2" th:each="chargeHistoryList, i : ${listChargeHistory}">
+				<tr>
+					<th scope="row" th:text="${listChargeHistory.size() - i.index}"></th>
+					<td th:if="${chargeHistoryList.chargeDate != null}" th:text="${#dates.format(chargeHistoryList.chargeDate, 'yyyy-MM-dd')}"></td>
+					<td th:if="${chargeHistoryList.chargeDate == null}" th:text=""></td>
+					<td th:text="${chargeHistoryList.paymentMethod}"></td>
+					<td th:text="${chargeHistoryList.chargeBamboo}"></td>
+					<td th:text="${chargeHistoryList.paymentAmount}"></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!-- 페이징 -->
+		<div th:if="${page.startPage > page.pageBlock}">
+			<a th:href="@{/charge(currentPage=${page.startPage - page.pageBlock})}">이전</a>
+		</div>
+		
+		<div th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
+		<a th:href="@{/charge(currentPage=${i}, pageStatus='1')}" th:text="${i}"></a>
+		</div>
+		
+		<div th:if="${page.endPage < page.totalPage}">
+			<a th:href="@{/charge(currentPage=${page.startPage + page.pageBlock})}">다음</a>
+		</div>
+		
+	</div>	<!-- /id="charge-details-container" -->
+	
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+	<script th:inline="javascript">
+		
+		 function moveChargePage(pageStatus) { 
+			 console.log("pageStatus -> " + pageStatus);
+			 location.href="?pageStatus="+pageStatus;
+		 }
+		
+	</script>
+	
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+
+</html>

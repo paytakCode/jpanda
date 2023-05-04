@@ -47,6 +47,7 @@ public class Paging {
 		endRow	  = startRow + rowPage - 1;
 		totalPage = (int)Math.ceil((double)totalRow / rowPage);
 		startPage = currentPage - (currentPage - 1) % pageBlock;
+		endPage	  = startPage + pageBlock - 1;
 		
 		if(endPage > totalPage) {
 			endPage = totalPage;
