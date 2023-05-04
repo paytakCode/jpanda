@@ -1,16 +1,38 @@
-	<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<h1>관리자 페이지</h1>
-	<a href="/admin/notices">공지사항 관리</a><p>
-	<a href="/admin/exchanges">환전 관리</a><p>
-	<a href="/admin/coupons-form">쿠폰 생성</a><p>
-	<a href="/admin/talents">판매 등록 신청 현황</a><p>
-	<a href="/admin/company-sales">매출 현황</a><p>
-	<a href="/admin/talent-refund">환불 관리</a><p>
-</body>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>관리자 페이지</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<h1>관리자 페이지</h1>
+		<a href="/admin/notices">공지사항 관리</a><p>
+		<a href="/admin/exchanges">환전 관리</a><p>
+		<a href="/admin/coupons-form">쿠폰 생성</a><p>
+		<a href="/admin/talents">판매 등록 신청 현황</a><p>
+		<a href="/admin/company-sales">매출 현황</a><p>
+		<a href="/admin/talent-refund">환불 관리</a><p>
+		<a href="/admin/report">유저 신고</a><p>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	</script>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
 </html>
