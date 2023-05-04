@@ -38,7 +38,7 @@ public class BoardController {
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("upperCategoryList", upperCategoryList);
 		
-		return "lhw/Board";
+		return "lhw/board";
 	}
 	
 	
@@ -66,9 +66,7 @@ public class BoardController {
 		
 		map.put("talentList", talentListByFilters);
 		map.put("filters", filters);
-//		 for(int i = 0; i <talentListByFilters.size(); i++) {
-//		 System.out.println(talentListByFilters.get(i).toString()); }
-		 
+
 		return map;
 	}
 	

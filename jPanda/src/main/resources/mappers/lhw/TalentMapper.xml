@@ -64,7 +64,25 @@
 		AND buyer_id = #{buyerId}
 	</select>
 	
+	<!-- 신고하기 검증용  -->
+	<select id="selectReportListByReportId" parameterType="String" resultType="BoardReport">
+		SELECT black_id
+		FROM report
+		WHERE report_id = #{reportId}
+	</select>
 	
+	<!-- 신고하기 인서트  -->
+	<insert id="insertReport" parameterType="BoardReport">
+		INSERT INTO report(black_id, report_id, issue, report_date, report_no)
+		VALUES (#{blackId}, #{reportId}, #{issue}, #{reportDate}, REPORT_NO_SEQ.nextval)
+	</insert>
+	
+	<!-- 조회수 업데이트  -->
+	<update id="updateTalentToViewCount" parameterType="Long">
+		UPDATE talent 
+		SET view_count = view_count + 1 
+		WHERE talent_no = #{talentNo}
+	</update>
 	
 </mapper>
 

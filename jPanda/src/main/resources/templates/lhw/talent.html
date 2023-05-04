@@ -206,9 +206,9 @@ body {
 		 
 		<div class="etc-btn">
 			<input type="hidden" id="login-id" value="${memberId}">
-			<button th:if="${talent.sellerId == memberId}" id="modify-btn" th:data-talentNo="${talent.talentNo}">게시물 수정</button>
-			<button th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentNo="${talent.talentNo}">게시물 삭제</button>
-			<button id="report-btn">게시물 신고하기</button>
+			<button th:if="${talent.sellerId == memberId}" id="modify-btn" th:data-talentno="${talent.talentNo}">게시물 수정</button>
+			<button th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentno="${talent.talentNo}">게시물 삭제</button>
+			<button id="report-btn" th:data-talentno="${talent.talentNo}" th:data-sellerid="${talent.sellerId}">게시물 신고하기</button>
 		</div>
 		
 		<div class="quick-move">
@@ -245,7 +245,6 @@ body {
 	 	</div>
 	</form>
 	
-	
 	<!-- 리뷰 수정 폼  -->
 	<form class="review-form" id="update-review-form" method="post" style="display: none;">
 	    <h3 class="update-bambooScore">리뷰를 남겨주세요</h3><br>
@@ -267,7 +266,7 @@ body {
 	    </div>
 	   		
 	 	<div id="update-review-button">
-	 		<button type="button" th:onclick="'sendUpdateReview(' + ${talent.talentNo} + ')'">수정 완료</button>
+	 		<button type="button" th:onclick="'reviewUpdate(' + ${talent.talentNo} + ')'">수정 완료</button>
 	 	</div>
 	</form>
 	
@@ -283,8 +282,8 @@ body {
 			
 			<div class="review-btn">
 		 		<input type="hidden" id="login-id" value="${memberId}">
-		 		<button th:if="${review.reviewerId == memberId}" type="button" class="modifyReview" th:data-reviewNo="${review.reviewNo}" th:data-content="${review.content}" th:data-reviewerId="${review.reviewerId}">수정</button>
-				<button th:if="${review.reviewerId == memberId}" type="button" class="deleteReview" th:data-reviewNo="${review.reviewNo}" th:data-talentNo="${talent.talentNo}" th:data-reviewerId="${review.reviewerId}">삭제</button>
+		 		<button th:if="${review.reviewerId == memberId}" type="button" class="modifyReview" th:data-reviewno="${review.reviewNo}" th:data-content="${review.content}" th:data-reviewerid="${review.reviewerId}">수정</button>
+				<button th:if="${review.reviewerId == memberId}" type="button" class="deleteReview" th:data-reviewno="${review.reviewNo}" th:data-talentno="${talent.talentNo}" th:data-reviewerid="${review.reviewerId}">삭제</button>
 	 		</div>
         </li>
     </ul>
@@ -296,20 +295,93 @@ body {
     <li><a href="#content">상세 내용</a></li>
     <li><a href="#review-list">리뷰</a></li>
   </ul>
-</div>
+	</div>
 	
+	  <!-- 신고하기 Modal -->
+	<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="reportModalLabel">신고하기</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <form method="post">
+	        <div class="modal-body">
+	            <input class="form-control" id="reportDate" name="reportDate" readonly>
+	          <div class="mb-3">
+	            <label for="reporterId" class="form-label">신고자 ID</label>
+	            <input type="text" class="form-control" id="reportId" name="reportId" readonly>
+	          </div>
+	          <div class="mb-3">
+	            <label for="reportedId" class="form-label">신고 받는 ID</label>
+	            <input type="text" class="form-control" id="blackId" th:name="blackId" th:value="${talent.sellerId}" readonly>
+	          </div>
+	          <div class="mb-3">
+	            <label for="talentTitle" class="form-label">게시물 제목</label>
+	            <input type="text" class="form-control" id="title" name="title" th:value="${talent.title}" readonly>
+	          </div>
+	          <div class="mb-3">
+	            <label for="reportReason" class="form-label">신고 사유</label>
+	            <textarea class="form-control" id="issue" name="issue" rows="3"></textarea>
+	          </div>
+	          <input type="hidden" name="talentNo" id="talentNo" th:value="${talent.talentNo}">
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="cancel-btn" data-bs-dismiss="modal">취소</button>
+	          <button type="submit" class="submit-btn" id="reportButton">제출</button>
+	        </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+ 
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
 	</th:block> 
 </div>
-
-
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+	
 	const userId = [[${#session.getAttribute('memberId')}]];
 	console.log(userId);
-
+	
+	
+	/* 신고하기 모달 */
+	const reportModal = document.getElementById('reportModal')
+	const reportButton = document.getElementById('report-btn')
+	reportButton.addEventListener('click', () => {
+		if(!userId){
+			alert('로그인이 필요한 서비스 입니다.');
+			location.href= "/login";
+		} else {
+			const reportId = userId
+		  	const blackId = document.getElementById('blackId').value
+		  	const title = document.getElementById('title').value
+		  	const issue = document.getElementById('issue')
+			const talentNo = document.getElementById("talentNo").value
+		  	const reportDate = getNow();
+		  	reportModal.querySelector('#reportDate').value = reportDate
+		  	reportModal.querySelector('#reportModalLabel').textContent = '신고하기'
+		  	reportModal.querySelector('#reportId').value = reportId
+		  	reportModal.querySelector('#blackId').value = blackId
+		  	reportModal.querySelector('#title').value = title
+		  	reportModal.querySelector('#issue').value = issue.value
+		  	reportModal.querySelector('form').setAttribute('action', "/talents/talent/report/" +talentNo);
+		  	const cancelButton = reportModal.querySelector('.cancel-btn')
+		  	cancelButton.addEventListener('click', () => {
+			    reportModal.querySelector('form').reset()
+			});
+		  	const submitButton = reportModal.querySelector('.submit-btn')
+		  	submitButton.addEventListener('click', () => {
+		    	reportModal.querySelector('form').submit()
+		  	});
+		  	const modal = new bootstrap.Modal(reportModal)
+		  	modal.show()
+		}
+	});
+		
+	
 	// 퀵 메뉴 설정
 	$(document).ready(function(){
 		  var currentPosition = parseInt($(".quick-menu").css("top"));
@@ -319,8 +391,6 @@ body {
 		  });
 		});
 	
-
-
 	
 	// 구매하기 버튼
 	$(document).on('click', '#buy-btn', function(){
@@ -357,7 +427,7 @@ body {
 				} else if (bambooUseInsert === 1){
 					alert("구매가 완료 되었습니다. 감사합니다.");
 				} else {
-					alert("구매 중 오류가 발생했습니다. 다시 시도해주세요.");
+					alert("구매 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
 				}
 			},
 			error : function(xhr, status, error){
@@ -423,7 +493,6 @@ body {
 	});
 
 
-
 	/* TimeStamp형식으로의 현재 Date 변환 */
 	function getNow(){
 		const now = new Date(Date.now());
@@ -438,18 +507,6 @@ body {
 		
 		return formattedDate;
 	};
-
-
-	$(document).on('click', '.modifyReview', function(){
-		// 기존에 있는 인서트 폼 숨기고 업데이트 폼 보여주기
-		$('#insert-review-form').hide();
-		$('#update-review-form').show();
-		// 기존 리뷰의 내용을 가져와서 업데이트 폼에 채워주기
-	   	$('#update-content').val($(this).data('content'));
-	   	$('#review-no').val($(this).data('reviewno'));
-	   	console.log($(this).data('content'));
-	   	console.log($(this).data('reviewno'));
-	});
 
 
 	// 리뷰 인서트 
@@ -486,10 +543,22 @@ body {
 		    }
 		});
 	}
+	
+	// 리뷰 업데이트 값 가져오기
+	$(document).on('click', '.modifyReview', function(){
+		// 기존에 있는 인서트 폼 숨기고 업데이트 폼 보여주기
+		$('#insert-review-form').hide();
+		$('#update-review-form').show();
+		// 기존 리뷰의 내용을 가져와서 업데이트 폼에 채워주기
+	   	$('#update-content').val($(this).data('content'));
+	   	$('#review-no').val($(this).data('reviewno'));
+	   	console.log($(this).data('content'));
+	   	console.log($(this).data('reviewno'));
+	});
 
 
 	// 리뷰 업데이트
-	function sendUpdateReview(talentNo){
+	function reviewUpdate(talentNo){
 		if( $("#update-content").val().trim() == ''){
 			alert('내용을 입력해주세요');
 			return;
@@ -566,7 +635,8 @@ body {
 		}
 	});
 
-	// 서버에서 reviewList 데이터 받기
+	
+	// reviewList 데이터 받아서 리뷰 갯수 및 평균 출력
 	var reviewList = /*[[${reviewList}]]*/[];
 	var reviewCount = reviewList.length;
 	var totalBambooScore = 0;
@@ -583,7 +653,6 @@ body {
 	}
 	$('#review-filter').text(avgBambooScore.toFixed(1) + ' / (' + reviewCount + ')');
 	
-
 
 	</script>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

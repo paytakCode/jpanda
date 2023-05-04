@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kakao.jPanda.lhw.dao.TalentDao;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
+import com.kakao.jPanda.lhw.domain.ReportDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
@@ -69,7 +70,7 @@ public class TalentServiceImpl implements TalentService {
 		} else if (totalBamboo == null || totalBamboo < bambooUse.getUseBamboo()) {
 			result = 0; // 포인트 잔액 검증 후 포인트 부족시 0 을 리턴 
 		} else {
-			result = talentDao.insertBambooUse(bambooUse); // 인서트 성공 Dao
+			result = talentDao.insertBambooUse(bambooUse); // 인서트 성공
 		}
 		return result;
 	}
@@ -81,7 +82,32 @@ public class TalentServiceImpl implements TalentService {
 		}
 		return talentDao.selectBuyCheckByBambooUse(bambooUse);
 	}
+
+	// 신고하기 인서트
+	@Override
+	public String addReport(ReportDto report) {
+	    String reportId = report.getReportId();
+	    // 중복 신고 검증용
+	    List<ReportDto> reportList = talentDao.selectReportByReportId(reportId);
+	    System.out.println("reportList -> " + reportList);
+	    // 중복 신고 검증
+	    if (!reportList.isEmpty()) {
+	        return "<script> alert('중복 신고는 불가능 합니다. 빠른 시일 내에 처리 하겠습니다. 감사합니다.'); history.back(); </script>";
+	    }
+	    // 인서트
+	    int insertResult = talentDao.insertReport(report);
+	    if (insertResult > 0) {
+	        return "<script> alert('신고가 접수되었습니다. 감사합니다.'); history.back(); </script>";
+	    } else {
+	        return "<script> alert('신고 접수에 실패했습니다. 잠시 후 다시 시도해주세요.'); history.back(); </script>";
+	    }
+	}
+
+
+	// 뷰 카운트 업데이트
+	@Override
+	public int modifyTalentToViewCount(Long talentNo) {
+		return talentDao.updateTalentToViewCount(talentNo);
+	}
 	
-
-
 }

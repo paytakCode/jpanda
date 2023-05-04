@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
+import com.kakao.jPanda.lhw.domain.ReportDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
@@ -70,6 +71,24 @@ public class TalentDaoImpl implements TalentDao {
 	@Override
 	public int selectBuyCheckByBambooUse(BambooUseDto bambooUse) {
 		return sqlSession.selectOne("selectBuyCheckByBambooUse", bambooUse);
+	}
+	
+	// 신고 여부 검증용
+	@Override
+	public List<ReportDto> selectReportByReportId(String reportId) {
+		return sqlSession.selectList("selectReportListByReportId", reportId);
+	}
+
+	// 신고 인서트
+	@Override
+	public int insertReport(ReportDto report) {
+		return sqlSession.insert("insertReport", report);
+	}
+
+	// 뷰 카운트 업데이트
+	@Override
+	public int updateTalentToViewCount(Long talentNo) {
+		return sqlSession.update("updateTalentToViewCount", talentNo);
 	}
 	
 	

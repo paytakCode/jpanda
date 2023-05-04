@@ -1,5 +1,6 @@
 package com.kakao.jPanda.lhw.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.kyg.service.ChargeService;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
+import com.kakao.jPanda.lhw.domain.ReportDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 import com.kakao.jPanda.lhw.service.TalentService;
@@ -30,11 +33,13 @@ public class TalentDetailController {
 	private final TalentService talentService;
 	private final ChargeService chargeService;
 	
+	
 	// 재능 상세페이지 및 리뷰 리스트 불러오기
 	@GetMapping("/talent/{talentNo}")
 	public String talentDetails(@PathVariable Long talentNo, Model model, HttpSession session) {
 		System.out.println("Controller talentDetails Start");
 		TalentDto talent = talentService.findBoardTalentByTalentNo(talentNo);
+		int viewCount = talentService.modifyTalentToViewCount(talentNo);
 		List<ReviewDto> reviewList = talentService.findReviewListByTalentNo(talentNo);
 		
 		String memberId = (String)session.getAttribute("memberId");
@@ -42,7 +47,7 @@ public class TalentDetailController {
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("talent", talent);
 		model.addAttribute("reviewList", reviewList);
-		return "lhw/Talent";
+		return "lhw/talent";
 	}
 	
 	
@@ -141,6 +146,25 @@ public class TalentDetailController {
 		return bambooUseInsert;
 	}
 	
+	// 신고하기 조회
+	@ResponseBody
+	@PostMapping("/talent/report/{talentNo}")
+	public String reportAdd(@PathVariable Long talentNo, @RequestParam("reportId")String reportId, @RequestParam("blackId")String blackId, 
+					     @RequestParam("issue")String issue, @RequestParam("reportDate") Timestamp reportDate) {
+		System.out.println("Controller reportAdd Start");
+		ReportDto reportDto = new ReportDto();
+		reportDto.setBlackId(blackId);
+		reportDto.setReportId(reportId);
+		reportDto.setIssue(issue);
+		reportDto.setReportDate(reportDate);
+		reportDto.setTalentNo(talentNo);
+		System.out.println("신고 정보 -> " + reportDto);
+		
+		String result = talentService.addReport(reportDto);
+		System.out.println("신고 최종 결과 -> " + result);
+		
+		return result;
+	}
 	
 
 	
