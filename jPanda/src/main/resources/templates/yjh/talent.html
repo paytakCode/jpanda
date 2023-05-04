@@ -5,7 +5,7 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 판매등록 신청 건 조회</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
@@ -32,6 +32,10 @@ tr:nth-child(even) {
 td {
 	border: 1px solid #ddd;
 }
+
+.btn{
+	border: 1px solid black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -52,21 +56,22 @@ td {
 					<th>상태</th>
 				</tr>
 				<tr th:each="talent : ${talentList}">
-					<td><input type="checkbox" class="checkbox" name="talentNo"
-						th:value="${talent.talentNo}"></td>
-					<td th:text="${talent.sellerId}"><input type="hidden"
-						class="hid" name="sellerId" th:value="${talent.sellerId}"></td>
+					<td>
+						<input type="checkbox" class="checkbox" name="talentNo" th:value="${talent.talentNo}">
+					</td>
+					<td th:text="${talent.sellerId}">
+						<input type="hidden" class="hid" name="sellerId" th:value="${talent.sellerId}">
+					</td>
 					<td th:text="${talent.talentNo}"></td>
-					<td><a class="detail"
-						th:href="'/admin/talents/' + ${talent.talentNo}"
-						th:text="${talent.title}"></a></td>
+					<td>
+						<a class="detail" th:href="'/admin/talents/' + ${talent.talentNo}" th:text="${talent.title}"></a>
+					</td>
 					<td th:text="${talent.summary}"></td>
 					<td th:text="${talent.statusDate}"></td>
 					<td th:text="${talent.talentStatus}"></td>
 				</tr>
 				<tr>
-					<td colspan="7"><input type="button" class="btn" value="검토 완료">
-					</td>
+					<td colspan="7"><input type="button" class="btn" value="검토 완료"></td>
 				</tr>
 			</table>
 		</body>

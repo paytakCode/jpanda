@@ -5,7 +5,7 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 공지사항</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
@@ -32,6 +32,10 @@ tr:nth-child(even) {
 td {
 	border: 1px solid #ddd;
 }
+
+.btn{
+	border: 1px solid black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -50,13 +54,13 @@ td {
 					</tr>
 					<tr th:each="notice : ${noticeList}">
 						<td th:text="${notice.noticeNo}"></td>
-						<td><a th:href="'/admin/notices/' + ${notice.noticeNo}"
-							th:text="${notice.title}"></a></td>
+						<td>
+							<a th:href="'/admin/notices/' + ${notice.noticeNo}" th:text="${notice.title}"></a>
+						</td>
 						<td th:text="${notice.regDate}"></td>
 					</tr>
 					<tr>
-						<td colspan="7"><input type="submit" class="btn" value="작성하기">
-						</td>
+						<td colspan="7"><input type="submit" class="btn" value="작성하기">	</td>
 					</tr>
 				</table>
 			</form>

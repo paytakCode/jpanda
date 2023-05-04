@@ -5,7 +5,7 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 쿠폰 생성</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
@@ -44,21 +44,29 @@ td {
 				<h3>쿠폰 생성</h3>
 				<table>
 					<tr>
-						<td><label>시작일</label><input type="date" name="issueDate"
-							class="issueDate" pattern="YYYYMMDD"></td>
-						<td><label>종료일</label><input type="date" name="expireDate"
-							class="expireDate" pattern="YYYYMMDD"></td>
-						<td><input type="text" id="couponCode" th:name="couponCode">&nbsp;<input
-							type="button" id="create-coupon" value="생성하기"></td>
-						<td><select th:name="couponValue" id="couponValue">
-								<option class="option" selected disabled>-- 쿠폰 값을
-									선택해주세요 --</option>
+						<td>
+							<label>시작일</label>
+							<input type="date" name="issueDate" class="issueDate" pattern="YYYYMMDD">
+						</td>
+						<td>
+							<label>종료일</label>
+							<input type="date" name="expireDate" class="expireDate" pattern="YYYYMMDD">
+						</td>
+						<td>
+							<input type="text" id="couponCode" th:name="couponCode">&nbsp;
+							<input type="button" id="create-coupon" value="생성하기">
+						</td>
+						<td>
+							<select th:name="couponValue" id="couponValue">
+								<option class="option" selected disabled>-- 쿠폰 값을 선택해주세요 --</option>
 								<option th:value="1000">1,000원</option>
 								<option th:value="3000">3,000원</option>
 								<option th:value="5000">5,000원</option>
 								<option th:value="7000">7,000원</option>
 								<option th:value="10000">10,000원</option>
-						</select> <input class="submit" type="button" value="적용"></td>
+							</select>
+							<input class="submit" type="button" value="적용">
+						</td>
 					</tr>
 				</table>
 				<h3>만료된 쿠폰</h3>

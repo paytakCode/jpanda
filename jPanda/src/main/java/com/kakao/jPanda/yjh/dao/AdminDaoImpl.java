@@ -9,6 +9,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.Pagination;
 import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
@@ -53,6 +54,12 @@ public class AdminDaoImpl implements AdminDao {
 		int result = sqlSession.update("updateNotice", notice);
 		
 		return result;
+	}
+
+	@Override
+	public int selectNoficeByPagination() {
+		int totalCount = 0;
+		return 0;
 	}
 	
 	//exchange
@@ -286,4 +293,5 @@ public class AdminDaoImpl implements AdminDao {
 		}
 		return result;
 	}
+
 }

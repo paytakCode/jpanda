@@ -8,13 +8,14 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.Pagination;
 import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 
 public interface AdminService {
 	//notice
-	List<NoticeDto> findNotice();
+	List<NoticeDto> findNotice(Pagination pagination);
 	NoticeDto findNoticeByNoticeNo(String noticeNo);
 	String modifyNotice(NoticeDto notice);
 	String addNotice(NoticeDto notice);

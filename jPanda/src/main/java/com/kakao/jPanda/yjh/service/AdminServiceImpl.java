@@ -14,6 +14,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.Pagination;
 import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
@@ -47,8 +48,10 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<NoticeDto> findNotice() {
+	public List<NoticeDto> findNotice(Pagination pagination) {
 		log.info("Service findNotice() start");
+		int totalCount = adminDao.selectNoficeByPagination();
+		
 		List<NoticeDto> noticeList = adminDao.selectNotice();
 		
 		return noticeList;

@@ -23,6 +23,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.Pagination;
 import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
@@ -55,9 +56,10 @@ public class AdminController {
 	
 	//notice
 	@GetMapping(value = "/notices")
-	public String noticeList(Model model, HttpSession session) {
+	public String noticeList(Model model, HttpSession session, Pagination pagination) {
 		log.info("Notice Controller noticeList() start");
-		List<NoticeDto> noticeList = adminService.findNotice();
+		
+		List<NoticeDto> noticeList = adminService.findNotice(pagination);
 		model.addAttribute("noticeList", noticeList);
 		
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
