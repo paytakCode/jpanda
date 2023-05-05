@@ -75,9 +75,8 @@
 		//채팅 대화 내용 업데이트
 		function updateChatContent() {
 			$.ajax({
-				url: "/chats",
+				url: "/chats/" + memberId + "?partner-id=" + selectedChat,
 				method: "GET",
-				data : {memberId : memberId},
 				dataType : "json",
 				success: function(chatList) {
 					console.log("chatList =>" + chatList);
