@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.json.async.NonBlockingJsonParserBase;
 import com.kakao.jPanda.njb.dao.MemberDao;
 import com.kakao.jPanda.njb.domain.BankDto;
 import com.kakao.jPanda.njb.domain.MemberDto;
@@ -162,7 +163,7 @@ public class MemberController {
     @DeleteMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "Logout Success";
+        return "logout success";
     }
    
     @PostMapping("/withdrawal")
@@ -186,8 +187,10 @@ public class MemberController {
             MemberDto memberInfo = memberservice.findMember(memberId);
             model.addAttribute("memberInfo", memberInfo);
             model.addAttribute("editMode", false);
+            return "njb/mypage";
         }
-        return "njb/mypage";
+        //로그인 안되어있으면 로그인페이지로 이동
+        return "njb/login";
     }
     @PostMapping("/updateMember")
     public String editMemberInfo(@ModelAttribute("memberInfo") MemberDto memberInfo, HttpSession session) {
