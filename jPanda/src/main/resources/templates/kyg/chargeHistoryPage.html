@@ -161,20 +161,28 @@
 			</tbody>
 		</table>
 		
-		<!-- 페이징 -->
-		<div th:if="${page.startPage > page.pageBlock}">
-			<a th:href="@{/charge(currentPage=${page.startPage - page.pageBlock})}">이전</a>
-		</div>
-		
-		<div th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
-		<a th:href="@{/charge(currentPage=${i}, pageStatus='1')}" th:text="${i}"></a>
-		</div>
-		
-		<div th:if="${page.endPage < page.totalPage}">
-			<a th:href="@{/charge(currentPage=${page.startPage + page.pageBlock})}">다음</a>
-		</div>
-		
 	</div>	<!-- /id="charge-details-container" -->
+		
+	<!-- 페이징 -->
+	<div class="d-flex justify-content-center">
+		<ul class="pagination">
+			<li class="page-item" th:if="${page.startPage > page.pageBlock}" aria-label="Previous">
+				<a class="page-link" th:href="@{/charge(currentPage=${page.startPage - page.pageBlock}, pageStatus='1')}">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			<li th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}" th:class="${i == page.currentPage} ? 'page-item active' : 'page-item'">
+				<a class="page-link" th:href="@{/charge(currentPage=${i}, pageStatus='1')}" th:text="${i}">
+					[[${i}]]
+				</a>
+			</li>
+			<li class="page-item" th:if="${page.endPage < page.totalPage}" >
+				<a class="page-link" aria-label="Next" th:href="@{/charge(currentPage=${page.startPage + page.pageBlock}, pageStatus='1')}">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+		</ul>
+	</div>
 	
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>

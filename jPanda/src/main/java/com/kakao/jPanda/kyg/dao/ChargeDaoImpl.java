@@ -199,19 +199,19 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public List<ChargeDto> selectBambooChargeListbyChargerId(ChargeDto chargeDto) {
+	public List<ChargeDto> selectBambooChargeList(ChargeDto chargeDto) {
 		log.info("ChargeDaoImpl selectBambooChargeListbyChargerId() Start...");
 		log.info("ChargeDaoImpl selectBambooChargeListbyChargerId() chargeDto.toString() -> {}", chargeDto.toString());
-		List<ChargeDto> selectBambooChargeListbyChargerIdResult = null;
-		log.info("ChargeDaoImpl selectBambooChargeListbyChargerId Start...");
+		List<ChargeDto> selectBambooChargeListResult = null;
+		log.info("ChargeDaoImpl selectBambooChargeList Start...");
 		try {
-			selectBambooChargeListbyChargerIdResult = sqlSession.selectList("selectBambooChargeListbyChargerId", chargeDto);
-			log.info("ChargeDaoImpl selectPaymentList() selectBambooChargeListbyChargerId.size() -> {}", selectBambooChargeListbyChargerIdResult.size());
+			selectBambooChargeListResult = sqlSession.selectList("selectBambooChargeList", chargeDto);
+			log.info("ChargeDaoImpl selectBambooChargeList() selectBambooChargeListResult.size() -> {}", selectBambooChargeListResult.size());
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
+			log.error("ChargeDaoImpl selectBambooChargeList() Exception -> {}", e.getMessage(), e);
 		}
 		
-		return selectBambooChargeListbyChargerIdResult;
+		return selectBambooChargeListResult;
 	}
 
 	@Override

@@ -40,9 +40,10 @@ public class ChargeController {
 	 * 메인페이지
 	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
 	 * 충전내역, chargeHistory를 테이블에 List형식으로 나타냄
+	 * button에 따라 pageStatus의 값을 변경, pageStatus의 값에 따라 returnPage를 다르게 전달
 	 * Model	TB payment -> method, bonusRatio 
-	 * @param	HttpSession, ChargeHistoryDto, Model
-	 * @return	kyg/chargePage
+	 * @param	HttpSession, ChargeDto chargeDto, String currentPage, String pageStatus, Model
+	 * @return	kyg/chargePage, kyg/chargeHistoryPage
 	 */
 	@GetMapping(value = "")
 	public String chargePage(HttpSession session, ChargeDto chargeDto, String currentPage, String pageStatus, Model model) {
@@ -76,8 +77,8 @@ public class ChargeController {
 		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
 		
 		// 충전내역
-		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeListbyChargerId(chargeDto);
-		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getBambooChargeList.size());
+		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeList(chargeDto);
+		log.info("ChargeContoller chargePage() getBambooChargeList.size() -> {}", getBambooChargeList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
 		model.addAttribute("listChargeHistory", getBambooChargeList);

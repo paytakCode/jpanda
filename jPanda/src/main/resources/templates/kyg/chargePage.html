@@ -139,7 +139,7 @@
 	
 		<div id="charge-contents">
 		
-			<h4>충전정보</h4>
+			<h2>충전정보</h2>
 			
 			<table class="table">
 				<thead>
@@ -420,7 +420,7 @@
 				type: "POST", 
 				data: JSON.stringify({
 					couponCode	  : couponCode,
-					paymentAmount : realChargeMoney,
+					chargeMoney : realChargeMoney,
 					paymentMethod : paymentMethod,
 					chargeBamboo  : chargeBamboo
 				}),
@@ -473,7 +473,7 @@
 	
 	}	/* /chargeSubmit(rsp) */
 
-//	총 보유 밤부		
+	//	총 보유 밤부		
 	$(function(){
 		$.ajax({
 			url: "/charge/members/total-bamboo",
@@ -489,6 +489,7 @@
 		});    
 	});
 	   
+	// 충전/내역 페이지 이동 status변경
 	function moveChargePage(pageStatus) { 
 		console.log("pageStatus -> " + pageStatus);
 		location.href="?pageStatus="+pageStatus;

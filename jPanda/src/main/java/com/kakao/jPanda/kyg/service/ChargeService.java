@@ -18,7 +18,7 @@ public interface ChargeService {
 
 	List<PaymentDto> findPaymentList();
 
-	List<ChargeDto> findBambooChargeListbyChargerId(ChargeDto chargeDto);
+	List<ChargeDto> findBambooChargeList(ChargeDto chargeDto);
 
 	int totalChargeCnt(String chargerId);
 

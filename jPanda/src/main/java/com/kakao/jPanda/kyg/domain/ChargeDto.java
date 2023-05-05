@@ -9,6 +9,7 @@ public class ChargeDto {
 	
 	private String		chargerId;
 	private String		paymentMethod; 
+	private Long		chargeMoney;
 	private Long		paymentAmount;
 	private Long		chargeBamboo;
 	private Timestamp	chargeDate;
