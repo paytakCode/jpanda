@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="chatMapper">
-	<select id="selectChatListByMemberId" parameterType="String" resultType="Chat">
+	<select id="selectChatListByMemberIdAndPartnerId" parameterType="Map" resultType="Chat">
 		SELECT *
 		FROM chat
-		WHERE receiver_id = #{memberId}
-			OR sender_id = #{memberId}
+		WHERE (receiver_id = #{memberId} AND sender_id = #{partnerId})
+			OR (sender_id = #{memberId} AND receiver_id = #{partnerId})
 		ORDER BY chat_date ASC
 	</select>
 	

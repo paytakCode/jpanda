@@ -1,6 +1,7 @@
 package com.kakao.jPanda.kts.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,12 +20,6 @@ public class ChatDaoImpl implements ChatDao {
 	}
 
 	@Override
-	public List<Chat> selectChatListByMemberId(String memberId) {
-	    List<Chat> selectedChatList = sqlSession.selectList("selectChatListByMemberId", memberId);
-		return selectedChatList;
-	}
-
-	@Override
 	public Integer insertChat(Chat chat) {
 		int result = sqlSession.insert("insertChat", chat);
 		return result;
@@ -35,5 +30,12 @@ public class ChatDaoImpl implements ChatDao {
 		List<Partner> selectedPartnerList = sqlSession.selectList("selectPartnerListByMemberId", memberId);
 		return selectedPartnerList;
 	}
+
+    @Override
+    public List<Chat> selectChatListByMemberIdAndPartnerId(
+            Map<String, String> memberIdAndPartnerMap) {
+        List<Chat> selectedChatList = sqlSession.selectList("selectChatListByMemberIdAndPartnerId", memberIdAndPartnerMap);
+        return selectedChatList;
+    }
 	
 }

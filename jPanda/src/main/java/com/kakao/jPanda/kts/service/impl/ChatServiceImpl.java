@@ -1,6 +1,8 @@
 package com.kakao.jPanda.kts.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kakao.jPanda.kts.dao.ChatDao;
@@ -19,8 +21,11 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	@Override
-	public List<Chat> findChatListByMemberId(String memberId) {
-		List<Chat> selectedChatList = chatDao.selectChatListByMemberId(memberId);
+	public List<Chat> findChatListByMemberIdAndPartnerId(String memberId, String partnerId) {
+	    Map<String, String> memberIdAndPartnerMap = new HashMap<String, String>();
+	    memberIdAndPartnerMap.put("memberId", memberId);
+	    memberIdAndPartnerMap.put("partnerId", partnerId);
+	    List<Chat> selectedChatList = chatDao.selectChatListByMemberIdAndPartnerId(memberIdAndPartnerMap);
 		return selectedChatList;
 	}
 
