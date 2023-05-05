@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.core.json.async.NonBlockingJsonParserBase;
 import com.kakao.jPanda.njb.dao.MemberDao;
 import com.kakao.jPanda.njb.domain.BankDto;
 import com.kakao.jPanda.njb.domain.MemberDto;
@@ -163,7 +162,7 @@ public class MemberController {
     @DeleteMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "logout success";
+        return "Logout success";
     }
    
     @PostMapping("/withdrawal")
