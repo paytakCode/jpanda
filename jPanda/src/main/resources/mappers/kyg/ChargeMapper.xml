@@ -19,7 +19,7 @@
 		  bamboo_charge_no_SEQ.NEXTVAL,
 		  #{chargerId},
 		  #{paymentMethod},
-		  #{paymentAmount},
+		  #{chargeMoney},
 		  #{chargeBamboo},							
 		  SYSDATE,
 		  #{couponCode,  jdbcType=VARCHAR}
@@ -98,7 +98,7 @@
 		
 	</select>
 	
-	<select id="selectBambooChargeListbyChargerId" parameterType="ChargeDto" resultType="ChargeDto">
+	<select id="selectBambooChargeList" parameterType="ChargeDto" resultType="ChargeDto">
 	
 	<![CDATA[
 		SELECT	*
@@ -112,10 +112,9 @@
 							ORDER BY	charge_date DESC
 						) a
 			)
-		WHERE	rn >= #{startRow}
-		AND		rn <= #{endRow}	
-		
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
 	]]>
+	
 	</select>
 	
 	<select id="totalChargeCnt" parameterType="String" resultType="int">
