@@ -26,6 +26,7 @@
   		<typeAlias alias="BoardReview" type="com.kakao.jPanda.lhw.domain.ReviewDto"/>
   		<typeAlias alias="BoardFilters" type="com.kakao.jPanda.lhw.domain.FiltersDto"/>
   		<typeAlias alias="BoardBambooUse" type="com.kakao.jPanda.lhw.domain.BambooUseDto"/>
+  		<typeAlias alias="BoardReport" type="com.kakao.jPanda.lhw.domain.ReportDto"/>
   		
   		<!-- 충전 -->
   		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
