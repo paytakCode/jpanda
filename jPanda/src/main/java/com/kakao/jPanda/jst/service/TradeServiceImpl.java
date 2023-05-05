@@ -232,5 +232,10 @@ public class TradeServiceImpl implements TradeService{
 		return null;
 	}
 
+	@Override
+	public TradeDto findTradeByTalentNo(String talentNo) {
+		return tradeDao.selectTradeByTalentNo(talentNo);
+	}
+
 
 }//end class
