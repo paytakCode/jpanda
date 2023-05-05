@@ -49,7 +49,7 @@ public class ChargeController {
 	public String chargePage(HttpSession session, ChargeDto chargeDto, String currentPage, String pageStatus, Model model) {
 		String returnPage = "kyg/chargePage";
 		if(pageStatus == null) pageStatus = "0";
-		log.info("ChargeContoller chargePage() pageStatus -> ", pageStatus);
+		log.info("ChargeContoller chargePage() pageStatus -> {}", pageStatus);
 		
 		if (session.getAttribute("memberId") == null) {
 			return "redirect:/login";
@@ -62,8 +62,8 @@ public class ChargeController {
 		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
 		
 		// 페이징 작업
-		log.info("ChargeContoller chargePage() chargeDto -> ", chargeDto);
-		log.info("ChargeContoller chargePage() currentPage -> ", currentPage);
+		log.info("ChargeContoller chargePage() chargeDto -> {}", chargeDto);
+		log.info("ChargeContoller chargePage() currentPage -> {}", currentPage);
 		
 		int totalChargeCnt = chargeService.totalChargeCnt(chargerId);
 		log.info("ChargeContoller chargePage() totalChargeCnt -> {}", totalChargeCnt);
@@ -83,6 +83,7 @@ public class ChargeController {
 		model.addAttribute("listPayment", getPaymentList);
 		model.addAttribute("listChargeHistory", getBambooChargeList);
 		model.addAttribute("pageStatus", pageStatus);
+		model.addAttribute("totalChargeCnt", totalChargeCnt);
 		model.addAttribute("page", page);
 		
 		if (pageStatus.equals("0")) {

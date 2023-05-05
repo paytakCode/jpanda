@@ -198,10 +198,10 @@
 					쿠폰 할인 받은 금액 : <input type="number" id = "coupon-discount" name="couponDiscount" value="0" readonly="readonly">
 				</li>
 				<li>
-					미할인 충전 금액	: <input type="number" id = "charge-money" name="chargeMoney" required="required" value="5000" readonly="readonly"><p/>
+					미할인 충전 금액	: <input type="number" id = "payment-amount" name="paymentAmount" required="required" value="5000" readonly="readonly"><p/>
 				</li>
 				<li>
-					적용 결제 금액 : <input type="number" id = "real-charge-money" name="realChargeMoney" value="5000" readonly="readonly">
+					적용 결제 금액 : <input type="number" id = "actual-payment-amount" name="actualPaymentAmount" value="5000" readonly="readonly">
 				</li>
 				<li>
 					<button id="request-pay-button"  onclick="requestPay()">충전하기</button><br/>
@@ -224,25 +224,25 @@
 	
 	// 충전 예상 금액 계산 후 client에 update
 	$(function(){
-		function updateChargeMoney(){
+		function updatePaymentAmount(){
 			
-			let chargeMoney = $('#charge-money').val();
+			let paymentAmount = $('#payment-amount').val();
 			let chargeBamboo = $('#charge-bamboo').val();
 			
-			chargeMoney = Math.floor(chargeBamboo * 1000);
-			$('#charge-money').val(chargeMoney);
+			paymentAmount = Math.floor(chargeBamboo * 1000);
+			$('#payment-amount').val(paymentAmount);
 		}
 		
-		$('#charge-bamboo').on('input', updateChargeMoney);				
+		$('#charge-bamboo').on('input', updatePaymentAmount);				
 		
-		updateChargeMoney();											
+		updatePaymentAmount();											
 	});
 	
 	$(function(){
-		function updateRealChargeMoney(){
+		function updateActualPaymentAmount(){
 			
 			let chargeBamboo = $('#charge-bamboo').val();
-			let realChargeMoney = $('#real-charge-money').val();
+			let actualPaymentAmount = $('#actual-payment-amount').val();
 			let couponDiscount = $('#coupon-discount').val();
 			let paymentMethod = $('input[name="paymentMethod"]:checked').val();
 			let ratio = 1.2;
@@ -257,15 +257,15 @@
 				ratio = 1.4;
 			}
 			
-			realChargeMoney = Math.floor(chargeBamboo * 1000 / ratio) - couponDiscount;
-			$('#real-charge-money').val(realChargeMoney);
+			actualPaymentAmount = Math.floor(chargeBamboo * 1000 / ratio) - couponDiscount;
+			$('#actual-payment-amount').val(actualPaymentAmount);
 			
 		}
 		
-		$('#charge-bamboo').on('input', updateRealChargeMoney);				
-		$('input[name="paymentMethod"]').change(updateRealChargeMoney);		
+		$('#charge-bamboo').on('input', updateActualPaymentAmount);				
+		$('input[name="paymentMethod"]').change(updateActualPaymentAmount);		
 
-		updateRealChargeMoney();											
+		updateActualPaymentAmount();											
 	});
 	
 	// 쿠폰입력 onchange 쿠폰입력시 사용가능쿠폰 자동 검증 후 결제기능 노출
@@ -303,11 +303,11 @@
 		  	      $('#coupon-discount').val(couponUseDto.couponValue);
 		  	      
 		  	      //  직접 입력한 금액에서 json으로 받아온 쿠폰의 값을 차감
-		  	      let realChargeMoney =   $('#real-charge-money').val();
-		  	      let chargePaymentMoney = realChargeMoney-couponUseDto.couponValue;
+		  	      let actualPaymentAmount =   $('#actual-payment-amount').val();
+		  	      let chargePaymentAmount = actualPaymentAmount-couponUseDto.couponValue;
 		  	      
-		  	      // 차감한 값을 다시 chargeMoney에 할당, 할당
-		  	      $('#real-charge-money').val(chargePaymentMoney);
+		  	      // 차감한 값을 다시 actualPaymentAmount에 할당, 할당
+		  	      $('#actual-payment-amount').val(chargePaymentAmount);
 	
 		        } else {
 			      $('#coupon-status').val('0');
@@ -332,8 +332,8 @@
 
     function requestPay() {
     	
-    	let subchargeMoney = $('#real-charge-money').val();			 
-    	if (subchargeMoney <= 0) {
+    	let subPaymentAmount = $('#actual-payment-amount').val();			 
+    	if (subPaymentAmount <= 0) {
     		alert("충전금액은 0원 초과이어야 합니다.");
     	    console.error("Error: 충전금액은 0원 초과이어야 합니다.");
     	    return;
@@ -342,10 +342,10 @@
     	let pay_method = ''; 
     	let chargerNo = '';  
     	let paymentMethod = $('input[name="paymentMethod"]:checked').val();
-    	let realChargeMoney = $('#real-charge-money').val();
+    	let actualPaymentAmount = $('#actual-payment-amount').val();
     	let couponCode = $('#coupon-code').val();
 		
-		console.log("충전 금액 : " + realChargeMoney);
+		console.log("충전 금액 : " + actualPaymentAmount);
 		console.log("쿠폰 번호 : " + chargerNo);
 		console.log("결제 방법 : " + $("input[name='paymentMethod']:checked").val());
 		
@@ -368,7 +368,7 @@
 			pg : pgSelect,								
 			pay_method : pay_method, 					// 지불 수단
 			name : 'panda충전',							// 상품 명
-			amount : realChargeMoney,					// 가격 숫자 타입
+			amount : actualPaymentAmount,					// 가격 숫자 타입
 			buyer_name : '',
 			buyer_email : '',
 			buyer_tel : '',
@@ -393,7 +393,7 @@
 		console.log("chargeSubmit Start...");
 		
 		let couponCode = rsp.custom_data;
-		let realChargeMoney = $('#real-charge-money').val();
+		let actualPaymentAmount = $('#actual-payment-amount').val();
 		let chargeBamboo = $('#charge-bamboo').val();
 	    let paymentMethod = rsp.pay_method;
 	    
@@ -408,7 +408,7 @@
 		}
 	    
 		console.log("rsp.success chargeSubmit couponCode : ", couponCode);
-		console.log("rsp.success chargeSubmit chargeMoney : ", realChargeMoney);
+		console.log("rsp.success chargeSubmit actualPaymentAmount : ", actualPaymentAmount);
 		console.log("rsp.success chargeSubmit pay_method : ", paymentMethod);
 		console.log("rsp.success chargeSubmit chargeBamboo : ", chargeBamboo);
 		
@@ -420,7 +420,7 @@
 				type: "POST", 
 				data: JSON.stringify({
 					couponCode	  : couponCode,
-					chargeMoney : realChargeMoney,
+					paymentAmount : actualPaymentAmount,
 					paymentMethod : paymentMethod,
 					chargeBamboo  : chargeBamboo
 				}),
@@ -441,14 +441,14 @@
 			});
 	        
 		} else {
-			if (couponCode == null && realChargeMoney > '0') {
+			if (couponCode == null && actualPaymentAmount > '0') {
 				console.log("chargeSubmit else 시작");
 				  
 				$.ajax({
 					url: "/charge/charge", 
 					type: "POST",
 					data: JSON.stringify({
-						chargeMoney	  : realChargeMoney,
+						paymentAmount : actualPaymentAmount,
 						paymentMethod : paymentMethod,
 						chargeBamboo  : chargeBamboo
 					}),

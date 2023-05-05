@@ -19,7 +19,7 @@
 		  bamboo_charge_no_SEQ.NEXTVAL,
 		  #{chargerId},
 		  #{paymentMethod},
-		  #{chargeMoney},
+		  #{paymentAmount},
 		  #{chargeBamboo},							
 		  SYSDATE,
 		  #{couponCode,  jdbcType=VARCHAR}
