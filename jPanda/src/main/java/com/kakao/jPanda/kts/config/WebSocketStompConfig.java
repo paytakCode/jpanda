@@ -30,7 +30,7 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.setApplicationDestinationPrefixes("/chat"); // 
-		registry.enableSimpleBroker("/direct");
+		registry.enableSimpleBroker("/message", "/read");
 	}
 	
 	

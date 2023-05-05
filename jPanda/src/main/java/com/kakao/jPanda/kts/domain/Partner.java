@@ -12,4 +12,7 @@ public class Partner {
 	
 	@NotEmpty
 	private String name;
+	
+	@NotEmpty
+	private int unreadCount;
 }
