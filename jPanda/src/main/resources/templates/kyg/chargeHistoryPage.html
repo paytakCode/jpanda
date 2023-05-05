@@ -136,13 +136,15 @@
 		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-details-btn"		value="chargeDetailsBtn">충전내역</button>
 	</div>
 	
+	<div style="display:flex; justify-content:center;">
+		<h4 th:text="'총 충전회수 : ' + ${totalChargeCnt}"></h4>
+	</div>	
 	<div id="charge-details-container">
-		<h2>충전내역</h2>
 	
+		<h3>충전내역</h3>
 		<table class="table">
 			<thead>
 				<tr>
-				<th scope="col">#</th>
 				<th scope="col">충전날짜</th>
 				<th scope="col">충전방법</th>
 				<th scope="col">충전밤부</th>
@@ -151,7 +153,6 @@
 			</thead>
 			<tbody class="table-group-divider2" th:each="chargeHistoryList, i : ${listChargeHistory}">
 				<tr>
-					<th scope="row" th:text="${listChargeHistory.size() - i.index}"></th>
 					<td th:if="${chargeHistoryList.chargeDate != null}" th:text="${#dates.format(chargeHistoryList.chargeDate, 'yyyy-MM-dd')}"></td>
 					<td th:if="${chargeHistoryList.chargeDate == null}" th:text=""></td>
 					<td th:text="${chargeHistoryList.paymentMethod}"></td>
