@@ -14,4 +14,10 @@ public class ChargeDto {
 	private Timestamp	chargeDate;
 	private String		couponCode;
 	
+	private int		startRow;
+	private int		endRow;
+	private String	pageNum;
+	private String	keyword;
+	private String	search;
+	
 }

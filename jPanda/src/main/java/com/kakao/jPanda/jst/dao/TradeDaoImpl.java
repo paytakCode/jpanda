@@ -140,7 +140,7 @@ public class TradeDaoImpl implements TradeDao{
 	@Override
 	public TradeDto selectExchangeByExchangeNo(String exchangeNo) {
 		log.info("selectExchangeByExchangeNo exchangeNo : " + exchangeNo);
-		TradeDto tradeDto = sqlSession.selectOne("selectTradeExchangeByExchangeNo", exchangeNo);
+		TradeDto tradeDto = sqlSession.selectOne("selectExchangeByExchangeNo", exchangeNo);
 		log.info("selectExchangeByExchangeNo tradeDto : " + tradeDto);
 		return tradeDto;
 	}
@@ -160,6 +160,5 @@ public class TradeDaoImpl implements TradeDao{
 		log.info("selectTradeByTalentNo tradeDto : " + tradeDto);
 		return tradeDto;
 	}
-
 
 }//end class

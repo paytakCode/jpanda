@@ -19,6 +19,7 @@ import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
 import com.kakao.jPanda.kyg.service.ChargeService;
+import com.kakao.jPanda.kyg.service.Paging;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +36,6 @@ public class ChargeController {
 		this.chargeService = chargeService;
 	}
 	
-	
 	/*
 	 * 메인페이지
 	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
@@ -45,24 +45,57 @@ public class ChargeController {
 	 * @return	kyg/chargePage
 	 */
 	@GetMapping(value = "")
-	public String chargePage(HttpSession session, Model model) {
+	public String chargePage(HttpSession session, ChargeDto chargeDto, String currentPage, String pageStatus, Model model) {
+		String returnPage = "kyg/chargePage";
+		if(pageStatus == null) pageStatus = "0";
+		log.info("ChargeContoller chargePage() pageStatus -> ", pageStatus);
+		
+		if (session.getAttribute("memberId") == null) {
+			return "redirect:/login";
+		}
+		
 		String chargerId = (String) session.getAttribute("memberId");
-		ChargeDto chargeDto = new ChargeDto();
 		log.info("ChargeContoller chargePage() Start...");
 		
 		chargeDto.setChargerId(chargerId);
 		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
 		
+		// 페이징 작업
+		log.info("ChargeContoller chargePage() chargeDto -> ", chargeDto);
+		log.info("ChargeContoller chargePage() currentPage -> ", currentPage);
+		
+		int totalChargeCnt = chargeService.totalChargeCnt(chargerId);
+		log.info("ChargeContoller chargePage() totalChargeCnt -> {}", totalChargeCnt);
+		
+		Paging page = new Paging(totalChargeCnt, currentPage);
+		chargeDto.setStartRow(page.getStartRow());
+		chargeDto.setEndRow(page.getEndRow());
+		
+		// 충전수단
 		List<PaymentDto> getPaymentList = chargeService.findPaymentList();
 		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
 		
-		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeListbyChargerId(chargerId);
+		// 충전내역
+		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeListbyChargerId(chargeDto);
 		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getBambooChargeList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
 		model.addAttribute("listChargeHistory", getBambooChargeList);
+		model.addAttribute("pageStatus", pageStatus);
+		model.addAttribute("page", page);
 		
-		return "kyg/chargePage";
+		if (pageStatus.equals("0")) {
+			log.info("ChargeContoller chargePage() 충전하기 페이지 pageStatus(0) -> {}", pageStatus);
+			returnPage = "kyg/chargePage";
+		} else if (pageStatus.equals("1")) {
+			log.info("ChargeContoller chargePage() 충전내역 페이지 pageStatus(1) -> {}", pageStatus);
+			returnPage = "kyg/chargeHistoryPage";
+		} else 	{
+			log.info("ChargeContoller chargePage() default -> {}", pageStatus);
+			returnPage = "kyg/chargePage";
+		}
+		 
+		return returnPage;
 	}
 	
 	/*
@@ -83,7 +116,6 @@ public class ChargeController {
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
 		Map<String, String> resultMap = new HashMap<>();
-		
 		
 		if(resultCharge > 0) {
 			log.info("ChargeController charge() resultCharge 완료");
@@ -153,8 +185,6 @@ public class ChargeController {
 		
 		return foundTotalBambooByMemberIdStr;
 	}
-	
-	
 	
 }
 	
