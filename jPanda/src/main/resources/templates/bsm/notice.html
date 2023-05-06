@@ -89,7 +89,7 @@
 	 <div class="container">
 	<h2 id="notice-main">공지사항</h2>
 	<div id="search-div">
-		<input type="text" id="search">
+		<input type="text" id="notice-search">
 		<button id="search-button">검색</button>
 	</div>
 	<div id="notice-list-div">
@@ -107,6 +107,21 @@
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script type="text/javascript">
+		// 뒤로가기 해쉬값 가져오기
+		function checkForHash(){
+			if(location.hash){
+				// 한글 깨지지 않게 나오도록 처리
+				var hash = decodeURI(location.hash);
+				hash = hash.replace("#","");
+				arrCurrentPage_Search = hash.split(",");
+				var currentPage = arrCurrentPage_Search[0];
+				var search = arrCurrentPage_Search[1];
+				noticeChange(search, currentPage);
+			}else{
+				noticeChange("", 1);
+			} 
+		};
+		// 페이징, 검색 기능
 		function noticeChange(search, currentPage){
 			$.ajax({
 				url : "/talent/notice/notices",
@@ -117,8 +132,6 @@
 				},
 				dataType: 'json',
 		          	success:function(data) {
-		          		console.log(data.noticeList);
-		          		console.log(data.pager);
 		          		
 		          		var noticeList = data.noticeList;
 		          		var noticeListTable = $('#notice-list-table');
@@ -167,29 +180,33 @@
 		                pagerDiv.append($('<a></a>').addClass('notice-page').text('>'));
 		           	  	
 						$('#search-button').one('click', function(){
-							noticeChange($('#search').val(), 1);
+							noticeChange($('#notice-search').val(), 1);
 						});
 						$('.notice-page').one('click', function(){
 							if($(this).text() === '<'){
 								if(parseInt(pager.currentPage) != 1){
-									noticeChange($('#search').val(), parseInt(pager.currentPage) - 1);
+									noticeChange($('#notice-search').val(), parseInt(pager.currentPage) - 1);
 								}
 							}else if($(this).text() === '>'){
 								if(parseInt(pager.currentPage) != parseInt(pager.totalPage)){
-									noticeChange($('#search').val(), parseInt(pager.currentPage) + 1);
+									noticeChange($('#notice-search').val(), parseInt(pager.currentPage) + 1);
 								}
 							}else{
-								noticeChange($('#search').val(), $(this).text());
+								noticeChange($('#notice-search').val(), $(this).text());
 							}
 						});
+						// 해쉬에값 저장
+						hash = currentPage + "," + search;
+						location.hash = hash;
 						$('.notice-detail').on('click', function(){
 							location.href = "/talent/notice/" + $(this).data('noticeno') + "/detail";							
 						});
 		          	}
 			});
 		}
+		// 공지사항 페이지 로드
 		$(function() {
-			noticeChange("", 1);
+			checkForHash();
 		});
 	</script>
 	
