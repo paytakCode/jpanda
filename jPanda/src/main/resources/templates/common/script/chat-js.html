@@ -58,11 +58,8 @@
 						updateselectedPartner($('.partner[value=' + selectedPartner + ']'));
 					});
 				}
-			    
-			    if($("#chat-console").css("display") == 'none'){
-			    	$("#chat-btn-alert").css("animation", "blink 1s infinite");
-			    	$("#chat-btn-alert").removeClass('visually-hidden');
-			    }
+				
+				updateTotalUnreadCount();
 			}
 		}
 		
@@ -91,8 +88,6 @@
 		//채팅 버튼 클릭 시 채팅 팝업 띄우기
 		$('#chat-btn').click(function () {
 			if (stompClient !== null) { //연결 된 상태에서만 채팅 콘솔 작동 가능
-				$("#chat-btn-alert").css("animation", "");
-		    	$("#chat-btn-alert").addClass('visually-hidden');
 			    $('#chat-console').toggle();
 			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 			}
@@ -203,6 +198,23 @@
 				});
 			}
 		}
+		
+		function updateTotalUnreadCount(){
+			let totalUnreadCount = 0;
+			$(".unread-count").each(function() {
+			    let count = parseInt($(this).text());
+			    if (!isNaN(count)) {
+			        totalUnreadCount += count;
+			    }
+			});
+			if (totalUnreadCount == 0){
+				$('#total-unread-count').text(' ');
+			} else if (totalUnreadCount > 99) {
+				$('#total-unread-count').text('99+');
+			} else {
+				$('#total-unread-count').text(totalUnreadCount);
+			}
+		}
 	
 	
 		//채팅창 열기
@@ -213,6 +225,8 @@
 			if(selectedPartner != null){
 				readPartnerMessage(selectedPartner);
 			}
+			
+			updateTotalUnreadCount();
 		});
 	
 	
@@ -224,18 +238,7 @@
 					$("#chat-console").hide();
 				}
 				
-				let totalUnreadCount = 0;
-				$(".unread-count").each(function() {
-				    let count = parseInt($(this).text());
-				    if (!isNaN(count)) {
-				        totalUnreadCount += count;
-				    }
-				});
-				
-				if(totalUnreadCount > 0){
-			    	$("#chat-btn-alert").css("animation", "blink 1s infinite");
-			    	$("#chat-btn-alert").removeClass('visually-hidden');
-				}
+				updateTotalUnreadCount();
 			});
 		});
 		
@@ -333,19 +336,7 @@
 		function loadChatByMemberId(memberId) {
 			updateChatPartnerList(memberId).then(function(){
 				$("#chat-content").append($('<div>').text('채팅 상대를 선택해주세요.'));
-				
-				let totalUnreadCount = 0;
-				$(".unread-count").each(function() {
-				    let count = parseInt($(this).text());
-				    if (!isNaN(count)) {
-				        totalUnreadCount += count;
-				    }
-				});
-				
-				if(totalUnreadCount > 0){
-			    	$("#chat-btn-alert").css("animation", "blink 1s infinite");
-			    	$("#chat-btn-alert").removeClass('visually-hidden');
-				}
+				updateTotalUnreadCount();
 			});
 		}
 		

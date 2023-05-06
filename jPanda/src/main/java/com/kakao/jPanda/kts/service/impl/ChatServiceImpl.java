@@ -43,10 +43,7 @@ public class ChatServiceImpl implements ChatService {
 	}
 
     @Override
-    public int modifyChatByReaderIdAndPartnerId(String readerId, String partnerId) {
-        Map<String, String> readerIdAndPartnerIdMap = new HashMap<String, String>();
-        readerIdAndPartnerIdMap.put("readerId", readerId);
-        readerIdAndPartnerIdMap.put("partnerId", partnerId);
+    public int modifyChatByReaderIdAndPartnerId(Map<String, String> readerIdAndPartnerIdMap) {
         int result = chatDao.updateChatByReaderIdAndPartnerId(readerIdAndPartnerIdMap);
         return result;
     }

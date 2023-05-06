@@ -78,10 +78,8 @@ public class ChatController {
 	@ResponseBody
 	@PatchMapping("/chats")
 	public ResponseEntity<Integer> chatModify(@RequestBody Map<String, String> readerIdAndPartnerIdMap){
-	    String readerId = readerIdAndPartnerIdMap.get("readerId");
-	    String partnerId = readerIdAndPartnerIdMap.get("partnerId");
-        log.info("[chatModify] {}가 {}에게 받은 메세지를 DB에 읽음으로 수정합니다.", readerId, partnerId);
-        Integer result = chatService.modifyChatByReaderIdAndPartnerId(readerId, partnerId);
+        log.info("[chatModify] {}가 {}에게 받은 메세지를 DB에 읽음으로 수정합니다.", readerIdAndPartnerIdMap.get("readerId"), readerIdAndPartnerIdMap.get("partnerId"));
+        Integer result = chatService.modifyChatByReaderIdAndPartnerId(readerIdAndPartnerIdMap);
         if(result >= 1) {
             log.info("[chatModify] 수정 완료 - {}", result);
             return ResponseEntity.ok(result);
