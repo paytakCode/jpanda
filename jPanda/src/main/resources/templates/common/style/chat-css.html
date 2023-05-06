@@ -44,8 +44,8 @@
 			box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 			z-index: 9999;
 			display: none;
-			grid-template-columns: 30% 70%;
-			grid-template-rows: 90% 10%;
+			grid-template-columns: 20% 80%;
+			grid-template-rows: 85% 15%;
 		}
 		
 		/* 채팅 상대 목록 스타일 */
@@ -53,7 +53,22 @@
 			box-sizing: border-box;
 			border-right: 1px solid #ddd;
 			overflow-y: auto;
-			padding: 10px;
+		}
+		
+		.partner{
+			font-weight:bold;
+			cursor: pointer;
+		}
+		
+		.partner-id-popover {
+			--bs-popover-border-color: black;
+			--bs-popover-bg: mediumseagreen;
+			--bs-popover-body-color: auto;
+			--bs-popover-body-padding-x: .5rem;
+			--bs-popover-body-padding-y: .5rem;
+			--bs-popover-arrow-width: 1rem;
+			--bs-popover-arrow-height: 0.5rem;
+			--bs-popover-font-size: 1rem;
 		}
 		
 		/* 채팅 대화 내용 스타일 */
@@ -112,21 +127,17 @@
 		#chat-console > #chat-partner-list > .list-group-item {
 			border: none;
 		}
-
-		.unread-count {
-			animation: blink 2s infinite;
-		}
 		
 		#total-unread-count {
 			animation: blink 2s infinite;
 		}
 		
-		.chat-date {
+		.chat-date, .new-chat-point {
 			justify-content: center;
 			align-items: center;
 			display: flex;
 			padding: 0px;
-			margin: 0 20%;
+			margin: 10px 20%;
 		}
 		
 		.chat-time {
