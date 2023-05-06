@@ -30,8 +30,9 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public Integer saveChat(Chat chat) {
-		Integer result = chatDao.insertChat(chat);
+	public int saveChat(Chat chat) {
+	    chat.setRead('F');
+	    int result = chatDao.insertChat(chat);
 		return result;
 	}
 
@@ -40,5 +41,14 @@ public class ChatServiceImpl implements ChatService {
 		List<Partner> selectedPartnerList = chatDao.selectPartnerListByMemberId(memberId);
 		return selectedPartnerList;
 	}
+
+    @Override
+    public int modifyChatByReaderIdAndPartnerId(String readerId, String partnerId) {
+        Map<String, String> readerIdAndPartnerIdMap = new HashMap<String, String>();
+        readerIdAndPartnerIdMap.put("readerId", readerId);
+        readerIdAndPartnerIdMap.put("partnerId", partnerId);
+        int result = chatDao.updateChatByReaderIdAndPartnerId(readerIdAndPartnerIdMap);
+        return result;
+    }
 
 }

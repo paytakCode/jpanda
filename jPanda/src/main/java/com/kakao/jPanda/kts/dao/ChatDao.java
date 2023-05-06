@@ -7,10 +7,12 @@ import com.kakao.jPanda.kts.domain.Partner;
 
 public interface ChatDao {
 
-	Integer insertChat(Chat chat);
+	int insertChat(Chat chat);
 
 	List<Partner> selectPartnerListByMemberId(String memberId);
 
     List<Chat> selectChatListByMemberIdAndPartnerId(Map<String, String> memberIdAndPartnerMap);
+
+    int updateChatByReaderIdAndPartnerId(Map<String, String> readerIdAndPartnerIdMap);
 
 }

@@ -20,7 +20,7 @@ public class ChatDaoImpl implements ChatDao {
 	}
 
 	@Override
-	public Integer insertChat(Chat chat) {
+	public int insertChat(Chat chat) {
 		int result = sqlSession.insert("insertChat", chat);
 		return result;
 	}
@@ -36,6 +36,12 @@ public class ChatDaoImpl implements ChatDao {
             Map<String, String> memberIdAndPartnerMap) {
         List<Chat> selectedChatList = sqlSession.selectList("selectChatListByMemberIdAndPartnerId", memberIdAndPartnerMap);
         return selectedChatList;
+    }
+
+    @Override
+    public int updateChatByReaderIdAndPartnerId(Map<String, String> readerIdAndPartnerIdMap) {
+        int result = sqlSession.update("updateChatByReaderIdAndPartnerId", readerIdAndPartnerIdMap);
+        return result;
     }
 	
 }

@@ -6,10 +6,12 @@ import com.kakao.jPanda.kts.domain.Partner;
 
 public interface ChatService {
 
-	Integer saveChat(Chat chat);
+	int saveChat(Chat chat);
 
 	List<Partner> findPartnerListByMemberId(String memberId);
 
     List<Chat> findChatListByMemberIdAndPartnerId(String memberId, String partnerId);
+
+    int modifyChatByReaderIdAndPartnerId(String readerId, String partnerId);
 
 }

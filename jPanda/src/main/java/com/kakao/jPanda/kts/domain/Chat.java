@@ -1,9 +1,7 @@
 package com.kakao.jPanda.kts.domain;
 
 import java.sql.Timestamp;
-
 import javax.validation.constraints.NotEmpty;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +22,6 @@ public class Chat {
 	private String message;
 
 	private Timestamp chatDate;
+	
+	private Character read;
 }

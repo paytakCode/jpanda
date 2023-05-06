@@ -11,29 +11,33 @@
 	</select>
 	
 	<select id="selectPartnerListByMemberId" parameterType="String" resultType="ChatPartner">	
-		SELECT * 
-		FROM
-			(
-			SELECT DISTINCT(c.sender_id) as member_id, m.name
-			FROM chat c JOIN member m ON(c.sender_id = m.member_id)
-			WHERE c.receiver_id = #{memberId}
-	        UNION
-	        SELECT DISTINCT(c.receiver_id) as member_id, m.name
-			FROM chat c JOIN member m ON(c.receiver_id = m.member_id)
-			WHERE c.sender_id = #{memberId}
+		SELECT member_id, name, SUM(unread_count) AS unread_count
+		FROM (
+			    SELECT DISTINCT(c.sender_id) as member_id, m.name, COUNT(CASE WHEN c.read = 'F' THEN 1 END) AS unread_count
+			    FROM chat c JOIN member m ON(c.sender_id = m.member_id)
+			    WHERE c.receiver_id = #{memberId}
+			    GROUP BY c.sender_id, m.name
+			    UNION ALL
+			    SELECT DISTINCT(c.receiver_id) as member_id, m.name, 0 AS unread_count
+			    FROM chat c JOIN member m ON(c.receiver_id = m.member_id)
+			    WHERE c.sender_id = #{memberId}
+			    GROUP BY c.receiver_id, m.name
 			)
+		GROUP BY member_id, name
 		ORDER BY name
 	</select>
 	
 	<insert id="insertChat" parameterType="Chat">
 		INSERT INTO 
-			chat(chat_no, sender_id, receiver_id, message, chat_date) 
-			VALUES(chat_id_seq.nextval, #{senderId}, #{receiverId}, #{message}, #{chatDate})
+			chat(chat_no, sender_id, receiver_id, message, chat_date, read) 
+			VALUES(chat_id_seq.nextval, #{senderId}, #{receiverId}, #{message}, #{chatDate}, #{read})
 	</insert>
 	
-	<select id="selectMemberList" resultType="ChatMember">
-		select *
-		FROM member
-		ORDER BY name
-	</select>
+	<update id="updateChatByReaderIdAndPartnerId" parameterType="Map">
+		UPDATE chat
+		 SET read = 'T'
+		WHERE receiver_id = #{readerId}
+			AND sender_id = #{partnerId} 
+			AND read = 'F'
+	</update>
 </mapper>

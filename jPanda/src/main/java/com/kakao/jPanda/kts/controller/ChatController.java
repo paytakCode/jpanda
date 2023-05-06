@@ -1,13 +1,15 @@
 package com.kakao.jPanda.kts.controller;
 
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,10 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatController {
 	
 	private final ChatService chatService;
+	private final SimpMessagingTemplate simpMessagingTemplate;
 	
 	@Autowired
-	public ChatController(ChatService chatService) {
+	public ChatController(ChatService chatService, SimpMessagingTemplate simpMessagingTemplate) {
 		this.chatService = chatService;
+		this.simpMessagingTemplate = simpMessagingTemplate;
 	}
     
     @ResponseBody
@@ -46,11 +50,16 @@ public class ChatController {
 	}
 	
 	@MessageMapping("/message")
-	@SendToUser(value = "/direct/{memberId}", broadcast = false)
-	public Chat sendMessage(Chat chat) {
+	public void sendMessage(Chat chat) {
 		log.info("[sendMessage] 메세지를 전송합니다. {}", chat.toString());
-		return chat;
+		simpMessagingTemplate.convertAndSend("/message/" + chat.getReceiverId(), chat);
 	}
+	
+	@MessageMapping("/read")
+    public void readMessage(Map<String, String> readerIdAndPartnerId) {
+        log.info("[readMessage] {}에게 {}가 메세지를 읽었다고 알립니다.", readerIdAndPartnerId.get("readerId"), readerIdAndPartnerId.get("partnerId"));
+        simpMessagingTemplate.convertAndSend("/read/" + readerIdAndPartnerId.get("partnerId"), readerIdAndPartnerId.get("readerId"));
+    }
 	
 	@ResponseBody
 	@PostMapping("/chat")
@@ -59,16 +68,27 @@ public class ChatController {
 		Integer result = chatService.saveChat(chat);
 		if(result == 1) {
 		    log.info("[chatSave] 저장 완료 {}", result);
-			return ResponseEntity.accepted().body(result);
+			return ResponseEntity.ok(result);
 		} else {
             log.info("[chatSave] 저장 실패 {}", result);
 			return ResponseEntity.internalServerError().body(result);
 		}
 	}
 	
-	//default Layout Test용
-	@GetMapping("/default-layout")
-	public String chatLayout() {
-	    return "/common/default";
+	@ResponseBody
+	@PatchMapping("/chats")
+	public ResponseEntity<Integer> chatModify(@RequestBody Map<String, String> readerIdAndPartnerIdMap){
+	    String readerId = readerIdAndPartnerIdMap.get("readerId");
+	    String partnerId = readerIdAndPartnerIdMap.get("partnerId");
+        log.info("[chatModify] {}가 {}에게 받은 메세지를 DB에 읽음으로 수정합니다.", readerId, partnerId);
+        Integer result = chatService.modifyChatByReaderIdAndPartnerId(readerId, partnerId);
+        if(result >= 1) {
+            log.info("[chatModify] 수정 완료 - {}", result);
+            return ResponseEntity.ok(result);
+        } else {
+            log.info("[chatModify] 수정 실패 - {}", result);
+            return ResponseEntity.internalServerError().body(result);
+        }
 	}
+
 }
