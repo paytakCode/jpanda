@@ -136,23 +136,22 @@
 		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-details-btn"		value="chargeDetailsBtn">충전내역</button>
 	</div>
 	
-	<div style="display:flex; justify-content:center;">
-		<h4 th:text="'총 충전회수 : ' + ${totalChargeCnt}"></h4>
-	</div>	
 	<div id="charge-details-container">
 	
 		<h3>충전내역</h3>
 		<table class="table">
 			<thead>
 				<tr>
-				<th scope="col">충전날짜</th>
-				<th scope="col">충전방법</th>
-				<th scope="col">충전밤부</th>
-				<th scope="col">충전금액</th>
+					<th scope="col">#</th>
+					<th scope="col">충전날짜</th>
+					<th scope="col">충전방법</th>
+					<th scope="col">충전밤부</th>
+					<th scope="col">충전금액</th>
 				</tr>
 			</thead>
 			<tbody class="table-group-divider2" th:each="chargeHistoryList, i : ${listChargeHistory}">
 				<tr>
+					<td th:text="${totalChargeCnt - (page.startRow + i.index - 1)}"></td>
 					<td th:if="${chargeHistoryList.chargeDate != null}" th:text="${#dates.format(chargeHistoryList.chargeDate, 'yyyy-MM-dd')}"></td>
 					<td th:if="${chargeHistoryList.chargeDate == null}" th:text=""></td>
 					<td th:text="${chargeHistoryList.paymentMethod}"></td>
@@ -163,12 +162,16 @@
 		</table>
 		
 	</div>	<!-- /id="charge-details-container" -->
+	
+	<div style="display:flex; justify-content:center;">
+		<h4 th:text="'총 충전회수 : ' + ${totalChargeCnt}"></h4>
+	</div>
 		
 	<!-- 페이징 -->
 	<div class="d-flex justify-content-center">
 		<ul class="pagination">
-			<li class="page-item" th:if="${page.startPage > page.pageBlock}" aria-label="Previous">
-				<a class="page-link" th:href="@{/charge(currentPage=${page.startPage - page.pageBlock}, pageStatus='1')}">
+			<li class="page-item" th:if="${page.startPage > page.pageBlock}">
+				<a class="page-link" aria-label="Previous" th:href="@{/charge(currentPage=${page.startPage - page.pageBlock}, pageStatus='1')}">
 					<span aria-hidden="true">&laquo;</span>
 				</a>
 			</li>
