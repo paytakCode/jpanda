@@ -19,14 +19,17 @@ public interface AdminService {
 	NoticeDto findNoticeByNoticeNo(String noticeNo);
 	String modifyNotice(NoticeDto notice);
 	String addNotice(NoticeDto notice);
+	int findNoticeForPagination();
 	
 	//exchange
-	List<ExchangeDto> findExchange();
+	Map<String, Object> findExchange(Pagination pagination);
 	int modifyExchangeStatusByExchangeNos(List<ExchangeDto> exchangeDto);
+	int findExchangeByPagination(Pagination pagination);
 	
 	//coupon
-	List<CouponDto> findCouponsExpired();
+	
 	String generateCouponNo();
+	Map<String, Object> findCouponListByPagination(Pagination pagination);
 	Map<String, Integer> addCoupon(CouponDto couponDto);
 	
 	//company-sales
@@ -34,11 +37,13 @@ public interface AdminService {
 	
 	//talent
 	List<TalentDto> findTalent();
+	Map<String, Object> findtalentByPagination(Pagination pagination);
 	int modifyTalentByTalentNos(List<TalentDto> talentDto);
 	TalentDto findTalentByTalentNo(Long talentNo);
 	
 	//talent-refund
 	List<TalentRefundDto> findTalentRefund();
+	Map<String, Object> findTalentRefundByPagination(Pagination pagination);
 	int modifyTalentRefundByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto);
 	
 	//report

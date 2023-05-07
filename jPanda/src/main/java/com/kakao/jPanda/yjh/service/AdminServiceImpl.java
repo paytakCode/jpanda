@@ -40,7 +40,7 @@ public class AdminServiceImpl implements AdminService {
 		int result = adminDao.insertNotice(notice);
 		
 		if(result > 0) {
-			resultStr = "<script>alert('공지사항 적용이 완료되었습니다.'); location.href='/admin/notices';</script>";
+			resultStr = "<script>alert('공지사항 적용이 완료되었습니다.'); location.href='/admin/notice';</script>";
 		} else {
 			resultStr = "<script>alert('공지사항 적용 오류'); history.back();</script>";
 		}
@@ -49,12 +49,16 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public List<NoticeDto> findNotice(Pagination pagination) {
-		log.info("Service findNotice() start");
-		int totalCount = adminDao.selectNoficeByPagination();
-		
-		List<NoticeDto> noticeList = adminDao.selectNotice();
+		log.info("Service findNotice() start");	
+		List<NoticeDto> noticeList = adminDao.selectNotice(pagination);
 		
 		return noticeList;
+	}
+	
+	@Override
+	public int findNoticeForPagination() {
+		int totalCount = adminDao.selectNoticeByPagination();
+		return totalCount;
 	}
 	
 	/*
@@ -80,7 +84,7 @@ public class AdminServiceImpl implements AdminService {
 		int result = adminDao.updateNotice(notice);
 		
 		if(result > 0) {
-			resultStr = "<script>alert('공지사항 수정이 완료되었습니다.'); location.href='/admin/notices'; </script>";
+			resultStr = "<script>alert('공지사항 수정이 완료되었습니다.'); location.href='/admin/notice'; </script>";
 		} else {
 			resultStr = "<script>alert('공지사항 수정 오류'); history.back(); </script>";
 		}
@@ -89,11 +93,18 @@ public class AdminServiceImpl implements AdminService {
 	
 	//exchange
 	@Override
-	public List<ExchangeDto> findExchange() {
-		log.info("Service findExchange() start");
-		List<ExchangeDto> exList = adminDao.selectExchange();
+	public Map<String, Object> findExchange(Pagination pagination) {
+		Map<String, Object> returMap = new HashMap<String, Object>();
 		
-		return exList;
+		int totalCount = adminDao.findExchangeByPagination();
+		pagination.setTotalCount(totalCount);
+		
+		List<ExchangeDto> exList = adminDao.selectExchange(pagination);
+		
+		returMap.put("exList", exList);
+		returMap.put("pagination", pagination);
+		
+		return returMap;
 	}
 
 	/*
@@ -121,18 +132,38 @@ public class AdminServiceImpl implements AdminService {
 		return result;
 	}
 	
+	@Override
+	public int findExchangeByPagination(Pagination pagination) {
+		int totalCount = adminDao.findExchangeByPagination();
+		
+		return totalCount;
+	}
+	
 	//coupon
 	/*
 	 * 	쿠폰 생성하기를 눌렀을때, UUID객체로 랜덤의 uuid를 생성하고, DB에 쿠폰 번호 데이터 사이즈와 타입에 맞게
 	 * 	toString, substring작업을 한 뒤에 PK검증을 위해 조회하고, 결과에 따라 해당화면 입력부에 생성이 되거나 중복 alert띄우는 기능
 	 * 	통합 후 데이터 전송 방식과 로직을 조금 손 볼 예정
  	 */
+
+	
+
 	@Override
-	public List<CouponDto> findCouponsExpired() {
-		List<CouponDto> couponList = adminDao.selectCouponsExpired();
+	public Map<String, Object> findCouponListByPagination(Pagination pagination) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		
-		return couponList;
+		int totalCount = adminDao.selectCoupon();
+		pagination.setTotalCount(totalCount);
+		log.info("pagination : "+pagination);
+		
+		List<CouponDto> couponList = adminDao.selectCouponsExpired(pagination);
+		
+		returnMap.put("couponList", couponList);
+		returnMap.put("pagination", pagination);
+		
+		return returnMap;
 	}
+
 	
 	@Override
 	public String generateCouponNo(){
@@ -247,6 +278,21 @@ public class AdminServiceImpl implements AdminService {
 		return talentList;
 	}
 	
+
+	@Override
+	public Map<String, Object> findtalentByPagination(Pagination pagination) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		int totalCount = adminDao.selectTalentByPagination();
+		pagination.setTotalCount(totalCount);
+		
+		List<TalentDto> talentList = adminDao.selectTalents(pagination);
+		
+		returnMap.put("talentList", talentList);
+		returnMap.put("pagination", pagination);
+		
+		return returnMap;
+	}
+	
 	/*
 	 * 	판매등록 신청건에 대한 게시상태를 업데이트 하는 기능
 	 */
@@ -277,6 +323,23 @@ public class AdminServiceImpl implements AdminService {
 		
 		return refundList;
 	}
+	
+
+	@Override
+	public Map<String, Object> findTalentRefundByPagination(Pagination pagination) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		
+		int totalCount = adminDao.selectTalentRefundForTotalCount();
+		pagination.setTotalCount(totalCount);
+		
+		List<TalentRefundDto> refundList = adminDao.selectTalentRefunByPagination(pagination);
+		
+		returnMap.put("refundList", refundList);
+		returnMap.put("pagination", pagination);
+		
+		return returnMap;
+	}
+
 
 	/*
 	 *  체크박스로 체크된 value(purchaseNo)에 대한 상태를 업데이트,
@@ -323,4 +386,5 @@ public class AdminServiceImpl implements AdminService {
 		
 		return adminDao.updateReportByMemberId(memberId);
 	}
+
 }

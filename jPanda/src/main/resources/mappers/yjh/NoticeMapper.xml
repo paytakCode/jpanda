@@ -3,8 +3,18 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.NoticeMapper">
 	
-	<select id="selectNotice" resultType="AdminNotice">
-		select 	* 
+	<select id="selectNotice" parameterType="AdminPagination" resultType="AdminNotice">
+		SELECT 	*
+		FROM 	(SELECT	ROWNUM rn, n.*
+				 FROM	(SELECT	  * 
+				 		 FROM 	  notice 
+				 		 ORDER BY reg_date DESC) n
+				)
+		WHERE  	rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectNoficeByPagination" resultType="int">
+		select 	count(*)
 		from 	notice
 	</select>
 

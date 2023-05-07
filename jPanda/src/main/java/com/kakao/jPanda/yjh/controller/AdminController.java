@@ -2,6 +2,7 @@ package com.kakao.jPanda.yjh.controller;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,20 +56,35 @@ public class AdminController {
 	}
 	
 	//notice
-	@GetMapping(value = "/notices")
-	public String noticeList(Model model, HttpSession session, Pagination pagination) {
+	@GetMapping(value = "/notice")
+	public String noticePage(HttpSession session) {
 		log.info("Notice Controller noticeList() start");
-		
-		List<NoticeDto> noticeList = adminService.findNotice(pagination);
-		model.addAttribute("noticeList", noticeList);
-		
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
 			
 			return "yjh/notice";
-		}	
+		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/notice/notices")
+	public Map<String, Object> noticeListForPaging(Pagination pagination) {
+		log.info("pagination : "+pagination);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		
+		int totalCount = adminService.findNoticeForPagination();
+		pagination.setTotalCount(totalCount);
+		log.info("after Set pagination : "+pagination);
+		
+		List<NoticeDto> noticeList = adminService.findNotice(pagination);
+		log.info("noticeList : "+noticeList);
+		
+		returnMap.put("noticeList", noticeList);
+		returnMap.put("pagination", pagination);
+		
+		return returnMap;
 	}
 	
 	/*
@@ -76,8 +92,8 @@ public class AdminController {
 	 *	해당 화면에는 수정 버튼이 존재, 삭제 버튼은 이야기 후 결정
 	 *	시퀀스 생성전이라 필수 입력란에 noticeNo존재, 통합후 시퀀스 생성하면 수정 예정
 	 */
-	@GetMapping(value = "/notices/{noticeNo}")
-	public String noticeDetails(@PathVariable String noticeNo, Model model, HttpSession session) {
+	@GetMapping(value = "/notice/{noticeNo}")
+	public String noticeDetails(@PathVariable("noticeNo") String noticeNo, Model model, HttpSession session) {
 		log.info("Notice Controller noticeDetails() start");
 		log.info("noticeNo : "+noticeNo);
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);	
@@ -160,17 +176,22 @@ public class AdminController {
 	
 	//exchange	
 	@GetMapping(value = "/exchanges")
-	public String exchangeList(Model model, HttpSession session) {
-		log.info("Exchange Controller exchangeList() start");
-		List<ExchangeDto> exList = adminService.findExchange();
-		model.addAttribute("exList", exList);
-				
+	public String exchangeList(Pagination pagination, Model model, HttpSession session) {	
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
 			return "yjh/exchange";
 		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/exchange/exchanges")
+	public Map<String, Object> exchangeListForPagination(Pagination pagination) {
+		log.info("pagination : "+pagination);
+		Map<String, Object> returnMap = adminService.findExchange(pagination);
+
+		return returnMap;
 	}
 	
 	/*
@@ -197,18 +218,21 @@ public class AdminController {
 
 	//coupon
 	@GetMapping(value = "/coupons-form")
-	public String couponsList(Model model, HttpSession session) {
-		log.info("Coupon Controller couponsForm() start");
-		List<CouponDto> couponList = adminService.findCouponsExpired();
-		
-		model.addAttribute("couponList", couponList);
-		
+	public String couponsPgae(Model model, HttpSession session) {
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
 			return "yjh/createCoupon";
 		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/coupon/coupons")
+	public Map<String, Object> couponListByPagination(Pagination pagination) {
+		Map<String, Object> returnMap = adminService.findCouponListByPagination(pagination);
+		
+		return returnMap;
 	}
 	
 	
@@ -271,17 +295,21 @@ public class AdminController {
 	
 	//talent
 	@GetMapping(value = "/talents") // talents
-	public String talentList(Model model, HttpSession session) {
-		log.info("Talent Controller talentList() start");
-		List<TalentDto> talentList =  adminService.findTalent();
-		model.addAttribute("talentList", talentList);
-				
+	public String talentList(HttpSession session) {
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
 			return "yjh/talent";
 		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/talent/talents")
+	public Map<String, Object> talentListByPagination(Pagination pagination) {
+		Map<String, Object> returnMap = adminService.findtalentByPagination(pagination);
+		
+		return returnMap;
 	}
 	
 	/*
@@ -318,20 +346,21 @@ public class AdminController {
 
 	//talent-refund
 	@GetMapping(value = "/talent-refund")
-	public String talentRefundList(Model model, HttpSession session) {
-		log.info("TalentRefund Controller talentRefundList() start");
-		
-		List<TalentRefundDto> refundList = adminService.findTalentRefund();
-		log.info("refundList : "+refundList);
-		
-		model.addAttribute("refundList", refundList);
-		
+	public String talentRefundPage(HttpSession session) {
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
 		} else {
 			return "yjh/talent-refund";
 		}
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/talent-refund/talent-refunds")
+	public Map<String, Object> talentRefundListByPagination(Pagination pagination) {
+		Map<String, Object> returnMap = adminService.findTalentRefundByPagination(pagination);
+		
+		return returnMap;
 	}
 	
 	/*
@@ -353,7 +382,7 @@ public class AdminController {
 	}
 	
 	@GetMapping(value = "/report")
-	public String reportList(Model model, HttpSession session) {
+	public String reportPage(Model model, HttpSession session) {
 		log.info("Report Controller reportList() start");
 		List<ReportDto> reportList = adminService.findReport();
 		model.addAttribute("reportList", reportList);

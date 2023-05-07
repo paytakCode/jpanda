@@ -12,6 +12,32 @@
 		and		tr.refund_status = '검토중'
 	</select>
 	
+	<select id="selectTalentRefunByPagination" parameterType="AdminPagination" resultType="AdminTalentRefund">
+		SELECT *
+		FROM (
+		    	SELECT
+		        			bu.buyer_id,
+		        			tr.purchase_no,
+					        bu.talent_no,
+					        tr.refund_bamboo,
+					        tr.issue,
+					        tr.refund_status,
+					        tr.approve_date,
+					        ROW_NUMBER() OVER (ORDER BY tr.approve_date DESC) AS rnum
+		    	FROM talent_refund tr, bamboo_use bu
+		    	WHERE tr.purchase_no = bu.purchase_no
+		    	AND tr.refund_status = '검토중'
+			)
+		WHERE rnum BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectTalentRefundForTotalCount" resultType="int">
+		SELECT 	COUNT(*)
+		FROM 	talent_refund tr
+		INNER 	JOIN bamboo_use bu ON tr.purchase_no = bu.purchase_no
+		WHERE 	tr.refund_status = '검토중'
+	</select>
+	
 	<update id="updateTalentRefundToSuccessByPurchaseNosAndStatus" parameterType="AdminTalentRefund">
 		update 	talent_refund
 		set		refund_status = #{refundStatus},

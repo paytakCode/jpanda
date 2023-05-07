@@ -19,6 +19,7 @@ public class ReportDto {
 	private String reportId;
 	private String issue;
 	private Timestamp reportDate;
+	private Long talentNo;
 	
 	//member테이블 조인용
 	private String memberId;

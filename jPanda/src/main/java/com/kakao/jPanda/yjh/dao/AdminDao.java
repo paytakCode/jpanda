@@ -16,18 +16,21 @@ public interface AdminDao {
 	int updateNotice(NoticeDto notice);
 	int insertNotice(NoticeDto notice);
 	NoticeDto selectNoticeByNoticeNo(Long noticeNo);
-	List<NoticeDto> selectNotice();
-	int selectNoficeByPagination();
+	List<NoticeDto> selectNotice(Pagination pagination);
+	int selectNoticeByPagination();
 	
 	//exchange
-	List<ExchangeDto> selectExchange();
+	List<ExchangeDto> selectExchange(Pagination pagination);
 	ExchangeDto selectExchangeByExchangeNo(Long exchangeNo);
 	int updateExchange(ExchangeDto exchange);
+	int findExchangeByPagination();
 	
 	//coupon
-	List<CouponDto> selectCouponsExpired();
+	List<CouponDto> selectCouponsExpired(Pagination pagination);
+	List<CouponDto> findCouponList(Pagination pagination);
 	List<CouponDto> findCouponList();
 	int insertCoupon(CouponDto couponDto);
+	int selectCoupon();
 	
 	//company-sales
 	List<CompanySalesDto> selectCompanySalesByYYYYDate(CompanySalesDto companySalesDto);
@@ -39,11 +42,15 @@ public interface AdminDao {
 	List<TalentDto> selectTalent();
 	int updateTalentByTalentNos(TalentDto paramDto);
 	TalentDto selectTalentByTalentNo(Long talentNo);
+	int selectTalentByPagination();
+	List<TalentDto> selectTalents(Pagination pagination);
 	
 	//talent-refund
 	List<TalentRefundDto> selectTalentRefund();
 	int updateTalentRefundToSuccessByPurchaseNosAndStatus(TalentRefundDto paramDto);
 	int updateTalentRefundToCompanionByPurchaseNosAndStatus(TalentRefundDto paramDto);
+	int selectTalentRefundForTotalCount();
+	List<TalentRefundDto> selectTalentRefunByPagination(Pagination pagination);
 	
 	//report
 	List<ReportDto> selectReport();
