@@ -40,10 +40,10 @@ public class TradeDaoImpl implements TradeDao{
 	}
 
 	@Override
-	public int deleteRefundByrefundPurchaseNo(String refundPurchaseNo) {
-		log.info("deleteRefundByrefundPurchaseNo refundPurchaseNo : " + refundPurchaseNo);
-		int result = sqlSession.update("deleteRefundByrefundPurchaseNo", refundPurchaseNo);
-		log.info("deleteRefundByPurchaseNo result : " + result);
+	public int deleteRefundByRefundPurchaseNo(String refundPurchaseNo) {
+		log.info("deleteRefundByRefundPurchaseNo refundPurchaseNo : " + refundPurchaseNo);
+		int result = sqlSession.update("deleteRefundByRefundPurchaseNo", refundPurchaseNo);
+		log.info("deleteRefundByRefundPurchaseNo result : " + result);
 		return result;
 	}
 
@@ -140,7 +140,7 @@ public class TradeDaoImpl implements TradeDao{
 	@Override
 	public TradeDto selectExchangeByExchangeNo(String exchangeNo) {
 		log.info("selectExchangeByExchangeNo exchangeNo : " + exchangeNo);
-		TradeDto tradeDto = sqlSession.selectOne("selectExchangeByExchangeNo", exchangeNo);
+		TradeDto tradeDto = sqlSession.selectOne("selectTradeExchangeByExchangeNo", exchangeNo);
 		log.info("selectExchangeByExchangeNo tradeDto : " + tradeDto);
 		return tradeDto;
 	}

@@ -126,16 +126,17 @@
 			r.purchase_no as refund_purchase_no,
 			r.refund_status,
 			r.issue,
-			r.submit_date as refund_r.submit_date,
+			r.submit_date as refund_submit_date,
 			r.approve_date as refund_approve_date,
 			r.refund_bamboo,
-			u.buyer_id
+			u.buyer_id,
+			u.talent_no
 		FROM talent_refund r
-		INNER JOIN bamboo_use u ON r.purchase_no = u.purchaseNo
-		WHERE purchase_no = #{refundPurchaseNo}
+		INNER JOIN bamboo_use u ON r.purchase_no = u.purchase_no
+		WHERE r.purchase_no = #{refundPurchaseNo}
 	</select>
 	
-	<delete id="deleteRefundByrefundPurchaseNo" parameterType="String">
+	<delete id="deleteRefundByRefundPurchaseNo" parameterType="String">
 		DELETE
 		from talent_refund
 		WHERE purchase_no = #{purchaseNo}
@@ -200,7 +201,7 @@
 	
 	<select id="selectTradeExchangeByExchangeNo" parameterType="String" resultType="TradeDto">
 		SELECT
-		EXCHANGE_NO
+			exchange_no,
 			seller_id as exchange_id,
 			talent_no as exchange_talent_no,
 			sales,

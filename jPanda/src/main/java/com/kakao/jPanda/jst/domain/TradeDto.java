@@ -74,5 +74,7 @@ public class TradeDto {
 	private Long sellCount;
 		//TradeMapper.xml selectTradeListByParaMap
 	private String refundableDate;
+		//payload parse
+	private Timestamp approveDate;
 	
 }
