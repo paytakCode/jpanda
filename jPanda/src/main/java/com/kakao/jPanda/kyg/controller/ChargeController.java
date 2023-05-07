@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
@@ -167,15 +168,14 @@ public class ChargeController {
 	
 	/*
 	 * 총보유밤부
-	 * chargePage에서 ajax 요청 처리
-	 * memberId에 따른 총 보유 bamboo를 계산하여 반환
+	 * header-js에서 ajax 요청 처리
+	 * html에서 전달받은 memberId의 총 보유 bamboo를 계산하여 반환
 	 * @param	memberId
 	 * @return	foundTotalBambooStr
 	 */
 	@GetMapping(path = "/members/total-bamboo")
 	@ResponseBody
-	public String  totalBambooByMemberId(HttpSession session) {
-		String memberId = (String) session.getAttribute("memberId");
+	public String  totalBambooByMemberId(@RequestParam("memberId") String memberId) {
 		log.info("ChargeContoller totalBambooByMemberId Start...");
 		log.info("ChargeContoller totalBambooByMemberId() memberId -> {}", memberId);
 		
