@@ -31,8 +31,6 @@ public class Paging {
 	private int totalPage;
 	// 전체 블록의 개수, 페이지를 블록으로 묶음
 	private int totalBlock;
-	// 검색어
-	private String search;
 	
 	
 	public Paging(int totalRow, String strCurrentPage) {

@@ -6,10 +6,11 @@
 	
 		//전역 변수 선언	
 		const memberId = [[${#session.getAttribute('memberId')}]];
+
+		
 		let selectedPartner = null;
 		let stompClient = null;
-		let blinkInterval = null;
-	
+		
 		//WebSocket(STOMP) 연결 함수
 		function connect(memberId) {
 		    var socket = new SockJS('/stomp/chat?' + memberId);
@@ -33,20 +34,20 @@
 		
 		//메세지 수신시 호출하는 함수
 		function onMessage(response){
-			let messageInfo = JSON.parse(response.body);
-			if (messageInfo != null){
-				if (selectedPartner == messageInfo.senderId){
+			let chat = JSON.parse(response.body);
+			if (chat != null){
+				if (selectedPartner == chat.senderId){
 			    	const lastDate = $('#chat-content a.chat-date').last().text();
 			    	if(getDate(Date.now()) != lastDate){
 						const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
-													.text(getDate(messageInfo.chatDate))
+													.text(getDate(chat.chatDate))
 													.attr("role","button")
 													.attr("aria-disabled","true");
 						$("#chat-content").append(chatDate);
 			    	}
 					const chatElem = $("<div>").addClass("from-other");
-					const messageElem = $("<span>").text(messageInfo.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
-					const timeElem = $("<span>").text(getTime(messageInfo.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+					const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
+					const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 					chatElem.append(messageElem);
 					chatElem.append(timeElem);
 	                $("#chat-content").append(chatElem);
@@ -106,7 +107,6 @@
 				method: "GET",
 				dataType : "json",
 				success: function(chatList) {
-					console.log("chatList =>" + chatList);
 					$("#chat-content").empty();
 					
 					chatList.forEach((chat, index) => {
@@ -145,9 +145,25 @@
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							}
-							const chatElem = $("<div>").addClass("from-other");
+							
+							const chatElem = $("<div>").addClass("from-other").val(chat.chatNo);
 							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+							
+							if(chat.read == 'F' && index == 0){
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary disabled")
+								.text('새로운 채팅')
+								.attr("role","button")
+								.attr("aria-disabled","true");
+								$("#chat-content").append(newChatPoint);
+							} else if(chat.read == 'F' && chatList[index - 1].read == 'T'){
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary disabled")
+								.text('새로운 채팅')
+								.attr("role","button")
+								.attr("aria-disabled","true");
+								$("#chat-content").append(newChatPoint);
+							}
+							
 							chatElem.append(messageElem);
 							chatElem.append(timeElem);
 		                    $("#chat-content").append(chatElem);
@@ -199,6 +215,7 @@
 			}
 		}
 		
+		//안읽은 메세지 총 갯수 표시하는 함수
 		function updateTotalUnreadCount(){
 			let totalUnreadCount = 0;
 			$(".unread-count").each(function() {
@@ -208,7 +225,7 @@
 			    }
 			});
 			if (totalUnreadCount == 0){
-				$('#total-unread-count').text(' ');
+				$('#total-unread-count').empty();
 			} else if (totalUnreadCount > 99) {
 				$('#total-unread-count').text('99+');
 			} else {
@@ -284,7 +301,6 @@
 				contentType : "application/json",
 				dataType : "json",
 				success: function(result) {
-					console.log("result =>" + result);
 			   	    stompClient.send("/chat/message", {}, message);
 			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 					return result;
@@ -304,17 +320,22 @@
 					dataType : "json",
 					success: function(partnerList) {
 						$("#chat-partner-list").empty();
-						console.log("partnerList =>" + partnerList);
 						partnerList.forEach((partner, index) => {
 							let chatPartnerElem = $("<li>");
 							chatPartnerElem.text(partner.name)
 											.attr('value', partner.memberId)
-											.attr('class', 'partner list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center');
+											.attr('class', 'partner list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center')
+											.attr('data-bs-toggle', "popover")
+											.attr('data-bs-placement', "left")
+											.attr('data-bs-custom-class', 'partner-id-popover')
+											.attr('data-bs-trigger', 'hover focus')
+											.attr('data-bs-content', partner.memberId);
 							chatPartnerElem.click(function() { 
 								selectedPartner = partner.memberId;
 								updateselectedPartner($(this));
 								updateChatContent();
 							});
+							
 							let unReadChatNoElem = $('<span>');
 							unReadChatNoElem.attr('class', 'unread-count badge bg-warning rounded-pill');
 							if(partner.unreadCount != 0){
@@ -324,6 +345,11 @@
 							$("#chat-partner-list").append(chatPartnerElem);  
 						});
 						resolve();
+
+						//채팅 상대 아이디 표기를 위한 툴팁 초기화
+						const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+						const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+						
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log('updateChatPartnerList Failed');
@@ -335,7 +361,7 @@
 		//접속한 유저의 채팅내역 불러오는 함수
 		function loadChatByMemberId(memberId) {
 			updateChatPartnerList(memberId).then(function(){
-				$("#chat-content").append($('<div>').text('채팅 상대를 선택해주세요.'));
+				$("#chat-content").append($('<span>').addClass('text-center fs-2').text('채팅 상대를 선택해주세요.'));
 				updateTotalUnreadCount();
 			});
 		}
@@ -376,6 +402,7 @@
 				$("#chat-btn").show();
 			}
 		});
+		
 		
 	</script>
 </div> <!-- chatJsFragment -->
