@@ -205,7 +205,7 @@
 <th:block layout:fragment="script">
 	<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 	<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
-	<script>
+	<script th:inline="javascript">
 	// 사이드바 
     $('#writeCheck tr').on('click', function() {
     	location.href = $(this).data('href');
@@ -234,7 +234,6 @@
     // 사이드바 체크표시
 	$('.write').on('input', function(){
 		var check = '#' + $(this).attr('id') + "-check";
-	    console.log(check);
 		var count = 0;
 		var each = 0;
 		var allFilled = false;
@@ -318,7 +317,6 @@
 	           	data : form,
 	           	dataType: 'json',
 	           	success:function(data) {
-	            	console.log(data);
 	               	$('#main-img-value').val(data.url);
 	               	$('#main-img-value').trigger('input');
 	           	},
@@ -369,11 +367,8 @@
 			    return false;
 		  }
 	});
-	</script>
-	<script th:inline="javascript">
 	// 카테고리 값 생성
-	
-	// model로 밭은 categoryList 값 가져오기C
+	// model로 밭은 categoryList 값 가져오기
   	var categoryList = /*[[${categoryList}]]*/ [];
  	var upperCatgoryNo = [[${talent.upperCategoryNo}]];
  	var lowerCatgoryNo = [[${talent.lowerCategoryNo}]];
@@ -392,7 +387,6 @@
  	});
   	
 	$('#upper-category-no').on("change", function() {
-		// 상위 카테고리의 값 category.category_no을 가져온다
   		var selectedCategoryNo = parseInt(this.value);
     	$('#lower-category-no').html('');
     	$('#lower-category-no').append($("<option disabled selected>").text("중분류"));
@@ -410,9 +404,18 @@
 		}else {
 			$('#category-check').attr('src', '/image/talentImage/check.png');
 		}
-	})
-	
+	});
 	$('#seller-id').val([[${#session.getAttribute("memberId")}]]);
+	
+	// 등록을 하지 않고 다른 페이지 이동 시 알림창
+	$(window).on('beforeunload', function(){
+		return null;
+	});
+	
+	// 수정하기 버튼은 페이지 이동 감지x
+	$('#talent-sudmit-button').on('click', function() {
+		$(window).unbind('beforeunload');
+	});
 	</script>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>

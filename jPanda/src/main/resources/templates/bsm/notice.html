@@ -90,7 +90,7 @@
 	<h2 id="notice-main">공지사항</h2>
 	<div id="search-div">
 		<input type="text" id="notice-search">
-		<button id="search-button">검색</button>
+		<button id="notice-search-btn">검색</button>
 	</div>
 	<div id="notice-list-div">
 	<table id="notice-list-table">
@@ -113,7 +113,7 @@
 				// 한글 깨지지 않게 나오도록 처리
 				var hash = decodeURI(location.hash);
 				hash = hash.replace("#","");
-				arrCurrentPage_Search = hash.split(",");
+				var arrCurrentPage_Search = hash.split(",");
 				var currentPage = arrCurrentPage_Search[0];
 				var search = arrCurrentPage_Search[1];
 				noticeChange(search, currentPage);
@@ -179,7 +179,7 @@
 		                }
 		                pagerDiv.append($('<a></a>').addClass('notice-page').text('>'));
 		           	  	
-						$('#search-button').one('click', function(){
+						$('#notice-search-btn').one('click', function(){
 							noticeChange($('#notice-search').val(), 1);
 						});
 						$('.notice-page').one('click', function(){
@@ -208,6 +208,13 @@
 		$(function() {
 			checkForHash();
 		});
+		// 공지사항 검색 입력란  EnterKey 입력 시 검색 기능
+		$('#notice-search').on('keydown', function(value) {
+			  if(value.keyCode == 13) {
+				  $('#notice-search-btn').click();
+			  }
+		});
+		
 	</script>
 	
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

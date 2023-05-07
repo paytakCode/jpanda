@@ -124,23 +124,19 @@ public class RegistTalentServiceImpl implements TalentService{
 		
 	}
 
-	@Override
-	public List<TalentDto> findBestSellerTalents() {
+	private List<TalentDto> findBestSellerTalents() {
 		return talentDao.selectBestSellerTalents();
 	}
 
-	@Override
-	public List<TalentDto> findTopRatedTalents() {
+	private List<TalentDto> findTopRatedTalents() {
 		return talentDao.selectTopRatedTalents();
 	}
 
-	@Override
-	public List<TalentDto> findNewTrendTalents() {
+	private List<TalentDto> findNewTrendTalents() {
 		return talentDao.selectNewTrendTalents();
 	}
 
-	@Override
-	public List<TalentDto> findRandomTalents() {
+	private List<TalentDto> findRandomTalents() {
 		return talentDao.selectRandomTalents();
 	}
 
