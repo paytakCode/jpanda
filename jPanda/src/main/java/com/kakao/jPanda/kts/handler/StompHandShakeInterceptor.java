@@ -15,14 +15,14 @@ public class StompHandShakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
             WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        log.info("[beforeHandshake] {} 연결시도", request.getURI().getQuery());
+        log.info("[beforeHandshake] {}의 연결시도", request.getURI().getQuery());
         return true;
     }
 
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
             WebSocketHandler wsHandler, Exception exception) {
-        log.info("[afterHandshake] {} 연결되었습니다.", request.getURI().getQuery());
+        log.info("[afterHandshake] {}가 연결되었습니다.", request.getURI().getQuery());
     }
 
 }
