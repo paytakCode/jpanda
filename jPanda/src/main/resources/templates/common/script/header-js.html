@@ -56,6 +56,20 @@
 				$(".dropdown-menu").append(liElement2);
 			}
 		});
+		$(function(){
+			$.ajax({
+				url: "/charge/members/total-bamboo",
+				type: "GET",
+				dataType: "text",
+				success: function(foundTotalBambooStr){
+					console.log("Ajax success foundTotalBambooStr : " + foundTotalBambooStr);
+					$('#total-bamboo').text(foundTotalBambooStr);	
+				},
+				error: function(){
+					console.error("AJAX 요청 실패: ");
+				}
+			});    
+		});
 	</script>
 </div> <!-- headerJsFragment -->
 </html>
