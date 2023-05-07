@@ -15,12 +15,8 @@ public interface TalentService {
 	List<CategoryDto> 	findCategorys();
 	String 			addTalent(TalentDto talent);
 	ModelAndView 	talentImageUpload(MultipartHttpServletRequest request);
-	TalentDto 			findTalentByTalentNo(Long talentNo);
+	TalentDto 		findTalentByTalentNo(Long talentNo);
 	String 			modifyTalent(TalentDto talent);
-	List<TalentDto> 	findBestSellerTalents();
-	List<TalentDto> 	findTopRatedTalents();
-	List<TalentDto> 	findNewTrendTalents();
-	List<TalentDto> 	findRandomTalents();
 	Model			findMainPageTalents(Model model);
 	
 }

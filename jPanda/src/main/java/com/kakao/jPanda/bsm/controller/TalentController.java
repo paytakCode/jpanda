@@ -77,7 +77,6 @@ public class TalentController {
 	// 수정 페이지 이동
 	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
 	public String talentUpdateFrom(@PathVariable Long talentNo, Model model, HttpSession session) { // @PathVariable
-		System.out.println(talentNo);
 		TalentDto talent = talentService.findTalentByTalentNo(talentNo);
 		List<CategoryDto> categoryList = talentService.findCategorys();
 		model.addAttribute("categoryList", categoryList);

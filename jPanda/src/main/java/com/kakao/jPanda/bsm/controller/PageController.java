@@ -1,5 +1,6 @@
 package com.kakao.jPanda.bsm.controller;
 
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -20,15 +21,7 @@ public class PageController {
 	public String talentTest(Model model, HttpSession session) {
 		model = talentService.findMainPageTalents(model);
 		
-		String loginId = "";
-		if(session.getAttribute("memberId") == null) {
-			loginId = "guest";
-		}else {
-			loginId = (String) session.getAttribute("memberId");
-		}
-		model.addAttribute("loginId", loginId);
 		return "bsm/talentTestMainpage";
 	}
-	
 	
 }
