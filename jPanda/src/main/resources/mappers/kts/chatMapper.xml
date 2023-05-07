@@ -27,10 +27,13 @@
 		ORDER BY name
 	</select>
 	
-	<insert id="insertChat" parameterType="Chat">
+	<insert id="insertChat" parameterType="Chat">  
+		<selectKey keyProperty="chatNo" resultType="Long" order="BEFORE">
+			SELECT chat_id_seq.NEXTVAL FROM dual
+		</selectKey>
 		INSERT INTO 
 			chat(chat_no, sender_id, receiver_id, message, chat_date, read) 
-			VALUES(chat_id_seq.nextval, #{senderId}, #{receiverId}, #{message}, #{chatDate}, #{read})
+			VALUES(#{chatNo}, #{senderId}, #{receiverId}, #{message}, #{chatDate}, #{read})
 	</insert>
 	
 	<update id="updateChatByReaderIdAndPartnerId" parameterType="Map">
@@ -40,4 +43,13 @@
 			AND sender_id = #{partnerId} 
 			AND read = 'F'
 	</update>
+	
+	<insert id="insertReportByChatReport" parameterType="ChatReport">  
+		<selectKey keyProperty="reportNo" resultType="Long" order="BEFORE">
+			SELECT report_no_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO 
+			report(report_no, black_id, report_id, issue, report_date, chat_no) 
+			VALUES(#{reportNo}, #{blackId}, #{reportId}, #{issue}, #{reportDate}, #{chatNo})
+	</insert>
 </mapper>

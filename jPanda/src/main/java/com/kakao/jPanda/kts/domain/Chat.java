@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Chat {
-	private Long id;
+	private Long chatNo;
 	
 	@NotEmpty
 	private String senderId;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.kakao.jPanda.kts.domain.Chat;
 import com.kakao.jPanda.kts.domain.Partner;
+import com.kakao.jPanda.kts.domain.ChatReport;
 import com.kakao.jPanda.kts.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,15 +64,15 @@ public class ChatController {
 	
 	@ResponseBody
 	@PostMapping("/chat")
-	public ResponseEntity<Integer> chatSave(@Valid @RequestBody Chat chat){
+	public ResponseEntity<Chat> chatSave(@Valid @RequestBody Chat chat){
 		log.info("[chatSave] 메세지를 DB에 저장합니다. {}", chat.toString());
 		Integer result = chatService.saveChat(chat);
 		if(result == 1) {
-		    log.info("[chatSave] 저장 완료 {}", result);
-			return ResponseEntity.ok(result);
+		    log.info("[chatSave] 저장 완료 {}", chat);
+			return ResponseEntity.ok(chat);
 		} else {
-            log.info("[chatSave] 저장 실패 {}", result);
-			return ResponseEntity.internalServerError().body(result);
+            log.info("[chatSave] 저장 실패 {}", chat);
+			return ResponseEntity.internalServerError().body(chat);
 		}
 	}
 	
@@ -86,6 +87,20 @@ public class ChatController {
         } else {
             log.info("[chatModify] 수정 실패 - {}", result);
             return ResponseEntity.internalServerError().body(result);
+        }
+	}
+	
+	@ResponseBody
+	@PostMapping("/chat/report")
+	public ResponseEntity<ChatReport> reportSave(@RequestBody ChatReport chatReport){
+	    log.info("[reportSave] 신고내역을 DB에 저장합니다. {}", chatReport.toString());
+        int result = chatService.saveReport(chatReport);
+        if(result == 1) {
+            log.info("[reportSave] 저장 완료 {}", chatReport);
+            return ResponseEntity.ok(chatReport);
+        } else {
+            log.info("[reportSave] 저장 실패 {}", chatReport);
+            return ResponseEntity.internalServerError().body(chatReport);
         }
 	}
 
