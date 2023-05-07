@@ -154,7 +154,7 @@ public class TradeServiceImpl implements TradeService{
 	public String removeRefundByrefundPurchaseNo(String purchaseNo) {
 		int result = 0;
 		
-		result = tradeDao.deleteRefundByrefundPurchaseNo(purchaseNo);
+		result = tradeDao.deleteRefundByRefundPurchaseNo(purchaseNo);
 		
 		if (result > 0) {
 			return "환불 취소 요청이 완료되었습니다.";
@@ -228,8 +228,7 @@ public class TradeServiceImpl implements TradeService{
 
 	@Override
 	public TradeDto findRefundByRefundPurchaseNo(String refundPurchaseNo) {
-		// TODO Auto-generated method stub
-		return null;
+		return tradeDao.selectRefundByRefundPurchaseNo(refundPurchaseNo);
 	}
 
 	@Override

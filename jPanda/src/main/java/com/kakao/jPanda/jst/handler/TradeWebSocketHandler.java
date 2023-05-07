@@ -1,7 +1,7 @@
 package com.kakao.jPanda.jst.handler;
 
+import java.io.Console;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,8 +56,13 @@ public class TradeWebSocketHandler extends TextWebSocketHandler{
 	
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-		List<TradeDto> messageTradeDtoList = objectMapper.readValue((String)message.getPayload(), new TypeReference<List<TradeDto>>() {});
+		String payload = (String)message.getPayload();
+		//tradeDto와 필드명 일치
+		String modifiedMessage = payload.replace("purchaseNo", "refundPurchaseNo");
+		
+		List<TradeDto> messageTradeDtoList = objectMapper.readValue(modifiedMessage, new TypeReference<List<TradeDto>>() {});
 		log.info("handleMessage before messageTradeDtoList : " + messageTradeDtoList);
+		log.info("handleMessage before messageTradeDtoList : " + messageTradeDtoList.size());
 		
 		List<TradeDto> tradeDtoList = messageTradeDtoList.stream().map(tradeDto -> {
 																	TradeDto resultTradeDto = findTradeDto(tradeDto);
@@ -95,6 +100,11 @@ public class TradeWebSocketHandler extends TextWebSocketHandler{
 	 * @return 조회된 TradeDto
 	 */
 	private TradeDto findTradeDto(TradeDto tradeDto) {
+		if (tradeDto == null) {
+			log.info("findTradeDto : tradeDto is Null");
+			return new TradeDto();
+		}
+		
 		if (tradeDto.getTalentNo() != null) {
 	        return tradeService.findTradeByTalentNo(tradeDto.getTalentNo());
 	        
@@ -105,26 +115,33 @@ public class TradeWebSocketHandler extends TextWebSocketHandler{
 			return tradeService.findRefundByRefundPurchaseNo(tradeDto.getRefundPurchaseNo());
 			
 		} else {
-			return null;
+			return new TradeDto();
 		}
 		
 	}
 	
 	/**
 	 * TradeDto의 sellerId, getBuyerId, getExchangeId를 memberId로 combine
-	 * 해당 dto의 type에 따라 listType 세팅
+	 * 해당 dto의 type에 따라 listType, approveDate 세팅
 	 * @param tradeDto
 	 */
 	private void combineTradeDtoValues(TradeDto tradeDto) {
+		if (tradeDto == null) {
+			tradeDto = new TradeDto();
+		}
+		
 		if (tradeDto.getSellerId() != null) {
 			tradeDto.setListType("sell");
 			tradeDto.setMemberId(tradeDto.getSellerId());
 		} else if (tradeDto.getBuyerId() != null) {
 			tradeDto.setListType("refund");
 			tradeDto.setMemberId(tradeDto.getBuyerId());
+			tradeDto.setRefundApproveDate(tradeDto.getApproveDate());
 		} else if (tradeDto.getExchangeId() != null) {
 			tradeDto.setListType("sell");
 			tradeDto.setMemberId(tradeDto.getExchangeId());
+			tradeDto.setTalentNo(tradeDto.getExchangeTalentNo());
+			tradeDto.setExchangeApproveDate(tradeDto.getApproveDate());
 		}
 		
 	}

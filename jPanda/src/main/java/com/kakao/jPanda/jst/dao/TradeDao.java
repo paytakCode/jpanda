@@ -13,7 +13,7 @@ public interface TradeDao {
 
 	int updateTalentStatusByTalentNo(String talentNo);
 
-	int deleteRefundByrefundPurchaseNo(String purchaseNo);
+	int deleteRefundByRefundPurchaseNo(String purchaseNo);
 
 	TalentDto selectTradeTalentByTalentNo(String talentNo);
 
