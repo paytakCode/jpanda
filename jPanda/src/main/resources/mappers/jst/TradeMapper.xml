@@ -10,7 +10,7 @@
 			t.status_date,
 			t.title,
 			t.sale_bamboo,
-			count(t.talent_no) AS sell_count,
+			(SELECT count(*) FROM bamboo_use WHERE talent_no = t.talent_no) AS sell_count,
 			e.exchange_status
 		FROM talent t
 		LEFT OUTER JOIN exchange e ON t.talent_no = e.talent_no

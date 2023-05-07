@@ -2,8 +2,6 @@ package com.kakao.jPanda.jst.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
@@ -14,17 +12,17 @@ public interface TradeService {
 
 	List<TradeDto> findTradeListByMemberId(String memberId, String tradeDto);
 
-	String modifyTalentByTalentNo(String talentNo, TalentDto talentDto);
+	int modifyTalentByTalentNo(String talentNo, TalentDto talentDto);
 
-	String removeRefundByrefundPurchaseNo(String refundPurchaseNo);
+	int removeRefundByrefundPurchaseNo(String refundPurchaseNo);
 
 	TalentDto findTalentByTalentNo(String talentNo);
 
-	String addExchangeByTalentNo(TalentDto talentDto);
+	int addExchangeByTalentNo(TalentDto talentDto);
 
-	String addRefund(HttpSession session ,TradeDto tradeDto);
+	int addRefund(String memberId ,TradeDto tradeDto);
 
-	String modifyExchangeStatusByTalentNo(String talentNo);
+	int modifyExchangeStatusByTalentNo(String talentNo);
 
 	TradeDto findExchangeByExchangeNo(String exchangeNo);
 
