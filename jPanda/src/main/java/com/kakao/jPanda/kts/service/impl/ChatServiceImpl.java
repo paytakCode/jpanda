@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kakao.jPanda.kts.dao.ChatDao;
 import com.kakao.jPanda.kts.domain.Chat;
 import com.kakao.jPanda.kts.domain.Partner;
+import com.kakao.jPanda.kts.domain.ChatReport;
 import com.kakao.jPanda.kts.service.ChatService;
 
 @Service
@@ -45,6 +46,12 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public int modifyChatByReaderIdAndPartnerId(Map<String, String> readerIdAndPartnerIdMap) {
         int result = chatDao.updateChatByReaderIdAndPartnerId(readerIdAndPartnerIdMap);
+        return result;
+    }
+
+    @Override
+    public int saveReport(ChatReport chatReport) {
+        int result = chatDao.insertReportByChatReport(chatReport);
         return result;
     }
 

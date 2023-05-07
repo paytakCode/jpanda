@@ -6,8 +6,6 @@
 	
 		//전역 변수 선언	
 		const memberId = [[${#session.getAttribute('memberId')}]];
-
-		
 		let selectedPartner = null;
 		let stompClient = null;
 		
@@ -34,20 +32,24 @@
 		
 		//메세지 수신시 호출하는 함수
 		function onMessage(response){
-			let chat = JSON.parse(response.body);
-			if (chat != null){
-				if (selectedPartner == chat.senderId){
+			let receivedChat = JSON.parse(response.body);
+			if (receivedChat != null){
+				if (selectedPartner == receivedChat.senderId){
 			    	const lastDate = $('#chat-content a.chat-date').last().text();
 			    	if(getDate(Date.now()) != lastDate){
 						const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
-													.text(getDate(chat.chatDate))
+													.text(getDate(receivedChat.chatDate))
 													.attr("role","button")
 													.attr("aria-disabled","true");
 						$("#chat-content").append(chatDate);
 			    	}
 					const chatElem = $("<div>").addClass("from-other");
-					const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
-					const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+					const messageElem = $("<span>").text(receivedChat.message)
+													.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
+													.attr('data-bs-toggle', "modal")
+													.attr('data-bs-target', 'report-chat-modal')
+													.data('chat-no', receivedChat.chatNo);
+					const timeElem = $("<span>").text(getTime(receivedChat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 					chatElem.append(messageElem);
 					chatElem.append(timeElem);
 	                $("#chat-content").append(chatElem);
@@ -56,7 +58,7 @@
 				    readPartnerMessage(selectedPartner);
 				} else {
 					updateChatPartnerList(memberId).then(function(){
-						updateselectedPartner($('.partner[value=' + selectedPartner + ']'));
+						updateSelectedPartner($('.partner[value=' + selectedPartner + ']'));
 					});
 				}
 				
@@ -95,7 +97,7 @@
 		});
 	
 		//선택된 채팅 상대 표시 업데이트
-		function updateselectedPartner(partnerElem) {    
+		function updateSelectedPartner(partnerElem) {    
 			$('.partner').removeClass('active');
 			$(partnerElem).addClass('active');
 		}
@@ -146,8 +148,12 @@
 								$("#chat-content").append(chatDate);
 							}
 							
-							const chatElem = $("<div>").addClass("from-other").val(chat.chatNo);
-							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
+							const chatElem = $("<div>").addClass("from-other");
+							const messageElem = $("<span>").text(chat.message)
+															.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
+															.attr('data-bs-toggle', "modal")
+															.attr('data-bs-target', '#report-chat-modal')
+															.data('chat-no', chat.chatNo);
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 							
 							if(chat.read == 'F' && index == 0){
@@ -251,7 +257,7 @@
 		$(function(){
 			$(document).on("click", function(event) {
 				if (!$(event.target).closest("#chat-console").length &&
-					!$(event.target).is("#chat-btn")) {
+					!$(event.target).is("#chat-btn") && $('#report-chat-modal').is(':hidden')) {
 					$("#chat-console").hide();
 				}
 				
@@ -263,14 +269,14 @@
 		$("#chat-input").keyup(function(e) {
 		    if (e.keyCode == 13 && selectedPartner && $("#chat-input").val().trim() != "") {
 		    	
-		    	message = JSON.stringify({
+		    	chat = JSON.stringify({
 		   	            'receiverId': selectedPartner,
 		   	            'senderId' : memberId,
 		   	            'message' : $('#chat-input').val(),
 		   	            'chatDate' : Date.now()
 		   	        });
 		    	
-		    	saveMessage(message);
+		    	saveChat(chat);
 		    	
 		    	const lastDate = $('#chat-content a.chat-date').last().text();
 		    	if(getDate(Date.now()) != lastDate){
@@ -292,21 +298,21 @@
 		});
 		
 		//message를 DB에 저장하는 함수
-		function saveMessage(message){
-			console.log(message);
+		function saveChat(chat){
+			console.log(chat);
 			$.ajax({
 				url: "/chat" ,
 				method: "POST",
-				data : message,
+				data : chat,
 				contentType : "application/json",
 				dataType : "json",
-				success: function(result) {
-			   	    stompClient.send("/chat/message", {}, message);
+				success: function(savedChat) {
+					console.log(savedChat);
+			   	    stompClient.send("/chat/message", {}, JSON.stringify(savedChat));
 			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
-					return result;
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					console.log('saveMessage Failed');
+					console.log('saveChat Failed');
 				}
 			});
 		}
@@ -330,11 +336,11 @@
 											.attr('data-bs-custom-class', 'partner-id-popover')
 											.attr('data-bs-trigger', 'hover focus')
 											.attr('data-bs-content', partner.memberId);
-							chatPartnerElem.click(function() { 
+					 		chatPartnerElem.click(function() { 
 								selectedPartner = partner.memberId;
-								updateselectedPartner($(this));
+								updateSelectedPartner($(this));
 								updateChatContent();
-							});
+							}); 
 							
 							let unReadChatNoElem = $('<span>');
 							unReadChatNoElem.attr('class', 'unread-count badge bg-warning rounded-pill');
@@ -361,7 +367,7 @@
 		//접속한 유저의 채팅내역 불러오는 함수
 		function loadChatByMemberId(memberId) {
 			updateChatPartnerList(memberId).then(function(){
-				$("#chat-content").append($('<span>').addClass('text-center fs-2').text('채팅 상대를 선택해주세요.'));
+				$("#chat-content").append($('<button>').attr('type', 'button').addClass('text-center fs-2 btn btn-outline-danger').text('채팅 상대를 선택해주세요.').prop('disabled', true));
 				updateTotalUnreadCount();
 			});
 		}
@@ -403,6 +409,52 @@
 			}
 		});
 		
+		//채팅 상대 메세지 선택 시 report-chat-modal 내용 업데이트하는 이벤트 등록
+		$('#chat-console').on('click', '.from-other .chat-message', function() {
+		    $('#report-memberId').val(selectedPartner);
+		    $('#chat-report-name').val($('#chat-partner-list .active').text());
+		    $('#chat-report-message').val($(this).text());
+		    $('#report-chat-no').val($(this).data('chat-no'));
+		});	
+		
+		//chat-report-modal 신고버튼 클릭 시 호출되는 함수
+		$('#chat-report-btn').click(function(){
+			if ($.trim($('#chat-report-issue').val()) != ''){
+				
+				$.ajax({
+					url: "/chat/report" ,
+					method: "POST",
+					data : JSON.stringify({
+						"blackId" : $('#report-memberId').val(),
+						"reportId" : memberId,
+						"issue" : $('#chat-report-issue').val(),
+						"reportDate" : Date.now(), 
+						"chatNo" : $('#report-chat-no').val()
+					}),
+					contentType : "application/json",
+					dataType : "json",
+					success: function(reportedData) {
+						console.log('reported-data -> ' + reportedData);
+						$('#report-chat-modal').modal('hide');
+						showToast('#report-success-toast');
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log('Chat Report Failed');
+						$('#report-chat-modal').modal('hide');
+						showToast('#report-fail-toast');
+					}
+				});
+				
+			} else {
+				showToast('#insert-issue-toast');
+			}
+		});
+		
+		//Toast Show
+		function showToast(toastId){
+			const toast = new bootstrap.Toast($(toastId));
+			toast.show();
+		}
 		
 	</script>
 </div> <!-- chatJsFragment -->

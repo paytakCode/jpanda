@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.kakao.jPanda.kts.dao.ChatDao;
 import com.kakao.jPanda.kts.domain.Chat;
+import com.kakao.jPanda.kts.domain.ChatReport;
 import com.kakao.jPanda.kts.domain.Partner;
 
 @Repository
@@ -41,6 +42,12 @@ public class ChatDaoImpl implements ChatDao {
     @Override
     public int updateChatByReaderIdAndPartnerId(Map<String, String> readerIdAndPartnerIdMap) {
         int result = sqlSession.update("updateChatByReaderIdAndPartnerId", readerIdAndPartnerIdMap);
+        return result;
+    }
+
+    @Override
+    public int insertReportByChatReport(ChatReport chatReport) {
+        int result = sqlSession.insert("insertReportByChatReport", chatReport);
         return result;
     }
 	
