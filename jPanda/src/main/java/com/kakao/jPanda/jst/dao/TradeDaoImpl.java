@@ -51,7 +51,7 @@ public class TradeDaoImpl implements TradeDao{
 	public TalentDto selectTradeTalentByTalentNo(String talentNo) {
 		log.info("selectTradeTalentByTalentNo talentNo : " + talentNo);
 		TalentDto talentDto = sqlSession.selectOne("selectTradeTalentByTalentNo", talentNo);
-		log.info("selectTradeTalentByTalentNo talentDto.getTalentNo() : " + talentDto.getTalentNo());
+		log.info("selectTradeTalentByTalentNo talentDto : " + talentDto.toString());
 		return talentDto;
 	}
 

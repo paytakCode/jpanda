@@ -358,13 +358,18 @@
 							talentStatus : '판매종료',
 							statusDate : Date.now()
 							}),
-						success : function(result){
-							console.log(result);
-							alert('재능 판매를 종료하였습니다.');
-							$(".filter-button[value='all']").click();
+						success : function(result, textStatus, xhr){
+							if (xhr.status === 200) {
+							    console.log('Success, put : ' + result);
+							    alert('판매가 성공적으로 종료되었습니다.');
+								$(".filter-button[value='all']").click();
+							} else if (xhr.status === 204) {
+							    console.log('Success, put : No content');
+							    alert('선택한 재능이 존재하지 않습니다. 다시 시도해주세요.');
+							}
 						},
-						error : function(){
-							alert("end-sell-btn function error");
+						error : function(xhr, textStatus, errorThrown){
+							alert("end-sell-btn function error : textSatus → " + textStatus + ", " + errorThrown);
 						}
 					}
 				);
@@ -389,13 +394,18 @@
 							statusDate : Date.now()
 							}),
 					dataType : 'text',
-					success : function(message){
-						console.log(message);
-						alert("재능 재등록을 신청하였습니다.");
-						$(".filter-button[value = 'all']").click();
+					success : function(result, textStatus, xhr){
+						if (xhr.status === 200) {
+						    console.log('Success, put : ' + result);
+						    alert('재능이 성공적으로 재등록되었습니다.');
+							$(".filter-button[value='all']").click();
+						} else if (xhr.status === 204) {
+						    console.log('Success, put : No content');
+						    alert('선택한 재능이 존재하지 않습니다. 다시 시도해주세요.');
+						}
 					},
-					error : function(){
-						alert('repost btn function error');
+					error : function(xhr, textStatus, errorThrown){
+						alert("repost-btn function error : textSatus → " + textStatus + ", " + errorThrown);
 					}
 			});	
 		}
@@ -415,14 +425,20 @@
 						url : "/trade/exchanges/"+ talentNo,
 						contentType: 'application/json',
 						dataType : 'text',
-						success : function(message){
-							console.log(message);
-							alert('환전 신청에 성공하였습니다.');
-							$(".filter-button[value='all']").click();	
+						success : function(result, textStatus, xhr){
+							if(xhr.status === 200){
+								console.log('Success, posted : ' + result);
+								alert('환전 신청에 성공하였습니다.');
+								$(".filter-button[value='all']").click();	
+							} else if (xhr.status === 204) {
+							    console.log('Success, posted : : No content');
+							    alert('환전 신청에 실패하였습니다. 다시 시도해주세요.');
+							}
+	
 						},
-						error : function(){
-							alert("exchange-btn function() error");
-						},
+						error : function(xhr, textStatus, errorThrown){
+							alert("exchange-btn function error : textSatus → " + textStatus + ", " + errorThrown);
+						}
 					}		
 				);	 
 		}
@@ -442,14 +458,20 @@
 						url : "/trade/refunds/"+ refundPurchaseNo,
 						contentType: 'application/json',
 						dataType : 'text',
-						success : function(message){
-							console.log(message);
-							alert("환불이 취소되었습니다.");
-							$(".filter-button[value='all']").click();
+						success : function(result, textStatus, xhr){
+							if(xhr.status === 200){
+								console.log('Success, deleted : ' + result);
+								alert("환불 신청이 취소되었습니다.");
+								$(".filter-button[value='all']").click();
+							} else if (xhr.status === 204) {
+							    console.log('Success, deleted : : No content');
+							    alert('환불 취소 신청에 실패하였습니다. 다시 시도해주세요.');
+							}
+
 						},
-						error : function(){
-							alert("refund-cancle-btn function error");
-						},
+						error : function(xhr, textStatus, errorThrown){
+							alert("refund-cancle-btn function error : textSatus → " + textStatus + ", " + errorThrown);
+						}
 					}
 				);		
 		}
@@ -501,12 +523,12 @@
 			    	  }),
 			    contentType: 'application/json',
 			    success: function(result){
-			        console.log(result);
-			        alert('재능 환불 신청에 성공하였습니다.');
+		    		console.log('Success posted : ' + result);
+		    		alert('재능 환불 신청에 성공하였습니다.');
 			        location.reload();
 			    },
 			    error: function(xhr, status, error){
-			        alert("refund-submit-btn function error");
+			        alert("refund-submit-btn function error : " + textStatus + ", " + errorThrown);
 			    }
 			});
 				
@@ -527,14 +549,14 @@
 						type : "PUT",
 						url : "/trade/exchanges/"+ talentNo + "/status",
 						dataType : 'text',
-						success : function(message){
-							console.log(message);
+						success : function(result){
+							console.log('Success put : ' + result);
 							alert('환전 재신청에 성공하였습니다.');
 							$(".filter-button[value='all']").click();	
 						},
-						error : function(){
-							alert("re-exchange-btn function error");
-						},
+						error : function(xhr, textStatus, errorThrown){
+							alert("re-exchange-btn function error :" + textStatus + ", " + errorThrown);
+						}
 					}		
 				);	 
 		}
@@ -557,11 +579,20 @@
 			text += '<div class = "card-text">' + 
 					'<button class="end-sell-btn btn btn-dark" id="sell-no-' + item.talentNo + '">판매종료</button></div>' + 
 					'</div><div class = "card-footer text-muted">판매등록날짜 : ' + timestampToCustomFormat(item.regDate) + '</div></div>';
+					
 		} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
-			text += '<div class = "card-text">' + 
-					'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">환전하기</button>' + 
-					'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' + 
-					'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
+			if(item.sellCount === 0){
+				text += '<div class = "card-text">' + 
+				'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '" disabled>환전하기</button>' +
+				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' +
+				'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
+			} else {
+				text += '<div class = "card-text">' + 
+				'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">환전하기</button>' + 
+				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' + 
+				'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
+			}
+			
 		} else if(item.exchangeStatus != null){
 			switch(item.exchangeStatus){
 				case '검토중':
