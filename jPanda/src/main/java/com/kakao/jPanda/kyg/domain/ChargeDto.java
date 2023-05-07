@@ -17,7 +17,5 @@ public class ChargeDto {
 	private int		startRow;
 	private int		endRow;
 	private String	pageNum;
-	private String	keyword;
-	private String	search;
 	
 }
