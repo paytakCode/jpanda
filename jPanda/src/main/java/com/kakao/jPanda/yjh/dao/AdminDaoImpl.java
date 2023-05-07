@@ -9,6 +9,7 @@ import com.kakao.jPanda.yjh.domain.CompanySalesDto;
 import com.kakao.jPanda.yjh.domain.CouponDto;
 import com.kakao.jPanda.yjh.domain.ExchangeDto;
 import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.yjh.domain.Pagination;
 import com.kakao.jPanda.yjh.domain.ReportDto;
 import com.kakao.jPanda.yjh.domain.TalentDto;
 import com.kakao.jPanda.yjh.domain.TalentRefundDto;
@@ -24,9 +25,9 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//notice
 	@Override
-	public List<NoticeDto> selectNotice() {
+	public List<NoticeDto> selectNotice(Pagination pagination) {
 		log.info("Dao selectNotice() start");
-		List<NoticeDto> noticeList = sqlSession.selectList("selectNotice");
+		List<NoticeDto> noticeList = sqlSession.selectList("selectNotice", pagination);
 		
 		return noticeList;
 	}
@@ -54,6 +55,19 @@ public class AdminDaoImpl implements AdminDao {
 		
 		return result;
 	}
+
+	@Override
+	public int selectNoticeByPagination() {
+		int totalCount = 0;
+		try {
+			totalCount = sqlSession.selectOne("selectNoficeByPagination");
+			log.info("totalCount : "+ totalCount);
+		} catch(Exception e) {
+			log.info("Pagination Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return totalCount;
+	}
 	
 	//exchange
 	@Override
@@ -72,12 +86,12 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
-	public List<ExchangeDto> selectExchange() {
+	public List<ExchangeDto> selectExchange(Pagination pagination) {
 		log.info("Dao selectExchange() start");
 		List<ExchangeDto> exList = null;
 		
 		try {
-			exList = sqlSession.selectList("selectExchange");
+			exList = sqlSession.selectList("selectExchange", pagination);
 		} catch(Exception e) {
 			
 			log.info("Dao selectExchange() Exception : "+e.getMessage());
@@ -93,14 +107,21 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.update("updateExchange", exchange);
 	}
 	
+
+	@Override
+	public int findExchangeByPagination() {
+		int totalCount = sqlSession.selectOne("findExchangeByPagination");
+		return totalCount;
+	}
+	
 	//coupon
 	@Override
-	public List<CouponDto> selectCouponsExpired() {
+	public List<CouponDto> selectCouponsExpired(Pagination pagination) {
 		log.info("Coupon Dao selectCouponsExpired() start");
 		List<CouponDto> couponList = null;
 		
 		try {
-			couponList = sqlSession.selectList("selectCouponsExpired");
+			couponList = sqlSession.selectList("selectCouponsExpired", pagination);
 			
 		} catch(Exception e) {
 			log.info("Coupon Dao selectCouponsExpired() Exception : "+e.getMessage());
@@ -108,9 +129,25 @@ public class AdminDaoImpl implements AdminDao {
 		}
 		return couponList;
 	}
-
+	
 	@Override
 	public List<CouponDto> findCouponList() {
+		List<CouponDto> couponList = sqlSession.selectList("findCouponList");
+		return couponList;
+	}
+
+	
+
+	@Override
+	public int selectCoupon() {
+		int totalCount = sqlSession.selectOne("selectCoupon");
+		
+		return totalCount;
+	}
+
+
+	@Override
+	public List<CouponDto> findCouponList(Pagination pagination) {
 		log.info("Dao findCouponList() start");
 		List<CouponDto> couponList = null;
 		
@@ -165,6 +202,21 @@ public class AdminDaoImpl implements AdminDao {
 		
 		return sqlSession.selectList("selectTalent");
 	}
+	
+	@Override
+	public int selectTalentByPagination() {
+		int totalCount = sqlSession.selectOne("selectTalentByPagination");
+		
+		return totalCount;
+	}
+
+	@Override
+	public List<TalentDto> selectTalents(Pagination pagination) {
+		List<TalentDto> talentList = sqlSession.selectList("selectTalents", pagination);
+		
+		return talentList;
+	}
+
 
 	@Override
 	public int updateTalentByTalentNos(TalentDto talentDto) {
@@ -206,6 +258,20 @@ public class AdminDaoImpl implements AdminDao {
 			log.info("TalentRefund Dao selectTalentRefun() Exception : "+e.getMessage());
 			e.printStackTrace();
 		}
+		
+		return refundList;
+	}
+	
+	@Override
+	public int selectTalentRefundForTotalCount() {
+		int totalCount = sqlSession.selectOne("selectTalentRefundForTotalCount");
+		
+		return totalCount;
+	}
+
+	@Override
+	public List<TalentRefundDto> selectTalentRefunByPagination(Pagination pagination) {
+		List<TalentRefundDto> refundList = sqlSession.selectList("selectTalentRefunByPagination", pagination);
 		
 		return refundList;
 	}
@@ -286,4 +352,6 @@ public class AdminDaoImpl implements AdminDao {
 		}
 		return result;
 	}
+
+
 }

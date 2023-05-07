@@ -5,17 +5,23 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 매출 데이터</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
-	<style>
-css
+<style>
+h1{
+	text-align: center;
+}
 
- 
+label {
+	text-align: center;
+}
 
-영역
+body {
+	text-align: center;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -25,28 +31,27 @@ css
 	<th:block layout:fragment="content">
 		<body>
 			<h1>(주)재능판다 매출 현황</h1>
-			<label>연간 매출<input type="radio" class="periodicData"
-				th:name="periodicData" th:value="Y"></label>
-			<label>월간 매출<input type="radio" class="periodicData"
-				th:name="periodicData" th:value="M"></label>
-			<label>일간 매출<input type="radio" class="periodicData"
-				th:name="periodicData" th:value="D"></label>
-			<br>
-			<br>
+			<label class="la">연간 매출
+				<input type="radio" class="periodicData" th:name="periodicData" th:value="Y">
+			</label>
+			<label class="la">월간 매출
+				<input type="radio" class="periodicData" th:name="periodicData" th:value="M">
+			</label>
+			<label class="la">일간 매출
+				<input type="radio" class="periodicData" th:name="periodicData" th:value="D">
+			</label>
+			<br><br>
 			<label>매출 집계 시작일<input type="date" class="start-period">
 				~
 			</label>
-			<label>매출 집계 종료일<input type="date" class="end-period"
-				oninput="callData()"></label>
+			<label>매출 집계 종료일<input type="date" class="end-period"></label>
+			<input type="button" onclick="callData()" value="적용하기">
 			<br>
 			<br>
 
-			<div id="chartContainer"
-				style="width: 900px; height: 900px; display: block; margin: 0 auto;">
+			<div id="chartContainer" style="width: 900px; height: 900px; display: block; margin: 0 auto;">
 				<!--차트가 그려질 부분-->
-				<canvas id="myChart" style="display: block; margin: 0 auto;">
-			
-		</canvas>
+				<canvas id="myChart" style="display: block; margin: 0 auto;"></canvas>
 			</div>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

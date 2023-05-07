@@ -3,8 +3,23 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.ExchangeMapper">
 
-	<select id="selectExchange" resultType="AdminExchange">
-		select 	exchange_No, talent_No, seller_id, submit_Date, total, exchange_status
+	<select id="selectExchange" resultType="AdminExchange" parameterType="adminPagination">
+		SELECT 	exchange_No, talent_No, seller_id, submit_Date, total, exchange_status
+		FROM 	exchange
+		WHERE 	exchange_status = '검토중'
+		AND exchange_No IN (
+  				SELECT exchange_No
+  				FROM (
+    					SELECT exchange_No, ROW_NUMBER() OVER (ORDER BY exchange_No DESC) AS rn
+    					FROM exchange
+    					WHERE exchange_status = '검토중'
+  						) t1
+  		WHERE rn BETWEEN #{startRow} AND #{endRow}
+		)
+	</select>
+	
+	<select id="findExchangeByPagination" resultType="int">
+		select 	count(*)
 		from 	exchange
 		where 	exchange_status = '검토중'
 	</select>

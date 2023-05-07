@@ -5,7 +5,7 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 불건전 유저 제제</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
@@ -141,7 +141,7 @@
 		                var row = $("<tr>");
 		                $("<td>").text(report.reportId).appendTo(row);
 		                $("<td>").text(report.issue).appendTo(row);
-		                $("<td>").text(report.reportDate).appendTo(row);
+		                $("<td>").text(report.reportDate.substring(0, 10)).appendTo(row);
 		                row.appendTo(body);
 		            }
 		            

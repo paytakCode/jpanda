@@ -9,6 +9,22 @@
 		where talent_status = '검토중'
 	</select>
 	
+	<select id="selectTalents" parameterType="AdminPagination" resultType="AdminTalent">
+		SELECT 	*
+		FROM (
+		    	SELECT t.*, ROW_NUMBER() OVER (ORDER BY talent_no DESC) rnum
+		    	FROM talent t
+		    	WHERE talent_status = '검토중'
+				)
+		WHERE rnum BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectTalentByPagination" resultType="int">
+		select 	count(*)
+		from 	talent
+		where 	talent_status = '검토중'
+	</select>
+	
 	<update id="updateTalentByTalentNos" parameterType="AdminTalent">
 		update 	talent
 		set 	talent_status = '게시중',
