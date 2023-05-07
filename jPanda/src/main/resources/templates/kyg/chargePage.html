@@ -190,11 +190,6 @@
 			<h2>충전하기</h2>
 			
 			<ul>
-				<!-- 총 보유 Bamboo -->
-				<li style="display: flex;">
-					<img alt="totalBamboo" src="/image/total-bamboo.png"  style="width: 50px; height: 20px;">
-					<p id="total-bamboo"></p>
-				</li>
 				<li>
 					쿠폰 할인 받은 금액 : <input type="number" id = "coupon-discount" name="couponDiscount" value="0" readonly="readonly">
 				</li>
@@ -473,30 +468,12 @@
 		}
 	
 	}	/* /chargeSubmit(rsp) */
-
-	//	총 보유 밤부		
-	$(function(){
-		$.ajax({
-			url: "/charge/members/total-bamboo",
-			type: "GET",
-			dataType: "text",
-			success: function(foundTotalBambooStr){
-				console.log("Ajax success foundTotalBambooStr : " + foundTotalBambooStr);
-				$('#total-bamboo').text(foundTotalBambooStr);	
-			},
-			error: function(){
-				console.error("AJAX 요청 실패: ");
-			}
-		});    
-	});
 	   
 	// 충전/내역 페이지 이동 status변경
 	function moveChargePage(pageStatus) { 
 		console.log("pageStatus -> " + pageStatus);
 		location.href="?pageStatus="+pageStatus;
 	}
-	  
-	  
 	 
 	</script>
 	
