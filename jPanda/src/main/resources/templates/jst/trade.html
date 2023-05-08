@@ -26,7 +26,6 @@
 		width : 100%;
 		display: flex;
 		gap : 5%;
-		justify-content: space-between;
 		align-items: baseline;
 	}
 	
@@ -36,14 +35,8 @@
 	}
 	
 	.filter-buttons button {
-		background-color: #333;
-		color: white;
 		margin-right : 10px;
-		border: none;
-		padding: 10px 20px;
-		border-radius: 5px;
 		cursor: pointer;
-		line-height: 1;
 	}
 	
 	.filter-buttons button:hover {
@@ -81,16 +74,6 @@
 		border: 1px solid;
 		margin-bottom: 2px;
 		background-color: #8FBC8F;
-	}
-	
-	.sidebar{
-		flex : 1;
-		background-color: #000;
-    	color: #fff;
-    	border-radius: 20px;
-    	padding: 10px;
-    	box-sizing: border-box;
-    	font-family: sans-serif;
 	}
 	
 	.card.text-center{
@@ -160,6 +143,27 @@
 		animation-delay : 0.1s;
 		animation-iteration-count: infinite;
 	}
+	
+	/* sidebar accordion */
+	.accordion{
+		width: 15%;
+	}
+	
+	.accordion-button{
+		justify-content: center;
+		color: #fff;
+		background-color: #333;
+	}
+	.accordion-button::after, .accordion-button::before{
+		display: none;
+	}
+	
+	.accordion-item{
+		border-color: gray;
+	}
+	
+	
+	
 	</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -175,16 +179,16 @@
 		
 		<!-- filter-buttons -->
 		<div class="filter-buttons">
-			<button type="button" class="filter-button position-relative" value="all">전체
+			<button type="button" class="btn filter-button position-relative btn-outline-dark" value="all">전체
 				<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle visually-hidden"></span>
 			</button>
-			<button type="button" class="filter-button position-relative" value="sell">판매
+			<button type="button" class="btn filter-button position-relative btn-outline-dark" value="sell">판매
 				<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle visually-hidden"></span>
 			</button>
-			<button type="button" class="filter-button position-relative" value="buy">구매
+			<button type="button" class="btn filter-button position-relative btn-outline-dark" value="buy">구매
 				<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle visually-hidden"></span>
 			</button>
-			<button type="button" class="filter-button position-relative" value="refund">환불
+			<button type="button" class="btn filter-button position-relative btn-outline-dark" value="refund">환불
 				<span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle visually-hidden"></span>
 			</button>
 
@@ -222,18 +226,51 @@
 			</div> <!-- 환불신청 Modal page -->	
 		
 			<!-- sidebar -->
-			<div class="sidebar">
-				★ 판매 ★<br>
-				검토중 : <span id="sidebar-submit-count"> 건</span><br>
-				판매중 : <span id="sidebar-sell-count"> 건</span><br> 
-				판매완료 : <span id="sidebar-sold-count"> 건</span><br>
-				★ 구매 ★<br>
-				구매완료 : <span id="sidebar-buy-count"> 건</span><br>
-				★ 환불 ★<br>
-				환불신청 : <span id="sidebar-refund-submit-count"> 건</span><br>
-				환불완료 : <span id="sidebar-refund-approve-count"> 건</span><br>
-				환불반려 : <span id="sidebar-refund-reject-count"> 건</span><br>
-			</div> <!-- /sidebar -->
+			<div class="accordion" id="stat-accordion">
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingOne">
+						<button class="accordion-button collapsed" type="button"
+							aria-expanded="false" aria-controls="sell-collapse">
+							판매 </button>
+					</h2>
+					<div id="sell-collapse" class="accordion-collapse collapse"
+						aria-labelledby="headingOne">
+						<div class="accordion-body">
+							검토중 : <span id="sidebar-submit-count"> 건</span><br>
+							판매중 : <span id="sidebar-sell-count"> 건</span><br> 
+							판매완료 : <span id="sidebar-sold-count"> 건</span><br>
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingTwo">
+						<button class="accordion-button collapsed" type="button"
+							aria-expanded="false" aria-controls="buy-collapse">
+							구매 </button>
+					</h2>
+					<div id="buy-collapse" class="accordion-collapse collapse"
+						aria-labelledby="headingTwo">
+						<div class="accordion-body">
+							구매완료 : <span id="sidebar-buy-count"> 건</span><br>
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingThree">
+						<button class="accordion-button collapsed" type="button"
+							aria-expanded="false" aria-controls="refund-collapse">
+							환불 </button>
+					</h2>
+					<div id="refund-collapse" class="accordion-collapse collapse"
+						aria-labelledby="headingThree">
+						<div class="accordion-body">
+							환불신청 : <span id="sidebar-refund-submit-count"> 건</span><br>
+							환불완료 : <span id="sidebar-refund-approve-count"> 건</span><br>
+							환불반려 : <span id="sidebar-refund-reject-count"> 건</span><br>
+						</div>
+					</div>
+				</div>
+			</div><!-- /sidebar -->
 		</div> <!-- /content -->
 	</div><!-- container -->
 	
@@ -245,6 +282,51 @@
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+	/**
+	 * statList 콜랩스
+	 */
+	$(function(){
+		const collapseElementList = $('.collapse');
+		const collapseList = [...collapseElementList].map(collapseEl => new bootstrap.Collapse(collapseEl));
+		const sellCollapse = new bootstrap.Collapse('#sell-collapse', {
+			  toggle: false
+			});
+		const buyCollapse = new bootstrap.Collapse('#buy-collapse', {
+			  toggle: false
+			});
+		const refundCollapse = new bootstrap.Collapse('#refund-collapse', {
+			  toggle: false
+			});
+		$('.filter-button').on("click", function(){
+			$this = $(this).val();
+			console.log('this : ' + $this);
+			switch($this){
+				case 'all':
+					sellCollapse.show();
+					buyCollapse.show();
+					refundCollapse.show();
+					break;
+				case 'sell':
+					sellCollapse.show();
+					buyCollapse.hide();
+					refundCollapse.hide();
+					break;
+				case 'buy':
+					sellCollapse.hide();
+					buyCollapse.show();
+					refundCollapse.hide();
+					break;
+				case 'refund':
+					sellCollapse.hide();
+					buyCollapse.hide();
+					refundCollapse.show();
+					break;
+			}
+			
+		});
+	});
+	 
+
 	/**
 	 * statList 가공
 	 */
@@ -614,6 +696,7 @@
 		}
 		
 		$('#list-print').append(text);
+		//클릭시 해당 재능 상세페이지로 이동
 		$('.card-title').on("click", function(){
 			location.href="/talents/talent/" + item.talentNo;
 		}).css('cursor', 'pointer');
@@ -731,6 +814,8 @@
 			$('#selected-filter').removeAttr('id');
 		}
 		this.id = "selected-filter";
+		$('.filter-buttons .active').removeClass('active');
+		$(this).addClass('active');
 		let listType = this.value;
 		updateList(listType);
 	});
