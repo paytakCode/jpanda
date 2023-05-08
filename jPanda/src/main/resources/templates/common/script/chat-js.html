@@ -41,7 +41,7 @@
 				if (selectedPartnerId == receivedChat.senderId){
 			    	const lastDate = $('#chat-content a.chat-date').last().text();
 			    	if(getDate(Date.now()) != lastDate){
-						const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+						const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 													.text(getDate(receivedChat.chatDate))
 													.attr("role","button")
 													.attr("aria-disabled","true");
@@ -49,7 +49,7 @@
 			    	}
 					const chatElem = $("<div>").addClass("from-other");
 					const messageElem = $("<span>").text(receivedChat.message)
-													.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
+													.addClass("chat-message lh-base text-start badge p-2 text-wrap")
 													.attr('data-bs-toggle', "modal")
 													.attr('data-bs-target', '#report-chat-modal')
 													.data('chat-no', receivedChat.chatNo);
@@ -105,20 +105,20 @@
 					chatList.forEach((chat, index) => {
 						if (chat.receiverId == selectedPartnerId) {
 							if(index == 0){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							}
 							const chatElem = $("<div>").addClass("from-me");
-							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-end badge text-bg-success p-2 text-wrap");
+							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-end badge p-2 text-wrap");
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 							chatElem.append(readToElem(chat.read));
 							chatElem.append(timeElem);
@@ -126,13 +126,13 @@
 		                    $("#chat-content").append(chatElem);
 						} else if(chat.senderId == selectedPartnerId){
 							if(index == 0){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
@@ -141,20 +141,20 @@
 							
 							const chatElem = $("<div>").addClass("from-other");
 							const messageElem = $("<span>").text(chat.message)
-															.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
+															.addClass("chat-message lh-base text-start badge p-2 text-wrap")
 															.attr('data-bs-toggle', "modal")
 															.attr('data-bs-target', '#report-chat-modal')
 															.data('chat-no', chat.chatNo);
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 							
 							if(chat.read == 'F' && index == 0){
-								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary disabled")
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary")
 								.text('새로운 채팅')
 								.attr("role","button")
 								.attr("aria-disabled","true");
 								$("#chat-content").append(newChatPoint);
 							} else if(chat.read == 'F' && chatList[index - 1].read == 'T'){
-								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary disabled")
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary")
 								.text('새로운 채팅')
 								.attr("role","button")
 								.attr("aria-disabled","true");
@@ -270,14 +270,14 @@
 		    	
 		    	const lastDate = $('#chat-content a.chat-date').last().text();
 		    	if(getDate(Date.now()) != lastDate){
-					const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+					const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 												.text(getDate(Date.now()))
 												.attr("role","button")
 												.attr("aria-disabled","true");
 					$("#chat-content").append(chatDate);
 		    	}
 				const chatElem = $("<div>").addClass("from-me");
-				const messageElem = $("<span>").text($("#chat-input").val()).addClass("chat-message lh-base text-end badge text-bg-success p-2 text-wrap");
+				const messageElem = $("<span>").text($("#chat-input").val()).addClass("chat-message lh-base text-end badge p-2 text-wrap");
 				const timeElem = $("<span>").text(getTime(Date.now())).addClass("chat-time badge rounded-pill text-bg-light");
 				chatElem.append(readToElem('F'));
 				chatElem.append(timeElem);
