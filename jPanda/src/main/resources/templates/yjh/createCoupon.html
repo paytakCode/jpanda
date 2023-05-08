@@ -10,7 +10,7 @@
 
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
-<style>
+<style>	
 table {
 	border-collapse: collapse;
 	width: 100%;
@@ -31,6 +31,25 @@ tr:nth-child(even) {
 
 td {
 	border: 1px solid #ddd;
+}
+
+
+.coupon-page {
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+#pagination{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.coupon-page{
+	text-decoration: none;
+	color: black;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -70,22 +89,7 @@ td {
 					</tr>
 				</table>
 				<h3>만료된 쿠폰</h3>
-				<table border="1" id="couponTable">
-<!-- 					<tr>
-						<th>쿠폰 번호</th>
-						<th>발급일</th>
-						<th>사용 기한</th>
-						<th>사용 회수</th>
-						<th>쿠폰 금액</th>
-					</tr>
-					<tr th:each="coupon : ${couponList}">
-						<td th:text="${coupon.couponCode}"></td>
-						<td th:text="${coupon.issueDate}"></td>
-						<td th:text="${coupon.expireDate}"></td>
-						<td th:text="${coupon.usedCouponCount}"></td>
-						<td th:text="${coupon.couponValue}"></td>
-					</tr> -->
-				</table>
+				<table border="1" id="couponTable"></table>
 				
 				<div id="pagination"></div>
 			</form>

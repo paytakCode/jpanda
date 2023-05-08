@@ -25,9 +25,16 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//notice
 	@Override
-	public List<NoticeDto> selectNotice(Pagination pagination) {
-		log.info("Dao selectNotice() start");
-		List<NoticeDto> noticeList = sqlSession.selectList("selectNotice", pagination);
+	public List<NoticeDto> selectNoticeByPagination(Pagination pagination) {
+		log.info("Dao selectNoticeByPagination() start");
+		List<NoticeDto> noticeList = null;
+		
+		try {
+			noticeList = sqlSession.selectList("selectNoticeByPagination", pagination);
+		} catch(Exception e) {
+			log.debug("Dao selectNoticeByPagination() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
 		
 		return noticeList;
 	}
@@ -35,32 +42,55 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public int insertNotice(NoticeDto notice) {
 		log.info("Dao insertNotice() start");
-		int result = sqlSession.insert("insertNotice", notice);
+		int result = 0;
 		
+		try {
+			result = sqlSession.insert("insertNotice", notice);
+		} catch(Exception e) {
+			log.debug("Dao insertNotice() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+				
 		return result;
 	}
 	
 	@Override
 	public NoticeDto selectNoticeByNoticeNo(Long noticeNo) {
 		log.info("Dao selectNoticeByNoticeNo() start");
-		NoticeDto notice = sqlSession.selectOne("selectNoticeByNoticeNo", noticeNo);
+		NoticeDto notice = null;
 		
+		try {
+			notice = sqlSession.selectOne("selectNoticeByNoticeNo", noticeNo);
+		} catch(Exception e) {
+			log.debug("Dao selectNoticeByNoticeNo() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+				
 		return notice;
 	}
 	
 	@Override
 	public int updateNotice(NoticeDto notice) {
 		log.info("Dao updateNotice() start");
-		int result = sqlSession.update("updateNotice", notice);
+		int result = 0;
 		
+		try {
+			result = sqlSession.update("updateNotice", notice);
+		} catch(Exception e) {
+			log.debug("Dao updateNotice() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+				
 		return result;
 	}
 
 	@Override
-	public int selectNoticeByPagination() {
+	public int selectNoticeForTotalCount() {
+		log.info("Dao selectNoticeForTotalCount() start");
 		int totalCount = 0;
+		
 		try {
-			totalCount = sqlSession.selectOne("selectNoficeByPagination");
+			totalCount = sqlSession.selectOne("selectNoticeForTotalCount");
 			log.info("totalCount : "+ totalCount);
 		} catch(Exception e) {
 			log.info("Pagination Exception : "+e.getMessage());
@@ -69,32 +99,17 @@ public class AdminDaoImpl implements AdminDao {
 		return totalCount;
 	}
 	
-	//exchange
+	//exchange	
 	@Override
-	public ExchangeDto selectExchangeByExchangeNo(Long exchangeNo) {
-		log.info("Dao selectExchangeByExchangeNo() start");
-		ExchangeDto exchange = null;
-		
-		try {
-			exchange = sqlSession.selectOne("selectExchangeByExchangeNo", exchangeNo);
-			
-		} catch(Exception e) {
-			log.debug("Dao selectExchangeByExchangeNo() Exception : "+e.getMessage());
-			e.printStackTrace();
-		}
-		return exchange;
-	}
-	
-	@Override
-	public List<ExchangeDto> selectExchange(Pagination pagination) {
-		log.info("Dao selectExchange() start");
+	public List<ExchangeDto> selectExchangeByPagination(Pagination pagination) {
+		log.info("Dao selectExchangeByPagination() start");
 		List<ExchangeDto> exList = null;
 		
 		try {
-			exList = sqlSession.selectList("selectExchange", pagination);
+			exList = sqlSession.selectList("selectExchangeByPagination", pagination);
 		} catch(Exception e) {
 			
-			log.info("Dao selectExchange() Exception : "+e.getMessage());
+			log.info("Dao selectExchangeByPagination() Exception : "+e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -104,70 +119,95 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public int updateExchange(ExchangeDto exchange) {
 		log.info("Dao updateExchange() start");
-		return sqlSession.update("updateExchange", exchange);
+		int result = 0;
+		
+		try {
+			result = sqlSession.update("updateExchange", exchange);
+		} catch(Exception e) {
+			log.debug("Dao updateExchnage() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 
 	@Override
-	public int findExchangeByPagination() {
-		int totalCount = sqlSession.selectOne("findExchangeByPagination");
+	public int selectExchangeForTotalCount() {
+		log.info("Dao selectExchangeForTotalCount() start");
+		int totalCount = 0;
+		
+		try {
+			totalCount = sqlSession.selectOne("selectExchangeForTotalCount");
+		} catch(Exception e) {
+			log.debug("Dao selectExchangeForTotalCoun() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+				
 		return totalCount;
 	}
 	
 	//coupon
 	@Override
-	public List<CouponDto> selectCouponsExpired(Pagination pagination) {
+	public List<CouponDto> selectCouponsByPagination(Pagination pagination) {
 		log.info("Coupon Dao selectCouponsExpired() start");
 		List<CouponDto> couponList = null;
 		
 		try {
-			couponList = sqlSession.selectList("selectCouponsExpired", pagination);
+			couponList = sqlSession.selectList("selectCouponsByPagination", pagination);
 			
 		} catch(Exception e) {
-			log.info("Coupon Dao selectCouponsExpired() Exception : "+e.getMessage());
+			log.info("Coupon Dao selectCouponsByPagination() Exception : "+e.getMessage());
 			e.printStackTrace();
 		}
 		return couponList;
 	}
-	
-	@Override
-	public List<CouponDto> findCouponList() {
-		List<CouponDto> couponList = sqlSession.selectList("findCouponList");
-		return couponList;
-	}
-
-	
 
 	@Override
-	public int selectCoupon() {
-		int totalCount = sqlSession.selectOne("selectCoupon");
+	public int selectCouponForTotalCount() {
+		log.info("Dao selectCouponForTotalCount() start");
+		int totalCount = 0;
 		
+		try {
+			totalCount = sqlSession.selectOne("selectCouponForTotalCount");
+		} catch(Exception e) {
+			log.debug("Dao selectCouponForTotalCoun() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+				
 		return totalCount;
 	}
-
-
+	
 	@Override
-	public List<CouponDto> findCouponList(Pagination pagination) {
-		log.info("Dao findCouponList() start");
+	public List<CouponDto> selectCouponList() {
+		log.info("Dao selectCouponList() start");
 		List<CouponDto> couponList = null;
 		
 		try {
-			couponList = sqlSession.selectList("findCouponList");
-			
+			couponList = sqlSession.selectList("selectCouponList");
 		} catch(Exception e) {
-			log.info("Dao findCouponList() Exception : "+e.getMessage());
+			log.debug("Dao findCouponList() Exception : "+e.getMessage());
 			e.printStackTrace();
 		}
-		
+				
 		return couponList;
 	}
+
 	
 	@Override
 	public int insertCoupon(CouponDto couponDto) {
 		log.info("Dao insertCoupon() start");
 		log.info("Dao couponDto : "+couponDto.toString());
+		int result = 0;
 		
-		return sqlSession.insert("insertCoupon", couponDto);
+		try {
+			result = sqlSession.insert("insertCoupon", couponDto);
+		} catch(Exception e) {
+			log.debug("Dao insertCoupon() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	//company-sales
@@ -197,22 +237,31 @@ public class AdminDaoImpl implements AdminDao {
 	
 	//talent
 	@Override
-	public List<TalentDto> selectTalent() {
-		log.info("Dao selectTalent() start");
+	public int selectTalentForTotalCount() {
+		log.info("Dao selectTalentForTotalCount() start");
+		int totalCount =  0;
 		
-		return sqlSession.selectList("selectTalent");
-	}
-	
-	@Override
-	public int selectTalentByPagination() {
-		int totalCount = sqlSession.selectOne("selectTalentByPagination");
+		try {
+			totalCount = sqlSession.selectOne("selectTalentForTotalCount");
+		} catch(Exception e) {
+			log.debug("Dao selectTalentForTotalCount() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
 		
 		return totalCount;
 	}
 
 	@Override
-	public List<TalentDto> selectTalents(Pagination pagination) {
-		List<TalentDto> talentList = sqlSession.selectList("selectTalents", pagination);
+	public List<TalentDto> selectTalentByPagination(Pagination pagination) {
+		log.info("Dao selectTalentByPagination() start");
+		List<TalentDto> talentList = null;
+		
+		try {
+			talentList = sqlSession.selectList("selectTalentByPagination", pagination);
+		} catch(Exception e) {
+			log.debug("Dao selectTalentByPagination() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
 		
 		return talentList;
 	}
@@ -220,12 +269,13 @@ public class AdminDaoImpl implements AdminDao {
 
 	@Override
 	public int updateTalentByTalentNos(TalentDto talentDto) {
+		log.info("Dao updateTalentByTalentNos() start");
 		int returnValue = 0;
 		
 		try {
 			returnValue = sqlSession.update("updateTalentByTalentNos", talentDto);
 		} catch(Exception e) {
-			log.info("Dao updateTalentBySellerIds() Exception : "+e.getMessage());
+			log.debug("Dao updateTalentByTalentNos() Exception : "+e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -234,44 +284,46 @@ public class AdminDaoImpl implements AdminDao {
 	
 	@Override
 	public TalentDto selectTalentByTalentNo(Long talentNo) {
+		log.info("Dao selectTalentByTalentNo");
 		TalentDto talentDto = null;
 		
 		try {
 			talentDto = sqlSession.selectOne("selectTalentByTalentNo", talentNo);
-			
 		} catch(Exception e) {
-			log.info("Dao selectTalentBySellerId() Exception : "+e.getMessage());
+			log.debug("Dao selectTalentBySellerId() Exception : "+e.getMessage());
 			e.printStackTrace();
 		}
+		
 		return talentDto;
 	}
 
 	//talent-refund
 	@Override
-	public List<TalentRefundDto> selectTalentRefund() {
-		log.info("TalentRefund Dao selectTalentRefund() start");
-		List<TalentRefundDto> refundList = null;
+	public int selectTalentRefundForTotalCount() {
+		log.info("Dao selectTalentRefundForTotalCount() start");
+		int totalCount = 0;
+		
 		try {
-			refundList = sqlSession.selectList("selectTalentRefund");
-			
+			totalCount = sqlSession.selectOne("selectTalentRefundForTotalCount");
 		} catch(Exception e) {
-			log.info("TalentRefund Dao selectTalentRefun() Exception : "+e.getMessage());
+			log.debug("Dao selectTalentRefundForTotalCount() Exception : "+e.getMessage());
 			e.printStackTrace();
 		}
-		
-		return refundList;
-	}
-	
-	@Override
-	public int selectTalentRefundForTotalCount() {
-		int totalCount = sqlSession.selectOne("selectTalentRefundForTotalCount");
 		
 		return totalCount;
 	}
 
 	@Override
 	public List<TalentRefundDto> selectTalentRefunByPagination(Pagination pagination) {
-		List<TalentRefundDto> refundList = sqlSession.selectList("selectTalentRefunByPagination", pagination);
+		log.info("Dao selectTalentRefundByPagination() start");
+		List<TalentRefundDto> refundList = null;
+		
+		try {
+			refundList = sqlSession.selectList("selectTalentRefunByPagination", pagination);	
+		} catch(Exception e) {
+			log.debug("Dao selectTalentRefundByPagination() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
 		
 		return refundList;
 	}
@@ -283,7 +335,6 @@ public class AdminDaoImpl implements AdminDao {
 		
 		try {
 			result = sqlSession.update("updateTalentRefundToSuccessByPurchaseNosAndStatus", paramDto);
-			
 		} catch(Exception e) {
 			log.info("TalentRefund Dao updateTalentRefundToSuccessByPurchaseNosAndStatus() Exception : "+e.getMessage());
 			e.printStackTrace();
@@ -352,6 +403,5 @@ public class AdminDaoImpl implements AdminDao {
 		}
 		return result;
 	}
-
 
 }
