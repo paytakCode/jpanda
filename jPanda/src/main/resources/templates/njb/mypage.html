@@ -81,8 +81,7 @@ a {
 	        <img src="/image/basic.png" alt="기본사진">
 	           <ul>   
 	              <li>내프로필</li>
-	              <li>계정설정</li>
-	              <li>거래내역</li>
+	              <a href="/trade" onclick="redirectToTrade()">거래내역</a>
 	           </ul>
 			<span class="withdrawal-btn-wrap" th:if="${session.memberId != null}">
 			  <button type="button" id="withdrawal-btn" data-bs-toggle="modal" data-bs-target="#withdrawalModal">회원탈퇴</button>
@@ -93,29 +92,38 @@ a {
 		    <h1>내프로필</h1>
 		    <h1 th:text="'Welcome, ' + ${session.memberId} + '님!'"></h1>
 				<form method="post" action="/updateMember">
+				<input type="hidden" name="memberId" th:value="${memberInfo.memberId}">
 				    <ul>
 				        <li>
 				            <span>이름: </span>
-				            <input type="text" th:value="${memberInfo.name}" th:disabled="${!editMode}" name="name">
+				            <input type="text" th:value="${memberInfo.name}" name="name">
 				        </li>
 				        <li>
 				            <span>이메일: </span>
-				            <input type="text" th:value="${memberInfo.email}" th:disabled="${!editMode}" name="email">
+				            <input type="text" th:value="${memberInfo.email}" name="email">
 				        </li>
 				        <li>
 				            <span>전화번호: </span>
-				            <input type="text" th:value="${memberInfo.tel}" th:disabled="${!editMode}" name="tel">
+				            <input type="text" th:value="${memberInfo.tel}" name="tel">
 				        </li>
+				        <li>
+				            <span>성별: </span>
+				            <input type="text" th:value="${memberInfo.gender}" name="gender" readonly>
+				        </li>
+				        <li>
+				            <span>회원등급: </span>
+				            <input type="text" th:value="${memberInfo.memberGrade}" name="memberGrade" readonly>
+				        </li>
+				        
 				    </ul>
-				    <button type="submit" th:if="${editMode}">수정 완료</button>
-    				<button type="button" th:if="${!editMode}" onclick="enableEditMode()">수정하기</button>
+    				<button type="submit" onclick="showSuccessAlertAndRefresh()" >수정하기</button>
 				</form>
 			<div class="menu">
 				<span>
 					<a href="/" target="_blank">계정설정</a>
 				</span>
 				<span>
-					<a href="/" target="_blank">거래내역</a>
+					<a href="/trade" onclick="redirectToTrade()" >거래내역</a>
 				</span>
 			</div>
 		</div>
@@ -197,23 +205,16 @@ a {
 		    }
 		  });
 		});
+	function showSuccessAlertAndRefresh() {
+        alert("수정되었습니다.");
+        location.reload(); // 페이지 새로고침
+    }
+	   function redirectToTrade() {
+	        window.location.href = "/trade"; // 페이지 이동
+	    }
 	
-       function enableEditMode() {
-        var inputs = document.getElementsByTagName("input");
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-        document.querySelector('button[type="submit"]').style.display = "block";
-        document.querySelector('button[type="button"]').style.display = "none";
-        document.querySelector('input[name="_method"]').value = "PUT";
-        document.querySelector('form').action = "/editProfile";
-        document.querySelector('button[type="submit"]').textContent = "수정 완료";
-    } 
 	</script> 
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>
 </html>
-
-
-

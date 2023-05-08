@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.kakao.jPanda.kts.dao.ChatDao;
 import com.kakao.jPanda.kts.domain.Chat;
 import com.kakao.jPanda.kts.domain.ChatReport;
-import com.kakao.jPanda.kts.domain.Partner;
+import com.kakao.jPanda.kts.domain.ChatPartner;
 
 @Repository
 public class ChatDaoImpl implements ChatDao {
@@ -27,15 +27,15 @@ public class ChatDaoImpl implements ChatDao {
 	}
 
 	@Override
-	public List<Partner> selectPartnerListByMemberId(String memberId) {
-		List<Partner> selectedPartnerList = sqlSession.selectList("selectPartnerListByMemberId", memberId);
+	public List<ChatPartner> selectPartnerListByMemberId(String memberId) {
+		List<ChatPartner> selectedPartnerList = sqlSession.selectList("selectPartnerListByMemberId", memberId);
 		return selectedPartnerList;
 	}
 
     @Override
     public List<Chat> selectChatListByMemberIdAndPartnerId(
-            Map<String, String> memberIdAndPartnerMap) {
-        List<Chat> selectedChatList = sqlSession.selectList("selectChatListByMemberIdAndPartnerId", memberIdAndPartnerMap);
+            Map<String, String> memberIdAndPartnerIdMap) {
+        List<Chat> selectedChatList = sqlSession.selectList("selectChatListByMemberIdAndPartnerId", memberIdAndPartnerIdMap);
         return selectedChatList;
     }
 

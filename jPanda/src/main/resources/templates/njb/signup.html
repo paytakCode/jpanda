@@ -45,6 +45,61 @@
         checkPassword(); // 비밀번호 확인 함수 호출
       });
     });
+    $(document).ready(function() {
+        // 이메일 인증 요청
+        $("#echeck-btn").click(function() {
+            var email = $("#signup-email").val();
+
+            $.ajax({
+                url: "/sendVerificationCode",
+                method: "POST",
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    // 이메일 인증 요청 성공 시 동작
+                    console.log("이메일 인증번호 전송 성공");
+                },
+                error: function() {
+                    // 이메일 인증 요청 실패 시 동작
+                    console.log("이메일 인증번호 전송 실패");
+                }
+            });
+        });
+    });
+    $(document).ready(function() {
+        $("#verify-btn").click(function() {
+            var verifCode = $("#signup-echeck").val();
+            var email = $("#signup-email").val();
+
+            $.ajax({
+                url: "/verifyCode",
+                type: "GET",
+                data: {
+                    verifCode: verifCode,
+                    email: email
+                },
+                success: function(response) {
+                    if (response === "일치") {
+                        // 인증번호 일치
+                        alert("인증번호가 일치합니다.");
+                        // 추가로 처리할 로직을 작성하시면 됩니다.
+                    } else if (response === "불일치") {
+                        // 인증번호 불일치
+                        alert("인증번호가 일치하지 않습니다.");
+                        // 추가로 처리할 로직을 작성하시면 됩니다.
+                    } else {
+                        // 응답이 올바르지 않은 경우
+                        alert("인증 확인 중 오류가 발생했습니다.");
+                    }
+                },
+                error: function() {
+                    // AJAX 요청 실패
+                    alert("인증 확인 중 오류가 발생했습니다.");
+                }
+            });
+        });
+    });
     
     
     
@@ -365,7 +420,7 @@ h3{
                     <input id="signup-echeck" type="text" name="verifCode" placeholder="인증번호 입력하세요"></input>
                 </span>
                 <span class="echeck-btn-wrap">
-                        <button type="button" id="echeck-btn">인증확인</button>
+                        <button type="button" id="verify-btn">인증확인</button>
                 </span>
             </div>
             <div>

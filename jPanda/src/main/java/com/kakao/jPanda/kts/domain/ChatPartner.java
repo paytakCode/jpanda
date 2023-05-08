@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class Partner {
+public class ChatPartner {
 	
 	@NotEmpty
 	private String memberId;
