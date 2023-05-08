@@ -3,6 +3,7 @@ package com.kakao.jPanda.njb.dao;
 import java.util.List;
 
 import com.kakao.jPanda.njb.domain.BankDto;
+import com.kakao.jPanda.njb.domain.EmailVerifDto;
 import com.kakao.jPanda.njb.domain.MemberDto;
 
 public interface MemberDao {
@@ -26,6 +27,11 @@ public interface MemberDao {
 	public boolean withdrawMemberById(String memberId, String encryptedPassword);
 
 	public void updateMemberInfo(MemberDto memberInfo);
+
+	public void insertVerificationCode(EmailVerifDto emailVerifDto);
+
+	public EmailVerifDto selectEmailVerif(EmailVerifDto emailVerifDto);
+
 
 	
 }	

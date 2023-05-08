@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kakao.jPanda.njb.domain.BankDto;
+import com.kakao.jPanda.njb.domain.EmailVerifDto;
 import com.kakao.jPanda.njb.domain.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -110,6 +111,26 @@ public class MemberDaoImpl implements MemberDao {
 		sqlSession.update("updateMemberInfo",memberInfo);
 		
 	}
+
+
+
+	@Override
+	public void insertVerificationCode(EmailVerifDto emailVerifDto) {
+
+		sqlSession.insert("insertVerificationCode",emailVerifDto);
+	}
+
+
+
+	@Override
+	public EmailVerifDto selectEmailVerif(EmailVerifDto emailVerifDto) {
+		EmailVerifDto selectEmailVerifDto = sqlSession.selectOne("selectEmailVerif",emailVerifDto);
+		return selectEmailVerifDto;
+	}
+
+
+
+
 
 
 	

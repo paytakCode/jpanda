@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kakao.jPanda.njb.dao.MemberDao;
 import com.kakao.jPanda.njb.domain.BankDto;
+import com.kakao.jPanda.njb.domain.EmailVerifDto;
 import com.kakao.jPanda.njb.domain.MemberDto;
 import com.kakao.jPanda.njb.service.MemberService;
 
@@ -116,7 +118,44 @@ public class MemberController {
             return new ResponseEntity<String>("비밀번호를 초기화 했습니다. 이메일을 확인해주세요.", HttpStatus.OK);
         }
     }
-    public void sendEmail(String to, String subject, String body) {
+    @PostMapping("/sendVerificationCode")
+    @ResponseBody
+    public ResponseEntity<String> sendVerificationCode(@RequestParam("email") String email) {
+        String verificationCode = generateVerificationCode();
+        System.out.println(verificationCode);
+        EmailVerifDto emailVerifDto = new EmailVerifDto();
+        emailVerifDto.setEmail(email);
+        emailVerifDto.setVerifCode(verificationCode);
+        
+        memberservice.insertVerificationCode(emailVerifDto);
+        
+        String to =email;
+        String subject = "인증번호";
+        String body = "인증번호 : " + verificationCode;
+        sendEmail(to, subject, body);
+        
+        return ResponseEntity.ok("success");
+
+        
+        
+    }
+        
+    private String generateVerificationCode() {
+        int length = 5; // 생성할 랜덤 문자열의 길이
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder code = new StringBuilder();
+
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            code.append(characters.charAt(index));
+        }
+
+        return code.toString();
+	
+    }
+
+	public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
@@ -181,6 +220,7 @@ public class MemberController {
     @GetMapping("/mypage")
     public String myPage(Model model, HttpSession session) {
         String memberId = (String) session.getAttribute("memberId");
+        System.out.println(memberId);
         if (memberId != null) {
             // 로그인이 되어있는 경우
             MemberDto memberInfo = memberservice.findMember(memberId);
@@ -193,13 +233,33 @@ public class MemberController {
     }
     @PostMapping("/updateMember")
     public String editMemberInfo(@ModelAttribute("memberInfo") MemberDto memberInfo, HttpSession session) {
-        
+    	
+    	session.setAttribute("memberInfo", memberInfo);
+    	System.out.println("memberInfo " + memberInfo);
     	memberservice.editMemberInfo(memberInfo);
-        session.setAttribute("memberInfo", memberInfo);
         return "redirect:/mypage";
     }
+    
+    @GetMapping("/verifyCode")
+    @ResponseBody
+    public ResponseEntity<String> verifyCode(EmailVerifDto emailVerifDto) {
+    	
+    	EmailVerifDto foundedEmailVerif = memberservice.findEmailVerif(emailVerifDto);
+
+        if (foundedEmailVerif != null) {
+            // 인증번호 일치
+            return ResponseEntity.ok("일치");
+        } else {
+            // 인증번호 불일치
+            return ResponseEntity.ok("불일치");
+        }
+    	
+    }
+    
 
   }
+
+
 
 
 
