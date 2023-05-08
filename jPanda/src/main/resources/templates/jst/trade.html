@@ -581,17 +581,14 @@
 					'</div><div class = "card-footer text-muted">판매등록날짜 : ' + timestampToCustomFormat(item.regDate) + '</div></div>';
 					
 		} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
+			text += '<div class = "card-text">' + 
+					'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '"';
 			if(item.sellCount === 0){
-				text += '<div class = "card-text">' + 
-				'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '" disabled>환전하기</button>' +
-				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' +
-				'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
-			} else {
-				text += '<div class = "card-text">' + 
-				'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">환전하기</button>' + 
-				'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' + 
-				'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
+				text += ' disabled';
 			}
+			text += '>환전하기</button>' + 
+					'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' + 
+					'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
 			
 		} else if(item.exchangeStatus != null){
 			switch(item.exchangeStatus){
@@ -617,6 +614,9 @@
 		}
 		
 		$('#list-print').append(text);
+		$('.card-title').on("click", function(){
+			location.href="/talents/talent/" + item.talentNo;
+		}).css('cursor', 'pointer');
 	}
 
 	/**
