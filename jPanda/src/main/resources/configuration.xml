@@ -20,6 +20,9 @@
   		<!-- 로그인, 회원가입, 마이페이지 -->
 		<typeAlias alias="MemberDto" type="com.kakao.jPanda.njb.domain.MemberDto"/>
   		<typeAlias alias="BankDto" type="com.kakao.jPanda.njb.domain.BankDto"/>
+  		<typeAlias alias="EmailVerifDto" type="com.kakao.jPanda.njb.domain.EmailVerifDto"/>
+  		
+  		
   		
   		<!-- 판매게시판 -->
 		<typeAlias alias="BoardTalent" type="com.kakao.jPanda.lhw.domain.TalentDto"/>
