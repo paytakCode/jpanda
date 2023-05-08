@@ -5,7 +5,9 @@
 	</div>
 	<div id="chat-console">
 		<ul id="chat-partner-list" class="list-group list-group-flush"></ul>
-		<div id="chat-content"></div>
+		<div id="chat-content">
+			<button type="button" class="text-center fs-2 btn btn-outline-danger" disabled="disabled">채팅 상대를 선택해주세요.</button>
+		</div>
 		<textarea id="chat-input" placeholder="메시지를 입력하세요."></textarea>
 	</div>
 	
@@ -26,7 +28,7 @@
 					<div class="mb-3">
 						<label for="chat-report-message" class="col-form-label">관련 채팅:</label>
 						<input type="hidden" id="report-chat-no">
-						<input type="text" class="form-control" id="chat-report-message" readonly>
+						<textarea class="form-control" id="chat-report-message" readonly></textarea>
 					</div>
 					<div class="mb-3">
 						<label for="chat-report-issue" class="col-form-label">신고 사유:</label>
