@@ -2,14 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kakao.jPanda.yjh.TalentMapper">
-
-	<select id="selectTalent" resultType="AdminTalent">
-		select * 
-		from talent
-		where talent_status = '검토중'
-	</select>
 	
-	<select id="selectTalents" parameterType="AdminPagination" resultType="AdminTalent">
+	<select id="selectTalentByPagination" parameterType="AdminPagination" resultType="AdminTalent">
 		SELECT 	*
 		FROM (
 		    	SELECT t.*, ROW_NUMBER() OVER (ORDER BY talent_no DESC) rnum
@@ -19,7 +13,7 @@
 		WHERE rnum BETWEEN #{startRow} AND #{endRow}
 	</select>
 	
-	<select id="selectTalentByPagination" resultType="int">
+	<select id="selectTalentForTotalCount" resultType="int">
 		select 	count(*)
 		from 	talent
 		where 	talent_status = '검토중'
@@ -30,7 +24,7 @@
 		set 	talent_status = '게시중',
 				reg_date = #{regDate},
 				status_date = #{statusDate}
-		where	talent_no = #{talentNo}					 
+		where	talent_no = #{talentNo}		 
 	</update>
 	
 	<select id="selectTalentByTalentNo" parameterType="Long" resultType="AdminTalent">

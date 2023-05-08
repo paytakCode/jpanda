@@ -15,19 +15,16 @@ import com.kakao.jPanda.yjh.domain.TalentRefundDto;
 
 public interface AdminService {
 	//notice
-	List<NoticeDto> findNotice(Pagination pagination);
+	Map<String, Object> findNoticeByPagination(Pagination pagination);
 	NoticeDto findNoticeByNoticeNo(String noticeNo);
 	String modifyNotice(NoticeDto notice);
 	String addNotice(NoticeDto notice);
-	int findNoticeForPagination();
 	
 	//exchange
-	Map<String, Object> findExchange(Pagination pagination);
+	Map<String, Object> findExchangeByPagination(Pagination pagination);
 	int modifyExchangeStatusByExchangeNos(List<ExchangeDto> exchangeDto);
-	int findExchangeByPagination(Pagination pagination);
 	
 	//coupon
-	
 	String generateCouponNo();
 	Map<String, Object> findCouponListByPagination(Pagination pagination);
 	Map<String, Integer> addCoupon(CouponDto couponDto);
@@ -36,13 +33,11 @@ public interface AdminService {
 	List<CompanySalesDto> findCompanySalesByStartDateAndEndDate(Timestamp startDate, Timestamp endDate, String periodicData);
 	
 	//talent
-	List<TalentDto> findTalent();
-	Map<String, Object> findtalentByPagination(Pagination pagination);
+	Map<String, Object> findTalentByPagination(Pagination pagination);
 	int modifyTalentByTalentNos(List<TalentDto> talentDto);
 	TalentDto findTalentByTalentNo(Long talentNo);
 	
 	//talent-refund
-	List<TalentRefundDto> findTalentRefund();
 	Map<String, Object> findTalentRefundByPagination(Pagination pagination);
 	int modifyTalentRefundByPurchaseNosAndStatus(List<TalentRefundDto> talentRefundDto);
 	
