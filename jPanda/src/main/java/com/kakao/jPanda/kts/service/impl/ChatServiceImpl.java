@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kakao.jPanda.kts.dao.ChatDao;
 import com.kakao.jPanda.kts.domain.Chat;
-import com.kakao.jPanda.kts.domain.Partner;
+import com.kakao.jPanda.kts.domain.ChatPartner;
 import com.kakao.jPanda.kts.domain.ChatReport;
 import com.kakao.jPanda.kts.service.ChatService;
 
@@ -38,8 +38,8 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	@Override
-	public List<Partner> findPartnerListByMemberId(String memberId) {
-		List<Partner> selectedPartnerList = chatDao.selectPartnerListByMemberId(memberId);
+	public List<ChatPartner> findPartnerListByMemberId(String memberId) {
+		List<ChatPartner> selectedPartnerList = chatDao.selectPartnerListByMemberId(memberId);
 		return selectedPartnerList;
 	}
 
