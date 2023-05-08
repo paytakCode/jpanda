@@ -76,6 +76,7 @@
 		background-color: #8FBC8F;
 	}
 	
+	/* Cards */
 	.card.text-center{
 		margin-bottom: 3%;
 	}
@@ -86,7 +87,12 @@
 	
 	.card-title{
 		font-weight: bold;
-		font-size: x-large;
+		font-size: large;
+		cursor: pointer;
+	}
+	
+	.img-fluid{
+		height: 100%;
 	}
 	
 	.refund-btn, .exchange-btn, .repost-btn, .repost-btn, .end-sell-btn, .refund-cancle-btn{
@@ -161,6 +167,7 @@
 	.accordion-item{
 		border-color: gray;
 	}
+	
 	
 	
 	
@@ -299,7 +306,6 @@
 			});
 		$('.filter-button').on("click", function(){
 			$this = $(this).val();
-			console.log('this : ' + $this);
 			switch($this){
 				case 'all':
 					sellCollapse.show();
@@ -650,119 +656,148 @@
 	 * 판매 리스트 출력
 	 */
 	function getSellList(item){
-		let text =  '<div id = "talent-no-' + item.talentNo + '"class = "card text-center sell-card">' + 
-						'<div class = "card-header badge text-bg-primary">' + item.talentStatus + '</div>' + 
-						'<div class = "card-body">' +  
-						'<div class = "card-title">' + item.title + '</div><br>' +
-						'<div class = "card-text card-text-bamboo">' + item.saleBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div><br>' +
-						'<div class = "card-text">' + item.sellCount + '명이 재능을 구매했어요</div>';
-					
-		if(item.talentStatus === '게시중' && item.exchangeStatus == null){
-			text += '<div class = "card-text">' + 
-					'<button class="end-sell-btn btn btn-dark" id="sell-no-' + item.talentNo + '">판매종료</button></div>' + 
-					'</div><div class = "card-footer text-muted">판매등록날짜 : ' + timestampToCustomFormat(item.regDate) + '</div></div>';
-					
+		const $card = $('<div>', { id: `talent-no-${item.talentNo}`, class: 'card mb-3 text-center sell-card' });
+		
+		const $cardHeader = $('<div>', { class: 'card-header badge text-bg-primary', text: item.talentStatus });
+		
+		const $cardImg = $('<img>', { class: 'img-fluid rounded-start', src: item.mainImg });
+		const $cardImgCol = $('<div>', { class: 'col-md-4' }).append($cardImg);
+		
+		const $cardTitle = $('<div>', { class: 'card-title', text: item.title });
+		const $bambooIcon = $('<img>', { src: '/image/common/bamboo-icon.png', class: 'bamboo-icon' });
+		const $cardSaleBamboo = $('<div>', { class: 'card-text card-text-bamboo' }).append(item.saleBamboo, $bambooIcon);
+		const $cardSellCount = $('<div>', { class: 'card-text', text: `${item.sellCount}명이 재능을 구매했어요`});
+		
+		const $endSellBtn = $('<button>', { class: 'end-sell-btn btn btn-dark', text: '판매종료', id: `sell-no-${item.talentNo}`});
+		const $exchangeBtn = $('<button>', { class: 'exchange-btn btn btn-dark', text: '환전하기', id: `sell-no-${item.talentNo}`});
+		const $repostBtn = $('<button>', { class: 'repost-btn btn btn-dark', text: '재등록', id: `sell-no-${item.talentNo}`});
+		const $reExchangeBtn = $('<button>', { class: 're-exchange-btn btn btn-dark', text: '재신청', id: `sell-no-${item.talentNo}`});
+		
+		const $cardTextCol = $('<div>', { class: 'col-md-8' });
+		const $cardBody = $('<div>', { class: 'card-body' });
+		
+		if(item.talentStatus === '게시중' && item.exchangeStatus == null) {
+			$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<div>', { class: 'card-text' }).append($endSellBtn));
+			$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `판매등록날짜 : ${timestampToCustomFormat(item.regDate)}`}));
 		} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
-			text += '<div class = "card-text">' + 
-					'<button class="exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '"';
+			$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<div>', { class: 'card-text'}).append($exchangeBtn, $repostBtn));
+			$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `판매종료날짜 : ${timestampToCustomFormat(item.statusDate)}`}));
 			if(item.sellCount === 0){
-				text += ' disabled';
+				$exchangeBtn.prop('disabled', true);
 			}
-			text += '>환전하기</button>' + 
-					'<button class="repost-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재등록</button></div>' + 
-					'</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
-			
 		} else if(item.exchangeStatus != null){
 			switch(item.exchangeStatus){
 				case '검토중':
-					text += '<div class = "card-text">' + 
-					'환전심사가 진행중인 물품입니다.</div>';
+					$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<div>', { class: 'card-text', text: '환전심사가 진행중인 재능입니다'}));
 					break;
 				case '환전완료':
-					text += '<div class = "card-text">' + 
-					'환전이 완료된 물품입니다.</div>';
+					$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<div>', { class: 'card-text', text: '환전이 완료된 재능입니다'}));
 					break;
 				case '반려':
-					text += '<div class = "card-text">' + 
-					'환전 신청이 반려되었습니다.</div>' + 
-					'<button class="re-exchange-btn btn btn-dark" id="sell-no-' + item.talentNo + '">재신청</button>';
+					$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount,
+									 $('<div>', { class: 'card-text', text: '환전 신청이 반려되었습니다'}),
+									 $('<br>'), $('<div>', { class: 'card-text'}).append($reExchangeBtn));
 					break;
 			}
 			
-			text += '</div><div class = "card-footer text-muted">판매종료날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
-
+			$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `판매종료날짜 : ${timestampToCustomFormat(item.statusDate)}`}));
+			
 		} else {
-			text += '</div><div class = "card-footer text-muted">판매등록날짜 : ' + timestampToCustomFormat(item.statusDate) + '</div></div>';
+			$cardBody.append($cardTitle, $cardSaleBamboo, $('<div>', { class: 'card-text', text: '판매등록 검토중인 재능입니다'}));
+			$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `판매신청날짜 : ${timestampToCustomFormat(item.statusDate)}`}));
 		}
-		
-		$('#list-print').append(text);
-		//클릭시 해당 재능 상세페이지로 이동
-		$('.card-title').on("click", function(){
-			location.href="/talents/talent/" + item.talentNo;
-		}).css('cursor', 'pointer');
-	}
 
+		const $cardRow = $('<div>', { class: 'row g-0' }).append($cardImgCol, $cardTextCol);
+		$('#list-print').append($card.append($cardHeader, $cardRow));
+		
+	}		
+	
 	/**
 	 * 구매 리스트 출력
 	 */
 	function getBuyList(item){
-		let text = '<div id = "talent-no-' + item.talentNo + '"class = "card text-center buy-card">' + 
-						'<div class = "card-header badge text-bg-success">' + item.talentStatus + '</div>' +
-						'<div class = "card-body">' + 
-							'<div class = "card-title">' + item.title + '</div><br>' +
-							'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div><br>';
-					
-		if(item.refundableDate < 0){
-			text += '<div class = "card-text">재능 구매가 확정되었어요</div>';
-		} else if(item.refundableDate > 0){
-			text += '<div class = "card-text">환불 가능일이 ' + item.refundableDate + '일 남았어요</div>' + 
-					'<div class = "card-text">' + 
-						'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
-						'data-refund-talentno = ' + item.talentNo + 
-						' data-refund-salebamboo = ' + item.useBamboo + 
-						'>환불신청</button></div>';
-		} else if(item.refundableDate == 0){
-			text += '<div class = "card-text"> 환불가능 마지막 날입니다! </div>' + 
-					'<div class = "card-text">'+ 
-					'<button type="button" data-bs-toggle="modal" data-bs-target="#refund-modal" class="refund-btn btn btn-dark" ' + 
-					'data-refund-talentno = ' + item.talentNo + 
-					' data-refund-salebamboo = ' + item.useBamboo + 
-					'>환불신청</button></div>'; 
-		} else {
-			text += '';	
-		}
+		const $card = $('<div>', { id: `talent-no-${item.talentNo}`, class: 'card mb-3 text-center buy-card' });
 		
-		text += '</div><div class = "card-footer text-muted">구매날짜 : ' + timestampToCustomFormat(item.purchaseDate) + '</div></div>';
-				
-		$('#list-print').append(text);		
+		const $cardHeader = $('<div>', { class: 'card-header badge text-bg-success', text: item.talentStatus });
+		
+		const $cardImg = $('<img>', { class: 'img-fluid rounded-start', src: item.mainImg });
+		const $cardImgCol = $('<div>', { class: 'col-md-4' }).append($cardImg);
+		
+		const $cardTitle = $('<div>', { class: 'card-title', text: item.title });
+		const $bambooIcon = $('<img>', { src: '/image/common/bamboo-icon.png', class: 'bamboo-icon' });
+		const $cardUseBamboo = $('<div>', { class: 'card-text card-text-bamboo' }).append(item.useBamboo, $bambooIcon);
+		const $refundBtn = $('<button>', { class: 'refund-btn btn btn-dark', text: '환불신청',
+										   'data-bs-toggle': 'modal', 'data-bs-target': '#refund-modal',
+										   'data-refund-talentno': item.talentNo, 'data-refund-salebamboo': item.useBamboo
+										 });
+			 
+		const $cardTextCol = $('<div>', { class: 'col-md-8' });
+		const $cardBody = $('<div>', { class: 'card-body' });
+		
+		if(item.refundableDate >= 0) {
+			if(item.refundableDate == 0){
+				$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).text('환불신청 마지막 날입니다!'),
+								$('<br>'), $('<div>', { class: 'card-text' }).append($refundBtn));
+				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `구매날짜 : ${timestampToCustomFormat(item.purchaseDate)}`}));
+								
+			} else {
+				$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).text(`환불신청일이 ${item.refundableDate}일 남았습니다.`),
+						$('<br>'), $('<div>', { class: 'card-text' }).append($refundBtn));
+				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `구매날짜 : ${timestampToCustomFormat(item.purchaseDate)}`}));
+			}
+			
+		} else if(item.refundableDate < 0){
+			$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).text('구매가 확정된 재능입니다.'));
+			$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `구매날짜 : ${timestampToCustomFormat(item.purchaseDate)}`}));
+		}
+
+		const $cardRow = $('<div>', { class: 'row g-0' }).append($cardImgCol, $cardTextCol);
+		$('#list-print').append($card.append($cardHeader, $cardRow));
+		
 	}
+		
+
 
 	/**
 	 * 환불 리스트 출력
 	 */
 	function getRefundList(item){
-		let text =  '<div id = "talent-no-' + item.talentNo + '"class = "card text-center refund-card">' +   
-						'<div class = "card-header badge text-bg-danger">' + item.refundStatus + '</div>' +
-						'<div class = "card-body">' +
-							'<div class = "card-title">' + item.title + '</div>' +
-							'<div class = "card-text card-text-bamboo">' + item.useBamboo + ' <img src="/image/common/bamboo-icon.png" class="bamboo-icon"></div><br>';
-				
-		if(item.refundStatus === '검토중'){
-			text += '<div class = "card-text"><button class="refund-cancle-btn btn btn-dark" id="refund-no-' + item.refundPurchaseNo + '">신청취소</button> </div>' +
-					'</div><div class = "card-footer text-muted">환불신청날짜 : ' + timestampToCustomFormat(item.refundSubmitDate) + '</div></div>'; 
-				 
-				'</div>';
-		} else if(item.refundStatus === '환불완료'){
-			text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + timestampToCustomFormat(item.refundSubmitDate) +   
-				'</div><div class = "card-footer text-muted">승인날짜 : ' + timestampToCustomFormat(item.refundApproveDate) + '</div></div>';
-		} else if(item.refundStatus === '반려'){
-			text += '</div><div class = "card-footer text-muted">환불신청날짜 : ' + timestampToCustomFormat(item.refundSubmitDate) +  
-				'</div><div class = "card-footer text-muted">반려날짜 : ' + timestampToCustomFormat(item.refundApproveDate) + '</div></div>';
-		} else{
-			text += '</div></div>';
-		}
+		const $card = $('<div>', { id: `talent-no-${item.talentNo}`, class: 'card mb-3 text-center refund-card' });
 		
-		$('#list-print').append(text);		
+		const $cardHeader = $('<div>', { class: 'card-header badge text-bg-danger', text: item.refundStatus });
+		
+		const $cardImg = $('<img>', { class: 'img-fluid rounded-start', src: item.mainImg });
+		const $cardImgCol = $('<div>', { class: 'col-md-4' }).append($cardImg);
+		
+		const $cardTitle = $('<div>', { class: 'card-title', text: item.title });
+		const $bambooIcon = $('<img>', { src: '/image/common/bamboo-icon.png', class: 'bamboo-icon' });
+		const $cardUseBamboo = $('<div>', { class: 'card-text card-text-bamboo' }).append(item.useBamboo, $bambooIcon);
+		const $refundCancleButton = $('<button>', { class: 'refund-cancle-btn btn btn-dark', id: `refund-no-${item.refundPurchaseNo}`, text: '신청취소' });
+		
+		const $cardTextCol = $('<div>', { class: 'col-md-8' });
+		const $cardBody = $('<div>', { class: 'card-body' });
+		
+		switch(item.refundStatus) {
+			case '검토중':
+				$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).append($refundCancleButton));
+				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }));
+				break;
+			case '환불완료':
+				$cardBody.append($cardTitle, $cardUseBamboo);
+				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }), $('<div>', { class: 'card-footer text-muted', text: `승인날짜 : ${timestampToCustomFormat(item.refundApproveDate)}` }));
+				break;
+			case '반려':
+				$cardBody.append($cardTitle, $cardUseBamboo);
+				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }), $('<div>', { class: 'card-footer text-muted', text: `반려날짜 : ${timestampToCustomFormat(item.refundApproveDate)}` }));
+				$cardImgCol.remove();
+				break;
+			default:
+				console.error(`Invalid refund status: ${item.refundStatus}`);
+				return;
+		}
+
+		const $cardRow = $('<div>', { class: 'row g-0' }).append($cardImgCol, $cardTextCol);
+		$('#list-print').append($card.append($cardHeader, $cardRow));
 	}
 
 	/**
@@ -818,6 +853,13 @@
 		$(this).addClass('active');
 		let listType = this.value;
 		updateList(listType);
+	});
+	
+	/**
+	 * 카드 제목 클릭시 재능 상세 페이지 이동
+	 */
+	$(document).on("click", '.card-title', function(){
+		location.href="/talents/talent/" + $this.closest('.card').attr('id').substr(10);
 	});
 
 	/**
