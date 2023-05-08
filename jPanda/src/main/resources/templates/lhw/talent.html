@@ -287,6 +287,7 @@ body {
 	 		</div>
         </li>
     </ul>
+    	<button id="load-more-button" th:if="${reviewList.size() > 5}" th:data-nextindex="${nextIndex}">더 보기</button>
 	</div>
 	
 	<div class="quick-menu">
@@ -345,6 +346,16 @@ body {
 	
 	const userId = [[${#session.getAttribute('memberId')}]];
 	console.log(userId);
+	
+	
+	 $(function() {
+	        $('#load-more-button').click(function() {
+	            var nextIndex = $(this).data('nextindex');
+	            $.ajax({
+	                url: '/talent/' + [[${talent.talentNo}]] + '?startIndex=' + nextIndex,
+	                type: 'GET',
+	                success: function(response) {
+	                    $('#review-list').append($(response).find
 	
 	
 	/* 신고하기 모달 */
@@ -486,7 +497,7 @@ body {
 	    var talentNo = $(this).data('talentno');
 	    if (confirm('정말로 게시물을 삭제하시겠습니까?')) {
 	        // 컨트롤러 이동
-	        location.href = '/talent/talents/updateStatus/' + talentNo;
+	        location.href = '/talents/talent/updateStatus/' + talentNo;
 	    }
 	});
 

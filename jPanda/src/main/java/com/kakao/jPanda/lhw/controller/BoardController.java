@@ -33,9 +33,6 @@ public class BoardController {
 		System.out.println("Controller boardList Start");
 		List<CategoryDto> upperCategoryList = boardService.findUpperCategoryList();
 		
-		String memberId = (String) session.getAttribute("memberId");
-		
-		model.addAttribute("memberId", memberId);
 		model.addAttribute("upperCategoryList", upperCategoryList);
 		if(search == null) {
 	         search = "";
