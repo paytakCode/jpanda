@@ -29,7 +29,7 @@
 	
 	<insert id="insertChat" parameterType="Chat">  
 		<selectKey keyProperty="chatNo" resultType="Long" order="BEFORE">
-			SELECT chat_id_seq.NEXTVAL FROM dual
+			SELECT chat_no_seq.NEXTVAL FROM dual
 		</selectKey>
 		INSERT INTO 
 			chat(chat_no, sender_id, receiver_id, message, chat_date, read) 
