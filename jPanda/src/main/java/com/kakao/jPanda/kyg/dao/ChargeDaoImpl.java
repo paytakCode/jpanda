@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
+import com.kakao.jPanda.kyg.domain.Pagination;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
+import com.kakao.jPanda.yjh.domain.NoticeDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -228,6 +230,23 @@ public class ChargeDaoImpl implements ChargeDao {
 		
 		return totalChargeCnt;
 	}
+
+	@Override
+	public List<ChargeDto> selectChargeByPagination(Pagination pagination) {
+		log.info("Dao selectNoticeByPagination() start");
+		List<ChargeDto> chargeList = null;
+		
+		try {
+			chargeList = sqlSession.selectList("selectBambooChargeList", pagination);
+		} catch(Exception e) {
+			log.debug("EmpDaoImpl selectChargeByPagination() Exception : "+e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return chargeList;
+	}
+
+
 
 
 }
