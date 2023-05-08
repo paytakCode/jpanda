@@ -37,7 +37,7 @@ public interface TalentDao {
 	int selectBuyCheckByBambooUse(BambooUseDto bambooUse);
 
 	// 신고 여부 검증용
-	List<ReportDto> selectReportByReportId(String reportId);
+	int selectReportCheck(ReportDto report);
 	
 	// 신고 인서트
 	int insertReport(ReportDto report);

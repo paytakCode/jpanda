@@ -75,8 +75,8 @@ public class TalentDaoImpl implements TalentDao {
 	
 	// 신고 여부 검증용
 	@Override
-	public List<ReportDto> selectReportByReportId(String reportId) {
-		return sqlSession.selectList("selectReportListByReportId", reportId);
+	public int selectReportCheck(ReportDto report) {
+		return sqlSession.selectOne("selectReportCheck", report);
 	}
 
 	// 신고 인서트

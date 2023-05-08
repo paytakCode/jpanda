@@ -86,24 +86,25 @@ public class TalentServiceImpl implements TalentService {
 	// 신고하기 인서트
 	@Override
 	public String addReport(ReportDto report) {
-	    String reportId = report.getReportId();
+		System.out.println("addReport -> " + report);
 	    // 중복 신고 검증용
-	    List<ReportDto> reportList = talentDao.selectReportByReportId(reportId);
-	    System.out.println("reportList -> " + reportList);
+	    int reportCheck = talentDao.selectReportCheck(report);
+	    System.out.println("reportCheck -> " + reportCheck);
 	    // 중복 신고 검증
-	    if (!reportList.isEmpty()) {
+	    if (reportCheck > 0) {
 	        return "<script> alert('중복 신고는 불가능 합니다. 빠른 시일 내에 처리 하겠습니다. 감사합니다.'); history.back(); </script>";
-	    }
-	    // 인서트
-	    int insertResult = talentDao.insertReport(report);
-	    if (insertResult > 0) {
-	        return "<script> alert('신고가 접수되었습니다. 감사합니다.'); history.back(); </script>";
 	    } else {
-	        return "<script> alert('신고 접수에 실패했습니다. 잠시 후 다시 시도해주세요.'); history.back(); </script>";
+	    	// 인서트
+	    	int insertResult = talentDao.insertReport(report);
+	    	if (insertResult > 0) {
+	    		return "<script> alert('신고가 접수되었습니다. 감사합니다.'); history.back(); </script>";
+	    	} else {
+	    		return "<script> alert('신고 접수에 실패했습니다. 잠시 후 다시 시도해주세요.'); history.back(); </script>";
+	    	}
 	    }
 	}
 
-
+	
 	// 뷰 카운트 업데이트
 	@Override
 	public int modifyTalentToViewCount(Long talentNo) {

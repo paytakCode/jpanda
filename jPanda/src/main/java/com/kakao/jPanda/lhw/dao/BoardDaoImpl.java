@@ -32,9 +32,9 @@ public class BoardDaoImpl implements BoardDao {
 	// 재능 리스트 필터 기능
 	@Override
 	public List<TalentDto> selectTalentListByFilter(FiltersDto filters) {
-		System.out.println("DAO -> " + filters.getFilter());
-		System.out.println("DAO -> " + filters.getUpperCategoryNo());
-		System.out.println("DAO -> " + filters.getLowerCategoryNo());
+		System.out.println("Filter -> " + filters.getFilter());
+		System.out.println("UpperCategoryNo -> " + filters.getUpperCategoryNo());
+		System.out.println("LowerCategoryNo -> " + filters.getLowerCategoryNo());
 		return sqlSession.selectList("selectTalentListByFilters", filters);
 	}
 	
