@@ -10,7 +10,7 @@
 		
 		//WebSocket(STOMP) 연결 함수
 		function connect() {
-		    var socket = new SockJS('/stomp/chat?' + memberId);
+		    const socket = new SockJS('/stomp/chat?' + memberId);
 		    stompClient = Stomp.over(socket);
 		    stompClient.connect({}, function (frame) {
 		        console.log('Connected: ' + frame);
