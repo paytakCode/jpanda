@@ -8,6 +8,20 @@
 		let selectedPartnerId = null;
 		let stompClient = null;
 		
+		//tooltip init
+		function initTooltip(){
+			$('[data-bs-toggle="tooltip"]').each(function(){
+				new bootstrap.Tooltip(this);
+			});
+		}
+		
+		//popover init
+		function initPopover(){
+			$('[data-bs-toggle="popover"]').each(function(){
+				new bootstrap.Popover(this);
+			});
+		}
+		
 		//WebSocket(STOMP) 연결 함수
 		function connect() {
 		    const socket = new SockJS('/stomp/chat?' + memberId);
@@ -47,7 +61,11 @@
 													.attr("aria-disabled","true");
 						$("#chat-content").append(chatDate);
 			    	}
-					const chatElem = $("<div>").addClass("from-other");
+					const chatElem = $("<div>").addClass("from-other")
+												.attr('data-bs-toggle', "tooltip")
+												.attr('data-bs-placement', "top")
+												.attr('data-bs-custom-class', 'chat-report-tooltip')
+												.attr('data-bs-title', '해당 메세지를 신고하려면 클릭하세요.');
 					const messageElem = $("<span>").text(receivedChat.message)
 													.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
 													.attr('data-bs-toggle', "modal")
@@ -60,6 +78,7 @@
 				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				    $('.partner[value=' + selectedPartnerId + '] .unread-count').text('1');
 				    readPartnerMessage();
+				    initTooltip();
 				} else {
 					updateChatPartnerList();
 				}
@@ -139,7 +158,11 @@
 								$("#chat-content").append(chatDate);
 							}
 							
-							const chatElem = $("<div>").addClass("from-other");
+							const chatElem = $("<div>").addClass("from-other")
+														.attr('data-bs-toggle', "tooltip")
+														.attr('data-bs-placement', "top")
+														.attr('data-bs-custom-class', 'chat-report-tooltip')
+														.attr('data-bs-title', '해당 메세지를 신고하려면 클릭하세요.');
 							const messageElem = $("<span>").text(chat.message)
 															.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
 															.attr('data-bs-toggle', "modal")
@@ -164,6 +187,8 @@
 							chatElem.append(messageElem);
 							chatElem.append(timeElem);
 		                    $("#chat-content").append(chatElem);
+		                    
+		                    initTooltip();
 						}
 						
 					});
@@ -342,11 +367,7 @@
 						
 						updateSelectedPartner();
 						updateTotalUnreadCount();
-						
-						//채팅 상대 아이디 표기를 위한 Popover 초기화
-						const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-						const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-						
+						initPopover();
 					},
 					error: function(error) {
 						console.log('updateChatPartnerList Failed -> ' + error);
