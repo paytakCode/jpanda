@@ -10,7 +10,7 @@
 			t.status_date,
 			t.title,
 			t.sale_bamboo,
-			count(t.talent_no) AS sell_count,
+			(SELECT count(*) FROM bamboo_use WHERE talent_no = t.talent_no) AS sell_count,
 			e.exchange_status
 		FROM talent t
 		LEFT OUTER JOIN exchange e ON t.talent_no = e.talent_no
@@ -50,6 +50,13 @@
 		WHERE u.buyer_id = #{memberId}
 		ORDER BY r.approve_date desc, r.submit_date desc
 	</select>
+	
+	<select id="selectTradeByTalentNo" parameterType="String" resultType="TradeDto">
+		SELECT *
+		FROM talent
+		WHERE talent_no = #{talentNo} 
+	</select>
+	
 	<!-- stat -->
 	<select id="selectSellStatByMemberId" parameterType="String" resultType="StatDto">
 		SELECT
@@ -115,12 +122,21 @@
 	
 	<!-- refund -->
 	<select id="selectTradeRefundByRefundPurchaseNo" parameterType="String" resultType="TradeDto">
-		SELECT *
-		FROM talent_refund
-		WHERE purchase_no = #{refundPurchaseNo}
+		SELECT
+			r.purchase_no as refund_purchase_no,
+			r.refund_status,
+			r.issue,
+			r.submit_date as refund_submit_date,
+			r.approve_date as refund_approve_date,
+			r.refund_bamboo,
+			u.buyer_id,
+			u.talent_no
+		FROM talent_refund r
+		INNER JOIN bamboo_use u ON r.purchase_no = u.purchase_no
+		WHERE r.purchase_no = #{refundPurchaseNo}
 	</select>
 	
-	<delete id="deleteRefundByrefundPurchaseNo" parameterType="String">
+	<delete id="deleteRefundByRefundPurchaseNo" parameterType="String">
 		DELETE
 		from talent_refund
 		WHERE purchase_no = #{purchaseNo}
@@ -184,8 +200,19 @@
 	</update>
 	
 	<select id="selectTradeExchangeByExchangeNo" parameterType="String" resultType="TradeDto">
-		SELECT *
-		FROM exchange
+		SELECT
+			exchange_no,
+			seller_id as exchange_id,
+			talent_no as exchange_talent_no,
+			sales,
+			submit_date as exchange_submit_date,
+			approve_date as exchange_approve_date,
+			total,
+			member_grade as exchange_grade,
+			exchange_ratio,
+			exchange_status,
+			payment_amount
+		FROM exchange e
 		WHERE exchange_no = #{exchangeNo}
 	</select>
 </mapper>

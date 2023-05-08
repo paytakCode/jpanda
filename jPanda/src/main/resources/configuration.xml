@@ -27,6 +27,7 @@
   		<typeAlias alias="BoardReview" type="com.kakao.jPanda.lhw.domain.ReviewDto"/>
   		<typeAlias alias="BoardFilters" type="com.kakao.jPanda.lhw.domain.FiltersDto"/>
   		<typeAlias alias="BoardBambooUse" type="com.kakao.jPanda.lhw.domain.BambooUseDto"/>
+  		<typeAlias alias="BoardReport" type="com.kakao.jPanda.lhw.domain.ReportDto"/>
   		
   		<!-- 충전 -->
   		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
@@ -44,6 +45,7 @@
 		<typeAlias type="com.kakao.jPanda.kts.domain.Chat" alias="Chat"/>
 		<typeAlias type="com.kakao.jPanda.kts.domain.Partner" alias="ChatPartner"/>
 		<typeAlias type="com.kakao.jPanda.kts.domain.Member" alias="ChatMember"/>
+		<typeAlias type="com.kakao.jPanda.kts.domain.ChatReport" alias="ChatReport"/>
 		
 		<!-- 거래게시판 -->
 		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>

@@ -2,16 +2,28 @@ package com.kakao.jPanda.jst.domain;
 
 import java.sql.Timestamp;
 
-import groovy.transform.ToString;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
-public class TradeDto extends TalentDto{
+public class TradeDto {
+	//talent
+	private String talentNo;
+	private String sellerId;
+	private String upperCategoryNo;
+	private String lowerCategoryNo;
+	private String mainImg;
+	private String title;
+	private String content;
+	private Long bamboo;
+	private Long saleBamboo;
+	private String summary;
+	private String talentStatus;
+	private Long viewCount;
+	private Timestamp regDate;
+	private Timestamp statusDate;
+	
 	//member
 	private String memberId;
 	private String password;
@@ -40,12 +52,12 @@ public class TradeDto extends TalentDto{
 	private String exchangeId; //sellerId
 	private String exchangeTalentNo; //talentNo
 	private Long sales;
-	private Timestamp exchangeSubmitDate;
-	private Timestamp exchangeApproveDate;
+	private Timestamp exchangeSubmitDate; //submitDate
+	private Timestamp exchangeApproveDate; //approveDate
 	private Long total;
-	private String exchangeGrade; //grade
-	private Long exchangeRatio; //ratio
-	private String exchangeStatus; //status
+	private String exchangeGrade; //member_grade
+	private Long exchangeRatio; 
+	private String exchangeStatus; 
 	private Long paymentAmount;
 	
 	//bamboo_use
@@ -62,5 +74,7 @@ public class TradeDto extends TalentDto{
 	private Long sellCount;
 		//TradeMapper.xml selectTradeListByParaMap
 	private String refundableDate;
+		//payload parse
+	private Timestamp approveDate;
 	
 }

@@ -1,11 +1,14 @@
 package com.kakao.jPanda.kts.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kakao.jPanda.kts.dao.ChatDao;
 import com.kakao.jPanda.kts.domain.Chat;
 import com.kakao.jPanda.kts.domain.Partner;
+import com.kakao.jPanda.kts.domain.ChatReport;
 import com.kakao.jPanda.kts.service.ChatService;
 
 @Service
@@ -19,14 +22,18 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	@Override
-	public List<Chat> findChatListByMemberId(String memberId) {
-		List<Chat> selectedChatList = chatDao.selectChatListByMemberId(memberId);
+	public List<Chat> findChatListByMemberIdAndPartnerId(String memberId, String partnerId) {
+	    Map<String, String> memberIdAndPartnerMap = new HashMap<String, String>();
+	    memberIdAndPartnerMap.put("memberId", memberId);
+	    memberIdAndPartnerMap.put("partnerId", partnerId);
+	    List<Chat> selectedChatList = chatDao.selectChatListByMemberIdAndPartnerId(memberIdAndPartnerMap);
 		return selectedChatList;
 	}
 
 	@Override
-	public Integer saveChat(Chat chat) {
-		Integer result = chatDao.insertChat(chat);
+	public int saveChat(Chat chat) {
+	    chat.setRead('F');
+	    int result = chatDao.insertChat(chat);
 		return result;
 	}
 
@@ -35,5 +42,17 @@ public class ChatServiceImpl implements ChatService {
 		List<Partner> selectedPartnerList = chatDao.selectPartnerListByMemberId(memberId);
 		return selectedPartnerList;
 	}
+
+    @Override
+    public int modifyChatByReaderIdAndPartnerId(Map<String, String> readerIdAndPartnerIdMap) {
+        int result = chatDao.updateChatByReaderIdAndPartnerId(readerIdAndPartnerIdMap);
+        return result;
+    }
+
+    @Override
+    public int saveReport(ChatReport chatReport) {
+        int result = chatDao.insertReportByChatReport(chatReport);
+        return result;
+    }
 
 }

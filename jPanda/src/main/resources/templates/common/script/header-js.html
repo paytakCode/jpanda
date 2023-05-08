@@ -56,6 +56,26 @@
 				$(".dropdown-menu").append(liElement2);
 			}
 		});
+		$(function(){
+			const memberId = [[${#session.getAttribute('memberId')}]];
+			if(memberId == "" || memberId == null){
+				$('#navbar-total-bamboo').empty(); 
+			} else{
+				$.ajax({
+					url: "/charge/members/total-bamboo",
+					type: "GET",
+					dataType: "text",
+					data: {memberId : memberId},
+					success: function(foundTotalBambooStr){
+						console.log("Ajax success foundTotalBambooStr : " + foundTotalBambooStr);
+						$('#total-bamboo').html(foundTotalBambooStr);	
+					},
+					error: function(){
+						console.error("total-bamboo function error");
+					}
+				});    
+			}
+		});
 	</script>
 </div> <!-- headerJsFragment -->
 </html>

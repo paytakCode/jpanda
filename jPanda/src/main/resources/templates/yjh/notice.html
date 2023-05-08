@@ -36,6 +36,48 @@ td {
 .btn{
 	border: 1px solid black;
 }
+
+.container{
+	margin: 0 auto;
+	width: 1000px;
+}
+
+#notice-main{
+	margin-left: 50px;
+}
+
+.notice-no{
+	width: 40px;
+}
+.notice-title{
+	width: 540px;
+	margin-right: 100px;
+	max-height: 21.33px;
+	overflow: hidden;
+}
+.notice-reg-date{
+	width: 90px;
+}
+.notice-page {
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+.notice-page, .notice-no, .notice-reg-date{
+	text-align: center;
+	line-height: 30px; /* 중간 높이로 해줌  */
+}
+#pagination{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.notice-page{
+	text-decoration: none;
+	color: black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>

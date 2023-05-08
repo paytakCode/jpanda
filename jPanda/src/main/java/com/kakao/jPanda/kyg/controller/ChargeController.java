@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
 import com.kakao.jPanda.kyg.service.ChargeService;
+import com.kakao.jPanda.kyg.service.Paging;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,34 +37,68 @@ public class ChargeController {
 		this.chargeService = chargeService;
 	}
 	
-	
 	/*
 	 * 메인페이지
 	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
 	 * 충전내역, chargeHistory를 테이블에 List형식으로 나타냄
+	 * button에 따라 pageStatus의 값을 변경, pageStatus의 값에 따라 returnPage를 다르게 전달
 	 * Model	TB payment -> method, bonusRatio 
-	 * @param	HttpSession, ChargeHistoryDto, Model
-	 * @return	kyg/chargePage
+	 * @param	HttpSession, ChargeDto chargeDto, String currentPage, String pageStatus, Model
+	 * @return	kyg/chargePage, kyg/chargeHistoryPage
 	 */
 	@GetMapping(value = "")
-	public String chargePage(HttpSession session, Model model) {
+	public String chargePage(HttpSession session, ChargeDto chargeDto, String currentPage, String pageStatus, Model model) {
+		String returnPage = "kyg/chargePage";
+		if(pageStatus == null) pageStatus = "0";
+		log.info("ChargeContoller chargePage() pageStatus -> {}", pageStatus);
+		
+		if (session.getAttribute("memberId") == null) {
+			return "redirect:/login";
+		}
+		
 		String chargerId = (String) session.getAttribute("memberId");
-		ChargeDto chargeDto = new ChargeDto();
 		log.info("ChargeContoller chargePage() Start...");
 		
 		chargeDto.setChargerId(chargerId);
 		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
 		
+		// 페이징 작업
+		log.info("ChargeContoller chargePage() chargeDto -> {}", chargeDto);
+		log.info("ChargeContoller chargePage() currentPage -> {}", currentPage);
+		
+		int totalChargeCnt = chargeService.totalChargeCnt(chargerId);
+		log.info("ChargeContoller chargePage() totalChargeCnt -> {}", totalChargeCnt);
+		
+		Paging page = new Paging(totalChargeCnt, currentPage);
+		chargeDto.setStartRow(page.getStartRow());
+		chargeDto.setEndRow(page.getEndRow());
+		
+		// 충전수단
 		List<PaymentDto> getPaymentList = chargeService.findPaymentList();
 		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
 		
-		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeListbyChargerId(chargerId);
-		log.info("ChargeContoller chargePage() getChargeHistoryList.size() -> {}", getBambooChargeList.size());
+		// 충전내역
+		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeList(chargeDto);
+		log.info("ChargeContoller chargePage() getBambooChargeList.size() -> {}", getBambooChargeList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
 		model.addAttribute("listChargeHistory", getBambooChargeList);
+		model.addAttribute("pageStatus", pageStatus);
+		model.addAttribute("totalChargeCnt", totalChargeCnt);
+		model.addAttribute("page", page);
 		
-		return "kyg/chargePage";
+		if (pageStatus.equals("0")) {
+			log.info("ChargeContoller chargePage() 충전하기 페이지 pageStatus(0) -> {}", pageStatus);
+			returnPage = "kyg/chargePage";
+		} else if (pageStatus.equals("1")) {
+			log.info("ChargeContoller chargePage() 충전내역 페이지 pageStatus(1) -> {}", pageStatus);
+			returnPage = "kyg/chargeHistoryPage";
+		} else 	{
+			log.info("ChargeContoller chargePage() default -> {}", pageStatus);
+			returnPage = "kyg/chargePage";
+		}
+		 
+		return returnPage;
 	}
 	
 	/*
@@ -83,7 +119,6 @@ public class ChargeController {
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
 		Map<String, String> resultMap = new HashMap<>();
-		
 		
 		if(resultCharge > 0) {
 			log.info("ChargeController charge() resultCharge 완료");
@@ -133,15 +168,14 @@ public class ChargeController {
 	
 	/*
 	 * 총보유밤부
-	 * chargePage에서 ajax 요청 처리
-	 * memberId에 따른 총 보유 bamboo를 계산하여 반환
+	 * header-js에서 ajax 요청 처리
+	 * html에서 전달받은 memberId의 총 보유 bamboo를 계산하여 반환
 	 * @param	memberId
 	 * @return	foundTotalBambooStr
 	 */
 	@GetMapping(path = "/members/total-bamboo")
 	@ResponseBody
-	public String  totalBambooByMemberId(HttpSession session) {
-		String memberId = (String) session.getAttribute("memberId");
+	public String  totalBambooByMemberId(@RequestParam("memberId") String memberId) {
 		log.info("ChargeContoller totalBambooByMemberId Start...");
 		log.info("ChargeContoller totalBambooByMemberId() memberId -> {}", memberId);
 		
@@ -153,8 +187,6 @@ public class ChargeController {
 		
 		return foundTotalBambooByMemberIdStr;
 	}
-	
-	
 	
 }
 	

@@ -2,10 +2,10 @@ package com.kakao.jPanda.jst.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -82,13 +82,20 @@ public class TradeController {
 	 */
 	@PutMapping("/talents/{talent-no}")
 	@ResponseBody
-	public String tradesByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
+	public ResponseEntity<Integer> tradesByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
 								   @RequestBody TalentDto talentDto) {
 		log.info("tradeModifyStatusByTalentNo talentNo, status : " + talentNo + ", " + talentDto);
-		String resultMessage = tradeService.modifyTalentByTalentNo(talentNo, talentDto);
-		log.info("tradeModifyStatusByTalentNo resultMessage : " + resultMessage);
+		Integer result = tradeService.modifyTalentByTalentNo(talentNo, talentDto);
+		log.info("tradeModifyStatusByTalentNo result : " + result);
 		
-		return resultMessage; 
+		if (result == 1) {
+			return ResponseEntity.ok(result);
+		} else if (result == 0){
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.internalServerError().build();
+		}
+		
 	}
 	
 	/**
@@ -98,61 +105,87 @@ public class TradeController {
 	 */
 	@PostMapping("/exchanges/{talent-no}")
 	@ResponseBody
-	public String exchangeAddByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
+	public ResponseEntity<Integer> exchangeAddByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
 		log.info("exchangeAddByTalentNo purchaseNo : " + talentNo);
 		TalentDto talentDto = tradeService.findTalentByTalentNo(talentNo);
-		String resultMessage = tradeService.addExchangeByTalentNo(talentDto);
-		log.info("exchangeAddByTalentNo resultMessage : " + resultMessage);
+		if (talentDto == null) {
+			return ResponseEntity.noContent().build();
+		} else {
+			Integer result = tradeService.addExchangeByTalentNo(talentDto);
+			log.info("exchangeAddByTalentNo result : " + result);
+			if (result == 1) {
+				return ResponseEntity.ok(result);
+			} else if(result == 0) {
+				return ResponseEntity.noContent().build();
+			} else {
+				return ResponseEntity.internalServerError().build();
+			}
+			
+		}
 		
-		return resultMessage;
 	}
 	
 	/**
 	 * 환전 재신청 Btn
-	 * talent_refund TB refund_status '반려' → '검토중' 
+	 * exchange TB exchange_status '반려' → '검토중' 
 	 * @param talentNo
 	 * @return resultMessage
 	 */
 	@PutMapping("/exchanges/{talent-no}/status")
 	@ResponseBody
-	public String exchangeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
+	public ResponseEntity<Integer> exchangeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
 		log.info("exchangeStatusModifyByTalentNo talentNo : " + talentNo);
-		String resultMessage = tradeService.modifyExchangeStatusByTalentNo(talentNo);
-		log.info("exchangeStatusModifyByTalentNo resultMessage : " + resultMessage);
+		Integer result = tradeService.modifyExchangeStatusByTalentNo(talentNo);
+		log.info("exchangeStatusModifyByTalentNo result : " + result);
 		
-		return resultMessage;
+		if (result == 1) {
+			return ResponseEntity.ok(result);
+		} else {
+			return ResponseEntity.internalServerError().build();
+		}
 	}
 	
 	/**
-	 * 환전 신청 Btn
+	 * 환불 신청 Btn
 	 * @param session
 	 * @param tradeDto
 	 * @return resultMessage
 	 */
 	@PostMapping("/refund")
 	@ResponseBody
-	public String refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
+	public ResponseEntity<Integer> refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
+		String memberId = (String)session.getAttribute("memberId");
 		log.info("refundAdd tradeListDto : " + tradeDto.toString());
-		String resultMessage = tradeService.addRefund(session, tradeDto);
-		log.info("refundAdd resultMessage : " + resultMessage);
+		Integer result = tradeService.addRefund(memberId, tradeDto);
+		log.info("refundAdd resultMessage : " + result);
 		
-		return resultMessage;
+		if (result == 1) {
+			return ResponseEntity.ok(result);
+		} else {
+			return ResponseEntity.internalServerError().build();
+		}
 	}
 	
 	/**
-	 * 환전 신청 취소 Btn
+	 * 환불 신청 취소 Btn
 	 * @param session
 	 * @param tradeDto
 	 * @return resultMessage
 	 */
 	@DeleteMapping("/refunds/{refund-purchase-no}")
 	@ResponseBody
-	public String refundRemoveByrefundPurchaseNo(@PathVariable(name = "refund-purchase-no") String refundPurchaseNo) {
+	public ResponseEntity<Integer> refundRemoveByrefundPurchaseNo(@PathVariable(name = "refund-purchase-no") String refundPurchaseNo) {
 		log.info("refundRemoveByrefundPurchaseNo purchaseNo : " + refundPurchaseNo);
-		String resultMessage = tradeService.removeRefundByrefundPurchaseNo(refundPurchaseNo);
-		log.info("refundRemoveByrefundPurchaseNo resultMessage : " + resultMessage);
+		Integer result = tradeService.removeRefundByrefundPurchaseNo(refundPurchaseNo);
+		log.info("refundRemoveByrefundPurchaseNo result : " + result);
 		
-		return resultMessage;
+		if (result == 1) {
+			return ResponseEntity.ok(result);
+		} else if (result == 0){
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.internalServerError().build();
+		}
 		
 	}
 	

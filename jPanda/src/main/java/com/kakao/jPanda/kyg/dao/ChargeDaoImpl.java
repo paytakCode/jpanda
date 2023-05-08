@@ -185,7 +185,6 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public List<PaymentDto> selectPaymentList() {
 		log.info("ChargeDaoImpl selectPaymentList() Start...");
-		//log.info("ChargeDaoImpl selectPaymentList() paymentDto.toString() -> {}", paymentDto.toString());
 		
 		List<PaymentDto> selectPaymentListResult = null;
 		log.info("ChargeDaoImpl selectPaymentList Start...");
@@ -200,20 +199,35 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public List<ChargeDto> selectBambooChargeListbyChargerId(String chargerId) {
-		log.info("ChargeDaoImpl selectChargeHistoryList() Start...");
-		log.info("ChargeDaoImpl selectChargeHistoryList() chargerId -> {}", chargerId);
-		
-		List<ChargeDto> selectBambooChargeListbyChargerIdResult = null;
-		log.info("ChargeDaoImpl selectPaymentList Start...");
+	public List<ChargeDto> selectBambooChargeList(ChargeDto chargeDto) {
+		log.info("ChargeDaoImpl selectBambooChargeListbyChargerId() Start...");
+		log.info("ChargeDaoImpl selectBambooChargeListbyChargerId() chargeDto.toString() -> {}", chargeDto.toString());
+		List<ChargeDto> selectBambooChargeListResult = null;
+		log.info("ChargeDaoImpl selectBambooChargeList Start...");
 		try {
-			selectBambooChargeListbyChargerIdResult = sqlSession.selectList("selectBambooChargeListbyChargerId", chargerId);
-			log.info("ChargeDaoImpl selectPaymentList() selectChargeHistoryList.size() -> {}", selectBambooChargeListbyChargerIdResult.size());
+			selectBambooChargeListResult = sqlSession.selectList("selectBambooChargeList", chargeDto);
+			log.info("ChargeDaoImpl selectBambooChargeList() selectBambooChargeListResult.size() -> {}", selectBambooChargeListResult.size());
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
+			log.error("ChargeDaoImpl selectBambooChargeList() Exception -> {}", e.getMessage(), e);
 		}
 		
-		return selectBambooChargeListbyChargerIdResult;
+		return selectBambooChargeListResult;
 	}
+
+	@Override
+	public int totalChargeCnt(String chargerId) {
+		log.info("ChargeDaoImpl totalChargeCnt() Start...");
+		int totalChargeCnt = 0;
+		
+		try {
+			totalChargeCnt = sqlSession.selectOne("totalChargeCnt", chargerId);
+			log.info("ChargeDaoImpl totalChargeCnt() count -> {}",  totalChargeCnt);
+		} catch (Exception e) {
+			System.out.println("EmpDaoImpl totalChargeCnt() Exception -> " + e.getMessage());
+		}
+		
+		return totalChargeCnt;
+	}
+
 
 }

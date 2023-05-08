@@ -200,7 +200,7 @@
 	<!-- CKEditor5 사용 -->
 	<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 	<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
-	<script>
+	<script th:inline="javascript">
 	// 사이드바
     $('#write-check tr').on('click', function() {
     	location.href = $(this).data('href');
@@ -244,7 +244,6 @@
 	// 사이드바 체크
 	$('.write-check').on('input', function(){
 		var check = '#' + $(this).attr('id') + "-check";
-	    console.log(check);
 		var count = 0;
 		var each = 0;
 		var allFilled = false;
@@ -325,7 +324,6 @@
 	           	data : form,
 	           	dataType: 'json',
 	           	success:function(data) {
-	            	console.log(data);
 	               	$('#main-img-value').val(data.url);
 	               	$('#main-img-value').trigger('input');
 	           	},
@@ -376,8 +374,7 @@
 			    return false;
 		  }
 	});
-	</script>
-	<script th:inline="javascript">
+	
 	// 카테고리 설정
   	var categoryList = /*[[${categoryList}]]*/ [];
   
@@ -407,9 +404,18 @@
 		}
 	});
 	$('#seller-id').val([[${#session.getAttribute("memberId")}]]);
-	</script>
 	
-		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	// 등록을 하지 않고 다른 페이지 이동 시 알림창
+	$(window).on('beforeunload', function(){
+		return null;
+	});
+	
+	// 등록하기 버튼은 페이지 이동 감지x
+	$('#talent-submit-button').on('click', function() {
+		$(window).unbind('beforeunload');
+	});
+	</script>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>
 </html>

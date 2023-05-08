@@ -31,8 +31,6 @@ public class Paging {
 	private int totalPage;
 	// 전체 블록의 개수, 페이지를 블록으로 묶음
 	private int totalBlock;
-	// 검색어
-	private String search;
 	
 	
 	public Paging(int totalRow, String strCurrentPage) {
@@ -47,6 +45,7 @@ public class Paging {
 		endRow	  = startRow + rowPage - 1;
 		totalPage = (int)Math.ceil((double)totalRow / rowPage);
 		startPage = currentPage - (currentPage - 1) % pageBlock;
+		endPage	  = startPage + pageBlock - 1;
 		
 		if(endPage > totalPage) {
 			endPage = totalPage;

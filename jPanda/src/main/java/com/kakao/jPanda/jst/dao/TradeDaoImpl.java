@@ -40,10 +40,10 @@ public class TradeDaoImpl implements TradeDao{
 	}
 
 	@Override
-	public int deleteRefundByrefundPurchaseNo(String refundPurchaseNo) {
-		log.info("deleteRefundByrefundPurchaseNo refundPurchaseNo : " + refundPurchaseNo);
-		int result = sqlSession.update("deleteRefundByrefundPurchaseNo", refundPurchaseNo);
-		log.info("deleteRefundByPurchaseNo result : " + result);
+	public int deleteRefundByRefundPurchaseNo(String refundPurchaseNo) {
+		log.info("deleteRefundByRefundPurchaseNo refundPurchaseNo : " + refundPurchaseNo);
+		int result = sqlSession.update("deleteRefundByRefundPurchaseNo", refundPurchaseNo);
+		log.info("deleteRefundByRefundPurchaseNo result : " + result);
 		return result;
 	}
 
@@ -51,7 +51,7 @@ public class TradeDaoImpl implements TradeDao{
 	public TalentDto selectTradeTalentByTalentNo(String talentNo) {
 		log.info("selectTradeTalentByTalentNo talentNo : " + talentNo);
 		TalentDto talentDto = sqlSession.selectOne("selectTradeTalentByTalentNo", talentNo);
-		log.info("selectTradeTalentByTalentNo talentDto.getTalentNo() : " + talentDto.getTalentNo());
+		log.info("selectTradeTalentByTalentNo talentDto : " + talentDto.toString());
 		return talentDto;
 	}
 
@@ -153,5 +153,12 @@ public class TradeDaoImpl implements TradeDao{
 		return tradeDto;
 	}
 
+	@Override
+	public TradeDto selectTradeByTalentNo(String talentNo) {
+		log.info("selectTradeByTalentNo talentNo : " + talentNo);
+		TradeDto tradeDto = sqlSession.selectOne("selectTradeByTalentNo", talentNo);
+		log.info("selectTradeByTalentNo tradeDto : " + tradeDto);
+		return tradeDto;
+	}
 
 }//end class

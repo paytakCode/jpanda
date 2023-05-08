@@ -20,7 +20,6 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Map<String, Object> findNoticeCountByPager(PagerDto pager) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		// service로 옮김
 		int totalCount = noticeDao.selectNoticeCountByPager(pager);
 		pager.setTotalCount(totalCount);
 		List<NoticeDto> noticeList = findNoticeListByPager(pager);

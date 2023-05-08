@@ -3,47 +3,6 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="talentMapper">
-
-	<!-- 재능 리스트 불러오기 with 필터 -->
-	<select id="selectTalentListByFilters" resultType="BoardTalent" parameterType="BoardFilters">
-		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
-		t.summary, t.bamboo, t.sale_bamboo, (ROUND(AVG(r.bamboo_score) * 2) / 2) AS bambooScore, t.view_count, t.reg_date
-		FROM talent t, review r
-		WHERE t.talent_no = r.talent_no
-		AND   t.talent_status = '게시중'
-		<if test="upperCategoryNo != null and upperCategoryNo != ''">
-		AND	  t.upper_category_no = #{upperCategoryNo}
-		</if>
-		<if test="lowerCategoryNo != null and lowerCategoryNo != ''">
-		AND	  t.lower_category_no = #{lowerCategoryNo}
-		</if>
-		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, 
-				 t.talent_status, t.reg_date, t.view_count
-		ORDER BY 
-		<if test="filter != null and filter != ''">
-			<choose>
-				<when test="filter eq 'reg_date'"> reg_date DESC</when>
-				<when test="filter eq 'view_count'"> view_count DESC</when>
-				<when test="filter eq 'bambooScore'"> bambooScore DESC</when>
-				<when test="filter eq 'sale_bamboo'"> sale_bamboo DESC </when>
-				<otherwise> sale_bamboo ASC</otherwise>
-			</choose>
-		</if>
-	</select>
-	
-	<!-- 대분류 카테고리 리스트  -->
-	<select id="selectUpperCategoryList" resultType="BoardCategory" >
-		SELECT *
-		FROM category
-		WHERE upper_category_no IS null
-	</select>
-	
-	<!-- 중분류 카테고리 리스트  -->
-	<select id="selectLowerCategoryListByUpperCategoryNo" resultType="BoardCategory" parameterType="Long">
-		SELECT *
-		FROM category
-		WHERE upper_category_no = #{upperCategoryNo}
-	</select>
 	
 	<!-- 상세 페이지  -->
 	<select id="selectBoardTalentByTalentNo" resultType="BoardTalent" parameterType="Long">
@@ -85,11 +44,45 @@
 	</update>
 	
 	<!-- 리뷰 인서트 검증 -->
-	<select id="selectBambooUseListByTalentNo" resultType="BoardBambooUse" parameterType="Long">
+	<select id="selectBambooUseListByTalentNo" parameterType="Long" resultType="BoardBambooUse">
 		SELECT *
 		FROM bamboo_use
 		WHERE talent_no = #{talentNo}
 	</select>
+	
+	<!-- 재능 구매자 정보 인서트  -->
+	<insert id="insertBambooUse" parameterType="BoardBambooUse">
+		INSERT INTO bamboo_use (buyer_id, talent_no, purchase_date, use_bamboo, purchase_no)
+		VALUES (#{buyerId}, #{talentNo}, #{purchaseDate}, #{useBamboo}, PURCHASE_NO_SEQ.nextval)
+	</insert>
+	
+	<!-- 구매 여부 확인 용도 -->
+	<select id="selectBuyCheckByBambooUse" parameterType="BoardBambooUse" resultType="int">
+		SELECT COUNT(*)
+		FROM bamboo_use
+		WHERE talent_no = #{talentNo} 
+		AND buyer_id = #{buyerId}
+	</select>
+	
+	<!-- 신고하기 검증용  -->
+	<select id="selectReportListByReportId" parameterType="String" resultType="BoardReport">
+		SELECT black_id
+		FROM report
+		WHERE report_id = #{reportId}
+	</select>
+	
+	<!-- 신고하기 인서트  -->
+	<insert id="insertReport" parameterType="BoardReport">
+		INSERT INTO report(black_id, report_id, issue, report_date, report_no)
+		VALUES (#{blackId}, #{reportId}, #{issue}, #{reportDate}, REPORT_NO_SEQ.nextval)
+	</insert>
+	
+	<!-- 조회수 업데이트  -->
+	<update id="updateTalentToViewCount" parameterType="Long">
+		UPDATE talent 
+		SET view_count = view_count + 1 
+		WHERE talent_no = #{talentNo}
+	</update>
 	
 </mapper>
 
