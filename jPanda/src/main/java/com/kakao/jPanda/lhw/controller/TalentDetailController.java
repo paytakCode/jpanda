@@ -152,15 +152,15 @@ public class TalentDetailController {
 	public String reportAdd(@PathVariable Long talentNo, @RequestParam("reportId")String reportId, @RequestParam("blackId")String blackId, 
 					     @RequestParam("issue")String issue, @RequestParam("reportDate") Timestamp reportDate) {
 		System.out.println("Controller reportAdd Start");
-		ReportDto reportDto = new ReportDto();
-		reportDto.setBlackId(blackId);
-		reportDto.setReportId(reportId);
-		reportDto.setIssue(issue);
-		reportDto.setReportDate(reportDate);
-		reportDto.setTalentNo(talentNo);
-		System.out.println("신고 정보 -> " + reportDto);
+		ReportDto report = new ReportDto();
+		report.setBlackId(blackId);
+		report.setReportId(reportId);
+		report.setIssue(issue);
+		report.setReportDate(reportDate);
+		report.setTalentNo(talentNo);
+		System.out.println("신고 정보 -> " + report);
 		
-		String result = talentService.addReport(reportDto);
+		String result = talentService.addReport(report);
 		System.out.println("신고 최종 결과 -> " + result);
 		
 		return result;

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.ExchangeMapper">
 
-	<select id="selectExchange" resultType="AdminExchange" parameterType="adminPagination">
+	<select id="selectExchangeByPagination" resultType="AdminExchange" parameterType="adminPagination">
 		SELECT 	exchange_No, talent_No, seller_id, submit_Date, total, exchange_status
 		FROM 	exchange
 		WHERE 	exchange_status = '검토중'
@@ -18,16 +18,10 @@
 		)
 	</select>
 	
-	<select id="findExchangeByPagination" resultType="int">
+	<select id="selectExchangeForTotalCount" resultType="int">
 		select 	count(*)
 		from 	exchange
 		where 	exchange_status = '검토중'
-	</select>
-	
-	<select id="selectExchangeByExchangeNo" parameterType="Long" resultType="AdminExchange">
-		select 	* 
-		from 	exchange
-		where 	exchange_no = #{exchangeNo}
 	</select>
 	
 	<update id="updateExchange" parameterType="AdminExchange">

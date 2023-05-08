@@ -193,7 +193,7 @@ body {
 		<img id="main-image" th:src="${talent.mainImg}" alt="상품 이미지">
 		
 		<div class="side-info">
-			  강사 : 		<div th:text="${talent.sellerId}"></div>
+			  강사 : 		<div th:text="${talent.name}"></div>
 			  요약 설명 : 	<div th:text="${talent.summary}"></div>
 			  정상 가격 : 	<div th:text="${talent.bamboo}"></div>
 			  판매 가격 : 	<div th:text="${talent.saleBamboo}"></div>
@@ -397,44 +397,42 @@ body {
 		if(!userId){
 			alert('로그인이 필요한 서비스 입니다.');
 			location.href = "/login";
-		} else if (userId){
-			alert("정말로 구매 하시겠습니까? " + $(this).data('salebamboo') + " 포인트가 차감 됩니다.");
-			
-		};  
-		const talentNo = $(this).data('talentno');
-		const useBamboo = $(this).data('salebamboo');
-		
-		let bambooUse = {
-	        talentNo     : talentNo,
-	        useBamboo    : useBamboo,
-	        purchaseDate : new Date(Date.now())
-	    };
-		
-		console.log(bambooUse);
-		
-		$.ajax({
-			url 	: "/talents/talent/purchase",
-			method 	: 'POST',
-			data  	: JSON.stringify(bambooUse),
-			contentType: 'application/json',
-			dataType : 'json',
-			success : function(bambooUseInsert){
-				if (bambooUseInsert === -1){
-					alert("이미 구매한 상품 입니다.");
-				} else if (bambooUseInsert === 0){
-					alert("잔액이 부족합니다. 충전 후 구매 해주세요.");
-					location.href= "/charge";
-				} else if (bambooUseInsert === 1){
-					alert("구매가 완료 되었습니다. 감사합니다.");
-				} else {
-					alert("구매 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-				}
-			},
-			error : function(xhr, status, error){
-				console.log(xhr);
-				alert('잠시 후 다시 시도해주세요.');
+		} else {
+			if(confirm("정말로 구매 하시겠습니까? " + $(this).data('salebamboo') + " 포인트가 차감 됩니다.")){
+				const talentNo = $(this).data('talentno');
+				const useBamboo = $(this).data('salebamboo');
+				let bambooUse = {
+			        talentNo     : talentNo,
+			        useBamboo    : useBamboo,
+			        purchaseDate : new Date(Date.now())
+			    };
+				console.log(bambooUse);
+				$.ajax({
+					url 	: "/talents/talent/purchase",
+					method 	: 'POST',
+					data  	: JSON.stringify(bambooUse),
+					contentType: 'application/json',
+					dataType : 'json',
+					success : function(bambooUseInsert){
+						if (bambooUseInsert === -1){
+							alert("이미 구매한 상품 입니다.");
+						} else if (bambooUseInsert === 0){
+							alert("잔액이 부족합니다. 충전 후 구매 해주세요.");
+							location.href= "/charge";
+						} else if (bambooUseInsert === 1){
+							alert("구매가 완료 되었습니다. 감사합니다.");
+							location.href= "/board";
+						} else {
+							alert("구매 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+						}
+					},
+					error : function(xhr, status, error){
+						console.log(xhr);
+						alert('잠시 후 다시 시도해주세요.');
+					}
+				});
 			}
-		});
+		}	
 	});
 	
 	
