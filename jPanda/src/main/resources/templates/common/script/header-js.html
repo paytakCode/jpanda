@@ -82,9 +82,10 @@
 		});
 		// 통합검색 EnterKey 입력 시 검색 기능
 		$('#search').on('keydown', function(value) {
-			  if(value.keyCode == 13) {
-				  location.href = "/board?search=" + $('#search').val();
-			  }
+			if(value.keyCode == 13) {
+				location.href = "/board?search=" + $('#search').val();
+				return false;
+			}
 		});
 	</script>
 </div> <!-- headerJsFragment -->

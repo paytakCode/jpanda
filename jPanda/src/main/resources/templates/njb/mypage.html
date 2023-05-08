@@ -206,6 +206,7 @@ a {
 		  });
 		});
 	
+
     function restrictPhoneNumberInput(event) {
         var input = event.target;
         input.value = input.value.replace(/\D/g, ''); // 숫자 이외의 문자 제거
@@ -226,11 +227,9 @@ a {
         location.reload();
     }
 	
+
 	</script> 
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>
 </html>
-
-
-

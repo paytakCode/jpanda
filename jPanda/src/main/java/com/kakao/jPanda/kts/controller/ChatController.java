@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.kakao.jPanda.kts.domain.Chat;
-import com.kakao.jPanda.kts.domain.Partner;
+import com.kakao.jPanda.kts.domain.ChatPartner;
 import com.kakao.jPanda.kts.domain.ChatReport;
 import com.kakao.jPanda.kts.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +44,9 @@ public class ChatController {
 	
 	@ResponseBody
 	@GetMapping("/chats/{memberId}/partners")
-	public List<Partner> partnerListByMemberId(@PathVariable String memberId){
+	public List<ChatPartner> partnerListByMemberId(@PathVariable String memberId){
 		log.info("[partnerListByMemberId] {}의 채팅 상대 목록을 불러옵니다.", memberId);
-		List<Partner> foundPartnerList = chatService.findPartnerListByMemberId(memberId);
+		List<ChatPartner> foundPartnerList = chatService.findPartnerListByMemberId(memberId);
 		return foundPartnerList;
 	}
 	
