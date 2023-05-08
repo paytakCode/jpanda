@@ -10,186 +10,87 @@
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style>
-		.filter-btn{  
-			margin-right: 15%;
-		}
-		
-		.printBtn{  
-			margin-left: 30%;
-		}
-		
-		/* 충전컨테이너 */
-		#charge-container {
-			display: flex;
-		    align-items: baseline;
-		    gap: 32px;
-		    padding: 48px 0;
-		    margin-left: 15%;
-		    margin-right: 15%;
-		}
-		
-		/* 결제내역 컨테이너 */
-		#charge-details-container {
-			display: flex;
-		    align-items: baseline;
-		    gap: 32px;
-		    padding: 48px 0;
-		    margin-left: 15%;
-		    margin-right: 15%;
-		}
-		
-		/* 충전컨텐츠 */
-		#charge-contents {
-			flex: 3;
-			padding: 32px;
-			border-radius: 16px 0 0 16px;
-		}
-		
-		/* 오른쪽 사이드바 */
-		#right-sidebar {
-			flex: 1;
-			padding: 24px;
-			border-radius: 0 16px 16px 0;
-		}	
-		
-		#right-sidebar > ul > li {
-			list-style: none;
-		}
-		
-		/* 쿠폰중복 */	
-		.input-side {
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			margin-top: 5%;
-			margin-left: 30%;
-		}
-		
-		#coupon-code, #check-coupon {
-			margin-left: auto;
-		}
-		
-		/* 충전방법  radio css */
-		.payment-method {
-		    padding: 15px 10px;
-		    text-align: center;
-		}
-		
-		.payment-method input[type=radio]{
-		    display: none;
-		}
-		
-		.payment-method input[type=radio]+label{
-		    display: inline-block;
-		    cursor: pointer;
-		    height: 24px;
-		    width: 90px;
-		    border: 1px solid #333;
-		    line-height: 24px;
-		    text-align: center;
-		    font-weight:bold;
-		    font-size:13px;
-		}
-		
-		.payment-method input[type=radio]+label{
-		    background-color: #fff;
-		    color: #333;
-		}
-		
-		.payment-method input[type=radio]:checked+label{
-		    background-color: #333;
-		    color: #fff;
-		}
-		 
-		th, td {
-			border: 1px solid black;
-			text-align: left;
-			padding: 8px;
-		}
-		 
-		th {
-			background-color: #cccccc;	
-		}
-	  
-		.table {
-			width: 50%;
-			margin: 0 auto;
-			border-collapse: collapse;
-	    }
-	    
-	    .table th, .table td {
-			text-align: center;
-			padding: 8px;
-		}
-		
-		/* 새페이징 */
-		table {
-		border-collapse: collapse;
-		width: 100%;
-		}
-		
-		th, td {
-			text-align: left;
-			padding: 8px;
-		}
-		
-		th {
-			background-color: #f2f2f2;
-		}
-		
-		tr:nth-child(even) {
-			background-color: #f2f2f2;
-		}
-		
-		td {
-			border: 1px solid #ddd;
-		}
-		
-		.btn{
-			border: 1px solid black;
-		}
-		
-		.container{
-			margin: 0 auto;
-			width: 1000px;
-		}
-		
-		#notice-main{
-			margin-left: 50px;
-		}
-		
-		.charge-reg-date{
-			width: 40px;
-		}
-		.charge-method{
-			width: 90px;
-		}
-		.charge-bamboo{
-			width: 90px;
-		}
-		.charge-money{
-			width: 90px;
-		}
-		.charge-page {
-			display: inline-block;
-			border: 1px solid #EAEAEA;
-			width: 30px;
-			height: 30px;
-			cursor: pointer;
-		}
-		.charge-page, .charge-money, charge-bamboo, .charge-reg-date{
-			text-align: center;
-			line-height: 30px; /* 중간 높이로 해줌  */
-		}
-		#pagination{
-			text-align: center;
-			margin-top: 30px;
-		}
-		
-		.charge-page{
-			text-decoration: none;
-			color: black;
-		}
+	
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	
+	.filter-btn{
+		position: absolute;
+		top: 23%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	
+	/* 결제내역 컨테이너 */
+	.charge-details-container{
+		margin: 0 auto;
+		width: 1300px;
+		margin-top: 10%;
+	}
+	
+	/* 새페이징 */
+	table {
+	border-collapse: collapse;
+	width: 100%;
+	}
+	
+	th, td {
+		text-align: center;
+		padding: 8px;
+	}
+	
+	th {
+		border: 1px solid #ddd;
+		/* background-color: #f2f2f2; */
+	}
+	
+	tr:nth-child(even) {
+		background-color: #f2f2f2;
+	}
+	
+	td {
+		border: 1px solid #ddd;
+	}
+	
+	#charge-main{
+		/* margin-left: 50px; */
+		text-align: center;
+	}
+	
+	.charge-reg-date{
+		width: 40px;
+	}
+	.charge-method{
+		width: 90px;
+	}
+	.charge-bamboo{
+		width: 90px;
+	}
+	.charge-money{
+		width: 90px;
+	}
+	.charge-page {
+		display: inline-block;
+		border: 1px solid #EAEAEA;
+		width: 30px;
+		height: 30px;
+		cursor: pointer;
+	}
+	.charge-reg-date, .charge-method, .charge-bamboo, .charge-money, .charge-page{
+		text-align: center;
+		line-height: 30px; /* 중간 높이로 해줌  */
+	}
+	#pagination{
+		text-align: center;
+		margin-top: 30px;
+	}
+	
+	.charge-page{
+		text-decoration: none;
+		color: black;
+	}
 		
 		
 		
@@ -203,33 +104,32 @@
 
 	<th:block layout:fragment="content">
 	
-	<div class="filter-btn gap-2 d-md-flex justify-content-md-end">
-		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-container-btn"	value="chargeContainerBtn"	onclick="moveChargePage(0)">충전하기</button>
-		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-details-btn"		value="chargeDetailsBtn">충전내역</button>
-	</div>
-	
-	<div id="charge-details-container">
-	
-		
-	</div>	<!-- /id="charge-details-container" -->
-	
-	
-		
 	<div class="container">
-		<h1 id="notice-main">충전내역</h1>
-		<div id="chargelistDiv">
-			<table id="chargeTable">
-			</table>
-			<!-- <input type="button" class="btn" value="작성하기"> -->
-		</div>
-		<div id="pagination">
-		</div>
-	</div> <!-- class="container" -->
 	
-	<div style="display:flex; justify-content:center;">
-		<h4 th:text="'총 충전회수 : ' + ${totalChargeCnt}"></h4>
-	</div>
+		<div class="btn-group filter-btn" role="group" aria-label="Basic outlined example">
+			<button type="button" class="btn btn-outline-primary btn-lg" id="charge-container-btn"	value="chargeContainerBtn" onclick="moveChargePage(0)">충전하기</button>
+			<button type="button" class="btn btn-outline-primary btn-lg" id="charge-details-btn"	value="chargeDetailsBtn">충전내역</button>
+		</div>
+		
+			
+		<div class="charge-details-container">
+		
+			<div style="display:flex; justify-content:right;">
+				<h4 th:text="'총 충전회수 : ' + ${totalChargeCnt}" style="font-size: 12px;"></h4>
+			</div>
+			
+			<div id="chargelistDiv">
+				<table id="chargeTable">
+				</table>
+				<!-- <input type="button" class="btn" value="작성하기"> -->
+			</div>
+			<div id="pagination" style="display:flex; justify-content:center;">
+			</div>
+		</div> <!-- /class="charge-details-container" -->
+		
+		
 	
+	</div>	<!-- class="container" -->
 	
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
@@ -246,11 +146,6 @@
 			 location.href="?pageStatus="+pageStatus;
 		 }
 		 
-		 
-		$(".btn").on("click", function(){
-		location.href="/admin/notice-form";
-		});
-		
 		function chargeChange(currentPage){
 			$.ajax({
 				url : "/charge/charge-history",
@@ -269,7 +164,6 @@
 	
 		    		// 테이블 헤더 생성
 		    		var tableHeader = $('<tr></tr>');
-		    		var headerNo = $('<th></th>').addClass('notice notice-no').text('번호');
 		    		var headerRegDate = $('<th></th>').addClass('charge charge-reg-date').text('충전날짜');
 		    		var headerMethod = $('<th></th>').addClass('charge charge-method').text('충전방법');
 		    		var headerBamboo = $('<th></th>').addClass('charge charge-bamboo').text('충전밤부');
