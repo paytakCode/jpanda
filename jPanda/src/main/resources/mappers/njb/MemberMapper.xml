@@ -55,6 +55,15 @@
 	<update id="updateMemberInfo" parameterType="MemberDto">
   		UPDATE member
   		SET name = #{name}, email = #{email}, tel = #{tel}
-  		WHERE id = #{id}
+  		WHERE member_id = #{memberId}
 	</update>
+	<insert id="insertVerificationCode" parameterType="EmailVerifDto">
+		INSERT INTO EMAIL_VERIF (email, verif_code)
+		VALUES(#{email},#{verifCode})
+	</insert>
+	<select id="selectEmailVerif" resultType="EmailVerifDto" parameterType="EmailVerifDto">
+		SELECT *
+		FROM email_verif
+		WHERE email=#{email} AND verif_code=#{verifCode}
+	</select>
 </mapper>

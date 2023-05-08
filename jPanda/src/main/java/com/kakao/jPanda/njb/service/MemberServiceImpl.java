@@ -11,6 +11,7 @@ import com.kakao.jPanda.njb.dao.MemberDao;
 
 
 import com.kakao.jPanda.njb.domain.BankDto;
+import com.kakao.jPanda.njb.domain.EmailVerifDto;
 import com.kakao.jPanda.njb.domain.MemberDto;
 
 import lombok.RequiredArgsConstructor;
@@ -110,6 +111,19 @@ public class MemberServiceImpl implements MemberService {
 		
 		memberDao.updateMemberInfo(memberInfo);
 	}
+
+	@Override
+	public void insertVerificationCode(EmailVerifDto emailVerifDto) {
+
+		memberDao.insertVerificationCode(emailVerifDto);
+	}
+
+	@Override
+	public EmailVerifDto findEmailVerif(EmailVerifDto emailVerifDto) {
+		EmailVerifDto emailVerif = memberDao.selectEmailVerif(emailVerifDto);
+		return emailVerif;
+	}
+
 	
 }
 
