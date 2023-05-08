@@ -36,6 +36,29 @@ td {
 .btn{
 	border: 1px solid black;
 }
+	
+.container{
+	margin: 0 auto;
+	width: 1000px;
+}
+
+.talent-page {
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+#pagination{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.talent-page{
+	text-decoration: none;
+	color: black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -45,36 +68,10 @@ td {
 	<th:block layout:fragment="content">
 		<body>
 			<h1>판매 등록 신청 현황</h1>
-			<table border="1" id="talentTable">
-<!-- 				<tr>
-					<th>선택</th>
-					<th>아이디</th>
-					<th>재능번호</th>
-					<th>제목</th>
-					<th>요약 설명</th>
-					<th>신청 날짜</th>
-					<th>상태</th>
-				</tr>
-				<tr th:each="talent : ${talentList}">
-					<td>
-						<input type="checkbox" class="checkbox" name="talentNo" th:value="${talent.talentNo}">
-					</td>
-					<td th:text="${talent.sellerId}">
-						<input type="hidden" class="hid" name="sellerId" th:value="${talent.sellerId}">
-					</td>
-					<td th:text="${talent.talentNo}"></td>
-					<td>
-						<a class="detail" th:href="'/admin/talents/' + ${talent.talentNo}" th:text="${talent.title}"></a>
-					</td>
-					<td th:text="${talent.summary}"></td>
-					<td th:text="${talent.statusDate}"></td>
-					<td th:text="${talent.talentStatus}"></td>
-				</tr> -->
-			</table>
+			<table border="1" id="talentTable"></table>
 			<input type="button" class="btn" value="검토 완료">
 			
 			<div id="pagination"></div>
-				
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>

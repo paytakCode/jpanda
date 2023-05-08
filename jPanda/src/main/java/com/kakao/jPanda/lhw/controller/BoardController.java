@@ -29,7 +29,7 @@ public class BoardController {
 	
 	// 대분류 카테고리 리스트 불러오기
 	@GetMapping("")
-	public String boardView(Model model, HttpSession session) {
+	public String boardView(Model model, HttpSession session, @RequestParam(required=false) String search) {
 		System.out.println("Controller boardList Start");
 		List<CategoryDto> upperCategoryList = boardService.findUpperCategoryList();
 		
@@ -37,6 +37,10 @@ public class BoardController {
 		
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("upperCategoryList", upperCategoryList);
+		if(search == null) {
+	         search = "";
+	      }
+	      model.addAttribute("search", search);
 		
 		return "lhw/board";
 	}

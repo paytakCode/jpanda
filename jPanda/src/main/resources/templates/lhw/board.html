@@ -240,17 +240,26 @@ ul, li {
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 	
-	// 검색 버튼
-	$('#search-btn').on('click', function(){
-		updateList(1);
-	});
 	
+   function checkForHash(){
+	      if(location.hash){
+	         // 한글 깨지지 않게 나오도록 처리
+	         var hash = decodeURI(location.hash);
+	         var currentPage = hash.replace("#","");
+	         updateList(currentPage);
+	      }else{
+	         updateList(1);
+	      } 
+	   };
+	   
+	   var search = [[${search}]];
+	   $('#search').val(search);   
+
 	// 재능 리스트 ajax로 불러오기
 	function updateList(currentPage){
 		let upperCategoryNo = $('.selected').data('uppercategoryno');
 	 	let lowerCategoryNo = $('#lower-category-list').val();
 	 	let filter =  $(".radio-filter:checked:first").val();
-	 	let search = $("#search").val();
 	 	$.ajax({
 	 		url : "/board/talents-list",
 	 		type : 'GET',
@@ -281,6 +290,9 @@ ul, li {
 	                var lastNum = parseInt(filters.lastNum);
 	                var filtersDiv = $('#page');
 	    			
+	                // currentPage 해쉬에 저장
+	                location.hash = filters.currentPage;
+	                
 	                // 기존 페이지 번호 삭제
 	                filtersDiv.empty();
 	                
@@ -297,9 +309,6 @@ ul, li {
 	                }
 	                filtersDiv.append($('<a></a>').addClass('talent-page').text('>'));
 	           	  	
-					$('#search-btn').one('click', function(){
-						updateList(1);
-					});
 					$('.talent-page').one('click', function(){
 						if($(this).text() === '<'){
 							if(parseInt(filters.currentPage) === 1){
@@ -375,8 +384,6 @@ ul, li {
 	$('#lower-category-list').on('change', function() {
 		updateList(1);
 	});
-
-	updateList(1);	
 		
 
 	// 대분류 카테고리 클릭시 선택 되어 있던 대분류 카테고리 클래스 삭제 후 새로 클릭 된 카테고리 selected 클래스 추가
@@ -401,6 +408,7 @@ ul, li {
 		});
 	});
 
+	
 	// 판매글 등록 버튼 로그인 여부 확인
 	function sellInsertBtn(){
 	    var memberId = [[${memberId}]];
@@ -418,6 +426,12 @@ ul, li {
 	  window.onload = function() {
 		  console.log([[${memberId}]]);
 		};
+		
+	// 검색	
+  	$(function() {
+	      checkForHash();
+	   });
+		
 	</script>
 	
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

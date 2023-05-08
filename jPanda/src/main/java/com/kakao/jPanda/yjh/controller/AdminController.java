@@ -2,7 +2,6 @@ package com.kakao.jPanda.yjh.controller;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +31,7 @@ import com.kakao.jPanda.yjh.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-/*
- * 	기능에 참조되는 DTO별로 //notice, //talent 등등 으로 구분지어 놓았습니다.
- * 	form -> ajax로 전송방식 통합 후 변경 예정입니다
- * 	전체적으로 통합한 뒤에 단순 insert, update, delete작업에 대한 return 재작업 예정입니다
- */
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -68,21 +63,15 @@ public class AdminController {
 		}
 	}
 	
+	/*
+	 *  페이징 처리된 List를 Map형식으로 리턴하여 ajax처리
+	 */
 	@ResponseBody
 	@GetMapping(value = "/notice/notices")
-	public Map<String, Object> noticeListForPaging(Pagination pagination) {
+	public Map<String, Object> noticeListByPagination(Pagination pagination) {
+		log.info("Notice Controller noticeListByPagination() start");
 		log.info("pagination : "+pagination);
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		
-		int totalCount = adminService.findNoticeForPagination();
-		pagination.setTotalCount(totalCount);
-		log.info("after Set pagination : "+pagination);
-		
-		List<NoticeDto> noticeList = adminService.findNotice(pagination);
-		log.info("noticeList : "+noticeList);
-		
-		returnMap.put("noticeList", noticeList);
-		returnMap.put("pagination", pagination);
+		Map<String, Object> returnMap = adminService.findNoticeByPagination(pagination);
 		
 		return returnMap;
 	}
@@ -176,7 +165,7 @@ public class AdminController {
 	
 	//exchange	
 	@GetMapping(value = "/exchanges")
-	public String exchangeList(Pagination pagination, Model model, HttpSession session) {	
+	public String exchangePage(Pagination pagination, Model model, HttpSession session) {	
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
@@ -187,9 +176,10 @@ public class AdminController {
 	
 	@ResponseBody
 	@GetMapping(value = "/exchange/exchanges")
-	public Map<String, Object> exchangeListForPagination(Pagination pagination) {
+	public Map<String, Object> exchangeListByPagination(Pagination pagination) {
+		log.info("Exchange Controller exchangeListByPagination() start");
 		log.info("pagination : "+pagination);
-		Map<String, Object> returnMap = adminService.findExchange(pagination);
+		Map<String, Object> returnMap = adminService.findExchangeByPagination(pagination);
 
 		return returnMap;
 	}
@@ -230,6 +220,7 @@ public class AdminController {
 	@ResponseBody
 	@GetMapping(value = "/coupon/coupons")
 	public Map<String, Object> couponListByPagination(Pagination pagination) {
+		log.info("Coupon Controller couponListByPagination() start");
 		Map<String, Object> returnMap = adminService.findCouponListByPagination(pagination);
 		
 		return returnMap;
@@ -241,7 +232,7 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PostMapping(value = "/coupons/coupons-no")
-	public String genetateCouponNo(HttpSession session) {
+	public String genetateCouponNo() {
 		log.info("Coupon Controller genetateCouponNo() start");
 
 		return adminService.generateCouponNo();
@@ -295,7 +286,7 @@ public class AdminController {
 	
 	//talent
 	@GetMapping(value = "/talents") // talents
-	public String talentList(HttpSession session) {
+	public String talentPage(HttpSession session) {
 		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
 			return "redirect:/login";
 			
@@ -307,7 +298,8 @@ public class AdminController {
 	@ResponseBody
 	@GetMapping(value = "/talent/talents")
 	public Map<String, Object> talentListByPagination(Pagination pagination) {
-		Map<String, Object> returnMap = adminService.findtalentByPagination(pagination);
+		log.info("Talent Controller talentListByPagination() start");
+		Map<String, Object> returnMap = adminService.findTalentByPagination(pagination);
 		
 		return returnMap;
 	}
@@ -317,8 +309,8 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PatchMapping(value = "/talents/{talentNo}")
-	public int talentModifyBySellerIds(@PathVariable("talentNo") List<String> talentNo, @RequestBody List<TalentDto> talentDto, HttpSession session) {
-		log.info("Talent Controller talentModifyBySellerIds() start");
+	public int talentModifyByTalentNos(@PathVariable("talentNo") List<String> talentNo, @RequestBody List<TalentDto> talentDto, HttpSession session) {
+		log.info("Talent Controller talentModifyByTalentNos() start");
 		log.info("SellerIds : "+talentNo);
 		log.info("talentDto : "+talentDto.toString());
 		int result = 0;
@@ -334,11 +326,13 @@ public class AdminController {
 	}
 	
 	@GetMapping(value = "/talents/{talentNo}")
-	public String talentDetailBySellerId(@PathVariable("talentNo") Long talentNo, Model model) {
+	public String talentDetailByTalentNo(@PathVariable("talentNo") Long talentNo, Model model) {
 		log.info("Talent Controller talentDetailByTalentNo start()");
 		log.info("sellerId : "+talentNo);
+		
 		TalentDto talentDto = adminService.findTalentByTalentNo(talentNo);
 		log.info("talentList : "+talentDto.toString());
+		
 		model.addAttribute("talent", talentDto);
 		
 		return "yjh/talent-detail";
@@ -358,6 +352,7 @@ public class AdminController {
 	@ResponseBody
 	@GetMapping(value = "/talent-refund/talent-refunds")
 	public Map<String, Object> talentRefundListByPagination(Pagination pagination) {
+		log.info("Talent Refund Controller talentRefuntListByPagination() start");
 		Map<String, Object> returnMap = adminService.findTalentRefundByPagination(pagination);
 		
 		return returnMap;
@@ -381,6 +376,7 @@ public class AdminController {
 		return result;
 	}
 	
+	//report
 	@GetMapping(value = "/report")
 	public String reportPage(Model model, HttpSession session) {
 		log.info("Report Controller reportList() start");

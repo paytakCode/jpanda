@@ -3,7 +3,7 @@
 
 <mapper namespace="com.kakao.jPanda.yjh.NoticeMapper">
 	
-	<select id="selectNotice" parameterType="AdminPagination" resultType="AdminNotice">
+	<select id="selectNoticeByPagination" parameterType="AdminPagination" resultType="AdminNotice">
 		SELECT 	*
 		FROM 	(SELECT	ROWNUM rn, n.*
 				 FROM	(SELECT	  * 
@@ -13,7 +13,7 @@
 		WHERE  	rn BETWEEN #{startRow} AND #{endRow}
 	</select>
 	
-	<select id="selectNoficeByPagination" resultType="int">
+	<select id="selectNoticeForTotalCount" resultType="int">
 		select 	count(*)
 		from 	notice
 	</select>
