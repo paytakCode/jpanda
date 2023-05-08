@@ -28,35 +28,42 @@ ul, li {
 
 /* 게시판 리스트 */
 .list-container, .sell-board {
-  margin: 80px auto;
-  max-width: 1000px;
+  margin: 30px auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  max-width: 950px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
 
+
 /* 사이드바 대분류 카테고리 */
 #top-category {
   position: absolute;
-  float: left;
-  left: 20px;
-  top: 200px;
-  width: 200px;
+  left: 60px;
+  bottom: 20px;
+  transform: translateY(-80%);
+  width: 250px;
   border: 1px solid #ccc;
-  margin-left: 20px;
+  margin: 0 auto;
   text-align: center;
-  margin: 20px 10px;
-  margin-bottom: 10px;
   padding: 10px;
-  flex-basis: 45%;
 }
+
 
 /* 중분류 카테고리 */
 #lower-category {
-  text-align: center;
-  margin: 0 auto;
-  max-width: 800px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center; /* 가로 방향으로 가운데 정렬 */
+  align-items: center; /* 세로 방향으로 가운데 정렬 */
+  max-width: 300px;
+  margin-top: 100px;
+  margin: 0 auto; /* 가운데 정렬 */
 }
+
 
 .bamboo-imges {
   width: 170px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
@@ -71,11 +78,13 @@ ul, li {
 /* 컨테이너 */
 #defalut-list {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
   flex-direction: column; /* 아이템들을 수직 방향으로 배치 */
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: center; /* 아이템들을 가운데 정렬 */
   margin: 10px;
+  gap: 30px;
 }
 
 /* 카드 컨테이너 */
@@ -86,9 +95,9 @@ ul, li {
   height: 450px;
   border: 1px solid #ccc;
   border-radius: 10px;
-  padding: 10px;
   margin 10px;
-  margin-bottom: 20px;
+  padding: 10px;
+  margin-bottom: 50px;
   overflow: hidden; /* 아이템 내부의 내용이 넘칠 경우, 숨김 처리 */
 }
 
@@ -157,12 +166,6 @@ ul, li {
   box-shadow: 0px 0px 10px #ccc;
 }
 
-.sell-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-}
 
 .talent-page {
 	display: inline-block;
@@ -170,21 +173,51 @@ ul, li {
 	width: 30px;
 	height: 30px;
 	cursor: pointer;
-}
-
-.talent-page{
 	text-align: center;
 	line-height: 30px; /* 중간 높이로 해줌  */
+	text-decoration: none;
+	color: black;
+	vertical-align: middle;
+	
 }
+
 
 #page{
 	text-align: center;
-	margin-top: 30px;
+	margin-top: 20px;
 }
 
-.talent-page {
-	text-decoration: none;
-	color: black;
+
+.list-group-item.active {
+  background-color: rgb(129,193,71);
+  border-color: rgb(129,193,71);
+}
+
+.btn-group {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; /* 가로 방향으로 가운데 정렬 */
+	align-items: center; /* 세로 방향으로 가운데 정렬 */
+	max-width: 900px;
+	margin: 0 auto; /* 가운데 정렬 */
+  	border-color: rgb(129,193,71);
+  	text-color: 
+}
+
+.btn-outline-primary {
+  color: black;
+  background-color: #fff;
+  border-color: grey;
+}
+
+.btn .btn-outline-primary:hover {
+  border-color: rgb(129,193,71) !important;
+}
+
+
+.btn-group > .btn-check:checked + .btn {
+  background-color: black;
+  color: #fff;
 }
 
 </style>
@@ -194,42 +227,48 @@ ul, li {
 
 <div>
 	<th:block layout:fragment="content">
-	 <div id="top-category">
-    	<h2>대분류 카테고리</h2>
-    	<ul th:each="upperCategory : ${upperCategoryList}">	
-    		<li class="topCategoryList" th:text="${upperCategory.item}" th:data-upperCategoryNo="${upperCategory.categoryNo}"></li>
-    	</ul>
-    </div>
+	
+	<div id="top-category">
+		<h2 class="top-category">카테고리</h2>
+		<ul class="list-group" th:each="upperCategory : ${upperCategoryList}">
+		  <li class="list-group-item" aria-current="true" th:text="${upperCategory.item}" th:data-upperCategoryNo="${upperCategory.categoryNo}"></li>
+		</ul>
+	</div>
     
     
     <div id="lower-category">
-    	<h2>중분류 카테고리</h2>
+	    <h3 class="lower-category-list-title">세부 카테고리</h3>
+	    
+ 		<div class="lower-category-list">
 			<select id="lower-category-list">
   				<option value="">==대분류를 선택해주세요==</option>
 			</select> <br>
-			
-			<input type="radio" id="radio1" name="group" class="radio-filter" value="reg_date" checked="checked">
-			<label for="radio1">최신순</label>
-			
-			<input type="radio" id="radio2" name="group" class="radio-filter" value="view_count">
-			<label for="radio2">인기순</label><br>
-			
-			<input type="radio" id="radio3" name="group" class="radio-filter" value="bambooScore">
-			<label for="radio3">평점순</label>
-			
-			<input type="radio" id="radio4" name="group" class="radio-filter" value="sale_bamboo">
-			<label for="radio4">높은 가격순</label><br>
-			
-			<input type="radio" id="radio5" name="group" class="radio-filter" value="sale_bambooA">
-			<label for="radio5">낮은 가격순</label><br>
-    </div>
-	
-	<div class="sell-btn">
-		<button id="sell-insert">판매글 등록</button>
+		</div>
 	</div>
+		
+		<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked="checked" value="reg_date">
+		  <label class="btn btn-outline-primary" for="btnradio1">최신순</label>
+		
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="view_count">
+		  <label class="btn btn-outline-primary" for="btnradio2">인기순</label>
+		
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="bambooScore">
+		  <label class="btn btn-outline-primary" for="btnradio3">평점순</label>
+		  
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" value="sale_bamboo">
+		  <label class="btn btn-outline-primary" for="btnradio4">높은 가격순</label>
+		  
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="sale_bambooA">
+		  <label class="btn btn-outline-primary" for="btnradio5">낮은 가격순</label>
+		</div>
+		
+   
+   
 	<div class="sell-board">
 	    <ul id="defalut-list"></ul>
 	</div>
+
 	
 	<div id="page"></div>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -260,7 +299,7 @@ ul, li {
 	function updateList(currentPage){
 		let upperCategoryNo = $('.selected').data('uppercategoryno');
 	 	let lowerCategoryNo = $('#lower-category-list').val();
-	 	let filter =  $(".radio-filter:checked:first").val();
+	 	let filter =  $(".btn-check:checked:first").val();
 	 	$.ajax({
 	 		url : "/board/talents-list",
 	 		type : 'GET',
@@ -377,7 +416,7 @@ ul, li {
 	}		
 
 	// 세부 필터 클릭 시 updateList(); 실행
-	$('.radio-filter').click(function(){	
+	$('.btn-check').click(function(){	
 		updateList(1);
 	});
 
@@ -388,8 +427,10 @@ ul, li {
 		
 
 	// 대분류 카테고리 클릭시 선택 되어 있던 대분류 카테고리 클래스 삭제 후 새로 클릭 된 카테고리 selected 클래스 추가
-	$('.topCategoryList').click(function(){
-		$('.topCategoryList').removeClass('selected');
+	$('.list-group-item').click(function(){
+		$('.list-group-item').removeClass('active');
+		$(this).addClass('active');
+		$('.list-group-item').removeClass('selected');
 		$(this).addClass('selected');
 		// 중분류 카테고리 리스트 불러오기
 		$.ajax({
@@ -409,25 +450,7 @@ ul, li {
 		});
 	});
 
-	
-	// 판매글 등록 버튼 로그인 여부 확인
-	function sellInsertBtn(){
-	    var memberId = [[${memberId}]];
-	    console.log(memberId);
-	    
-	    if (memberId != null) {
-	      location.href = "/talent/write-form";
-	    } else {
-	      alert("로그인이 필요한 서비스 입니다.");
-	      location.href = "/login";
-	    }
-	  }
-	  document.getElementById("sell-insert").addEventListener("click", sellInsertBtn);
-	  
-	  window.onload = function() {
-		  console.log([[${memberId}]]);
-		};
-		
+	 
 	// 검색	
   	$(function() {
 	      checkForHash();
