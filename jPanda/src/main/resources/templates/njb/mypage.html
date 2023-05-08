@@ -116,22 +116,14 @@ a {
 				        </li>
 				        
 				    </ul>
-<<<<<<< HEAD
-    				<button type="submit">수정하기</button>
-=======
     				<button type="submit" onclick="showSuccessAlertAndRefresh()" >수정하기</button>
->>>>>>> refs/remotes/origin/dev
 				</form>
 			<div class="menu">
 				<span>
 					<a href="/" target="_blank">계정설정</a>
 				</span>
 				<span>
-<<<<<<< HEAD
-					<a href="/trade" target="_blank">거래내역</a>
-=======
 					<a href="/trade" onclick="redirectToTrade()" >거래내역</a>
->>>>>>> refs/remotes/origin/dev
 				</span>
 			</div>
 		</div>
@@ -213,9 +205,6 @@ a {
 		    }
 		  });
 		});
-<<<<<<< HEAD
-
-=======
 	function showSuccessAlertAndRefresh() {
         alert("수정되었습니다.");
         location.reload(); // 페이지 새로고침
@@ -223,14 +212,9 @@ a {
 	   function redirectToTrade() {
 	        window.location.href = "/trade"; // 페이지 이동
 	    }
->>>>>>> refs/remotes/origin/dev
-	
 	
 	</script> 
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>
 </html>
-
-
-
