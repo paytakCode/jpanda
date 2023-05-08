@@ -5,15 +5,37 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 밤부 환전 신청 건 조회</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
-	<style>
-css
- 
-영역
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+td {
+	border: 1px solid #ddd;
+}
+
+.btn{
+	border: 1px solid black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -23,34 +45,11 @@ css
 	<th:block layout:fragment="content">
 		<body>
 			<h1>환전 관리</h1>
-			<table border="1">
-				<tr>
-					<th>선택</th>
-					<th>신청번호</th>
-					<th>재능번호</th>
-					<th>아이디</th>
-					<th>신청일</th>
-					<th>총금액</th>
-					<th>상태</th>
-				</tr>
-				<tr th:each="exchange : ${exList}">
-					<td><input type="checkbox" class="checkbox"
-						th:name="exchangeNo" th:value="${exchange.exchangeNo}"></td>
-					<td th:text="${exchange.exchangeNo}"></td>
-					<td th:text="${exchange.talentNo}"></td>
-					<td th:text="${exchange.sellerId}"><input type="hidden"
-						name="sellerId" th:value="${exchange.sellerId}"></td>
-					<td th:text="${exchange.submitDate}"></td>
-					<td th:text="${exchange.total}"></td>
-					<td th:text="${exchange.exchangeStatus}"></td>
-				</tr>
-				<tr>
-					<td colspan="7"><input type="button" class="btn"
-						th:name="exchangeStatus" th:value="환전완료"> <input
-						type="button" class="btn" th:name="exchangeStatus" th:value="반려">
-					</td>
-				</tr>
-			</table>
+			<table border="1" id="exchangeTable"></table>
+			<input type="button" class="btn" th:name="exchangeStatus" th:value="환전완료">
+			<input type="button" class="btn" th:name="exchangeStatus" th:value="반려">
+
+			<div id="pagination"></div>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
@@ -60,7 +59,112 @@ css
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+	function exchangeChange(currentPage){
+		$.ajax({
+			url : "/admin/exchange/exchanges",
+			type : "GET",
+			data : { currentPage : currentPage },
+			dataType: 'json',
+	        success:function(returnMap) {
+	        	console.log(returnMap.exList);
+	          	console.log(returnMap.pagination);
+	          		
+	          	var exList = returnMap.exList;
+	          	var exchangeTable = $('#exchangeTable');
+
+	            // 기존 테이블 초기화
+	    		exchangeTable.empty();
+
+	    		// 테이블 헤더 생성
+	    		var tableHeader = $('<tr></tr>');
+	    		var headerNo = $('<th></th>').text('선택');
+	    		var headerTitle = $('<th></th>').text('신청번호');
+	    		var headerTalentNo = $('<th></th>').text('재능번호');
+	    		var headerSellerId = $('<th></th>').text('아이디');
+	    		var headerSubmitDate = $('<th></th>').text('신청일');
+	    		var headerTotal = $('<th></th>').text('총금액');
+	    		var headerStatus = $('<th></th>').text('상태');
+	    		tableHeader.append(headerNo).append(headerTitle).append(headerTalentNo).append(headerSellerId).append(headerSubmitDate).append(headerTotal).append(headerStatus);
+	    		exchangeTable.append(tableHeader);
+
+	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
+				$.each(exList, function(index, exchange) {
+				  var tableRow = $('<tr></tr>').addClass('exchange-detail');
+				  var checkbox = $('<td></td>').append(
+				    $('<input/>').attr({
+				      type: 'checkbox',
+				      class: 'checkbox',
+				      name: 'exchangeNo',
+				      value: exchange.exchangeNo
+				    })
+				  );
+				  var exchangeNo = $('<td></td>').text(exchange.exchangeNo);
+				  var talentNo = $('<td></td>').text(exchange.talentNo);
+				  var sellerId = $('<td></td>').text(exchange.sellerId).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'sellerId',
+				      value: exchange.sellerId
+				    })
+				  );
+				  var submitDate = $('<td></td>').text(exchange.submitDate.substring(0, 10));
+				  var total = $('<td></td>').text(exchange.total);
+				  var exchangeStatus = $('<td></td>').text(exchange.exchangeStatus);
+				  tableRow.append(checkbox, exchangeNo, talentNo, sellerId, submitDate, total, exchangeStatus);
+				  
+				  var exchangeTable = $('#exchangeTable');
+				  exchangeTable.append(tableRow);
+				});
+	    			
+	                var pagination = returnMap.pagination;
+	                var startNum = parseInt(pagination.startNum);
+	                var lastNum = parseInt(pagination.lastNum);
+	                var paginationDiv = $('#pagination');
+	    			
+	                // 기존 페이지 번호 삭제
+	                paginationDiv.empty();
+	                
+	                var page = $('<a></a>').addClass('exchange-page').text('<');
+	                paginationDiv.append(page);
+	                
+	           	  	// 페이지 번호 생성
+	                for (var i=startNum; i<=lastNum; i++) {
+	                    var page = $('<a></a>').addClass('exchange-page').text(i);
+	    				if(pagination.currentPage == i){
+	    					page.css('background-color', '#EAEAEA');
+	    				}
+	                    paginationDiv.append(page);
+	                }
+	                paginationDiv.append($('<a></a>').addClass('exchange-page').text('>'));
+	           	  	
+					$('.exchange-page').one('click', function(){
+						if($(this).text() === '<'){
+							if(parseInt(pagination.currentPage) === 1){
+								exchangeChange(pagination.currentPage);
+							}else{
+								exchangeChange(parseInt(pagination.currentPage) - 1);
+							}
+						}else if($(this).text() === '>'){
+							if(parseInt(pagination.currentPage) === parseInt(pagination.totalPage)){
+								exchangeChange(pagination.currentPage);
+							}else{
+								exchangeChange(parseInt(pagination.currentPage) + 1);
+							}
+						}else{
+							exchangeChange($(this).text());
+						}
+					});
+				
+	          	}
+		});
+	}
+	
+	$(function() {
+		exchangeChange(1);
+	});
+	
 	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
+	
 	$(".btn").on("click", function(){
 		let exchangeNo = $("input.checkbox:checked").map(function(){
 			return $(this).val();

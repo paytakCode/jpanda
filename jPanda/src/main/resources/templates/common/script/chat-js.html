@@ -2,28 +2,30 @@
 <div th:fragment="chatJsFragment">
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<script th:inline = 'javascript'>
+	<script type="text/javascript">
 	
 		//전역 변수 선언	
-		const memberId = [[${#session.getAttribute('memberId')}]];
-
-		
-		let selectedPartner = null;
+		let selectedPartnerId = null;
 		let stompClient = null;
 		
 		//WebSocket(STOMP) 연결 함수
-		function connect(memberId) {
+		function connect() {
 		    var socket = new SockJS('/stomp/chat?' + memberId);
 		    stompClient = Stomp.over(socket);
 		    stompClient.connect({}, function (frame) {
 		        console.log('Connected: ' + frame);
-		        loadChatByMemberId(memberId);
-		        subscribe(memberId);
+		        onConnect();
 		    });
 		}
 		
-		//Direct Message 를 받을 STOMP Url 구독
-		function subscribe(memberId){
+		//Connect 성공 시 호출되는 함수
+		function onConnect(){
+	        subscribe();
+	        updateChatPartnerList();
+		}
+		
+		//STOMP Url 구독
+		function subscribe(){
 			stompClient.subscribe('/message/' + memberId, function (response) {
 				onMessage(response);
 			});
@@ -34,40 +36,40 @@
 		
 		//메세지 수신시 호출하는 함수
 		function onMessage(response){
-			let chat = JSON.parse(response.body);
-			if (chat != null){
-				if (selectedPartner == chat.senderId){
+			let receivedChat = JSON.parse(response.body);
+			if (receivedChat != null){
+				if (selectedPartnerId == receivedChat.senderId){
 			    	const lastDate = $('#chat-content a.chat-date').last().text();
 			    	if(getDate(Date.now()) != lastDate){
 						const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
-													.text(getDate(chat.chatDate))
+													.text(getDate(receivedChat.chatDate))
 													.attr("role","button")
 													.attr("aria-disabled","true");
 						$("#chat-content").append(chatDate);
 			    	}
 					const chatElem = $("<div>").addClass("from-other");
-					const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
-					const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+					const messageElem = $("<span>").text(receivedChat.message)
+													.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
+													.attr('data-bs-toggle', "modal")
+													.attr('data-bs-target', '#report-chat-modal')
+													.data('chat-no', receivedChat.chatNo);
+					const timeElem = $("<span>").text(getTime(receivedChat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 					chatElem.append(messageElem);
 					chatElem.append(timeElem);
 	                $("#chat-content").append(chatElem);
 				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
-				    $('.partner[value=' + selectedPartner + '] .unread-count').text('1');
-				    readPartnerMessage(selectedPartner);
+				    $('.partner[value=' + selectedPartnerId + '] .unread-count').text('1');
+				    readPartnerMessage();
 				} else {
-					updateChatPartnerList(memberId).then(function(){
-						updateselectedPartner($('.partner[value=' + selectedPartner + ']'));
-					});
+					updateChatPartnerList();
 				}
-				
-				updateTotalUnreadCount();
 			}
 		}
 		
 		//상대가 메세지를 읽었을 때 채팅을 보고있다면 읽음으로 수정
 		function onRead(response){
 			const readerId = response.body;
-			if (selectedPartner == readerId){
+			if (selectedPartnerId == readerId){
 				console.log('상대방(' + readerId + ')이 메세지를 읽었습니다.')
 				$('.read-status').each(function() {
 				    $(this).text('읽음')
@@ -76,41 +78,32 @@
 				});
 			}
 		}
-		
-		//연결 끊기
-		function disconnect() {
-		    if (stompClient !== null) {
-		        stompClient.disconnect();
-		        stompClient = null;
-		    }
-		    console.log("Disconnected");
-		}
 	
 		//채팅 버튼 클릭 시 채팅 팝업 띄우기
 		$('#chat-btn').click(function () {
-			if (stompClient !== null) { //연결 된 상태에서만 채팅 콘솔 작동 가능
+			if (stompClient !== null) {
 			    $('#chat-console').toggle();
 			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 			}
 		});
 	
 		//선택된 채팅 상대 표시 업데이트
-		function updateselectedPartner(partnerElem) {    
+		function updateSelectedPartner() {    
 			$('.partner').removeClass('active');
-			$(partnerElem).addClass('active');
+			$($('.partner[value=' + selectedPartnerId + ']')).addClass('active');
 		}
 	
 		//채팅 대화 내용 업데이트
 		function updateChatContent() {
 			$.ajax({
-				url: "/chats/" + memberId + "?partner-id=" + selectedPartner,
+				url: "/chats/" + memberId + "?partner-id=" + selectedPartnerId,
 				method: "GET",
 				dataType : "json",
 				success: function(chatList) {
 					$("#chat-content").empty();
 					
 					chatList.forEach((chat, index) => {
-						if (chat.receiverId == selectedPartner) {
+						if (chat.receiverId == selectedPartnerId) {
 							if(index == 0){
 								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
 															.text(getDate(chat.chatDate))
@@ -131,7 +124,7 @@
 							chatElem.append(timeElem);
 							chatElem.append(messageElem);
 		                    $("#chat-content").append(chatElem);
-						} else if(chat.senderId == selectedPartner){
+						} else if(chat.senderId == selectedPartnerId){
 							if(index == 0){
 								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
 															.text(getDate(chat.chatDate))
@@ -146,8 +139,12 @@
 								$("#chat-content").append(chatDate);
 							}
 							
-							const chatElem = $("<div>").addClass("from-other").val(chat.chatNo);
-							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap");
+							const chatElem = $("<div>").addClass("from-other");
+							const messageElem = $("<span>").text(chat.message)
+															.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
+															.attr('data-bs-toggle', "modal")
+															.attr('data-bs-target', '#report-chat-modal')
+															.data('chat-no', chat.chatNo);
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 							
 							if(chat.read == 'F' && index == 0){
@@ -170,11 +167,11 @@
 						}
 						
 					});
-					readPartnerMessage(selectedPartner);
+					readPartnerMessage();
 				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log('updateChatContent Failed');
+				error: function(error) {
+					console.log('updateChatContent Failed -> ' + error);
 				}
 			});
 		}
@@ -189,14 +186,14 @@
 		}
 		
 		//채팅 읽음 처리 함수
-		function readPartnerMessage(partnerId){
-			if ($('.partner[value=' + partnerId + '] .unread-count').text() != ''){
+		function readPartnerMessage(){
+			if ($('.partner[value=' + selectedPartnerId + '] .unread-count').text() != ''){
 
-				$('.partner[value=' + partnerId + '] .unread-count').text('');
+				$('.partner[value=' + selectedPartnerId + '] .unread-count').text('');
 				
 				const readerIdAndPartnerId = JSON.stringify({
 												"readerId" : memberId,
-												"partnerId" : partnerId
+												"partnerId" : selectedPartnerId
 											});
 				
 				$.ajax({
@@ -207,15 +204,16 @@
 				    success: function(result) {
 				        console.log(result + '개의 메세지를 읽었습니다. 상대방에게 읽었다고 알립니다.');
 						stompClient.send("/chat/read", {}, readerIdAndPartnerId);
+						updateTotalUnreadCount();
 				    },
 				    error: function(error) {
-				        console.log(error);
+				        console.log('[readPartnerMessage] read Update Failed -> ' + error);
 				    }
 				});
 			}
 		}
 		
-		//안읽은 메세지 총 갯수 표시하는 함수
+		//안읽은 메세지 총 갯수 표시하는 함수(#total-unread-count)
 		function updateTotalUnreadCount(){
 			let totalUnreadCount = 0;
 			$(".unread-count").each(function() {
@@ -239,11 +237,9 @@
 			$("#chat-console").css("display", "grid");
 			
 			//채팅창을 열었을때 선택된 상대가 있을경우  읽음 처리
-			if(selectedPartner != null){
-				readPartnerMessage(selectedPartner);
+			if(selectedPartnerId != null){
+				readPartnerMessage();
 			}
-			
-			updateTotalUnreadCount();
 		});
 	
 	
@@ -251,7 +247,7 @@
 		$(function(){
 			$(document).on("click", function(event) {
 				if (!$(event.target).closest("#chat-console").length &&
-					!$(event.target).is("#chat-btn")) {
+					!$(event.target).is("#chat-btn") && $('#report-chat-modal').is(':hidden')) {
 					$("#chat-console").hide();
 				}
 				
@@ -261,16 +257,16 @@
 		
 		//Enter 키로 메시지 전송
 		$("#chat-input").keyup(function(e) {
-		    if (e.keyCode == 13 && selectedPartner && $("#chat-input").val().trim() != "") {
+		    if (e.keyCode == 13 && selectedPartnerId && $("#chat-input").val().trim() != "") {
 		    	
-		    	message = JSON.stringify({
-		   	            'receiverId': selectedPartner,
+		    	chat = JSON.stringify({
+		   	            'receiverId': selectedPartnerId,
 		   	            'senderId' : memberId,
 		   	            'message' : $('#chat-input').val(),
 		   	            'chatDate' : Date.now()
 		   	        });
 		    	
-		    	saveMessage(message);
+		    	saveChat(chat);
 		    	
 		    	const lastDate = $('#chat-content a.chat-date').last().text();
 		    	if(getDate(Date.now()) != lastDate){
@@ -292,33 +288,32 @@
 		});
 		
 		//message를 DB에 저장하는 함수
-		function saveMessage(message){
-			console.log(message);
+		function saveChat(chat){
 			$.ajax({
 				url: "/chat" ,
 				method: "POST",
-				data : message,
+				data : chat,
 				contentType : "application/json",
 				dataType : "json",
-				success: function(result) {
-			   	    stompClient.send("/chat/message", {}, message);
+				success: function(savedChat) {
+					console.log('상대방에게 메세지를 보냅니다.' + savedChat);
+			   	    stompClient.send("/chat/message", {}, JSON.stringify(savedChat));
 			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
-					return result;
 				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log('saveMessage Failed');
+				error: function(error) {
+					console.log('saveChat Failed -> ' + error);
 				}
 			});
 		}
 	
 		//채팅 상대 리스트 업데이트
-		function updateChatPartnerList(memberId) {
-			return new Promise(function(resolve, reject) {
+		function updateChatPartnerList() {
 				$.ajax({
 					url: "/chats/" + memberId + "/partners",
 					method: "GET",
 					dataType : "json",
 					success: function(partnerList) {
+						console.log('채팅 상대 목록을 불러옵니다.' + partnerList);
 						$("#chat-partner-list").empty();
 						partnerList.forEach((partner, index) => {
 							let chatPartnerElem = $("<li>");
@@ -330,11 +325,11 @@
 											.attr('data-bs-custom-class', 'partner-id-popover')
 											.attr('data-bs-trigger', 'hover focus')
 											.attr('data-bs-content', partner.memberId);
-							chatPartnerElem.click(function() { 
-								selectedPartner = partner.memberId;
-								updateselectedPartner($(this));
+					 		chatPartnerElem.click(function() { 
+								selectedPartnerId = partner.memberId;
+								updateSelectedPartner();
 								updateChatContent();
-							});
+							}); 
 							
 							let unReadChatNoElem = $('<span>');
 							unReadChatNoElem.attr('class', 'unread-count badge bg-warning rounded-pill');
@@ -344,26 +339,19 @@
 							chatPartnerElem.append(unReadChatNoElem);
 							$("#chat-partner-list").append(chatPartnerElem);  
 						});
-						resolve();
-
-						//채팅 상대 아이디 표기를 위한 툴팁 초기화
+						
+						updateSelectedPartner();
+						updateTotalUnreadCount();
+						
+						//채팅 상대 아이디 표기를 위한 Popover 초기화
 						const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 						const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 						
 					},
-					error: function(jqXHR, textStatus, errorThrown) {
-						console.log('updateChatPartnerList Failed');
+					error: function(error) {
+						console.log('updateChatPartnerList Failed -> ' + error);
 					}
 				});
-			});
-		}
-	
-		//접속한 유저의 채팅내역 불러오는 함수
-		function loadChatByMemberId(memberId) {
-			updateChatPartnerList(memberId).then(function(){
-				$("#chat-content").append($('<span>').addClass('text-center fs-2').text('채팅 상대를 선택해주세요.'));
-				updateTotalUnreadCount();
-			});
 		}
 		
 		//Timestamp -> chatTime
@@ -398,11 +386,58 @@
 		//접속
 		$(function(){
 			if(memberId != null){
-				connect(memberId);
+				connect();
 				$("#chat-btn").show();
 			}
 		});
 		
+		//채팅 상대 메세지 선택 시 report-chat-modal 내용 업데이트하는 이벤트 등록
+		$('#chat-console').on('click', '.from-other .chat-message', function() {
+		    $('#report-memberId').val(selectedPartnerId);
+		    $('#chat-report-name').val($('#chat-partner-list .active').text());
+		    $('#chat-report-message').val($(this).text());
+		    $('#report-chat-no').val($(this).data('chat-no'));
+		    $('#chat-report-issue').empty();
+		});	
+		
+		//chat-report-modal 신고버튼 클릭 시 호출되는 함수
+		$('#chat-report-btn').click(function(){
+			if ($.trim($('#chat-report-issue').val()) != ''){
+				
+				$.ajax({
+					url: "/chat/report" ,
+					method: "POST",
+					data : JSON.stringify({
+						"blackId" : $('#report-memberId').val(),
+						"reportId" : memberId,
+						"issue" : $('#chat-report-issue').val(),
+						"reportDate" : Date.now(), 
+						"chatNo" : $('#report-chat-no').val()
+					}),
+					contentType : "application/json",
+					dataType : "json",
+					success: function(reportedData) {
+						console.log('신고 완료.' + reportedData);
+						$('#report-chat-modal').modal('hide');
+						showToast('#report-success-toast');
+					},
+					error: function(error) {
+						console.log('Chat Report Failed -> ' + error);
+						$('#report-chat-modal').modal('hide');
+						showToast('#report-fail-toast');
+					}
+				});
+				
+			} else {
+				showToast('#insert-issue-toast');
+			}
+		});
+		
+		//Toast Show
+		function showToast(toastId){
+			const toast = new bootstrap.Toast($(toastId));
+			toast.show();
+		}
 		
 	</script>
 </div> <!-- chatJsFragment -->

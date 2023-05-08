@@ -57,18 +57,24 @@
 			}
 		});
 		$(function(){
-			$.ajax({
-				url: "/charge/members/total-bamboo",
-				type: "GET",
-				dataType: "text",
-				success: function(foundTotalBambooStr){
-					console.log("Ajax success foundTotalBambooStr : " + foundTotalBambooStr);
-					$('#total-bamboo').text(foundTotalBambooStr);	
-				},
-				error: function(){
-					console.error("AJAX 요청 실패: ");
-				}
-			});    
+			const memberId = [[${#session.getAttribute('memberId')}]];
+			if(memberId == "" || memberId == null){
+				$('#navbar-total-bamboo').empty(); 
+			} else{
+				$.ajax({
+					url: "/charge/members/total-bamboo",
+					type: "GET",
+					dataType: "text",
+					data: {memberId : memberId},
+					success: function(foundTotalBambooStr){
+						console.log("Ajax success foundTotalBambooStr : " + foundTotalBambooStr);
+						$('#total-bamboo').html(foundTotalBambooStr);	
+					},
+					error: function(){
+						console.error("total-bamboo function error");
+					}
+				});    
+			}
 		});
 		// 검색 기능
 		$('#search-btn').on('click', function(){

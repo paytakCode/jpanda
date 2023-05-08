@@ -5,15 +5,37 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 공지사항 수정</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
-	<style>
-css
- 
-영역
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+td {
+	border: 1px solid #ddd;
+}
+
+.btn {
+	border: 1px solid black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -22,25 +44,24 @@ css
 <div>
 	<th:block layout:fragment="content">
 		<body>
-			<form th:action="'/admin/notice/'+${notice.noticeNo}+'/modify'"
-				method="post">
+			<form th:action="'/admin/notice/'+${notice.noticeNo}+'/modify'" method="post">
 				<input type="hidden" name="_method" value="put">
 				<table border="1">
 					<tr>
 						<th>제목</th>
-						<td><input name="title" type="text"
-							th:value="${notice.title}"></td>
+							<td><input name="title" type="text" th:value="${notice.title}"></td>
 					</tr>
 					<tr>
 						<th colspan="2">내용</th>
 					</tr>
 					<tr>
-						<td colspan="2"><textarea name="content" rows="30" cols="30"
-								th:text="${notice.content}"></textarea> <input type="hidden"
-							name="regDate" th:value="${notice.regDate}"></td>
+						<td colspan="2">
+							<textarea name="content" rows="30" cols="30" th:text="${notice.content}"></textarea>
+							<input type="hidden" name="regDate" th:value="${notice.regDate}">
+						</td>
 					</tr>
 				</table>
-				<input type="submit" value="수정완료">
+				<input type="submit" class="btn" value="수정완료">
 			</form>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

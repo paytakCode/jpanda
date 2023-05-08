@@ -5,15 +5,37 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 공지사항 상세</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
-	<style>
-css
- 
-영역
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+td {
+	border: 1px solid #ddd;
+}
+
+.btn {
+	border: 1px solid black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -36,7 +58,7 @@ css
 						<td colspan="2" th:text="${notice.content}"></td>
 					</tr>
 				</table>
-				<input type="submit" value="수정하기">
+				<input type="submit" class="btn" value="수정하기">
 			</form>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

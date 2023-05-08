@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,8 +112,7 @@ public class TradeServiceImpl implements TradeService{
 	}
 
 	@Override
-	public String modifyTalentByTalentNo(String talentNo, TalentDto talentDto) {
-		int result = 0;
+	public int modifyTalentByTalentNo(String talentNo, TalentDto talentDto) {
 		//DB에 있는 Talent 조회
 		TalentDto foundTalentDto = tradeDao.selectTradeTalentByTalentNo(talentNo);
 		
@@ -140,85 +137,45 @@ public class TradeServiceImpl implements TradeService{
             
         }
 		
-		result = tradeDao.updateTradeTalent(foundTalentDto);
-		
-		if (result > 0) {
-			return "수정에 성공하였습니다.";
-		} else {
-			return "수정 요청에 실패하였습니다.";
-		}
-		
+		return tradeDao.updateTradeTalent(foundTalentDto);
 	}
 
 	@Override
-	public String removeRefundByrefundPurchaseNo(String purchaseNo) {
-		int result = 0;
-		
-		result = tradeDao.deleteRefundByRefundPurchaseNo(purchaseNo);
-		
-		if (result > 0) {
-			return "환불 취소 요청이 완료되었습니다.";
-		} else {
-			return "환불 취소 요청에 실패하였습니다.";
-		}
+	public int removeRefundByrefundPurchaseNo(String purchaseNo) {
+		return tradeDao.deleteRefundByRefundPurchaseNo(purchaseNo);
 	}
 
 	@Override
 	public TalentDto findTalentByTalentNo(String talentNo) {
-		TalentDto talentDto = null;
-		
-		talentDto = tradeDao.selectTradeTalentByTalentNo(talentNo);
-		
-		return talentDto;
+		return tradeDao.selectTradeTalentByTalentNo(talentNo);
 	}
 
 	@Override
-	public String addExchangeByTalentNo(TalentDto talentDto) {
+	public int addExchangeByTalentNo(TalentDto talentDto) {
 		int result = 0;
 		
 		if ( talentDto != null) {
 			result = tradeDao.insertExchangeByTalentNo(talentDto);
-		
-			if (result > 0) {
-				return "환전 신청이 완료되었습니다.";
-			} else {
-				return "환전 신청에 실패하였습니다.";
-			}
 			
 		} else {
-			return "fail submitExchange talentDto : null";
+			result = 0;
 		}
+		
+		return result;
 		
 	}
 
 	@Override
-	public String addRefund(HttpSession session, TradeDto tradeDto) {
-		int result = 0;
-		tradeDto.setBuyerId((String)session.getAttribute("memberId"));
+	public int addRefund(String memberId, TradeDto tradeDto) {
+		tradeDto.setBuyerId(memberId);
 		log.info("addRefund tradeDto.getBuyerId() : " + tradeDto.getBuyerId());
 		
-		result = tradeDao.insertTalentRefund(tradeDto);
-		
-		if (result > 0) {
-			return "환불 신청이 완료되었습니다.";
-		} else {
-			return "환불 신청에 실패하였습니다.";
-		}
-		
-		
+		return tradeDao.insertTalentRefund(tradeDto);
 	}
 
 	@Override
-	public String modifyExchangeStatusByTalentNo(String talentNo) {
-		int result = 0;
-		result = tradeDao.updateExchangeStatusByTalentNo(talentNo);
-		
-		if (result > 0) {
-			return "환전등록 재신청에 성공하였습니다.";
-		} else {
-			return "환전등록 재신청에 실패하였습니다.";
-		}
-		
+	public int modifyExchangeStatusByTalentNo(String talentNo) {
+		return tradeDao.updateExchangeStatusByTalentNo(talentNo);
 	}
 
 	@Override

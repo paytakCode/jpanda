@@ -14,24 +14,40 @@
 		from coupon
 	</select>
 	
-	<select id="selectCouponsExpired" resultType="AdminCoupon">
+	<select id="selectCoupon" resultType="int">
 	<![CDATA[
-		select
-            	count(cu.coupon_code) as usedcoupon_count,
-            	c.coupon_code,
-           	 	c.issue_date,
-            	c.expire_date,
-            	c.coupon_value
-		from        
-            	coupon c, coupon_use cu
-		where
-            	c.expire_date <= sysdate
-		and 
-            	c.coupon_code = cu.coupon_code
-		group by 
-            	c.coupon_code, c.issue_date, c.expire_date, c.coupon_value
-        order by
-        		c.expire_date desc
+		SELECT 	COUNT(*) 
+		FROM (
+		  		SELECT
+		    			count(cu.coupon_code) as usedcoupon_count,
+		    			c.coupon_code,
+		    			c.issue_date,
+					    c.expire_date,
+					    c.coupon_value
+				FROM coupon c, coupon_use cu
+				WHERE c.expire_date <= sysdate
+				AND c.coupon_code = cu.coupon_code
+				GROUP BY c.coupon_code, c.issue_date, c.expire_date, c.coupon_value
+			)
+	]]>
+	</select>
+	
+	<select id="selectCouponsExpired" resultType="AdminCoupon" parameterType="AdminPagination">
+	<![CDATA[
+		  SELECT *
+		  FROM (
+		    SELECT ROW_NUMBER() OVER (ORDER BY c.expire_date DESC) AS rnum,
+		           count(cu.coupon_code) as usedcoupon_count,
+		           c.coupon_code,
+		           c.issue_date,
+		           c.expire_date,
+		           c.coupon_value
+		    FROM coupon c, coupon_use cu
+		    WHERE c.expire_date <= sysdate
+		    AND c.coupon_code = cu.coupon_code
+		    GROUP BY c.coupon_code, c.issue_date, c.expire_date, c.coupon_value
+		  ) t
+		  WHERE t.rnum BETWEEN #{startRow} AND #{endRow}
 	]]>
 	</select>
 	

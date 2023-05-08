@@ -121,7 +121,7 @@
 <div>
 	<th:block layout:fragment="content">
 	<script th:inline="javascript">
-		if([[${#session.getAttribute("memberId")}]] != [[${talent.sellerId}]]){
+		if(memberId != [[${talent.sellerId}]]){
 			alert("비정상적인 접근이 감지되었습니다. 다시 로그인 해주세요.");
 			location.href = "/logout";
 		}
@@ -413,7 +413,7 @@
 			$('#category-check').attr('src', '/image/talentImage/check.png');
 		}
 	});
-	$('#seller-id').val([[${#session.getAttribute("memberId")}]]);
+	$('#seller-id').val(memberId);
 	
 	// 등록을 하지 않고 다른 페이지 이동 시 알림창
 	$(window).on('beforeunload', function(){

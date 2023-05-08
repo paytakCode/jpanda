@@ -62,8 +62,8 @@
 		
 		.partner-id-popover {
 			--bs-popover-border-color: black;
-			--bs-popover-bg: mediumseagreen;
-			--bs-popover-body-color: auto;
+			--bs-popover-bg: black;
+			--bs-popover-body-color: white;
 			--bs-popover-body-padding-x: .5rem;
 			--bs-popover-body-padding-y: .5rem;
 			--bs-popover-arrow-width: 1rem;
@@ -157,6 +157,14 @@
 			justify-content: flex-start;
 		}
 		
+		.from-other .chat-message{
+			cursor: pointer;
+		}
+		
+		#report-chat-modal {
+			z-index: 10000;
+		}
+		
 		.from-me {
 			display: flex;
 			flex-direction: row;
@@ -170,6 +178,15 @@
 			color: #fff;
 			font-weight:
 		}
+		
+		#insert-issue-toast{
+			z-index: 10001;
+		}
+		
+		#report-success-toast{
+			z-index: 10001;
+		}
+		
 	</style>
 </div> <!-- chatCssFragment -->
 </html>

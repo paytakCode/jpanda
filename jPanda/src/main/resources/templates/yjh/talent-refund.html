@@ -5,15 +5,37 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>관리자 환불신청 건 조회</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
-	<style>
-css
- 
-영역
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+td {
+	border: 1px solid #ddd;
+}
+
+.btn {
+	border: 1px solid black;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -23,42 +45,10 @@ css
 	<th:block layout:fragment="content">
 		<body>
 			<h1>환불 관리</h1>
-			<table border="1">
-				<tr>
-					<th>번호</th>
-					<th>신청 아이디</th>
-					<th>구매번호</th>
-					<th>재능번호</th>
-					<th>환불 밤부</th>
-					<th>환불 사유</th>
-					<th>상태</th>
-					<th>신청일</th>
-					<th></th>
-				</tr>
-				<tr th:each="refund : ${refundList}">
-					<td><input type="checkbox" class="checkbox"
-						th:name="purchaseNo" th:value="${refund.purchaseNo}"></td>
-					<td th:text="${refund.buyerId}"><input type="hidden"
-						name="buyerId" th:value="${refund.buyerId}"></td>
-					<td th:text="${refund.purchaseNo}"><input type="hidden"
-						th:name="purchaseNo" th:value="${refund.purchaseNo}"></td>
-					<td th:text="${refund.talentNo}"><input type="hidden"
-						th:name="talentNo" th:value="${refund.talentNo}"></td>
-					<td th:text="${refund.refundBamboo}"><input type="hidden"
-						th:name="refundBamboo" th:value="${refund.refundBamboo}"></td>
-					<td th:text="${refund.issue}"><input type="hidden"
-						th:name="issue" th:value="${refund.issue}"></td>
-					<td th:text="${refund.refundStatus}"><input type="hidden"
-						th:name="status" th:value="${refund.refundStatus}"></td>
-					<td th:text="${refund.approveDate}"><input type="hidden"
-						th:name="approveDate" th:value="${refund.approveDate}"></td>
-				</tr>
-				<tr>
-					<td colspan="8"><input type="button" class="btn"
-						th:name="refundStatus" value="환불완료"> <input type="button"
-						class="btn" th:name="refundStatus" value="반려"></td>
-				</tr>
-			</table>
+			<table border="1" id="refundTable"></table>
+				<input type="button" class="btn" th:name="refundStatus" value="환불완료">
+				<input type="button" class="btn" th:name="refundStatus" value="반려">
+			<div id="pagination"></div>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
@@ -68,7 +58,145 @@ css
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
+	function refundChange(currentPage){
+		$.ajax({
+			url : "/admin/talent-refund/talent-refunds",
+			type : "GET",
+			data : { currentPage : currentPage },
+			dataType: 'json',
+	        success:function(returnMap) {
+	        	console.log(returnMap.refundList);
+	          	console.log(returnMap.pagination);
+	          		
+	          	var refundList = returnMap.refundList;
+	          	var refundTable = $('#refundTable');
+
+	            // 기존 테이블 초기화
+	    		refundTable.empty();
+
+	    		// 테이블 헤더 생성
+	    		var tableHeader = $('<tr></tr>');
+	    		var headerNo = $('<th></th>').text('번호');
+	    		var headerBuyerId= $('<th></th>').text('신청 아이디');
+	    		var headerPurchaseNo = $('<th></th>').text('구매번호');
+	    		var headerTalentNo = $('<th></th>').text('재능번호');
+	    		var headerRefundBamboo = $('<th></th>').text('환불 밤부');
+	    		var headerIssue = $('<th></th>').text('환불 사유');
+	    		var headerRefundStatus = $('<th></th>').text('상태');
+	    		var headerSubmitDate = $('<th></th>').text('신청일');	    		
+	    		tableHeader.append(headerNo).append(headerBuyerId).append(headerPurchaseNo)
+	    				   .append(headerTalentNo).append(headerRefundBamboo).append(headerIssue)
+	    				   .append(headerRefundStatus).append(headerSubmitDate);
+	    		refundTable.append(tableHeader);
+
+	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
+				$.each(refundList, function(index, refund) {
+				  var tableRow = $('<tr></tr>').addClass('refund-detail');
+				  var checkbox = $('<td></td>').append(
+				    $('<input/>').attr({
+				      type: 'checkbox',
+				      class: 'checkbox',
+				      name: 'purchaseNo',
+				      value: refund.purchaseNo
+				    })
+				  );
+				  var buyerId = $('<td></td>').text(refund.buyerId).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'buyerId',
+				      value: refund.buyerId
+				    })
+				  );
+				  var purchaseNo = $('<td></td>').text(refund.purchaseNo);
+				  var talentNo = $('<td></td>').text(refund.talentNo).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'talentNo',
+				      value: refund.talentNo
+				    })
+				  );
+				  var refundBamboo = $('<td></td>').text(refund.refundBamboo).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'refundBamboo',
+				      value: refund.refundBamboo
+				    })
+				  );
+				  var issue = $('<td></td>').text(refund.issue).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'issue',
+				      value: refund.issue
+				    })
+				  );
+				  var refundStatus = $('<td></td>').text(refund.refundStatus).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'status',
+				      value: refund.refundStatus
+				    })
+				  );
+				  var approveDate = $('<td></td>').text(refund.approveDate.substring(0, 10)).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'approveDate',
+				      value: refund.approveDate
+				    })
+				  );
+				  
+				  tableRow.append(checkbox, buyerId, purchaseNo, talentNo, refundBamboo, issue, refundStatus, approveDate);
+				  refundTable.append(tableRow);
+				});
+	    			
+	                var pagination = returnMap.pagination;
+	                var startNum = parseInt(pagination.startNum);
+	                var lastNum = parseInt(pagination.lastNum);
+	                var paginationDiv = $('#pagination');
+	    			
+	                // 기존 페이지 번호 삭제
+	                paginationDiv.empty();
+	                
+	                var page = $('<a></a>').addClass('refund-page').text('<');
+	                paginationDiv.append(page);
+	                
+	           	  	// 페이지 번호 생성
+	                for (var i=startNum; i<=lastNum; i++) {
+	                    var page = $('<a></a>').addClass('refund-page').text(i);
+	    				if(pagination.currentPage == i){
+	    					page.css('background-color', '#EAEAEA');
+	    				}
+	                    paginationDiv.append(page);
+	                }
+	                paginationDiv.append($('<a></a>').addClass('refund-page').text('>'));
+	           	  	
+					$('.refund-page').one('click', function(){
+						if($(this).text() === '<'){
+							if(parseInt(pagination.currentPage) === 1){
+								refundChange(pagination.currentPage);
+							}else{
+								refundChange(parseInt(pagination.currentPage) - 1);
+							}
+						}else if($(this).text() === '>'){
+							if(parseInt(pagination.currentPage) === parseInt(pagination.totalPage)){
+								refundChange(pagination.currentPage);
+							}else{
+								refundChange(parseInt(pagination.currentPage) + 1);
+							}
+						}else{
+							refundChange($(this).text());
+						}
+					});
+				
+	          	}
+		});
+	}
+	
+	$(function() {
+		refundChange(1);
+	});
+	
 	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
+	
 	$(".btn").on("click", function() {
 		let purchaseNo = $("input.checkbox:checked").map(function() {
 			return $(this).val();
