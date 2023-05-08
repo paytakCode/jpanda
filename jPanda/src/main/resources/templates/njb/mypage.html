@@ -104,7 +104,7 @@ a {
 				        </li>
 				        <li>
 				            <span>전화번호: </span>
-				            <input type="text" th:value="${memberInfo.tel}" name="tel">
+				            <input type="text" maxlength="11" th:value="${memberInfo.tel}" name="tel" oninput="restrictPhoneNumberInput(event)">
 				        </li>
 				        <li>
 				            <span>성별: </span>
@@ -205,14 +205,26 @@ a {
 		    }
 		  });
 		});
-	function showSuccessAlertAndRefresh() {
-        alert("수정되었습니다.");
-        location.reload(); // 페이지 새로고침
-    }
-	   function redirectToTrade() {
-	        window.location.href = "/trade"; // 페이지 이동
-	    }
 	
+    function restrictPhoneNumberInput(event) {
+        var input = event.target;
+        input.value = input.value.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+    }
+    
+    function showSuccessAlertAndRefresh() {
+        var phoneNumberInput = document.getElementsByName("tel")[0];
+        var phoneNumber = phoneNumberInput.value;
+        
+        if (phoneNumber.length !== 11) {
+            alert("전화번호는 11자리로 입력해주세요.");
+            return;
+        }
+        
+        // 수정 완료 알림창 표시
+        alert("수정되었습니다.");
+        // 페이지 새로고침
+        location.reload();
+    }
 	
 	</script> 
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
