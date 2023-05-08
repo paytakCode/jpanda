@@ -57,9 +57,8 @@ public class BoardController {
 	@GetMapping("/talents-list")
 	public HashMap<String, Object> talentList(FiltersDto filters){
 		System.out.println("Controller talentList Start");
-		System.out.println(filters.toString());
 		List<TalentDto> talentListByFilters = boardService.findTalentListByFilter(filters);
-		System.out.println(talentListByFilters.size());
+		System.out.println("talentList Total Count-> "+ talentListByFilters.size());
 		filters.setTotalCount(talentListByFilters.size());
 		talentListByFilters = boardService.findTalentListByFilter(filters);
 		HashMap<String, Object> map = new HashMap<String, Object>();

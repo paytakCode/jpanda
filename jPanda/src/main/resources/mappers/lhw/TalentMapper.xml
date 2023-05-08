@@ -6,9 +6,10 @@
 	
 	<!-- 상세 페이지  -->
 	<select id="selectBoardTalentByTalentNo" resultType="BoardTalent" parameterType="Long">
-		SELECT talent_no, title, seller_id, main_img, summary, bamboo, sale_bamboo, content
-		FROM talent
-		WHERE talent_no = #{talentNo}
+		SELECT t.talent_no, t.title, t.seller_id, t.main_img, t.summary, t.bamboo, t.sale_bamboo, t.content, m.name
+		FROM talent t, member m
+		WHERE t.seller_id = m.member_id
+		AND talent_no = #{talentNo}
 	</select> 
 	
 	<!-- 리뷰 리스트 셀렉트  -->
@@ -65,16 +66,17 @@
 	</select>
 	
 	<!-- 신고하기 검증용  -->
-	<select id="selectReportListByReportId" parameterType="String" resultType="BoardReport">
-		SELECT black_id
+	<select id="selectReportCheck" parameterType="BoardReport" resultType="int">
+		SELECT COUNT(*)
 		FROM report
-		WHERE report_id = #{reportId}
+		WHERE talent_no = #{talentNo}
+		AND report_id = #{reportId}
 	</select>
 	
 	<!-- 신고하기 인서트  -->
 	<insert id="insertReport" parameterType="BoardReport">
-		INSERT INTO report(black_id, report_id, issue, report_date, report_no)
-		VALUES (#{blackId}, #{reportId}, #{issue}, #{reportDate}, REPORT_NO_SEQ.nextval)
+		INSERT INTO report(black_id, report_id, issue, report_date, report_no, talent_no)
+		VALUES (#{blackId}, #{reportId}, #{issue}, #{reportDate}, REPORT_NO_SEQ.nextval, #{talentNo})
 	</insert>
 	
 	<!-- 조회수 업데이트  -->

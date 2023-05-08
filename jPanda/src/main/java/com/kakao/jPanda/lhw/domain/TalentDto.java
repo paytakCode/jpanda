@@ -29,6 +29,8 @@ public class TalentDto {
 	
 	// 리뷰 테이블용 
 	private Double bambooScore;
-	
 	private int reviewCount;
+	
+	// 이름 조회용
+	private String name;
 }

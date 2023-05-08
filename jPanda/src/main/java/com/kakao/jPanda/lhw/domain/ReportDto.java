@@ -16,6 +16,6 @@ public class ReportDto {
 	private String reportId;
 	private String issue;
 	private Timestamp reportDate;
-	
 	private Long talentNo;
+	private Long chatNo;
 }
