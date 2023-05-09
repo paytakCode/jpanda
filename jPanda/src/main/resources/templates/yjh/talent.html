@@ -14,18 +14,21 @@
 table {
 	border-collapse: collapse;
 	width: 100%;
+	table-layout: auto;
 }
 
 th, td {
 	text-align: left;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
 	background-color: #f2f2f2;
+	white-space: nowrap;
 }
 
-tr:nth-child(even) {
+tr:nth-child(odd) {
 	background-color: #f2f2f2;
 }
 
@@ -34,7 +37,8 @@ td {
 }
 
 .btn{
-	border: 1px solid black;
+	border: 1px solid #ddd;
+	float: right;
 }
 	
 .container{
@@ -50,6 +54,9 @@ td {
 	cursor: pointer;
 }
 
+.regDate, .status {
+	white-space: nowrap;
+}
 #pagination{
 	text-align: center;
 	margin-top: 30px;
@@ -59,6 +66,15 @@ td {
 	text-decoration: none;
 	color: black;
 }
+
+.statusDate, .status{
+	white-space: nowrap;
+}
+
+h2{
+	margin: 30px;
+	text-align: center;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -67,10 +83,11 @@ td {
 <div>
 	<th:block layout:fragment="content">
 		<body>
-			<h1>판매 등록 신청 현황</h1>
+			<h2>판매 등록 신청 현황</h2>
 			<table border="1" id="talentTable"></table>
+			<br>
 			<input type="button" class="btn" value="검토 완료">
-			
+			<br>
 			<div id="pagination"></div>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -136,8 +153,9 @@ td {
 				    }).text(talent.title)
 				  );
 				  var summary = $('<td></td>').text(talent.summary);
-				  var statusDate = $('<td></td>').text(talent.statusDate.substring(0, 10));
-				  var talentStatus = $('<td></td>').text(talent.talentStatus.substring(0, 10));
+				  var statusDate = $('<td></td>').text(talent.statusDate.substring(0, 10)).addClass("statusDate");
+				  var statusDate = $('<td></td>').text(talent.statusDate.substring(0, 10)).addClass("regDate");
+				  var talentStatus = $('<td></td>').text(talent.talentStatus.substring(0, 10)).addClass("status");
 				  
 				  tableRow.append(checkbox, sellerId, talentNo, title, summary, statusDate, talentStatus);
 				  talentTable.append(tableRow);

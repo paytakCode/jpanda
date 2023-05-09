@@ -19,13 +19,14 @@ table {
 th, td {
 	text-align: left;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
 	background-color: #f2f2f2;
 }
 
-tr:nth-child(even) {
+tr:nth-child(odd) {
 	background-color: #f2f2f2;
 }
 
@@ -51,6 +52,15 @@ td {
 	text-decoration: none;
 	color: black;
 }
+
+.create-coupon td{
+	text-align: center;
+}
+
+h3 {
+	margin: 20px;
+	text-align: center;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -61,6 +71,7 @@ td {
 		<body>
 			<form action="/admin/coupons" method="post">
 				<h3>쿠폰 생성</h3>
+				<div class="create-coupon">
 				<table>
 					<tr>
 						<td>
@@ -72,7 +83,7 @@ td {
 							<input type="date" name="expireDate" class="expireDate" pattern="YYYYMMDD">
 						</td>
 						<td>
-							<input type="text" id="couponCode" th:name="couponCode">&nbsp;
+							<input type="text" id="couponCode" th:name="couponCode">
 							<input type="button" id="create-coupon" value="생성하기">
 						</td>
 						<td>
@@ -88,9 +99,10 @@ td {
 						</td>
 					</tr>
 				</table>
+				</div>
+				<br><br>
 				<h3>만료된 쿠폰</h3>
 				<table border="1" id="couponTable"></table>
-				
 				<div id="pagination"></div>
 			</form>
 		</body>
