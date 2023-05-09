@@ -132,7 +132,7 @@
 		#side {
 		  	position: fixed;
 		  	top: 200px;
-		  	right: calc(50% + 570px);
+		  	right: calc(60% + 320px);
 		}
 		
 		.write-check {
@@ -142,10 +142,10 @@
 			border-radius: 13px;
 		}
 		
-		#price > div {
-		   display: inline-block;
-		    margin-left: 50px;
+		#price > div:not(.talent-image-summary) {
+		  	display: inline-block;
 		   	text-align: left;
+		   	margin-left: 30px;
 		}
 		
 		.talent-price-h3 {
@@ -181,7 +181,8 @@
 			width: 25px;
 			height: 25px;
 			text-align: left;
-			margin-right: 5px;
+			margin-left: 15px;
+	   		margin-right: 5px;
 		}
 		
 		justify-content: space-between;
@@ -201,6 +202,11 @@
    		.essential-image {
 	   		height: 20px;
 	   		margin-left: 2px;
+    	}
+    	
+    	.talent-image-summary{
+    		display: flex;
+    		line-height: 25px;
     	}
 	</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -250,7 +256,10 @@
 			<div id="main-image" class="main-img write-check">
 				<h4 class="talent-h4">대표 이미지<img class="essential-image" src="/image/talentImage/essential.png"></h4>
 				<p class="talent-summary">메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요 <br>비율은 4:3이 가장 좋아요.</p>
-				<p class="talent-summary"><img class="warning-image" src="/image/talentImage/red!.png">논란의 여지가 있는 이미지나 저작권, 초상권, 지적 재산권을 침해하는 이미지를 사용할 시 책임지지 않습니다.</p>
+				<div class="talent-image-summary">
+					<img class="warning-image" src="/image/talentImage/red!.png">
+					<p class="talent-summary talent-summary-in-div">논란의 여지가 있는 이미지나 저작권, 초상권, 지적 재산권을 침해하는 이미지를 사용할 시 책임지지 않습니다.</p>
+				</div>
 				<img id="main-image-preview" width="auto" height="250" />
 				<input type="file" id="choose-image-file" accept="image/jpeg, image/png, image/gif" style="display:none;"/>
 				<input type="hidden" id="main-img-value" name="mainImg" th:value="${talent.mainImg}">
@@ -259,7 +268,10 @@
 			<div id="title" class="title write-check">
 				<h4  class="talent-h4">제목<img class="essential-image" src="/image/talentImage/essential.png"></h4>
 				<p class="talent-summary">메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.</p>
-				<p class="talent-summary"><img class="warning-image" src="/image/talentImage/orange!.png">제목은 15자 이상 30자 이하로  작성해주세요.</p>
+				<div class="talent-image-summary">
+					<img class="warning-image" src="/image/talentImage/orange!.png">
+					<p class="talent-summary talent-summary-in-div">제목은 15자 이상 30자 이하로  작성해주세요.</p>
+				</div>
 				<input type="text" id="title" name="title" class="title talent-input" th:value="${talent.title}" minlength="15" maxlength="30">
 			</div>
 			
@@ -272,7 +284,10 @@
 			<div id="price" class="bamboo write-check">
 				<h4 class="talent-h4">가격<img class="essential-image" src="/image/talentImage/essential.png"></h4>
 				<p class="talent-summary">정상 가격과 판매 가격을 입력해 주세요.</p>
-				<p class="talent-summary"><img class="warning-image" src="/image/talentImage/red!.png">터무니 없이 높은 할인율은 반려 대상입니다.</p>
+				<div class="talent-image-summary">
+					<img class="warning-image" src="/image/talentImage/red!.png">
+					<p class="talent-summary talent-summary-in-div">터무니 없이 높은 할인율은 반려 대상입니다.</p>
+				</div>
 			<div class="price">
 				<h3 class="talent-price-h3">정상 가격</h3>
 				<input type="number" id="bamboo" name="bamboo" class="bamboo bamboo-input talent-input" placeholder="1000" th:value="${talent.bamboo}"><p>밤부</p>
@@ -281,7 +296,7 @@
 				<h3 class="talent-price-h3">판매 가격</h3>
 				<input type="number" id="sale-bamboo" name="saleBamboo" class="bamboo bamboo-input talent-input" placeholder="900" th:value="${talent.saleBamboo}"><p>밤부</p>
 			</div>	
-			<div >
+			<div class="price">
 				<h3 class="talent-price-h3">할인율</h3>
 				<input type="text" id="discount-bamboo" class="bamboo bamboo-input talent-input" placeholder="10" readonly><p>%</p>
 			</div>
@@ -290,7 +305,10 @@
 			<div id="summary" class="summary write-check">
 				<h4  class="talent-h4">요약 설명<img class="essential-image" src="/image/talentImage/essential.png"></h4>
 				<p class="talent-summary">해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
-				<p class="talent-summary"><img class="warning-image" src="/image/talentImage/orange!.png">요약 설명은 20자 이상 40자 이하로 작성해 주세요.</p>
+				<div class="talent-image-summary">
+					<img class="warning-image" src="/image/talentImage/orange!.png">
+					<p class="talent-summary talent-summary-in-div">요약 설명은 20자 이상 40자 이하로 작성해 주세요.</p>
+				</div>
 				<input type="text" id="summary" name="summary" class="summary talent-input" th:value="${talent.summary}" minlength="20" maxlength="40">
 			</div>
 			<input id="talent-sudmit-button" type="submit" value="수정하기">
