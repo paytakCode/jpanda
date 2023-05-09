@@ -19,6 +19,7 @@ table {
 th, td {
 	text-align: left;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
@@ -34,7 +35,14 @@ td {
 }
 
 .btn {
-	border: 1px solid black;
+	border: 1px solid #ddd;
+	float: right;
+	margin: 10px 0;
+}
+
+h2{
+	text-align: center;
+	margin: 30px;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -44,8 +52,8 @@ td {
 <div>
 	<th:block layout:fragment="content">
 		<body>
-			<form th:action="'/admin/notice/'+${notice.noticeNo}+'/modify-form'"
-				method="get">
+			<form th:action="'/admin/notice/' + ${notice.noticeNo} + '/modify-form'" method="get">
+				<h2>공지사항 세부내용</h2>
 				<table border="1">
 					<tr>
 						<th>제목</th>
@@ -69,7 +77,7 @@ td {
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		JavaScript영역
+		/* JavaScript영역 */
 	</script>
 
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

@@ -19,6 +19,7 @@ table {
 th, td {
 	text-align: left;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
@@ -32,6 +33,17 @@ tr:nth-child(even) {
 td {
 	border: 1px solid #ddd;
 }
+
+h2{
+	margin: 30px;
+	text-align: center;
+}
+
+.btn{
+	float: right;
+	border: 1px solid #ddd;
+	margin: 10px 0;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -40,6 +52,7 @@ td {
 <div>
 	<th:block layout:fragment="content">
 		<body>
+		<h2>판매등록건 세부내용</h2>
 			<table border="1">
 				<tr>
 					<th>제목</th>
@@ -49,9 +62,10 @@ td {
 					<th colspan="2">내용</th>
 				</tr>
 				<tr>
-					<td colspan="2" th:text="${talent.content}"></td>
+					<td colspan="2" th:utext="${talent.content}"></td>
 				</tr>
 			</table>
+			<input class="btn" type="button" value="목록">
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
@@ -61,8 +75,10 @@ td {
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		JavaScript영역
-	</script>
+		$(".btn").on("click", function(){
+			history.back();
+		});
+	</script>	
 
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>

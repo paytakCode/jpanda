@@ -2,15 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kakao.jPanda.yjh.TalentRefundMapper">
-
-	<select id="selectTalentRefund" parameterType="List" resultType="AdminTalentRefund">
-		select	
-				bu.buyer_id, tr.purchase_no, bu.talent_no, tr.refund_bamboo, tr.issue, 
-        		tr.refund_status, tr.approve_date
-		from 	talent_refund tr, bamboo_use bu
-		where	tr.purchase_no = bu.purchase_no
-		and		tr.refund_status = '검토중'
-	</select>
 	
 	<select id="selectTalentRefunByPagination" parameterType="AdminPagination" resultType="AdminTalentRefund">
 		SELECT *
@@ -22,7 +13,7 @@
 					        tr.refund_bamboo,
 					        tr.issue,
 					        tr.refund_status,
-					        tr.approve_date,
+					        tr.submit_date,
 					        ROW_NUMBER() OVER (ORDER BY tr.approve_date DESC) AS rnum
 		    	FROM talent_refund tr, bamboo_use bu
 		    	WHERE tr.purchase_no = bu.purchase_no
