@@ -13,157 +13,174 @@
 	<style type="text/css">
 /* 페이지 전체 레이아웃 */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
 } 
 
 /* 공통 스타일 */
 ul, li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }  
 
 
 /* 게시판 리스트 */
-.list-container, .sell-board {
-  margin: 30px auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  max-width: 950px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+.sell-board {
+	margin: 30px auto;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	max-width: 950px;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 
 /* 사이드바 대분류 카테고리 */
 #top-category {
-  position: absolute;
-  left: 60px;
-  bottom: 20px;
-  transform: translateY(-80%);
-  width: 250px;
-  border: 1px solid #ccc;
-  margin: 0 auto;
-  text-align: center;
-  padding: 10px;
+	font-size: 16px;
+	position: absolute;
+	left: 60px;
+	bottom: 20px;
+	transform: translateY(-80%);
+	width: 250px;
+	border: 1px solid #ccc;
+	margin: 0 auto;
+	text-align: center;
+	padding: 10px;
+}
+
+.top-category {
+	font-weight: bold;
+	font-size: 19px;
 }
 
 
 /* 중분류 카테고리 */
-#lower-category {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center; /* 가로 방향으로 가운데 정렬 */
-  align-items: center; /* 세로 방향으로 가운데 정렬 */
-  max-width: 300px;
-  margin-top: 100px;
-  margin: 0 auto; /* 가운데 정렬 */
+#lower-category-list {
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 370px;
+	margin-top: 3px !important;
+	margin: 0 auto; /* 가운데 정렬 */
+	margin-bottom: 20px;
+}
+
+.lower-category{
+	margin-top: 30px !important;
+	font-weight: bold;
+	font-size: 19px;
+	text-align: center;
 }
 
 
 .bamboo-imges {
-  width: 170px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
-  height: 20px;
+	width: 170px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
+	height: 20px;
 }
 
 .bamboo-imges img {
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 /* 컨테이너 */
 #defalut-list {
-  display: flex;
-  justify-content: center;
-  flex-direction: column; /* 아이템들을 수직 방향으로 배치 */
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: center; /* 아이템들을 가운데 정렬 */
-  margin: 10px;
-  gap: 30px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column; /* 아이템들을 수직 방향으로 배치 */
+	flex-wrap: wrap;
+	flex-direction: row;
+	align-items: center; /* 아이템들을 가운데 정렬 */
+	margin: 10px;
+	gap: 30px;
 }
 
 /* 카드 컨테이너 */
 .talent-ajax-list {
-  display: flex;
-  flex-direction: column;
-  width: 200px;
-  height: 450px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  margin 10px;
-  padding: 10px;
-  margin-bottom: 50px;
-  overflow: hidden; /* 아이템 내부의 내용이 넘칠 경우, 숨김 처리 */
+	display: flex;
+	flex-direction: column;
+	width: 210px;
+	height: 450px;
+	border-radius: 10px;
+	margin 10px;
+	padding: 10px;
+	margin-bottom: 50px;
+	overflow: hidden; /* 아이템 내부의 내용이 넘칠 경우, 숨김 처리 */
+}
+
+
+/* 제목 */
+.talent-title {
+	display: block;
+	font-size: 15px;
+	font-weight: bold;
+	white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+	overflow: hidden; /* 넘치는 텍스트는 숨김 처리 */
+	text-overflow: ellipsis; /* 넘치는 텍스트는 생략 부호(...)로 대체 */
 }
 
 /* 이미지 */
 .talent-image {
-  display: block;
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 10px;
+	display: block;
+	width: 100%;
+	height: 180px;
+	object-fit: contain;
+	border-radius: 10px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	border-radius: 10px;
+	margin-bottom: 10px;
 }
 
-/* 제목 */
-.talent-title {
-  display: block;
-  font-size: 18px;
-  font-weight: bold;
-  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-  overflow: hidden; /* 넘치는 텍스트는 숨김 처리 */
-  text-overflow: ellipsis; /* 넘치는 텍스트는 생략 부호(...)로 대체 */
-}
 
 /* 요약 */
 .talent-summary {
-  display: block;
-  width: 190px;
-  height: 120px;
-  font-size: 16px;
-  overflow: hidden; /* 넘치는 텍스트는 숨김 처리 */
-  text-overflow: ellipsis; /* 넘치는 텍스트는 생략 부호(...)로 대체 */
+	display: block;
+	width: 180px;
+	height: 110px;
+	font-size: 14px;
+	overflow: hidden; /* 넘치는 텍스트는 숨김 처리 */
+	text-overflow: ellipsis; /* 넘치는 텍스트는 생략 부호(...)로 대체 */
 }
 
 /* 판매자 */
 .talent-seller {
-  font-size: 15px;
-  margin-bottom: 5px;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 0px;
 }
 
 /* 가격 */
 .talent-price {
-  font-size: 15px;
-  font-weight: bold;
-  color: gray;
-  margin-bottom: 5px;
-  text-decoration: line-through;
+	font-size: 18px;
+	font-weight: bold;
+	color: gray;
+	margin-bottom: 0px;
+	text-decoration: line-through;
 }
 
 /* 세일 가격 */
 .talent-sale-price {
-  font-size: 17px;
-  font-weight: bold;
-  color: green;
-  margin-bottom: 5px;
+	font-size: 20px;
+	font-weight: bold;
+	color: #198754;
+	margin-bottom: 5px;
 }
 
 /* 대나무 점수 */
 .talent-bamboo-score {
-  font-size: 15px;
-  margin-bottom: 5px;
+	font-size: 15px;
+	margin-bottom: 5px;
 }
 
 /* 선택 가능 */
 .talent-ajax-list:hover, .topCategoryList:hover {
-  cursor: pointer;
-  box-shadow: 0px 0px 10px #ccc;
+	cursor: pointer;
+	box-shadow: 0px 0px 10px #ccc;
 }
 
 
@@ -189,8 +206,8 @@ ul, li {
 
 
 .list-group-item.active {
-  background-color: rgb(129,193,71);
-  border-color: rgb(129,193,71);
+	background-color: #198754;
+	border-color: #198754;
 }
 
 .btn-group {
@@ -200,24 +217,30 @@ ul, li {
 	align-items: center; /* 세로 방향으로 가운데 정렬 */
 	max-width: 900px;
 	margin: 0 auto; /* 가운데 정렬 */
-  	border-color: rgb(129,193,71);
+  	border-color: #198754;
   	text-color: 
 }
 
 .btn-outline-primary {
-  color: black;
-  background-color: #fff;
-  border-color: grey;
+	color: black;
+	background-color: #fff;
+	border-color: grey;
 }
 
-.btn .btn-outline-primary:hover {
-  border-color: rgb(129,193,71) !important;
+.btn-outline-primary:hover {
+	border-color: #198754) !important;
+	color: black !important;
 }
 
 
 .btn-group > .btn-check:checked + .btn {
-  background-color: black;
-  color: #fff;
+	background-color: #198754;
+	color: #fff;
+	border-color: #198754;
+}
+
+.talent-bamboo-score {
+	display: none;
 }
 
 </style>
@@ -229,39 +252,36 @@ ul, li {
 	<th:block layout:fragment="content">
 	
 	<div id="top-category">
-		<h2 class="top-category">카테고리</h2>
+		<h2 class="top-category">대분류 카테고리</h2>
 		<ul class="list-group" th:each="upperCategory : ${upperCategoryList}">
 		  <li class="list-group-item" aria-current="true" th:text="${upperCategory.item}" th:data-upperCategoryNo="${upperCategory.categoryNo}"></li>
 		</ul>
 	</div>
     
-    
-    <div id="lower-category">
-	    <h3 class="lower-category-list-title">세부 카테고리</h3>
-	    
- 		<div class="lower-category-list">
-			<select id="lower-category-list">
-  				<option value="">==대분류를 선택해주세요==</option>
-			</select> <br>
-		</div>
+		
+	<h3 class="lower-category">세부 카테고리</h3>
+	<select class="form-select" aria-label="Default select example" id="lower-category-list">
+		<option value="">==대분류 카테고리를 먼저 선택해주세요==</option>
+	</select>
+				
+		
+		
+	<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+	  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked="checked" value="reg_date">
+	  <label class="btn btn-outline-primary" for="btnradio1">최신순</label>
+	
+	  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="view_count">
+	  <label class="btn btn-outline-primary" for="btnradio2">인기순</label>
+	
+	  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="bambooScore">
+	  <label class="btn btn-outline-primary" for="btnradio3">평점순</label>
+	  
+	  <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" value="sale_bamboo">
+	  <label class="btn btn-outline-primary" for="btnradio4">높은 가격순</label>
+	  
+	  <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="sale_bambooA">
+	  <label class="btn btn-outline-primary" for="btnradio5">낮은 가격순</label>
 	</div>
-		
-		<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-		  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked="checked" value="reg_date">
-		  <label class="btn btn-outline-primary" for="btnradio1">최신순</label>
-		
-		  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="view_count">
-		  <label class="btn btn-outline-primary" for="btnradio2">인기순</label>
-		
-		  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="bambooScore">
-		  <label class="btn btn-outline-primary" for="btnradio3">평점순</label>
-		  
-		  <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" value="sale_bamboo">
-		  <label class="btn btn-outline-primary" for="btnradio4">높은 가격순</label>
-		  
-		  <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="sale_bambooA">
-		  <label class="btn btn-outline-primary" for="btnradio5">낮은 가격순</label>
-		</div>
 		
    
    
@@ -319,8 +339,8 @@ ul, li {
 		            $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
 		            $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
 		            $('<span>').addClass('talent-seller').text('강사: '+ talent.name).appendTo(li);
-		            $('<span>').addClass('talent-price').text('정상 가격: '+ talent.bamboo).appendTo(li);
-		            $('<span>').addClass('talent-sale-price').text('판매 가격: '+ talent.saleBamboo).appendTo(li);
+		            $('<span>').addClass('talent-price').text(talent.bamboo + " Bamboo").appendTo(li);
+		            $('<span>').addClass('talent-sale-price').text(talent.saleBamboo + " Bamboo").appendTo(li);
 		            $('<span>').addClass('talent-bamboo-score').text(talent.bambooScore).appendTo(li);
 		            $('<img>').addClass('bamboo-imges').appendTo(li);
 		            

@@ -2,7 +2,9 @@ package com.kakao.jPanda.kyg.service;
 
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,9 @@ import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
+import com.kakao.jPanda.yjh.domain.NoticeDto;
+import com.kakao.jPanda.kyg.domain.Pagination;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -173,5 +178,23 @@ public class ChargeServiceImpl implements ChargeService {
 		
 		return totalChargeCnt;
 	}
+
+	@Override
+	public Map<String, Object> findchargeByPagination(Pagination pagination) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		String chargeId = pagination.getChargerId();
+		int totalCount = chargeDao.totalChargeCnt(chargeId);
+		log.info("ChargeServiceImpl findchargeByPagination() count -> {}", totalCount);
+		
+		pagination.setTotalCount(totalCount);
+		
+		List<ChargeDto> chargeList = chargeDao.selectChargeByPagination(pagination);
+		
+		returnMap.put("chargeList", chargeList);
+		returnMap.put("pagination", pagination);
+		
+		return returnMap;
+	}
+
 
 }

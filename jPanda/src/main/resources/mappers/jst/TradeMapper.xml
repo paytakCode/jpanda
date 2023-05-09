@@ -11,11 +11,12 @@
 			t.title,
 			t.sale_bamboo,
 			(SELECT count(*) FROM bamboo_use WHERE talent_no = t.talent_no) AS sell_count,
-			e.exchange_status
+			e.exchange_status,
+			t.main_img
 		FROM talent t
 		LEFT OUTER JOIN exchange e ON t.talent_no = e.talent_no
 		WHERE t.seller_id = #{memberId}
-		GROUP BY t.talent_no, t.talent_status, t.reg_date ,t.sale_bamboo, t.title, t.sale_bamboo, e.exchange_status, t.status_date
+		GROUP BY t.talent_no, t.talent_status, t.reg_date ,t.sale_bamboo, t.title, t.sale_bamboo, e.exchange_status, t.status_date, t.main_img
 		ORDER BY status_date desc
 	</select>
 	
@@ -26,7 +27,8 @@
 			TRUNC(u.purchase_date) - TRUNC(sysdate) + 7 AS refundable_date,
 			t.title,
 			t.talent_no,
-			u.purchase_date
+			u.purchase_date,
+			t.main_img
 		FROM bamboo_use u 
 		INNER JOIN talent t ON u.talent_no = t.talent_no
 		LEFT OUTER JOIN talent_refund r ON r.purchase_no = u.purchase_no
@@ -43,7 +45,8 @@
 			r.purchase_no AS refund_purchase_no,
 			r.submit_date AS refund_submit_date,
 			r.approve_date AS refund_approve_date,
-			t.talent_no
+			t.talent_no,
+			t.main_img
 		FROM talent_refund r
 		INNER JOIN bamboo_use u ON r.purchase_no = u.purchase_no
 		INNER JOIN talent t ON u.talent_no = t.talent_no

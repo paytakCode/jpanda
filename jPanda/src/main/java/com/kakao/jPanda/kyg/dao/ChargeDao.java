@@ -1,10 +1,13 @@
 package com.kakao.jPanda.kyg.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import com.kakao.jPanda.bsm.domain.PagerDto;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
+import com.kakao.jPanda.kyg.domain.Pagination;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
 
 public interface ChargeDao {
@@ -30,5 +33,9 @@ public interface ChargeDao {
 	List<ChargeDto> selectBambooChargeList(ChargeDto chargeDto);
 
 	int totalChargeCnt(String chargerId);
+
+	List<ChargeDto> selectChargeByPagination(Pagination pagination);
+
+
 	
 }

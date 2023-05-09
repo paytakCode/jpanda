@@ -21,6 +21,7 @@ import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
 import com.kakao.jPanda.kyg.service.ChargeService;
 import com.kakao.jPanda.kyg.service.Paging;
+import com.kakao.jPanda.kyg.domain.Pagination;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -188,6 +189,23 @@ public class ChargeController {
 		return foundTotalBambooByMemberIdStr;
 	}
 	
+	
+		/*
+		 *  페이징 처리된 List를 Map형식으로 리턴하여 ajax처리
+		 */
+		@ResponseBody
+		@GetMapping(value = "/charge-history")
+		public Map<String, Object> chargeListByPagination(Pagination pagination, HttpSession session) {
+			log.info("Notice Controller noticeListByPagination() start");
+			log.info("pagination : "+pagination);
+			
+			String chargerId = (String) session.getAttribute("memberId");
+			pagination.setChargerId(chargerId);
+			log.info("ChargeContoller chargeListByPagination() chargerId -> {}", chargerId);
+			Map<String, Object> returnMap = chargeService.findchargeByPagination(pagination);
+			
+			return returnMap;
+		}
 }
 	
 
