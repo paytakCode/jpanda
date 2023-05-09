@@ -118,7 +118,7 @@
 		height: 100%;
 	}
 	
-	.refund-btn, .exchange-btn, .repost-btn, .repost-btn, .end-sell-btn, .refund-cancle-btn{
+	.refund-btn, .exchange-btn, .repost-btn, .repost-btn, .end-sell-btn, .refund-cancle-btn, .reject-confirm-btn{
 		float: right;
 		margin-right: 1%;
 	}
@@ -557,40 +557,34 @@
 		}
 		
 	});
-
-	/**
-	 * 환불취소 버튼 Ajax 통신 function
+	 
+	 /**
+	 * 환전 재신청 버튼 Ajax 통신
 	 */
-	$(document).on("click", ".refund-cancle-btn", function(){
-		let refundPurchaseNo = $(this).attr('id').substr(10);
-		console.log('refundPurchaseNo : ' + refundPurchaseNo);
-		if(confirm('환불을 취소하시겠습니까?')){
+	 $(document).on("click", ".re-exchange-btn", function(){
+		let $this = $(this);
+		let talentNo = $this.attr('id').substr(8);
+		console.log('talentNo : ' + talentNo);
+		if(confirm('환전을 재신청 하시겠습니까?')){
 			$.ajax(
 					{
-						type : "DELETE",
-						url : "/trade/refunds/"+ refundPurchaseNo,
-						contentType: 'application/json',
+						type : "PUT",
+						url : "/trade/exchanges/"+ talentNo + "/status",
 						dataType : 'text',
-						success : function(result, textStatus, xhr){
-							if(xhr.status === 200){
-								console.log('Success, deleted : ' + result);
-								alert("환불 신청이 취소되었습니다.");
-								$(".filter-button[value='all']").click();
-							} else if (xhr.status === 204) {
-							    console.log('Success, deleted : : No content');
-							    alert('환불 취소 신청에 실패하였습니다. 다시 시도해주세요.');
-							}
-
+						success : function(result){
+							console.log('Success put : ' + result);
+							alert('환전 재신청에 성공하였습니다.');
+							$(".filter-button[value='all']").click();	
 						},
 						error : function(xhr, textStatus, errorThrown){
-							alert("refund-cancle-btn function error : textSatus → " + textStatus + ", " + errorThrown);
+							alert("re-exchange-btn function error :" + textStatus + ", " + errorThrown);
 						}
-					}
-				);		
+					}		
+				);	 
 		}
-		 
+			
 	});
-
+	 
 	/**
 	 * 재능환불 신청 버튼
 	 * 팝업창구현 : bootstrap - modal
@@ -649,33 +643,68 @@
 		
 	});
 	 
-	 /**
-	 * 환전 재신청 버튼 Ajax 통신
+	/**
+	 * 환불취소 버튼 Ajax 통신 function
 	 */
-	 $(document).on("click", ".re-exchange-btn", function(){
-		let $this = $(this);
-		let talentNo = $this.attr('id').substr(8);
-		console.log('talentNo : ' + talentNo);
-		if(confirm('환전을 재신청 하시겠습니까?')){
+	$(document).on("click", ".refund-cancle-btn", function(){
+		let refundPurchaseNo = $(this).attr('id').substr(10);
+		console.log('refundPurchaseNo : ' + refundPurchaseNo);
+		if(confirm('환불을 취소하시겠습니까?')){
 			$.ajax(
 					{
-						type : "PUT",
-						url : "/trade/exchanges/"+ talentNo + "/status",
+						type : "DELETE",
+						url : "/trade/refunds/"+ refundPurchaseNo,
+						contentType: 'application/json',
 						dataType : 'text',
-						success : function(result){
-							console.log('Success put : ' + result);
-							alert('환전 재신청에 성공하였습니다.');
-							$(".filter-button[value='all']").click();	
+						success : function(result, textStatus, xhr){
+							if(xhr.status === 200){
+								console.log('Success, deleted : ' + result);
+								alert("환불 신청이 취소되었습니다.");
+								$(".filter-button[value='all']").click();
+							} else if (xhr.status === 204) {
+							    console.log('Success, deleted : : No content');
+							    alert('환불 취소 신청에 실패하였습니다. 다시 시도해주세요.');
+							}
+
 						},
 						error : function(xhr, textStatus, errorThrown){
-							alert("re-exchange-btn function error :" + textStatus + ", " + errorThrown);
+							alert("refund-cancle-btn function error : textSatus → " + textStatus + ", " + errorThrown);
 						}
-					}		
-				);	 
+					}
+				);		
 		}
-			
+		 
 	});
+	
+	/**
+	 * 환불 반려 확인 버튼
+	 */
+	$(document).on("click", ".reject-confirm-btn", function(){
+		let refundPurchaseNo= $(this).attr('id').substr(10);
+		if(confirm("반려된 환불입니다.\n확인을 누르면 해당 재능은 구매완료 상태로 변경됩니다.")){
+			$.ajax(
+					{
+						type : "DELETE",
+						url : "/trade/refunds/"+ refundPurchaseNo,
+						contentType: 'application/json',
+						dataType : 'text',
+						success : function(result, textStatus, xhr){
+							if(xhr.status === 200){
+								console.log('Success, deleted : ' + result);
+								$(".filter-button[value='all']").click();
+							} else if (xhr.status === 204) {
+							    console.log('Success, deleted : : No content');
+							    alert('환불 반려 확인에 실패하였습니다. 다시 시도해주세요.');
+							}
 
+						},
+						error : function(xhr, textStatus, errorThrown){
+							alert("refund-cancle-btn function error : textSatus → " + textStatus + ", " + errorThrown);
+						}
+					}
+				);
+		}
+	});
 	 
 	/**
 	 * 판매 리스트 출력
@@ -750,7 +779,7 @@
 		
 		const $cardTitle = $('<div>', { class: 'card-title', text: item.title });
 		const $bambooIcon = $('<img>', { src: '/image/common/bamboo-icon.png', class: 'bamboo-icon' });
-		const $cardUseBamboo = $('<div>', { class: 'card-text card-text-bamboo' }).append(item.useBamboo, $bambooIcon);
+		const $cardUseBamboo = $('<div>', { class: 'card-text card-text-bamboo'}).append(item.useBamboo, $bambooIcon);
 		const $refundBtn = $('<button>', { class: 'refund-btn btn btn-dark',
 											text: '환불신청',
 										   'data-bs-toggle': 'modal', 'data-bs-target': '#refund-modal',
@@ -763,12 +792,12 @@
 		
 		if(item.refundableDate >= 0) {
 			if(item.refundableDate == 0){
-				$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).text('환불신청 마지막 날입니다!'),
+				$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).text('환불신청이 가능한 마지막 날입니다!'),
 								$('<br>'), $('<div>', { class: 'card-text' }).append($refundBtn));
 				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `구매날짜 : ${timestampToCustomFormat(item.purchaseDate)}`}));
 								
 			} else {
-				$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).text(`환불신청일이 ${item.refundableDate}일 남았습니다.`),
+				$cardBody.append($cardTitle, $cardUseBamboo, $('<br>'), $('<div>', { class: 'card-text' }).text(`환불신청 가능일이 ${item.refundableDate}일 남았습니다.`),
 						$('<br>'), $('<div>', { class: 'card-text' }).append($refundBtn));
 				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `구매날짜 : ${timestampToCustomFormat(item.purchaseDate)}`}));
 			}
@@ -796,8 +825,9 @@
 		
 		const $cardTitle = $('<div>', { class: 'card-title', text: item.title });
 		const $bambooIcon = $('<img>', { src: '/image/common/bamboo-icon.png', class: 'bamboo-icon' });
-		const $cardUseBamboo = $('<div>', { class: 'card-text card-text-bamboo' }).append(item.useBamboo, $bambooIcon);
+		const $cardUseBamboo = $('<div>', { class: 'card-text card-text-bamboo', 'data-use-bamboo': item.useBamboo }).append(item.useBamboo, $bambooIcon);
 		const $refundCancleButton = $('<button>', { class: 'refund-cancle-btn btn btn-dark', id: `refund-no-${item.refundPurchaseNo}`, text: '신청취소' });
+		const $rejectConfirmButton = $('<button>', { class: 'reject-confirm-btn btn btn-dark', id: `refund-no-${item.refundPurchaseNo}`, text: '반려확인' });
 		
 		const $cardTextCol = $('<div>', { class: 'col-md-8' });
 		const $cardBody = $('<div>', { class: 'card-body' });
@@ -812,8 +842,8 @@
 				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }), $('<div>', { class: 'card-footer text-muted', text: `승인날짜 : ${timestampToCustomFormat(item.refundApproveDate)}` }));
 				break;
 			case '반려':
-				$cardBody.append($cardTitle, $cardUseBamboo);
-				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }), $('<div>', { class: 'card-footer text-muted', text: `반려날짜 : ${timestampToCustomFormat(item.refundApproveDate)}` }));
+				$cardBody.append($cardTitle, $cardUseBamboo).append($rejectConfirmButton);
+				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', 'data-refund-submit-date' : item.refundSubmitDate, text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }));
 				$cardImgCol.remove();
 				break;
 			default:
