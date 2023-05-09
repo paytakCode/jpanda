@@ -141,10 +141,12 @@ h2{
 	    		$.each(noticeList, function(index, notice) {
 	    			var tableRow = $('<tr></tr>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo);
 	    			var no = $('<td></td>').addClass('notice notice-no').text(notice.noticeNo);
-	    			var title = $('<td></td>').addClass('notice notice-title').text(notice.title);
+	    			var title = $('<td></td>');
 	    			var regDate = $('<td></td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
-	    				tableRow.append(no).append(title).append(regDate);
-	    				noticeTable.append(tableRow);
+	    			var detail = $('<a></a>').text(notice.title).attr('href', '/admin/notice/'+notice.noticeNo);
+	    			title.append(detail);
+	    			tableRow.append(no).append(title).append(regDate);
+	    			noticeTable.append(tableRow);
 	    			});
 	    			
 	                var pagination = returnMap.pagination;
@@ -185,9 +187,9 @@ h2{
 							noticeChange($(this).text());
 						}
 					});
-					$('.notice-detail').on('click', function(){
+		/* 			$('.notice-detail').on('click', function(){
 						location.href = "/admin/notice/" + $(this).data('noticeno');							
-					});
+					}); */
 	          	}
 		});
 	}
