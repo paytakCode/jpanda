@@ -132,12 +132,22 @@
 			animation: blink 2s infinite;
 		}
 		
-		.chat-date, .new-chat-point {
+		.chat-date {
 			justify-content: center;
 			align-items: center;
 			display: flex;
-			padding: 0px;
-			margin: 10px 20%;
+		    padding: 0px 20px;
+		    margin: 5px auto;
+		    cursor: default;
+		}
+		
+		.new-chat-point {
+			justify-content: center;
+			align-items: center;
+			display: flex;
+		    padding: 0px 30px;
+		    margin: 5px auto;
+		    cursor: default;
 		}
 		
 		.chat-time {
@@ -145,6 +155,8 @@
 		}
 		
 		.chat-message {
+		    color: #141619!important;
+		    background-color: RGBA(129,193,71,var(--bs-bg-opacity,1))!important;
 			max-width: 60%;
 			display: inline-block;
 		}
@@ -179,11 +191,17 @@
 			font-weight:
 		}
 		
-		#insert-issue-toast{
+		#insert-issue-toast {
 			z-index: 10001;
 		}
 		
-		#report-success-toast{
+		#report-success-toast {
+			z-index: 10001;
+		}
+		
+		.chat-report-tooltip {
+		    --bs-tooltip-bg: darkred;
+		    --bs-tooltip-color: white;
 			z-index: 10001;
 		}
 		
