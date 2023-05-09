@@ -13,17 +13,144 @@
 
 /* 페이지 전체 레이아웃 */
 body {
-  font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
 }
+
+
+/* 공통 스타일 */
+ul, li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}  
+
+
+.talent-info {
+	z-index: 3;
+	margin-top: 10px;
+	position: relative;
+	width: 100%;
+	height: 510px;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+
+.view-image {
+	position: absolute;
+	left: 100px;
+	top: 30px;
+	width: 500px;
+	height: 500px;
+}
+
+
+#main-image {
+	position: relative;
+	max-width: 500px;
+	max-height: 375px;
+}
+
+
+.view-title {
+	position: absolute;
+	top: 10px;
+	right: 100px;
+	text-align: left;
+	margin-top: 10px;
+	height: 24px;
+	left: calc(100% - 500px - 180px); 
+	margin-bottom: 10px;
+}
+
+
+.side-info {
+	position: absolute;
+	top: calc(30px + 24px + 20px);
+	right: 30px;
+	text-align: left;
+	width: 50%;
+	height: 420px;
+}
+
+
+#name {
+	border-top: 1px solid gray;
+	font-size: 16px;
+}
+
+
+#summary {
+	font-size: 15px;
+}
+
+
+#bamboo {
+	color: gray;
+	text-decoration: line-through;
+	font-size: 20px;
+}
+
+
+#sale-bamboo {
+	border-bottom: 1px solid gray;
+	font-weight: bold;
+	color: #198754;
+	font-size: 22px;
+}
+
+
+#review-filter {
+	font-weight: bold;
+	font-size: 20px;
+	color: rgb(81,149,252);
+}
+
+
+.btn-group {
+	font-size: 15px;
+	font-weight: bold;
+	color: white;
+}
+
+
+
+
+
+.content {
+	z-index: 2;
+	height: 1000px;
+	width: 1000px;
+	text-align: center;
+	margin-top: 100px;
+}
+
+.bamboo-imges{
+  width: 100px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
+  height: 21px;
+}
+
+.quick-menu {
+  position: sticky;
+  top: 0;
+  bottom: 20px;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
 
 /* 리뷰  목록 */
 #review-list {
+	z-index: 1;
   list-style: none;
   margin: 0;
   padding: 0;
   border: 1px solid #ccc;
   margin: 20px 10px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   padding: 10px;
   text-align: center;
   flex-basis: 48%;
@@ -32,35 +159,6 @@ body {
 #review-list:hover {
   background-color: #f2f2f2;
 }
-
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#top-title {
-  text-align: center;
-  margin-top: 20px;
-}
-
-#main-image {
-  margin-left: 5px;
-  float: left;
-}
-
-.side-info {
-  margin-right: 5px;
-  float: right;
-  text-align: center;
-}
-
-.content {
-  text-align: center;
-  margin-top: 20px;
-}
-
 
 
 .review-form {
@@ -74,6 +172,7 @@ body {
 }
 
 .review-form .form-group {
+	position: relative;
   margin-bottom: 10px;
 }
 
@@ -144,39 +243,6 @@ body {
   font-size: 14px;
 }
 
-#load-more-button {
-  display: block;
-  margin: 20px auto 0;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-#load-more-button:hover {
-  background-color: #0069d9;
-}
-
-#main-image {
-  width: 420px;
-  height: 450px;
-}
-
-.bamboo-imges{
-  width: 100px; /* 별점 이미지 하나당 16px이므로 5개의 별점을 표시하기 위해 80px 지정 */
-  height: 21px;
-}
-
-.quick-menu {
-  position: sticky;
-  top: 0;
-  bottom: 20px;
-  left: 20px;
-  transform: translateY(-50%);
-}
 
 
 </style>
@@ -186,40 +252,46 @@ body {
 
 <div>
 	<th:block layout:fragment="content">
-	<body>
 		<!-- 판매 정보  -->
-	<div class="container">
-		<h1 id="top-title" th:text="${talent.title}"></h1>
-		<img id="main-image" th:src="${talent.mainImg}" alt="상품 이미지">
-		
+	<div class="talent-info">
+	
+		<div class="view-image">
+			<img id="main-image" th:src="${talent.mainImg}" alt="상품 이미지">
+		</div>
+		<div class="view-title">
+			<h4 id="top-title" th:text="${talent.title}"></h4>
+		</div>
 		<div class="side-info">
-			  강사 : 		<div th:text="${talent.name}"></div>
-			  요약 설명 : 	<div th:text="${talent.summary}"></div>
-			  정상 가격 : 	<div th:text="${talent.bamboo}"></div>
-			  판매 가격 : 	<div th:text="${talent.saleBamboo}"></div>
-		         평균 별점 :	<div id="review-filter"></div>
+			 <br><div id="name" th:text="'판매자: ' + ${talent.name}"></div>
+			 <br><div id="summary" th:text="${talent.summary}"></div>
+			 <br><div id="bamboo" th:text="${talent.bamboo} + 'Bamboo'"></div>
+			 <div id="sale-bamboo" th:text="${talent.saleBamboo} + 'Bamboo'"></div>
+		     <div id="review-filter"></div>
 		         
-		 	<div class="buy-btn">
-			    <button id="buy-btn" th:data-talentno="${talent.talentNo}" th:data-salebamboo="${talent.saleBamboo}">구매하기</button>
+		 	<div class="d-grid gap-2">
+		 		<button type="button" class="btn btn-success btn" id="buy-btn" th:data-talentno="${talent.talentNo}" th:data-salebamboo="${talent.saleBamboo}">구매하기</button><br>
  			</div>
+ 			
+ 			
+ 			<div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+ 				<input type="hidden" id="login-id" value="${memberId}">
+			  	<button type="button" class="btn btn-success" th:if="${talent.sellerId == memberId}" id="modify-btn" th:data-talentno="${talent.talentNo}">게시물 수정</button>
+			  	<button type="button" class="btn btn-danger" th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentno="${talent.talentNo}">게시물 삭제</button>
+			  	<button type="button" class="btn btn-warning" id="report-btn" th:data-talentno="${talent.talentNo}" th:data-sellerid="${talent.sellerId}">게시물 신고하기</button>
+			</div>
+ 			
+ 			
+			<div class="quick-move">
+				<a href="#review-list">리뷰</a>|<a href="#content">상세 내용</a>|<a href="">상담 및 채팅</a>
+			</div>
 		</div>
 		 
-		<div class="etc-btn">
-			<input type="hidden" id="login-id" value="${memberId}">
-			<button th:if="${talent.sellerId == memberId}" id="modify-btn" th:data-talentno="${talent.talentNo}">게시물 수정</button>
-			<button th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentno="${talent.talentNo}">게시물 삭제</button>
-			<button id="report-btn" th:data-talentno="${talent.talentNo}" th:data-sellerid="${talent.sellerId}">게시물 신고하기</button>
-		</div>
-		
-		<div class="quick-move">
-			<a href="#review-list">리뷰</a>|<a href="#content">상세 내용</a>|<a href="">상담 및 채팅</a>
-		</div>
-		
+	</div>
+	
 		<div class="content">
 			<a name="content"></a>
 				상세 내용 : <div class="content-detail" th:utext="${talent.content}"></div>
 		</div>
-	</div>
 	
 	<!-- 리뷰 작성 폼  -->
 	<form class="review-form" id="insert-review-form" method="post">
@@ -655,7 +727,7 @@ body {
 	} else if (isNaN(avgBambooScore)){
 		avgBambooScore = 0;
 	}
-	$('#review-filter').text(avgBambooScore.toFixed(1) + ' / (' + reviewCount + ')');
+	$('#review-filter').text(avgBambooScore.toFixed(1) + ' / (' + reviewCount + ')개의 리뷰');
 	
 
 	</script>
