@@ -11,46 +11,38 @@
 <th:block layout:fragment="css">
 	<style type="text/css">
 		
-		.container{
+		.notice-container{
 			margin: 0 auto;
 			width: 1000px;
+			margin-top: 30px;
 		}
 		
 		#notice-list-div {
 			margin: 0 auto;
 			width: 800px;
-			height: 400px;
+			height: 480px;
+			margin-top: 30px;
 			
 		}
 		#notice-main{
-			margin-left: 50px;
-		}
-		.notice{
-		  	display: inline-block;
+			margin-left: 108px;
+			font-weight: bolder;
 		}
 		.notice-no{
-			width: 40px;
+			width: 60px;
 		}
 		.notice-title{
-			width: 540px;
-			margin-right: 100px;
+			width: 580px;
 			overflow: hidden;
 		}
 		.notice-reg-date{
-			width: 90px;
+			width: 130px;
 		}
-		p {
-			margin: 0 5px;
+		.nocice {
+			padding: 2px;
+			height: 30px;
 		}
-		li{
-			list-style: none;
-		}
-		ul {
-			padding: 0px;
-		}
-		hr {
-			margin: 2 0px;
-		}
+		
 		.notice-page {
 			display: inline-block;
 			border: 1px solid #EAEAEA;
@@ -58,25 +50,32 @@
 			height: 30px;
 			cursor: pointer;
 		}
-		.notice-page, .notice-no, .notice-reg-date{
+		.notice-page, .notice-no, .notice-reg-date {
 			text-align: center;
-			line-height: 30px;
 		}
-		#pager{
+		#pager {
 			text-align: center;
-			margin-top: 30px;
+			margin-bottom: 80px;
 		}
-		#search-div{
+		#search-div {
 			display: flex; 
 			justify-content: flex-end;
 			margin-right: 100px;
 		}
-		.notice-page{
+		.notice-page {
 			text-decoration: none;
 			color: black;
+			line-height: 30px;
 		}
-		.th-title{
+		.th-title {
 			text-align: center;
+		}
+		#notice-search {
+			width: 160px;
+		}
+		.notice-header th {
+			background-color: #1ABC9C;
+			color: white !important;
 		}
 	</style>
 		
@@ -86,14 +85,16 @@
 
 <div>
 	<th:block layout:fragment="content">
-	 <div class="container">
-	<h2 id="notice-main">공지사항</h2>
+	 <div class="notice-container">
+	<h1 id="notice-main">공지사항</h1>
 	<div id="search-div">
-		<input type="text" id="notice-search">
-		<button id="notice-search-btn">검색</button>
+		<input type="text" id="notice-search" class="form-control me-2">
+		<button id="notice-search-btn" class="btn btn-outline-success text-nowrap">검색</button>
 	</div>
 	<div id="notice-list-div">
-	<table id="notice-list-table">
+	<table id="notice-list-table" class="table table-striped table-hover">
+	<tbody id="notice-list-table-body">
+	</tbody>
 	</table>
 	</div>
 	<div id="pager">
@@ -135,17 +136,17 @@
 		          		
 		          		var noticeList = data.noticeList;
 		          		var noticeListTable = $('#notice-list-table');
-
 		             	// 기존 테이블 초기화
 		    			noticeListTable.empty();
 
+		    			var noticeListTableBody = $('<tbody></tbody>');
 		    			// 테이블 헤더 생성
-		    			var tableHeader = $('<tr></tr>');
+		    			var tableHeader = $('<tr></tr>').addClass('notice-header');
 		    			var headerNo = $('<th></th>').addClass('notice notice-no').text('번호');
 		    			var headerTitle = $('<th></th>').addClass('notice notice-title th-title').text('제목');
 		    			var headerRegDate = $('<th></th>').addClass('notice notice-reg-date').text('등록일');
 		    			tableHeader.append(headerNo).append(headerTitle).append(headerRegDate);
-		    			noticeListTable.append(tableHeader);
+		    			noticeListTableBody.append(tableHeader);
 
 		    			// 받아온 데이터를 반복하며 리스트 아이템 생성
 		    			$.each(noticeList, function(index, notice) {
@@ -155,8 +156,9 @@
 		    				var regDate = $('<td></td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
 
 		    				tableRow.append(no).append(title).append(regDate);
-		    				noticeListTable.append(tableRow);
+		    				noticeListTableBody.append(tableRow);
 		    			});
+		    			noticeListTable.append(noticeListTableBody);
 		    			
 		                var pager = data.pager;
 		                var startNum = parseInt(pager.startNum);
