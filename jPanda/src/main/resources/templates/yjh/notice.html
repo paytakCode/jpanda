@@ -19,13 +19,14 @@ table {
 th, td {
 	text-align: left;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
 	background-color: #f2f2f2;
 }
 
-tr:nth-child(even) {
+tr:nth-child(odd) {
 	background-color: #f2f2f2;
 }
 
@@ -34,7 +35,8 @@ td {
 }
 
 .btn{
-	border: 1px solid black;
+	border: 1px solid #ddd;
+	float: right;
 }
 
 .container{
@@ -44,6 +46,7 @@ td {
 
 #notice-main{
 	margin-left: 50px;
+	text-align: center;
 }
 
 .notice-no{
@@ -78,6 +81,10 @@ td {
 	text-decoration: none;
 	color: black;
 }
+
+h2{
+	margin: 30px;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -86,11 +93,10 @@ td {
 <div>
 	<th:block layout:fragment="content">
 		<body>
-			<h1 id="notice-main">공지사항</h1>
+			<h2 id="notice-main">공지사항</h2>
 			<div id="noticelistDiv">
-				<table id="noticeTable">
-				</table>
-			<input type="button" class="btn" value="작성하기">
+				<table id="noticeTable"></table>
+				<br><input type="button" class="btn" value="작성하기"><br>
 			</div>
 			<div id="pagination"></div>
 		</body>

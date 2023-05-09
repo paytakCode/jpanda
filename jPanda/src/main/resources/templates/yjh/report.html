@@ -36,14 +36,14 @@
 
 .que.on>span {
 	font-weight: bold;
-	color: #006633;
+	color: black;
 }
 
 .anw {
 	display: none;
 	overflow: hidden;
 	font-size: 14px;
-	background-color: #f4f4f2;
+	background-color: white;
 	padding: 27px 0;
 }
 
@@ -78,8 +78,32 @@
 	display: block;
 }
 
+.que.on{
+	background-color: rgb(129,193,71);
+}
+
 .btn {
-	border: 1px solid black;
+	border: 1px solid #ddd;
+	float: right;
+	margin: 10px 0;
+}
+
+h2{
+	margin: 30px;
+	text-align: center;
+}
+
+table{
+	border: 1px solid #ddd;
+	width: 100%;
+}
+
+th, td{
+	border: 1px solid #ddd;
+}
+
+.aco {
+	margin: 10px 0;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -89,16 +113,17 @@
 <div>
 	<th:block layout:fragment="content">
 		<body>
-			<div th:each="report, i : ${reportList}" th:id="'aco' + ${i}">
+			<h2>불건전 유저 신고리스트</h2>
+			<div class="aco" th:each="report, i : ${reportList}" th:id="'aco' + ${i}">
 				<div class="que">
-					<span th:text="'불건전 유저 : ' + ${report.blackId}">
-					</span>
+					<span th:text="'불건전 유저 : ' + ${report.blackId}"></span>
 					<div class="arrow-wrap">
-						<span class="arrow-top">↑</span> <span class="arrow-bottom">↓</span>
+						<span class="arrow-top">↑</span>
+						<span class="arrow-bottom">↓</span>
 					</div>
 				</div>
 				<div class="anw" th:data-blackId="${report.blackId}">
-					<span>This is first answer.</span>
+					<span></span>
 				</div>
 			</div>
 		</body>
@@ -125,7 +150,7 @@
 		      data : blackId,
 		      success : function(reportList) {
 		            console.log(reportList);
-		            
+
 		            var tableBody = $(".anw");
 		            tableBody.empty(); // 테이블 내용 초기화
 		            var table = $("<table>").appendTo(tableBody);
@@ -145,9 +170,9 @@
 		                row.appendTo(body);
 		            }
 		            
-		            var row = $("<tr>");
-		            $("<td>").append($("<input>").attr("type", "button").addClass("btn").val("제제하기")).appendTo(row);
-		            row.appendTo(body);
+		          
+		            tableBody.append($("<input>").attr("type", "button").addClass("btn").val("제제하기"));
+		            
 		      },
 		      error : function(jqXHR, textStatus, errorThrown) {
 		          alert("안 성공");

@@ -17,8 +17,9 @@ table {
 }
 
 th, td {
-	text-align: left;
+	text-align: center;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
@@ -31,10 +32,23 @@ tr:nth-child(even) {
 
 td {
 	border: 1px solid #ddd;
+	text-align: center;
 }
 
 .btn {
-	border: 1px solid black;
+	border: 1px solid #ddd;
+	float: right;
+	margin: 10px 0;
+}
+
+.notice-title, .notice-content{
+	width: 90%;
+	margin: 0 auto;
+}
+
+h2{
+	text-align: center;
+	margin: 30px;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -45,25 +59,20 @@ td {
 	<th:block layout:fragment="content">
 		<body>
 			<form action="/admin/notice" method="post" onsubmit="return chk()">
+				<h2>공지사항 작성</h2>
 				<table border="1">
 					<tr>
 						<th>제목</th>
-							<td>
-								<input type="text" name="title">
-							</td>
+							<td><input class="notice-title" type="text" name="title"></td>
 					</tr>
 					<tr>
 						<th>내용</th>
-							<td>
-								<textarea rows="50" cols="50" name="content"></textarea>
+							<td style="background-color: white;">
+								<textarea class="notice-content" rows="10" cols="10" name="content"></textarea>
 							</td>
 					</tr>
-					<tr>
-						<td colspan="2">
-							<button type="submit" class="btn" value="적용">적용</button>
-						</td>
-					</tr>
 				</table>
+				<button type="submit" class="btn" value="적용">공지사항 적용</button>
 				<input type="hidden" class="regDate" name="regDate" pattern="YYYYMMDD">
 			</form>
 
