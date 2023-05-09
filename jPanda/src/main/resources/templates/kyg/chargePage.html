@@ -10,117 +10,137 @@
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style>
-		.filter-btn{  
-			margin-right: 15%;
+		
+		body {
+			margin: 0;
+			padding: 0;
 		}
 		
-		.printBtn{  
-			margin-left: 30%;
+		.filter-btn{  
+			position: absolute;
+			top: 23%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		
+		.btn-success {
+			background-color: rgb(129, 193, 71);
 		}
 		
 		/* 충전컨테이너 */
-		#charge-container {
+		.charge-container{
+			margin: 0 auto;
+			width: 1180px;
+			margin-left: 200px;
 			display: flex;
-		    align-items: baseline;
-		    gap: 32px;
-		    padding: 48px 0;
-		    margin-left: 15%;
-		    margin-right: 15%;
-		}
-		
-		/* 결제내역 컨테이너 */
-		#charge-details-container {
-			display: flex;
-		    align-items: baseline;
-		    gap: 32px;
-		    padding: 48px 0;
-		    margin-left: 15%;
-		    margin-right: 15%;
 		}
 		
 		/* 충전컨텐츠 */
 		#charge-contents {
+			float: left;
+			width: 700px;
 			flex: 3;
 			padding: 32px;
-			border-radius: 16px 0 0 16px;
+			border-radius: 16px 16px 16px 16px;
+			margin-top: 13%;
+			border: 1px solid #EAEAEA;
+			background-color: ghostwhite;
+		}
+		
+		/* 충전방법 */
+		.table th, .table td {
+			text-align: center;
+			padding: 8px;
+		}
+		
+		.table th, td {
+			padding: 8px;
+		}
+		
+		.table th {
+			font-size: 20px;
+		}
+
+		.table td {
+			font-size: 18px;
 		}
 		
 		/* 오른쪽 사이드바 */
 		#right-sidebar {
+			width: 500px;
+			height: 400px;
 			flex: 1;
-			padding: 24px;
-			border-radius: 0 16px 16px 0;
-		}	
-		
-		#right-sidebar > ul > li {
-			list-style: none;
+			padding: 24px 12px 24px 0;
+			border-radius: 16px 16px 16px 16px;
+			margin-left: 4%;
+	  		margin-top: 13%;
+	  		border: 1px solid #EAEAEA;
+	  		background-color: ghostwhite;
+	  		
+		}
+		#right-sidebar .input-group {
+		  width: 100%;
+		  margin-bottom: 10px;
 		}
 		
-		/* 쿠폰중복 */	
-		.input-side {
+		#right-sidebar .input-group, 
+		#right-sidebar .btn-wrapper {
+			margin-left: 10px;
+		}
+		
+		#right-sidebar .input-group .form-control {
+		  width: 50%;
+		  margin-left: 0;
+		}
+		
+		#right-sidebar span:not(.cautionMsg) {
+		    background-color: #353535;
+		    color: #fff;
+		    border-radius: 10px
+		    
+		}
+		
+		#right-sidebar .btn btn-dark {
+		    border-radius: 10px
+		}
+		
+		
+		#right-sidebar input {
+		    border: none;
+		}
+		
+	
+		/* 입력 */	
+		.input-div {
 			display: flex;
 			flex-direction: column;
-			align-items: flex-start;
+			align-items: flex-end;
 			margin-top: 5%;
-			margin-left: 30%;
+			margin-right: 3%;
+			border-radius: 16px 16px 16px 16px;
+			
 		}
 		
-		#coupon-code, #check-coupon {
-			margin-left: auto;
+		.input-div span:not(.cautionMsg):not(.inputIcon) {
+		    background-color: #353535;
+		    color: #fff;
+		    border-radius: 10px
+		    
+		}
+		
+		input[type="number"]::-webkit-outer-spin-button,
+		input[type="number"]::-webkit-inner-spin-button {
+		    -webkit-appearance: none;
+		    margin: 0;
 		}
 		
 		/* 충전방법  radio css */
 		.payment-method {
-		    padding: 15px 10px;
+		
 		    text-align: center;
 		}
-		
-		.payment-method input[type=radio]{
-		    display: none;
-		}
-		
-		.payment-method input[type=radio]+label{
-		    display: inline-block;
-		    cursor: pointer;
-		    height: 24px;
-		    width: 90px;
-		    border: 1px solid #333;
-		    line-height: 24px;
-		    text-align: center;
-		    font-weight:bold;
-		    font-size:13px;
-		}
-		
-		.payment-method input[type=radio]+label{
-		    background-color: #fff;
-		    color: #333;
-		}
-		
-		.payment-method input[type=radio]:checked+label{
-		    background-color: #333;
-		    color: #fff;
-		}
-		 
-		th, td {
-			border: 1px solid black;
-			text-align: left;
-			padding: 8px;
-		}
-		 
-		th {
-			background-color: #cccccc;	
-		}
-	  
-		.table {
-			width: 50%;
-			margin: 0 auto;
-			border-collapse: collapse;
-	    }
+		    
 	    
-	    .table th, .table td {
-			text-align: center;
-			padding: 8px;
-		}
 	</style>
 
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -130,83 +150,98 @@
 <div>
 	<th:block layout:fragment="content">
 	 
-	 <div class="filter-btn gap-2 d-md-flex justify-content-md-end">
-		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-container-btn"	value="chargeContainerBtn" >충전하기</button>
-		<button type="button" class="container-filter-btn btn-secondary btn-sm" id="charge-details-btn"		value="chargeDetailsBtn"	onclick="moveChargePage(1)">충전내역</button>
-	</div>	
-    
-	<div id="charge-container">
+	 <div class="container">
+	 
+		<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
+			<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn">충전하기</button>
+			<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn"  onclick="moveChargePage(1)">충전내역</button>
+		</div>
+	    
+		<div class="charge-container">
+		
+			<div id="charge-contents">
+			
+				<div style="text-align: center; margin-bottom: 5%; font-weight: bold; font-size: 30px;">
+					<span>충전</span>
+				</div>
+				<table class="table table-default">
+					<thead>
+						<tr>
+							<th scope="col"><span class="inputIcon"><img src="/image/bamboo-charge.png" alt="image" width="30" height="30"></span></th>
+							<th scope="col">충전 수단</th>
+							<th scope="col">충전밤부 포인트 비율</th>
+						</tr>
+					</thead>
+					<tbody th:each="paymentList, i : ${listPayment}">
+						<tr>
+							<th scope="row" th:text="${i.index + 1}"></th>
+							<td th:text="${paymentList.method}"></td>
+							<td th:text="${paymentList.bonusRatio}"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<div class="input-div">
+				
+					<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
+					<div class="input-group input-group-default mb-3 w-25">
+						<span class="input-group-text" id="inputGroup-sizing-sm">충전 밤부</span>
+						<input type="number" id = "charge-bamboo" name="chargeBamboo" required="required" value="5" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+					</div>
+					
+					<div class="input-group input-group-default mb-3 w-25">
+						<span class="input-group-text" id="inputGroup-sizing-sm">쿠폰 입력</span>
+						<input type="text" id = "coupon-code" name="couponCode" onblur="couponInsertOnBlur()" placeholder="coupon" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+					</div>
+					
+					<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()" class="btn btn-dark">쿠폰 검사</button>
+					<div><span class="cautionMsg" id="onchange-check-coupon" style="font-size:12px;"></span></div>
+					<div><span class="cautionMsg" id="result-check-coupon" style="font-size:12px;"></span></div>
+
+				</div>
+				
+				<div class="payment-method">
+					 
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio1" autocomplete="off" value="휴대폰" checked="checked">
+					<label class="btn btn-dark" for="payment-method-radio1">휴대폰</label>
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio2" autocomplete="off" value="상품권">
+					<label class="btn btn-dark" for="payment-method-radio2">상품권</label>
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio3" autocomplete="off" value="신용카드">
+					<label class="btn btn-dark" for="payment-method-radio3">신용카드</label>
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio4" autocomplete="off" value="계좌이체">
+					<label class="btn btn-dark" for="payment-method-radio4">계좌이체</label>
+					
+				</div>
+					
+			</div>	<!-- /id="charge-contents" -->
+			
+			<div id="right-sidebar">
+				
+				<div class="input-group input-group-default mb-3 w-50">
+					<span class="input-group-text" id="inputGroup-sizing-sm">쿠폰 할인 금액</span>
+					<input type="number" id = "coupon-discount" name="couponDiscount" value="0" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+				</div>
+				
+				<div class="input-group input-group-default mb-3 w-50">
+					<span class="input-group-text" id="inputGroup-sizing-sm">기본 충전 금액</span>
+					<input type="number" id = "payment-amount" name="paymentAmount" required="required" value="5000" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+				</div>
+				
+				<div class="input-group input-group-default mb-3 w-50">
+					<span class="input-group-text" id="inputGroup-sizing-sm">적용 결제 금액</span>
+					<input type="number" id = "actual-payment-amount" name="actualPaymentAmount" value="5000" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+				</div>
+						
+				<div class="btn-wrapper">
+					<button type="button" id="request-pay-button" value="충전하기" onclick="requestPay()" class="btn btn-dark">충전하기</button>
+				</div>
+				<span class="cautionMsg" style="font-size:12px;"><img alt="주의" src="/image/basic.png" height="16px" width="16px"> 결제금액이 0원인경우 결제가 되지 않습니다.</span>						
+			    
+			</div>	<!-- /id="right-sidebar" -->
+			
+		</div>	<!-- /class="charge-container" -->
 	
-		<div id="charge-contents">
-		
-			<h2>충전정보</h2>
-			
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">충전 수단</th>
-						<th scope="col">충전밤부 포인트 비율</th>
-					</tr>
-				</thead>
-				<tbody class="table-group-divider" th:each="paymentList, i : ${listPayment}">
-					<tr>
-						<th scope="row" th:text="${i.index + 1}"></th>
-						<td th:text="${paymentList.method}"></td>
-						<td th:text="${paymentList.bonusRatio}"></td>
-					</tr>
-				</tbody>
-			</table>
-			
-			<div class="input-side">
-			
-				<input type="hidden" id = "coupon-status" name="couponStatus" value="0">								
-				충전 밤부	: <input type="number" id = "charge-bamboo" name="chargeBamboo" required="required" value="5"><p/>
-				<p style="font-size:12px;">결제금액이 0원인경우 결제가 되지 않습니다.</p>
-				쿠폰 입력	: <input type="text" id = "coupon-code" name="couponCode" onblur="couponInsertOnBlur()" placeholder="쿠폰입력">
-				<button type="button" id="check-coupon" value="쿠폰검사" onclick="couponCheck()">쿠폰검사</button><br/>
-				<div><span id="onchange-check-coupon" style="font-size:12px;"></span></div>
-				<div><span id="result-check-coupon" style="font-size:12px;"></span></div>
-				
-			</div>
-			
-			<div class="payment-method">
-			
-				<input type="radio" id="payment-method-radio1" name="paymentMethod" value="휴대폰" checked="checked">
-				<label for="payment-method-radio1">휴대폰</label>
-				<input type="radio" id="payment-method-radio2" name="paymentMethod" value="상품권">
-				<label for="payment-method-radio2">상품권</label>
-				<input type="radio" id="payment-method-radio3" name="paymentMethod" value="신용카드">
-				<label for="payment-method-radio3">신용카드</label>
-				<input type="radio" id="payment-method-radio4" name="paymentMethod" value="계좌이체">
-				<label for="payment-method-radio4">계좌이체</label>
-				
-			</div>
-				
-		</div>	<!-- /id="charge-contents" -->
-		
-		<div id="right-sidebar">
-		
-			<h2>충전하기</h2>
-			
-			<ul>
-				<li>
-					쿠폰 할인 받은 금액 : <input type="number" id = "coupon-discount" name="couponDiscount" value="0" readonly="readonly">
-				</li>
-				<li>
-					미할인 충전 금액	: <input type="number" id = "payment-amount" name="paymentAmount" required="required" value="5000" readonly="readonly"><p/>
-				</li>
-				<li>
-					적용 결제 금액 : <input type="number" id = "actual-payment-amount" name="actualPaymentAmount" value="5000" readonly="readonly">
-				</li>
-				<li>
-					<button id="request-pay-button"  onclick="requestPay()">충전하기</button><br/>
-				</li>
-			</ul>
-		    
-		</div>	<!-- /id="right-sidebar" -->
-		
-	</div>	<!-- /id="charge-container" -->
+	</div>	<!-- /class="container" -->
 	
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
