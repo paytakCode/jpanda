@@ -45,7 +45,7 @@
 		SELECT *
 		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
 		        FROM     talent t INNER JOIN member m ON t.seller_id = m.member_id
-		                          LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                          INNER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
 		                                           FROM      review 
 		                                           GROUP BY  talent_no) r 
 		                                                        ON t.talent_no = r.talent_no

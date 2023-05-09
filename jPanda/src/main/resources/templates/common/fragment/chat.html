@@ -6,7 +6,7 @@
 	<div id="chat-console">
 		<ul id="chat-partner-list" class="list-group list-group-flush"></ul>
 		<div id="chat-content">
-			<button type="button" class="text-center fs-2 btn btn-outline-danger" disabled="disabled">채팅 상대를 선택해주세요.</button>
+			<span class="fs-2">채팅 상대를 선택해주세요.</span>
 		</div>
 		<textarea id="chat-input" placeholder="메시지를 입력하세요."></textarea>
 	</div>
@@ -14,21 +14,22 @@
 	<!-- report-chat-modal -->
 	<div class="modal fade" id="report-chat-modal" tabindex="-1" aria-labelledby="report-chat-modal" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-			<div class="modal-content">
+			<div class="modal-content report-modal-content">
 				<div class="modal-header">
+					<span class="p-2 bg-danger border border-light rounded-circle" style="margin-left: auto;"></span>
 					<h1 class="modal-title fs-5" id="report-chat-modal">부적절한 채팅 신고</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div class="mb-3">
-						<label for="chat-report-name" class="col-form-label">신고할 유저:</label>
+					<div class="mb-3" style="text-align: right">
+						<label for="chat-report-name" class="col-form-label">신고할 유저: </label>
 						<input type="hidden" id="report-memberId">
 						<input type="text" class="form-control" id="chat-report-name" readonly>
 					</div>
 					<div class="mb-3">
 						<label for="chat-report-message" class="col-form-label">관련 채팅:</label>
 						<input type="hidden" id="report-chat-no">
-						<textarea class="form-control" id="chat-report-message" readonly></textarea>
+						<textarea class="form-control text-wrap" id="chat-report-message" readonly></textarea>
 					</div>
 					<div class="mb-3">
 						<label for="chat-report-issue" class="col-form-label">신고 사유:</label>
@@ -47,7 +48,7 @@
 	
 		<div id="insert-issue-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="toast-header">
-				<img src="/image/orange-dot.png" class="rounded me-2" width="20px" height="20px">
+				<span class="p-1 bg-warning border border-light rounded-circle"></span>
 				<strong class="me-auto">Chat Report</strong>
 				<small>empty issue</small>
 				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -59,7 +60,7 @@
 		
 		<div id="report-fail-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="toast-header">
-				<img src="/image/red-dot.png" class="rounded me-2" width="20px" height="20px">
+				<span class="p-1 bg-danger border border-light rounded-circle"></span>
 				<strong class="me-auto">Chat Report</strong>
 				<small>failed</small>
 				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -71,7 +72,7 @@
 		
 		<div id="report-success-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="toast-header">
-				<img src="/image/green-dot.png" class="rounded me-2" width="20px" height="20px">
+				<span class="p-1 bg-success border border-light rounded-circle"></span>
 				<strong class="me-auto">Chat Report</strong>
 				<small>complete</small>
 				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
