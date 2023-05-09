@@ -140,17 +140,11 @@
 		  let blackId = $(this).next(".anw").data('blackid');
 		  console.log(blackId);
 		  
-/* 		  let answer = $(this).next(".anw");
-		  answer.stop().slideToggle(200);
-		  $(this).toggleClass('on').siblings().removeClass('on');
-		  $(".anw").not(answer).slideUp(200); // 1개씩 펼치기 */
-		  
 		  let question = $(this);
 		  let answer = question.next(".anw"); 
 
 		  // 현재 선택된 .que 요소와 형제 요소들의 .que 요소에 on 클래스를 제거
 		  question.addClass('on').siblings().removeClass('on');
-
 		  answer.stop().slideToggle(200);
 		  $(".anw").not(answer).slideUp(200);
 
