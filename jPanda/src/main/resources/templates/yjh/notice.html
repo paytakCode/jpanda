@@ -85,6 +85,9 @@ td {
 h2{
 	margin: 30px;
 }
+a{
+	text-decoration: none;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -108,12 +111,12 @@ h2{
 
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
-	<script th:inline="javascript">
+	<script th:inline="javascript">	
 	$(".btn").on("click", function(){
 		location.href="/admin/notice-form";
 	});
 	
-	function noticeChange(currentPage){
+	function noticeChange(currentPage) {
 		$.ajax({
 			url : "/admin/notice/notices",
 			type : "GET",
@@ -141,10 +144,12 @@ h2{
 	    		$.each(noticeList, function(index, notice) {
 	    			var tableRow = $('<tr></tr>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo);
 	    			var no = $('<td></td>').addClass('notice notice-no').text(notice.noticeNo);
-	    			var title = $('<td></td>').addClass('notice notice-title').text(notice.title);
+	    			var title = $('<td></td>');
 	    			var regDate = $('<td></td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
-	    				tableRow.append(no).append(title).append(regDate);
-	    				noticeTable.append(tableRow);
+	    			var detail = $('<a></a>').text(notice.title).attr('href', '/admin/notice/'+notice.noticeNo);
+	    			title.append(detail);
+	    			tableRow.append(no).append(title).append(regDate);
+	    			noticeTable.append(tableRow);
 	    			});
 	    			
 	                var pagination = returnMap.pagination;
@@ -159,7 +164,7 @@ h2{
 	                paginationDiv.append(page);
 	                
 	           	  	// 페이지 번호 생성
-	                for (var i=startNum; i<=lastNum; i++) {
+	                for (var i=startNum; i <= lastNum; i++) {
 	                    var page = $('<a></a>').addClass('notice-page').text(i);
 	    				if(pagination.currentPage == i){
 	    					page.css('background-color', '#EAEAEA');
@@ -167,7 +172,7 @@ h2{
 	                    paginationDiv.append(page);
 	                }
 	                paginationDiv.append($('<a></a>').addClass('notice-page').text('>'));
-	           	  	
+	           	          
 					$('.notice-page').one('click', function(){
 						if($(this).text() === '<'){
 							if(parseInt(pagination.currentPage) === 1){
@@ -185,15 +190,34 @@ h2{
 							noticeChange($(this).text());
 						}
 					});
-					$('.notice-detail').on('click', function(){
-						location.href = "/admin/notice/" + $(this).data('noticeno');							
-					});
+				 	cookie = 'currentPage='+currentPage;
+					console.log(cookie);
+					document.cookie = cookie;
+					console.log("밑     " +document.cookie);
+	          	},
+	          	error : function(xhr, textStatus, errorThrown) {
+	          		if(xhr.status === 401) {
+	          			alert('로그인이 필요한 서비스 입니다');
+	          			location.replace(JSON.parse(xhr.responseText).redirectUrl);
+	          		} else {
+	          			alert('admin notice erorr : ' + textStatus + ',' + errorThrown);
+	          		}
 	          	}
 		});
 	}
 	
 	$(function() {
-		noticeChange(1);
+		let cookie = document.cookie;
+		console.log("0. cookie"+cookie);
+		let currentPage = "";
+		if(cookie == "" || cookie == null) {
+			currentPage = 1;
+			
+		} else {
+			currentPage = cookie.substring(12);
+			console.log("0. currentPage : "+currentPage);
+		}
+		noticeChange(currentPage);
 	});
 	</script>
 

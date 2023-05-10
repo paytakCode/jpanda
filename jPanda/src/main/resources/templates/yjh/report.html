@@ -11,100 +11,101 @@
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style>
-* {
-	box-sizing: border-box;
-}
+	* {
+		box-sizing: border-box;
+	}
+	
+	.que:first-child {
+		border-top: 1px solid black;
+	}
+	
+	.que {
+		position: relative;
+		padding: 17px 0;
+		cursor: pointer;
+		font-size: 14px;
+		border-bottom: 1px solid #dddddd;
+	}
+	
+	.que::before {
+		display: inline-block;
+		font-size: 14px;
+		color: #006633;
+		margin: 0 5px;
+	}
+	
+	.que.on>span {
+		font-weight: bold;
+		color: black;
+	}
+	
+	.anw {
+		display: none;
+		overflow: hidden;
+		font-size: 14px;
+		background-color: white;
+		padding: 27px 0;
+	}
+	
+	.anw::before {
+		display: inline-block;
+		font-size: 14px;
+		font-weight: bold;
+		color: #666;
+		margin: 0 5px;
+	}
+	
+	.arrow-wrap {
+		position: absolute;
+		top: 50%;
+		right: 10px;
+		transform: translate(0, -50%);
+	}
+	
+	.que .arrow-top {
+		display: none;
+	}
+	
+	.que .arrow-bottom {
+		display: block;
+	}
+	
+	.que.on .arrow-bottom {
+		display: none;
+	}
+	
+	.que.on .arrow-top {
+		display: block;
+	}
+	
+	.que.on {
+		background-color: rgb(129,193,71);
+	}
+	
+	.btn {
+		border: 1px solid #ddd;
+		float: right;
+		margin: 10px 0;
+	}
+	
+	h2{
+		margin: 30px;
+		text-align: center;
+	}
+	
+	table{
+		border: 1px solid #ddd;
+		width: 100%;
+	}
+	
+	th, td{
+		border: 1px solid #ddd;
+	}
+	
+	.aco {
+		margin: 10px 0;
+	}
 
-.que:first-child {
-	border-top: 1px solid black;
-}
-
-.que {
-	position: relative;
-	padding: 17px 0;
-	cursor: pointer;
-	font-size: 14px;
-	border-bottom: 1px solid #dddddd;
-}
-
-.que::before {
-	display: inline-block;
-	font-size: 14px;
-	color: #006633;
-	margin: 0 5px;
-}
-
-.que.on>span {
-	font-weight: bold;
-	color: black;
-}
-
-.anw {
-	display: none;
-	overflow: hidden;
-	font-size: 14px;
-	background-color: white;
-	padding: 27px 0;
-}
-
-.anw::before {
-	display: inline-block;
-	font-size: 14px;
-	font-weight: bold;
-	color: #666;
-	margin: 0 5px;
-}
-
-.arrow-wrap {
-	position: absolute;
-	top: 50%;
-	right: 10px;
-	transform: translate(0, -50%);
-}
-
-.que .arrow-top {
-	display: none;
-}
-
-.que .arrow-bottom {
-	display: block;
-}
-
-.que.on .arrow-bottom {
-	display: none;
-}
-
-.que.on .arrow-top {
-	display: block;
-}
-
-.que.on{
-	background-color: rgb(129,193,71);
-}
-
-.btn {
-	border: 1px solid #ddd;
-	float: right;
-	margin: 10px 0;
-}
-
-h2{
-	margin: 30px;
-	text-align: center;
-}
-
-table{
-	border: 1px solid #ddd;
-	width: 100%;
-}
-
-th, td{
-	border: 1px solid #ddd;
-}
-
-.aco {
-	margin: 10px 0;
-}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -139,10 +140,16 @@ th, td{
 		  let blackId = $(this).next(".anw").data('blackid');
 		  console.log(blackId);
 		  
-		  let answer = $(this).next(".anw");
-		  answer.stop().slideToggle(300);
-		  $(this).toggleClass('on').siblings().removeClass('on');
-		  $(".anw").not(answer).slideUp(300); // 1개씩 펼치기
+		  let question = $(this);
+		  let answer = question.next(".anw"); 
+
+		  // 현재 선택된 .que 요소와 형제 요소들의 .que 요소에 on 클래스를 제거
+		  question.addClass('on').siblings().removeClass('on');
+		  answer.stop().slideToggle(200);
+		  $(".anw").not(answer).slideUp(200);
+
+		  // 다른 .que 요소들은 선택되지 않도록 함
+		  question.closest(".aco").siblings().find(".que").removeClass("on");
 		      	
 		  $.ajax({
 		      url : "/admin/report/reports/" + blackId,
@@ -174,8 +181,13 @@ th, td{
 		            tableBody.append($("<input>").attr("type", "button").addClass("btn").val("제제하기"));
 		            
 		      },
-		      error : function(jqXHR, textStatus, errorThrown) {
-		          alert("안 성공");
+		      error : function(xhr, textStatus, errorThrown) {
+		          if(xhr.status === 401) {
+		        	  alert('로그인이 필요합니다');
+		        	  location.replace(JSON.parse(xhr.responseText).redirectUrl);
+		          } else {
+		        	  alert('admin report error : ' + textStatus + ',' + errorThrown);
+		          }
 		      }
 		  });
 		});
@@ -196,8 +208,13 @@ th, td{
 					 alert("오류가 발생했습니다");
 				 }
 			 },
-			 error : function(){
-				 alert("에러가 발생했습니다");
+			 error : function(xhr, textStatus, errorThrown){
+				if(xhr.status === 401) {
+					alert('로그인이 필요합니다');
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);
+				} else {
+					alert('admin report modify error : ' + textStatus + ',' + errorThrown);
+				}
 			 }
 		 })
 	});

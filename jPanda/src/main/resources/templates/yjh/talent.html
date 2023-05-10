@@ -75,6 +75,10 @@ h2{
 	margin: 30px;
 	text-align: center;
 }
+
+a {
+	text-decoration: none;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -199,13 +203,33 @@ h2{
 							talentChange($(this).text());
 						}
 					});
-				
+						cookie = 'currentPage=' + currentPage;
+						document.cookie = cookie;
+						console.log("function.cookie : "+document.cookie);
+	          	},
+	          	error : function(xhr, textStatus, errorThrown) {
+	          		if(xhr.status === 401) {
+	          			alert('로그인이 필요합니다');
+	          			location.replace(JSON.parse(xhr.responseText).redirectUrl);
+	          		} else {
+	          			alert('admin talent error : ' + textStatus + ',' + errorThrown);
+	          		}
 	          	}
 		});
 	}
 	
 	$(function() {
-		talentChange(1);
+		let cookie = document.cookie;
+		console.log("0. cookie : "+cookie);
+		let currentPage = "";
+		
+		if(cookie == "" || cookie == null) {
+			currentPage = 1;
+		} else {
+			currentPage = cookie.substring(12);
+			console.log("0.else. currentPage : "+currentPage);
+		}
+		talentChange(currentPage);
 	});
 	
 	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
@@ -243,8 +267,13 @@ h2{
 					history.back();
 				}
 			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("처리중 오류가 발생했습니다");
+			error : function(xhr, textStatus, errorThrown) {
+				if(xhr.status === 401) {
+					alert('로그인이 필요합니다');
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);
+				} else {
+					alert('admin talent modify error : ' + textStatus + ',' + errorThrown);
+				}
 			}
 		});
 	});

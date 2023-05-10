@@ -192,6 +192,14 @@ h3 {
 						}
 					});
 			
+	          	},
+	          	error : function(xhr, textStatus, errorThrown) {
+	          		if(xhr.status === 401) {
+	          			alert('로그인이 필요합니다');
+	          			location.replace(JSON.parse(xhr.responseText).redirectUrl);
+	          		} else {
+	          			alert('admin coupon error : ' + textStatus + ',' + errorThrown);
+	          		}
 	          	}
 		});
 	}
@@ -245,6 +253,14 @@ h3 {
 					} else {
 						alert("쿠폰의 값을 설정해주세요");
 					}
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					if(xhr.status === 401) {
+						alert('로그인이 필요합니다');
+						location.replace(JSON.parse(xhr.responseText).redirectUrl);
+					} else {
+						alert('admin coupon add error : ' + textStatus + ',' + errorThrown);
+					}
 				}
 			});
 		});
@@ -257,6 +273,14 @@ h3 {
 				success : function(data) {
 					console.log(data);
 					$("#couponCode").val(data);
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					if(xhr.status === 401) {
+						alert('로그인이 필요합니다');
+						location.replace(JSON.parse(xhr.responseText).redirectUrl);
+					} else {
+						alert('admin coupon add error : ' + textStatus + ',' + errorThrown);
+					}
 				}
 			});
 		});

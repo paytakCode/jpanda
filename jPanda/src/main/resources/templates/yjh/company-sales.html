@@ -130,12 +130,14 @@ body {
 					var bcCountList = [];
 					var periodList = [];
 					var exCountList = [];
+					var colorList = [];
 
 					$.each(csList, function() {
-						bcCountList.push(this["bcCount"])
-						periodList.push(this["period"])
-						exCountList.push(this["exCount"])
-					})
+						bcCountList.push(this["bcCount"]);
+						periodList.push(this["period"]);
+						exCountList.push(this["exCount"]);
+						colorList.push(randomColor());
+					});
 
 					const ctx = document.getElementById('myChart').getContext(
 							'2d');
@@ -149,28 +151,16 @@ body {
 									{
 										label : 'BambooPoint 판매 매출 현황',
 										data : bcCountList,
-										backgroundColor : [
-												'rgba(255, 99, 132, 0.2)',
-												'rgba(54, 162, 235, 0.2)',
-												'rgba(255, 206, 86, 0.2)' ],
-										borderColor : [
-												'rgba(255, 99, 132, 0.2)',
-												'rgba(54, 162, 235, 0.2)',
-												'rgba(255, 206, 86, 0.2)' ],
+										backgroundColor : colorList,
+										borderColor : colorList,
 										borderWidth : 3
 									},
 
 									{
 										label : '환전 수수료 수익 현황',
 										data : exCountList,
-										backgroundColor : [
-												'rgba(255, 99, 132, 0.2)',
-												'rgba(54, 162, 235, 0.2)',
-												'rgba(255, 206, 86, 0.2)' ],
-										borderColor : [
-												'rgba(255, 99, 132, 0.2)',
-												'rgba(54, 162, 235, 0.2)',
-												'rgba(255, 206, 86, 0.2)' ],
+										backgroundColor : colorList,
+										borderColor : colorList,
 										borderWidth : 3
 									} ]
 						},
@@ -182,6 +172,14 @@ body {
 							}
 						}
 					});
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					if(xhr.status === 401) {
+						alert('로그인이 필요합니다');
+						location.replace(JSON.parse(xhr.responseText).redirectUrl);
+					} else {
+						alert('admin company-sales error : ' + textStatus + ',' + errorThrown);
+					}	
 				}
 			});
 		}
@@ -212,6 +210,15 @@ body {
 			const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
 			return formattedDate;
+		}
+		
+		function randomColor() {
+			let r = Math.floor(Math.random()*250);
+			let g = Math.floor(Math.random()*250);
+			let b = Math.floor(Math.random()*250);
+			
+			let color = 'rgba(' + r + ',' + g + ',' + b + ', 0.4)';
+			return color;
 		}
 	</script>
 
