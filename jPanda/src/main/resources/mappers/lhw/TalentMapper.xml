@@ -5,7 +5,7 @@
 <mapper namespace="talentMapper">
 	
 	<!-- 상세 페이지  -->
-	<select id="selectBoardTalentByTalentNo" resultType="BoardTalent" parameterType="Long">
+	<select id="selectBoardTalentByTalentNo" parameterType="Long" resultType="BoardTalent">
 		SELECT t.talent_no, t.title, t.seller_id, t.main_img, t.summary, t.bamboo, t.sale_bamboo, t.content, m.name
 		FROM talent t, member m
 		WHERE t.seller_id = m.member_id
@@ -19,12 +19,6 @@
 		WHERE talent_no = #{talentNo}
 		ORDER BY review_date DESC
 	</select>
-	
-	<!-- 리뷰 인서트  -->	
-	<insert id="insertReview" parameterType="BoardReview">
-		INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score, review_no) 
-    	VALUES (#{talentNo}, #{reviewerId}, #{content}, #{reviewDate}, #{bambooScore}, REVIEW_NO_SEQ.nextval)
-	</insert>
 	
 	<!-- 리뷰 업데이트  -->	
 	<update id="updateReview" parameterType="BoardReview">
@@ -44,11 +38,18 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
+	<!-- 리뷰 인서트  -->	
+	<insert id="insertReview" parameterType="BoardReview">
+		INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score, review_no) 
+    	VALUES (#{talentNo}, #{reviewerId}, #{content}, #{reviewDate}, #{bambooScore}, REVIEW_NO_SEQ.nextval)
+	</insert>
+	
 	<!-- 리뷰 인서트 검증 -->
-	<select id="selectBambooUseListByTalentNo" parameterType="Long" resultType="BoardBambooUse">
-		SELECT *
+	<select id="selectBambooUseByTalentNoAndBuyerId" parameterType="Map" resultType="BoardBambooUse">
+		SELECT buyer_id
 		FROM bamboo_use
-		WHERE talent_no = #{talentNo}
+		WHERE talent_no = to_number(#{talentNo})
+		AND buyer_id = #{buyerId}
 	</select>
 	
 	<!-- 재능 구매자 정보 인서트  -->

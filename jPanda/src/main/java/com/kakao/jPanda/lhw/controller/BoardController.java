@@ -4,7 +4,6 @@ package com.kakao.jPanda.lhw.controller;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kakao.jPanda.common.annotation.NoLoginCheck;
 import com.kakao.jPanda.lhw.domain.CategoryDto;
 import com.kakao.jPanda.lhw.domain.FiltersDto;
-import com.kakao.jPanda.lhw.domain.TalentDto;
 import com.kakao.jPanda.lhw.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/board")
@@ -27,48 +28,47 @@ public class BoardController {
 	
 	private final BoardService boardService;
 	
+	
+	// 재능 리스트 불러오기 (필터 통합)
+	@NoLoginCheck
+	@ResponseBody
+	@GetMapping("/talents")
+	public HashMap<String, Object> talentList(FiltersDto filters){
+		log.info("Controller talentList Start");
+		
+		HashMap<String, Object> map =boardService.findTalentListByFilter(filters);
+
+		return map;
+	}
+	
+	
 	// 대분류 카테고리 리스트 불러오기
+	@NoLoginCheck
 	@GetMapping("")
-	public String boardView(Model model, HttpSession session, @RequestParam(required=false) String search) {
-		System.out.println("Controller boardList Start");
+	public String boardView(@RequestParam(required=false) String search, Model model) {
+		log.info("Controller boardList Start");
+		
 		List<CategoryDto> upperCategoryList = boardService.findUpperCategoryList();
 		
 		model.addAttribute("upperCategoryList", upperCategoryList);
 		if(search == null) {
 	         search = "";
 	      }
-	      model.addAttribute("search", search);
+	    model.addAttribute("search", search);
 		
 		return "lhw/board";
 	}
 	
 	
 	// 중분류 카테고리를 불러오는 리스트
+	@NoLoginCheck
 	@ResponseBody
 	@GetMapping("/categorys/lower-category-nos") 
 	public List<CategoryDto> lowerCategoryListByUpperCategoryNo(@RequestParam Long upperCategoryNo) {
-		System.out.println("Controller lowerCategoryListByUpperCategoryNo Start");
+		log.info("Controller lowerCategoryListByUpperCategoryNo Start");
+		
 		List<CategoryDto> lowerCategotyList = boardService.findLowerCategoryListByUpperCategoryNo(upperCategoryNo);
+		
 		return lowerCategotyList;
 	}
-	
-	
-	//재능 리스트 불러오기 (필터 통합)
-	@ResponseBody
-	@GetMapping("/talents-list")
-	public HashMap<String, Object> talentList(FiltersDto filters){
-		System.out.println("Controller talentList Start");
-		List<TalentDto> talentListByFilters = boardService.findTalentListByFilter(filters);
-		System.out.println("talentList Total Count-> "+ talentListByFilters.size());
-		filters.setTotalCount(talentListByFilters.size());
-		talentListByFilters = boardService.findTalentListByFilter(filters);
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("talentList", talentListByFilters);
-		map.put("filters", filters);
-
-		return map;
-	}
-	
-	
 }
