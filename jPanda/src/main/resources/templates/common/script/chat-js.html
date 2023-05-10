@@ -63,15 +63,15 @@
 			    	}
 					const chatElem = $("<div>").addClass("from-other")
 												.attr('data-bs-toggle', "modal")
-												.attr('data-bs-target', '#report-chat-modal')
-												.data('chat-no', receivedChat.chatNo);
+												.attr('data-bs-target', '#report-chat-modal');
 					const messageElem = $("<span>").text(receivedChat.message)
 													.addClass("chat-message lh-base text-start badge p-2 text-wrap")
 													.attr('data-bs-toggle', "tooltip")
 													.attr('data-bs-placement', "top")
 													.attr('data-bs-custom-class', 'chat-report-tooltip')
 													.attr('data-bs-html', 'true')
-													.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>');
+													.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>')
+													.data('chat-no', receivedChat.chatNo);
 					const timeElem = $("<span>").text(getTime(receivedChat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 					chatElem.append(messageElem)
 							.append(timeElem);
@@ -162,15 +162,15 @@
 							
 							const chatElem = $("<div>").addClass("from-other")
 														.attr('data-bs-toggle', "modal")
-														.attr('data-bs-target', '#report-chat-modal')
-														.data('chat-no', chat.chatNo);
+														.attr('data-bs-target', '#report-chat-modal');
 							const messageElem = $("<span>").text(chat.message)
 															.addClass("chat-message lh-base text-start badge p-2 text-wrap")
 															.attr('data-bs-toggle', "tooltip")
 															.attr('data-bs-placement', "top")
 															.attr('data-bs-custom-class', 'chat-report-tooltip')
 															.attr('data-bs-html', 'true')
-															.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>');
+															.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>')
+															.data('chat-no', chat.chatNo);
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 							
 							if(chat.read == 'F' && index == 0){
@@ -199,7 +199,7 @@
 				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				},
 				error: function(error) {
-					console.log('updateChatContent Failed -> ' + error);
+					console.log('updateChatContent Failed -> ' + JSON.stringify(error));
 				}
 			});
 		}
@@ -235,7 +235,7 @@
 						updateTotalUnreadCount();
 				    },
 				    error: function(error) {
-				        console.log('[readPartnerMessage] read Update Failed -> ' + error);
+				        console.log('[readPartnerMessage] read Update Failed -> ' + JSON.stringify(error));
 				    }
 				});
 			}
@@ -275,8 +275,10 @@
 		//채팅창 닫기
 		$(function(){
 			$(document).on("click", function(event) {
-				if (!$(event.target).closest("#chat-console").length &&
-					!$(event.target).is("#chat-btn") && $('#report-chat-modal').is(':hidden')) {
+				if (!$(event.target).closest("#chat-console").length 
+					&& !$(event.target).is("#chat-btn") 
+					&& $('#report-chat-modal').is(':hidden')
+					&& !$(event.target).is('#admin-chat-btn')) {
 					$("#chat-console").hide();
 				}
 			});
@@ -328,7 +330,7 @@
 			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				},
 				error: function(error) {
-					console.log('saveChat Failed -> ' + error);
+					console.log('saveChat Failed -> ' + JSON.stringify(error));
 				}
 			});
 		}
@@ -352,11 +354,11 @@
 											.attr('data-bs-custom-class', 'partner-id-popover')
 											.attr('data-bs-trigger', 'hover focus')
 											.attr('data-bs-content', partner.memberId);
-					 		chatPartnerElem.click(function() { 
-								selectedPartnerId = partner.memberId;
-								updateSelectedPartner();
-								updateChatContent();
-							}); 
+						 		chatPartnerElem.click(function() { 
+									selectedPartnerId = partner.memberId;
+									updateSelectedPartner();
+									updateChatContent();
+								}); 
 							
 							let unReadChatNoElem = $('<span>');
 							unReadChatNoElem.attr('class', 'unread-count badge bg-warning rounded-pill');
@@ -372,7 +374,7 @@
 						initPopover();
 					},
 					error: function(error) {
-						console.log('updateChatPartnerList Failed -> ' + error);
+						console.log('updateChatPartnerList Failed -> ' + JSON.stringify(error));
 					}
 				});
 		}
@@ -454,7 +456,7 @@
 						showToast('#report-success-toast');
 					},
 					error: function(error) {
-						console.log('Chat Report Failed -> ' + error);
+						console.log('Chat Report Failed -> ' + JSON.stringify(error));
 						$('#report-chat-modal').modal('hide');
 						showToast('#report-fail-toast');
 					}
