@@ -442,8 +442,15 @@
 	               	$('#main-img-value').val(data.url);
 	               	$('#main-img-value').trigger('input');
 	           	},
-	           	error: function (jqXHR) { 
-	           		$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
+	           	error: function(xhr, textStatus, errorThrown){
+			    	if(xhr.status === 401){
+			    		alert('로그인이 필요합니다.');
+			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+			    	}else {
+	           			$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
+			    		alert('Image Upload Fail 다시 시도해주세요.');
+	           			console.error(xhr);
+			    	}
 	           	}
 	       	});
 		}
@@ -497,13 +504,22 @@
 			url : "/talent/categorys",
          	type : "GET",
            	dataType: 'json',
-           	success:function(ajaxCategoryList) {
+           	success : function(ajaxCategoryList) {
            		categoryList = ajaxCategoryList;
 			  	categoryList.forEach(function(category) {
 			    	if(category.upperCategoryNo === null) {
 			      		$('#upper-category-no').append($("<option>").val(category.categoryNo).text(category.item));
 			    	}
 			 	});
+           	},
+           	error: function(xhr, textStatus, errorThrown){
+		    	if(xhr.status === 401){
+		    		alert('로그인이 필요합니다.');
+		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+		    	}else {
+		    		alert('CategoryList Load Fail 다시 시도해주세요.');
+		    		console.error(xhr);
+		    	}
            	}
 		});
 	})
