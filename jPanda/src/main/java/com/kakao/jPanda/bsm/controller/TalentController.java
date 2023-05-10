@@ -58,24 +58,6 @@ public class TalentController {
 		return talentService.addTalent(talent,session);
 	}
 	
-//	// 재능 DB Update
-//	@ResponseBody
-//	@PutMapping("/talent")
-//	public String talentModify(TalentDto talent, HttpSession session) {
-//		
-//		String sellerId = talentService.findSellerIdByTalent(talent);
-//		
-//		if(sellerId != (String) session.getAttribute("memberId")) {
-//			return "<script>" +
-//					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
-//					"location.href = '/login';" + 
-//					"</script>";
-//		}else {
-//			String result = talentService.modifyTalent(talent);
-//			return result;
-//		}
-//	}
-	// 재능 DB Update
 	@ResponseBody
 	@PutMapping("/talent")
 	public String talentModify(TalentDto talent, HttpSession session) {
