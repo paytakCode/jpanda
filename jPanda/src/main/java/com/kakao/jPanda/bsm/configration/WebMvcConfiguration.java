@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 	
+	// 이미지 업로드 시 저장 경로 설정(외부 디텍토리)
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		int index = System.getProperty("user.dir").indexOf(File.separator + "jPanda");

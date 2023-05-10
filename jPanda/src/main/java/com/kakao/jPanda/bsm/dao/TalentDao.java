@@ -15,5 +15,6 @@ public interface TalentDao {
 	List<TalentDto> 	selectTopRatedTalents();
 	List<TalentDto> 	selectNewTrendTalents();
 	List<TalentDto> 	selectRandomTalents();
+	String selectSellerIdByTalent(TalentDto talent);
 
 }

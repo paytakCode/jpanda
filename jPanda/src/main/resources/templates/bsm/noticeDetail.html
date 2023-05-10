@@ -41,7 +41,7 @@
 			border-radius: 10px;
 		}
 		.table-th{
-			background-color: #1ABC9C;
+			background-color: #198754;
 			width: 120px;
 			height: 45px;
 			text-align: center;
@@ -66,7 +66,7 @@
 			<table id="notice-detail-table">
 				<tr><th class="table-th">제목</th><td id="title" th:text="${notice.title}"></td></tr>
 				<tr><th class="table-th">등록일</th><td id="reg-date" th:text="${#strings.substring(notice.regDate, 0, 10)}"></td></tr>
-				<tr><td colspan="2" id="content" th:text="${notice.content}"></td></tr>
+				<tr><td colspan="2" id="content" th:utext="${notice.content.replaceAll('\n', '<br>')}"></td></tr>
 			</table>
 				<button id="back-button" class="btn btn-outline-success text-nowrap">목록</button>
 		</div> <!-- class="container" -->
@@ -83,7 +83,7 @@
 		});
 	</script>
 	
-		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>
 </html>

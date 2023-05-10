@@ -99,5 +99,15 @@ public class RegistTalentDaoImpl implements TalentDao{
 		}
 		return selectRandomTalents;
 	}
+	@Override
+	public String selectSellerIdByTalent(TalentDto talent) {
+		String sellerId = null;
+		try {
+			sellerId = session.selectOne("selectSellerIdByTalent");
+		} catch (Exception e) {
+			log.error("TalentDaoImpl selectSellerIdByTalent e.getMessage() ->" + e.getMessage());
+		}
+		return sellerId;
+	}
 	
 }
