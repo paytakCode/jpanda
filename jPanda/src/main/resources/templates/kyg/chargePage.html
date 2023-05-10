@@ -16,11 +16,20 @@
 			padding: 0;
 		}
 		
+		.btn-container{
+			position:relative;
+			margin: 0 auto;
+			margin-top: 30px;
+			width: 500px;
+			margin-left: 270px;
+			display: flex;
+		}
+		
 		.filter-btn{  
-			position: absolute;
+			background-color: rgb(129,193,71);
 			top: 23%;
 			left: 50%;
-			transform: translate(-50%, -50%);
+			
 		}
 		
 		.btn-success {
@@ -33,6 +42,7 @@
 			width: 1180px;
 			margin-left: 200px;
 			display: flex;
+			
 		}
 		
 		/* 충전컨텐츠 */
@@ -42,8 +52,10 @@
 			flex: 3;
 			padding: 32px;
 			border-radius: 16px 16px 16px 16px;
-			margin-top: 13%;
+			margin-top: 8%;
+			margin-bottom: 10%;
 			border: 1px solid #EAEAEA;
+			box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
 			background-color: ghostwhite;
 		}
 		
@@ -75,6 +87,7 @@
 			margin-left: 4%;
 	  		margin-top: 13%;
 	  		border: 1px solid #EAEAEA;
+	  		box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
 	  		background-color: ghostwhite;
 	  		
 		}
@@ -151,18 +164,21 @@
 	<th:block layout:fragment="content">
 	 
 	 <div class="container">
-	 
-		<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
-			<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn">충전하기</button>
-			<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn"  onclick="moveChargePage(1)">충전내역</button>
+	 	
+	 	<div class="btn-container">
+			<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
+				<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn">충전하기</button>
+				<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn"  onclick="moveChargePage(1)">결제내역</button>
+			</div>
 		</div>
 	    
 		<div class="charge-container">
 		
+			
 			<div id="charge-contents">
 			
 				<div style="text-align: center; margin-bottom: 5%; font-weight: bold; font-size: 30px;">
-					<span>충전</span>
+					<span class="fst-italic">충전</span>
 				</div>
 				<table class="table table-default">
 					<thead>
@@ -235,7 +251,7 @@
 				<div class="btn-wrapper">
 					<button type="button" id="request-pay-button" value="충전하기" onclick="requestPay()" class="btn btn-dark">충전하기</button>
 				</div>
-				<span class="cautionMsg" style="font-size:12px;"><img alt="주의" src="/image/basic.png" height="16px" width="16px"> 결제금액이 0원인경우 결제가 되지 않습니다.</span>						
+				<span class="cautionMsg" style="font-size:12px;"><img alt="주의" src="/image/talentImage/red!.png" height="16px" width="16px"> 결제금액이 0원인경우 결제가 되지 않습니다.</span>						
 			    
 			</div>	<!-- /id="right-sidebar" -->
 			

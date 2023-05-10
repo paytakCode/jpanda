@@ -203,13 +203,26 @@ a {
 							talentChange($(this).text());
 						}
 					});
+						cookie = 'currentPage=' + currentPage;
+						document.cookie = cookie;
+						console.log("function.cookie : "+document.cookie);
 				
 	          	}
 		});
 	}
 	
 	$(function() {
-		talentChange(1);
+		let cookie = document.cookie;
+		console.log("0. cookie : "+cookie);
+		let currentPage = "";
+		
+		if(cookie == "" || cookie == null) {
+			currentPage = 1;
+		} else {
+			currentPage = cookie.substring(12);
+			console.log("0.else. currentPage : "+currentPage);
+		}
+		talentChange(currentPage);
 	});
 	
 	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");

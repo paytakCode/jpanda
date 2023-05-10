@@ -34,15 +34,18 @@
         float: left;
         box-sizing: border-box;
        	font-size: 30px;
-        
+        border-radius: 10px;
         background: rgb(196, 196, 191);
     }
     div.right {
         width: 70%;
         float: right;
         box-sizing: border-box;
+        border-radius: 10px;
         font-size: 20px;
+        border:solid 1px rgb(86 121 107 / 80%);
         
+        padding:16px 17px 0;
         background: rgb(250, 252, 252);
     }
 
@@ -51,7 +54,10 @@
     width: 460px;
     margin: auto;
 }
-
+ul {
+  list-style-type: none;
+  padding: 0;
+}
 /* ahref 밑줄없애기 */
 a {
     text-decoration: none;
@@ -67,6 +73,35 @@ a {
 .withdrawal-btn-wrap {
   margin-top: auto;
   margin-bottom: 10px;
+
+}
+.black-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+li span {
+  margin-right: 5px;
+  width: 100px; /* 레이블 너비 조정 */
+}
+
+li input {
+  flex: 1;
+  padding: 4px;
 }
 
 	</style>
@@ -80,17 +115,15 @@ a {
         <div class="left" align="center">
 	        <img src="/image/basic.png" alt="기본사진">
 	           <ul>   
-	              <li>내프로필</li>
+	              <h1 th:text="${session.memberId}" font-size=10px;></h1>
 	              <a href="/trade" onclick="redirectToTrade()">거래내역</a>
 	           </ul>
 			<span class="withdrawal-btn-wrap" th:if="${session.memberId != null}">
-			  <button type="button" id="withdrawal-btn" data-bs-toggle="modal" data-bs-target="#withdrawalModal">회원탈퇴</button>
+			  <button type="button" id="withdrawal-btn" data-bs-toggle="modal" data-bs-target="#withdrawalModal" class="black-button">회원탈퇴</button>
 			</span>	
         </div>
         
-        <div class="right" align="center" th:if="${session.memberId != null}">
-		    <h1>내프로필</h1>
-		    <h1 th:text="'Welcome, ' + ${session.memberId} + '님!'"></h1>
+        <div class="right" align="center" style="border-radius: 10; width: auto; margin: 0 auto;" pxth:if="${session.memberId != null}"> 
 				<form method="post" action="/updateMember">
 				<input type="hidden" name="memberId" th:value="${memberInfo.memberId}">
 				    <ul>
@@ -100,7 +133,7 @@ a {
 				        </li>
 				        <li>
 				            <span>이메일: </span>
-				            <input type="text" th:value="${memberInfo.email}" name="email">
+				            <input type="email" th:value="${memberInfo.email}" name="email" oninput="validateEmailInput(event)">
 				        </li>
 				        <li>
 				            <span>전화번호: </span>
@@ -114,17 +147,17 @@ a {
 				            <span>회원등급: </span>
 				            <input type="text" th:value="${memberInfo.memberGrade}" name="memberGrade" readonly>
 				        </li>
-				        
+				        <button type="submit" onclick="showSuccessAlertAndRefresh()">수정하기</button>
 				    </ul>
-    				<button type="submit" onclick="showSuccessAlertAndRefresh()" >수정하기</button>
+    				
 				</form>
 			<div class="menu">
-				<span>
-					<a href="/" target="_blank">계정설정</a>
-				</span>
-				<span>
+				<div>
+					<a href="" onclick="moveFocusToNameInput()">계정설정</a>
+				</div>
+				<div>
 					<a href="/trade" onclick="redirectToTrade()" >거래내역</a>
-				</span>
+				</div>
 			</div>
 		</div>
 		<div class="right" align="center" th:unless="${session.memberId != null}">
@@ -160,9 +193,9 @@ a {
 
 	$('#logout-btn').click(function() {
 	  $.ajax({
-	    url: '/logout', // 로그아웃 요청을 보낼 URL
-	    type: 'GET', // HTTP 요청 메서드
-	    dataType: 'text', // 서버 응답 데이터 타입
+	    url: '/logout', 
+	    type: 'GET', 
+	    dataType: 'text', 
 	    success: function(result) {
 	      alert('로그아웃 되었습니다.');
 	      location.href='/login';
@@ -226,7 +259,22 @@ a {
         // 페이지 새로고침
         location.reload();
     }
-	
+    function validateEmailInput(event) {
+    	  const emailInput = event.target;
+    	  const email = emailInput.value;
+    	  
+    	  // 이메일 형식을 검증하는 정규식
+    	  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    	  
+    	  if (!emailRegex.test(email)) {
+    	    emailInput.setCustomValidity("유효한 이메일 형식이 아닙니다.");
+    	  } else {
+    	    emailInput.setCustomValidity("");
+    	  }
+    	}
+    function moveFocusToNameInput() {
+        document.getElementById("name").focus();
+    }
 
 	</script> 
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

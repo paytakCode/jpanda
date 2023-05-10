@@ -16,12 +16,19 @@
 			padding: 0;
 		}
 		
+		.btn-container{
+			position:relative;
+			margin: 0 auto;
+			margin-top: 30px;
+			width: 500px;
+			margin-left: 270px;
+			display: flex;
+		}
+		
 		.filter-btn{
 			background-color: rgb(129,193,71);
-			position: absolute;
 			top: 23%;
 			left: 50%;
-			transform: translate(-50%, -50%);
 		}
 		
 		.btn-success {
@@ -33,8 +40,11 @@
 			margin: 0 auto;
 			width: 1000px;
 			height: 750px;
-			margin-top: 12%;
+			margin-top: 8%;
+			margin-bottom: 10%;
 			border-radius: 16px 16px 16px 16px;
+			border: 1px solid #EAEAEA;
+	  		box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
 			background-color: ghostwhite;
 		}
 		
@@ -62,10 +72,6 @@
 		td {
 			font-size: 18px;
 		}
-		
-		/* #charge-main{
-			text-align: center;
-		} */
 		
 		.charge-reg-date{
 			width: 40px;
@@ -106,9 +112,28 @@
 
 		.charge-page{
 			text-decoration: none;
-			background-color: #198754;
 			color: black;
 		}
+		
+		.charge-page:hover {
+			background-color: rgb(129,193,71);
+		}
+		
+		@keyframes text-rising {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+		
+		.chargeList {
+		animation: text-rising 1s ease-out;
+		}
+
 		
 	</style>
 
@@ -122,22 +147,26 @@
 	
 	<div class="container">
 	
-		<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
-			<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn" onclick="moveChargePage(0)">충전하기</button>
-			<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn">충전내역</button>
+		<div class="btn-container">
+			<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
+				<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn" onclick="moveChargePage(0)">충전하기</button>
+				<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn">결제내역</button>
+			</div>
 		</div>
 			
 		<div class="charge-details-container">
-			
+		
+		
 			<div style="text-align: center; margin-bottom: 5%; font-weight: bold; font-size: 30px; padding-top: 30px;">
-				<span>충전내역</span>
+				<span class="fst-italic">결제내역</span>
 			</div>	
 			<div id="chargelistDiv">
 				<table id="chargeTable" class="table table-default">
 				</table>
 			</div>
 			<div style="display:flex; justify-content:flex-end; margin-top: 10px; margin-right: 100px">
-				<span th:text="'총 충전회수 : ' + ${totalChargeCnt}" style="font-size: 12px;"></span>
+				<span class="historyIcon"><img src="/image/bamboo-history.png" alt="image" width="25" height="25"></span>
+				<span th:text="'총 충전회수 : ' + ${totalChargeCnt}" style="font-size: 17px;"></span>
 			</div>
 			<div id="pagination">
 			</div>
@@ -189,10 +218,10 @@
 		    		// 받아온 데이터를 반복하며 리스트 아이템 생성
 		    		$.each(chargeList, function(index, charge) {
 		    			var tableRow = $('<tr></tr>');
-		    			var chargeDate = $('<td></td>').text(charge.chargeDate.substring(0, 10));
-		    			var paymentMethod = $('<td></td>').text(charge.paymentMethod);
-		    			var chargeBamboo = $('<td></td>').text(charge.chargeBamboo);
-		    			var paymentAmount = $('<td></td>').text(charge.paymentAmount);
+		    			var chargeDate = $('<td></td>').addClass('chargeList chargeDate').text(charge.chargeDate.substring(0, 10));
+		    			var paymentMethod = $('<td></td>').addClass('chargeList paymentMethod').text(charge.paymentMethod);
+		    			var chargeBamboo = $('<td></td>').addClass('chargeList chargeBamboo').text(charge.chargeBamboo);
+		    			var paymentAmount = $('<td></td>').addClass('chargeList paymentAmount').text(charge.paymentAmount);
 		    				tableRow.append(chargeDate)
 		    						.append(paymentMethod)
 		    						.append(chargeBamboo)
@@ -247,6 +276,9 @@
 		$(function() {
 			chargeChange(1);
 		}); 
+		
+
+		
 		
 	</script>
 	

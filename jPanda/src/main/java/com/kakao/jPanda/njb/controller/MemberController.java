@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kakao.jPanda.common.annotation.NoLoginCheck;
 import com.kakao.jPanda.njb.dao.MemberDao;
 import com.kakao.jPanda.njb.domain.BankDto;
 import com.kakao.jPanda.njb.domain.EmailVerifDto;
@@ -42,7 +43,7 @@ public class MemberController {
 	private final MemberService memberservice;
 	private final MemberDao memberDao;
 	
-
+	@NoLoginCheck
     @GetMapping("/signup")
     public String signupForm(Model model) {
     	System.out.println("signup Start...");
@@ -51,14 +52,14 @@ public class MemberController {
  	    model.addAttribute("bankList", findBankList);
     	return "njb/signup";
     }
-    
+	@NoLoginCheck
     @PostMapping("/members/signup")
     public String join(MemberDto memberInfo) {
     	System.out.println("/members/signup start...");
     	memberservice.joinMember(memberInfo);
     	return "njb/login";	
     }
-    
+	@NoLoginCheck
     @GetMapping("/members/id/id")
     @ResponseBody
     public Map<String, String> checkId(@RequestParam String memberId) {
@@ -83,7 +84,7 @@ public class MemberController {
         return resultMap;
     }
 
-
+	@NoLoginCheck
     @GetMapping("/findid")
     public ResponseEntity<String> findIdByNameAndEmail(@RequestParam String name, @RequestParam String email) {
     	System.out.println("/findid start....");
@@ -99,7 +100,8 @@ public class MemberController {
 
     @Autowired
     private JavaMailSender mailSender;
-  
+    
+    @NoLoginCheck
     @GetMapping("/findpw")
     @ResponseBody
     public ResponseEntity<String> findPwByIdAndEmail(@RequestParam String memberId, @RequestParam String email) {
@@ -118,6 +120,7 @@ public class MemberController {
             return new ResponseEntity<String>("비밀번호를 초기화 했습니다. 이메일을 확인해주세요.", HttpStatus.OK);
         }
     }
+    @NoLoginCheck
     @PostMapping("/sendVerificationCode")
     @ResponseBody
     public ResponseEntity<String> sendVerificationCode(@RequestParam("email") String email) {
@@ -176,7 +179,7 @@ public class MemberController {
         return new String(password);
     }
 
-    
+    @NoLoginCheck
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDto memberDto, HttpSession session,RedirectAttributes redirectAttributes) {
     	boolean loginResult = memberservice.login(memberDto);
@@ -203,7 +206,7 @@ public class MemberController {
         session.invalidate();
         return "Logout success";
     }
-   
+    
     @PostMapping("/withdrawal")
     public ResponseEntity<String> withdrawal(HttpSession session, @RequestParam String password) {
         String memberId = (String) session.getAttribute("memberId");
@@ -231,6 +234,7 @@ public class MemberController {
         //로그인 안되어있으면 로그인페이지로 이동
         return "njb/login";
     }
+    
     @PostMapping("/updateMember")
     public String editMemberInfo(@ModelAttribute("memberInfo") MemberDto memberInfo, HttpSession session) {
     	
@@ -240,6 +244,7 @@ public class MemberController {
         return "redirect:/mypage";
     }
     
+    @NoLoginCheck
     @GetMapping("/verifyCode")
     @ResponseBody
     public ResponseEntity<String> verifyCode(EmailVerifDto emailVerifDto) {
