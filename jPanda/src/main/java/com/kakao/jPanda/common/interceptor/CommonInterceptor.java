@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import com.kakao.jPanda.common.annotation.NoLoginCheck;
 
@@ -23,8 +22,7 @@ public class CommonInterceptor implements HandlerInterceptor, AsyncHandlerInterc
 		
 		//view 관련 요청 handler들은 모두 통과시킴
 		//로직 없을 시 Class Casting Error
-        if (handler instanceof ResourceHttpRequestHandler) {
-        	log.info("ResourceHttpRequestHandler>>true");
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
         
