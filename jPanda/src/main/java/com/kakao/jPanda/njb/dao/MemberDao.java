@@ -8,7 +8,7 @@ import com.kakao.jPanda.njb.domain.MemberDto;
 
 public interface MemberDao {
 
-	public void insertMember(MemberDto memberInfo);
+	public boolean insertMember(MemberDto memberInfo);
 
 	public List<BankDto> selectBankList();
 	
