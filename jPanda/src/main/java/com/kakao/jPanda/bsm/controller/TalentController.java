@@ -39,7 +39,7 @@ public class TalentController {
 	public String talentTest(Model model, HttpSession session) {
 		model = talentService.findMainPageTalents(model);
 		
-		return "bsm/talentTestMainpage";
+		return "bsm/mainPage";
 	}
 	
 	// 재능 등록 페이지 이동
@@ -55,33 +55,31 @@ public class TalentController {
 	@ResponseBody
 	@PostMapping("/talent")
 	public String talentAdd(TalentDto talent, HttpSession session) {
-		if(talent.getSellerId() != (String)session.getAttribute("memberId")) {
-			return "<script>" +
-					"alert('비정상적인 재능 등록입니다. 다시 로그인해 주세요.');" + 
-					"location.href = '/login';" + 
-					"</script>";
-		}else {
-			String result = talentService.addTalent(talent);
-			return result;
-		}
+		return talentService.addTalent(talent,session);
 	}
 	
+//	// 재능 DB Update
+//	@ResponseBody
+//	@PutMapping("/talent")
+//	public String talentModify(TalentDto talent, HttpSession session) {
+//		
+//		String sellerId = talentService.findSellerIdByTalent(talent);
+//		
+//		if(sellerId != (String) session.getAttribute("memberId")) {
+//			return "<script>" +
+//					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
+//					"location.href = '/login';" + 
+//					"</script>";
+//		}else {
+//			String result = talentService.modifyTalent(talent);
+//			return result;
+//		}
+//	}
 	// 재능 DB Update
 	@ResponseBody
 	@PutMapping("/talent")
 	public String talentModify(TalentDto talent, HttpSession session) {
-		
-		String sellerId = talentService.findSellerIdByTalent(talent);
-		
-		if(sellerId != (String) session.getAttribute("memberId")) {
-			return "<script>" +
-					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
-					"location.href = '/login';" + 
-					"</script>";
-		}else {
-			String result = talentService.modifyTalent(talent);
-			return result;
-		}
+		return talentService.modifyTalent(talent, session);
 	}
 	
 	// 이미지 서버 저장 후 상대 경로 반환

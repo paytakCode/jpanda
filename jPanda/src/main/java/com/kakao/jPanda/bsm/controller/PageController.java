@@ -23,7 +23,7 @@ public class PageController {
 	public String talentTest(Model model, HttpSession session) {
 		model = talentService.findMainPageTalents(model);
 		
-		return "bsm/talentTestMainpage";
+		return "bsm/mainPage";
 	}
 	
 }

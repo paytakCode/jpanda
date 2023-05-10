@@ -215,12 +215,6 @@
 
 <div>
 	<th:block layout:fragment="content">
-	<script th:inline="javascript">
-		if(memberId == null){
-			alert("로그인이 필요한 서비스 입니다.");
-			location.href = "/login";
-		}
-	</script>
 	 <div id="side">
 	  	<table id="write-check">
 	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>

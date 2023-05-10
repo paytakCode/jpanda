@@ -213,13 +213,13 @@
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
 </th:block>
 <div>
-	<th:block layout:fragment="content">
 	<script th:inline="javascript">
 		if(memberId != [[${talent.sellerId}]]){
 			alert("비정상적인 접근이 감지되었습니다. 다시 로그인 해주세요.");
 		    location.href = "/login";
 		}
 	</script>
+	<th:block layout:fragment="content">
 	 	<div id="side">
 		  	<table id="write-check">
 		    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/check.png"></td></tr>

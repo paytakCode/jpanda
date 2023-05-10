@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,27 +24,78 @@ public class RegistTalentServiceImpl implements TalentService{
 	private final TalentDao talentDao;
 	
 	@Override
+	public Model findMainPageTalents(Model model) {
+		model.addAttribute("bestSellerTalent", findBestSellerTalents());
+		model.addAttribute("topRatedTalent", findTopRatedTalents());
+		model.addAttribute("newTrendTalent", findNewTrendTalents());
+		model.addAttribute("randomTalent", findRandomTalents());
+		return model;
+	}
+	
+	@Override
 	public List<CategoryDto> findCategorys() {
 		List<CategoryDto> categoryList = talentDao.selectCategorys();
 		return categoryList;
 	}
 	
 	@Override
-	public String addTalent(TalentDto talent) {
-		String resultStr = "";
-		int result = talentDao.insertTalent(talent);
-		if(result > 0) {
-			resultStr = "<script> " +
-					"alert('재능 등록이 완료되었습니다.');" + 
-					"location.href = '/talent/';" + 
+	public String addTalent(TalentDto talent, HttpSession session) {
+		String result = null;
+		if(talent.getSellerId() != (String)session.getAttribute("memberId")) {
+			result = "<script>" +
+					"alert('비정상적인 재능 등록입니다. 다시 로그인해 주세요.');" + 
+					"location.href = '/login';" + 
 					"</script>";
 		}else {
-			resultStr = "<script> " +
-					"alert('재능 등록이 완료되지 않았습니다. 다시 확인해주세요.');" + 
-					"history.back();" + 
-					"</script>";
+			int insertResult = talentDao.insertTalent(talent);
+			if(insertResult > 0) {
+				result = "<script> " +
+						"alert('재능 등록이 완료되었습니다.');" + 
+						"location.href = '/talent/';" + 
+						"</script>";
+			}else {
+				result = "<script> " +
+						"alert('재능 등록이 완료되지 않았습니다. 다시 확인해주세요.');" + 
+						"history.back();" + 
+						"</script>";
+			}
 		}
-		return resultStr;
+		return result;
+	}
+	
+	
+	@Override
+	public TalentDto findTalentByTalentNo(Long talentNo) {
+		TalentDto talent = talentDao.selectTalentBytalentNo(talentNo);
+		
+		return talent;
+	}
+
+	@Override
+	public String modifyTalent(TalentDto talent, HttpSession session) {
+		String result = null;;
+		String sellerId = findSellerIdByTalent(talent);
+		
+		if(sellerId != (String) session.getAttribute("memberId")) {
+			result = "<script>" +
+					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
+					"location.href = '/login';" + 
+					"</script>";
+		}else {
+			int updateResult = talentDao.updateTalent(talent);
+			if(updateResult > 0) {
+				result = "<script> " +
+						"alert('재능 수정 완료되었습니다.');" + 
+						"location.href = '/talent/';" + 
+						"</script>";
+			}else {
+				result = "<script> " +
+						"alert('재능 수정이 완료되지 않았습니다. 다시 확인해주세요.');" + 
+						"history.back();" + 
+						"</script>";
+			}
+		}
+		return result;
 	}
 	
 	@Override
@@ -53,19 +106,19 @@ public class RegistTalentServiceImpl implements TalentService{
 		// jsonView 라고 쓴다고 무조건 json 형식으로 가는건 아니고 @Configuration 어노테이션을 단 
 		// WebConfig 파일에 MappingJackson2JsonView 객체를 리턴하는 jsonView 매서드를 만들어서 bean으로 등록해야 함 
 		ModelAndView mav = new ModelAndView("jsonView");
-
+		
 		// ckeditor 에서 파일을 보낼 때 upload : [파일] 형식으로 해서 넘어오기 때문에 upload라는 키의 밸류를 받아서 uploadFile에 저장함
 		MultipartFile uploadFile = request.getFile("upload");
 		
 		// 파일의 오리지널 네임
 		String originalFileName = uploadFile.getOriginalFilename();
 		
-        // 파일의 확장자 추출
+		// 파일의 확장자 추출
 		String ext = originalFileName.substring(originalFileName.indexOf("."));
 		
-        // 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
+		// 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
 		String newFileName = UUID.randomUUID() + ext;
-
+		
 		int index = System.getProperty("user.dir").indexOf("\\jPanda");
 		String path = System.getProperty("user.dir").substring(0, index);
 		
@@ -81,7 +134,7 @@ public class RegistTalentServiceImpl implements TalentService{
 		}
 		
 		String uploadPath = "/uploadImage/" + newFileName; 
-
+		
 		// 저장 경로로 파일 객체 생성
 		File file = new File(savePath);
 		
@@ -96,32 +149,6 @@ public class RegistTalentServiceImpl implements TalentService{
 		mav.addObject("uploaded", true); // 업로드 완료
 		mav.addObject("url", uploadPath); // 업로드 완료
 		return mav;
-	}
-	
-	@Override
-	public TalentDto findTalentByTalentNo(Long talentNo) {
-		TalentDto talent = talentDao.selectTalentBytalentNo(talentNo);
-		
-		return talent;
-	}
-
-	@Override
-	public String modifyTalent(TalentDto talent) {
-		String resultStr = "";
-		int result = talentDao.updateTalent(talent);
-		if(result > 0) {
-			resultStr = "<script> " +
-					"alert('재능 수정 완료되었습니다.');" + 
-					"location.href = '/talent/';" + 
-					"</script>";
-		}else {
-			resultStr = "<script> " +
-					"alert('재능 수정이 완료되지 않았습니다. 다시 확인해주세요.');" + 
-					"history.back();" + 
-					"</script>";
-		}
-		return resultStr;
-		
 	}
 
 	private List<TalentDto> findBestSellerTalents() {
@@ -140,17 +167,8 @@ public class RegistTalentServiceImpl implements TalentService{
 		return talentDao.selectRandomTalents();
 	}
 
-	@Override
-	public Model findMainPageTalents(Model model) {
-		model.addAttribute("bestSellerTalent", findBestSellerTalents());
-		model.addAttribute("topRatedTalent", findTopRatedTalents());
-		model.addAttribute("newTrendTalent", findNewTrendTalents());
-		model.addAttribute("randomTalent", findRandomTalents());
-		return model;
-	}
 
-	@Override
-	public String findSellerIdByTalent(TalentDto talent) {
+	private String findSellerIdByTalent(TalentDto talent) {
 		return talentDao.selectSellerIdByTalent(talent);
 	}
 
