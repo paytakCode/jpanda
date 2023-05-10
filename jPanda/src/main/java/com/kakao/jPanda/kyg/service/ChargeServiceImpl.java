@@ -158,40 +158,31 @@ public class ChargeServiceImpl implements ChargeService {
 	}
 
 	@Override
-	public List<ChargeDto> findBambooChargeList(ChargeDto chargeDto) {
-		List<ChargeDto> selectBambooChargeList = null;
-		log.info("ChargeServiceImpl findBambooChargeList() Start...");
+	public int totalChargeCntByChargerId(String chargerId) {
+		log.info("ChargeServiceImpl totalChargeCntByChargerId() Start...");
+		int totalChargeCntByChargerId = chargeDao.totalChargeCntChargerId(chargerId);
+		log.info("ChargeServiceImpl totalChargeCntByChargerId() count -> {}", totalChargeCntByChargerId);
 		
-		selectBambooChargeList = chargeDao.selectBambooChargeList(chargeDto);
-		log.info("ChargeServiceImpl findBambooChargeList() selectBambooChargeList.size() -> {}", selectBambooChargeList.size());
-		
-		return selectBambooChargeList;
+		return totalChargeCntByChargerId;
 	}
 
 	@Override
-	public int totalChargeCnt(String chargerId) {
-		log.info("ChargeServiceImpl totalChargeCnt() Start...");
-		int totalChargeCnt = chargeDao.totalChargeCnt(chargerId);
-		log.info("ChargeServiceImpl totalChargeCnt() count -> {}", totalChargeCnt);
-		
-		return totalChargeCnt;
-	}
-
-	@Override
-	public Map<String, Object> findchargeByPagination(Pagination pagination) {
-		Map<String, Object> returnMap = new HashMap<String, Object>();
+	public Map<String, Object> findchargeHistoryMapByPagination(Pagination pagination) {
+		Map<String, Object> chargeHistoryMapByPagination = new HashMap<String, Object>();
+		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() Start...");
 		String chargeId = pagination.getChargerId();
-		int totalCount = chargeDao.totalChargeCnt(chargeId);
-		log.info("ChargeServiceImpl findchargeByPagination() count -> {}", totalCount);
+		int totalCount = chargeDao.totalChargeCntChargerId(chargeId);
+		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() totalCount -> {}", totalCount);
 		
 		pagination.setTotalCount(totalCount);
 		
-		List<ChargeDto> chargeList = chargeDao.selectChargeByPagination(pagination);
+		List<ChargeDto> chargeListByPagination = chargeDao.selectChargeListByPagination(pagination);
+		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() chargeList.size() -> {}", chargeListByPagination.size());
 		
-		returnMap.put("chargeList", chargeList);
-		returnMap.put("pagination", pagination);
+		chargeHistoryMapByPagination.put("chargeList", chargeListByPagination);
+		chargeHistoryMapByPagination.put("pagination", pagination);
 		
-		return returnMap;
+		return chargeHistoryMapByPagination;
 	}
 
 
