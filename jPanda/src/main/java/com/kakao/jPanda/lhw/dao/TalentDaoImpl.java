@@ -1,6 +1,7 @@
 package com.kakao.jPanda.lhw.dao;
 
 import java.util.List;
+import java.util.Map;
 
 
 import org.apache.ibatis.session.SqlSession;
@@ -31,12 +32,6 @@ public class TalentDaoImpl implements TalentDao {
 		return sqlSession.selectList("selectReviewListByTalentNo", talentNo);
 	}
 	
-	// 리뷰 인서트
-	@Override
-	public int insertReview(ReviewDto review) {
-		return sqlSession.insert("insertReview", review);
-	}
-	
 	// 리뷰 업데이트
 	@Override
 	public int updateReview(ReviewDto review) {
@@ -54,11 +49,17 @@ public class TalentDaoImpl implements TalentDao {
 	public int updateTalent(Long talentNo) {
 		return sqlSession.update("updateTalent", talentNo);
 	}
+	
+	// 리뷰 인서트
+	@Override
+	public int insertReview(ReviewDto review) {
+		return sqlSession.insert("insertReview", review);
+	}
 
 	// 리뷰 인서트 검증용
 	@Override
-	public List<BambooUseDto> selectBambooUseListByTalentNo(Long talentNo) {
-		return sqlSession.selectList("selectBambooUseListByTalentNo", talentNo);
+	public List<BambooUseDto> selectBambooUseByTalentNoAndBuyerId(Map<String, Object> talentNoAndBuyerIdMap) {
+		return sqlSession.selectList("selectBambooUseByTalentNoAndBuyerId", talentNoAndBuyerIdMap);
 	}
 
 	// 재능 구매자 정보 인서트

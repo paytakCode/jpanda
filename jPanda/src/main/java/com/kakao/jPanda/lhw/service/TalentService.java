@@ -2,6 +2,7 @@ package com.kakao.jPanda.lhw.service;
 
 import java.util.List;
 
+
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReportDto;
 import com.kakao.jPanda.lhw.domain.ReviewDto;
@@ -15,9 +16,6 @@ public interface TalentService {
 	// 리뷰 리스트 불러오기
 	List<ReviewDto> findReviewListByTalentNo(Long talentNo);
 	
-	// 리뷰 인서트
-	int addReview(ReviewDto review);
-	
 	// 리뷰 업데이트
 	int modifyReview(ReviewDto review);
 	
@@ -27,8 +25,8 @@ public interface TalentService {
 	// 재능 삭제 (업데이트)
 	int updateTalentStatus(Long talentNo);
 	
-	// 리뷰 인서트 검증
-	List<BambooUseDto> findBambooUseListByTalentNo(Long talentNo);
+	// 리뷰 인서트
+	int addReview(ReviewDto review);
 
 	// 재능 구매자 정보 인서트
 	int addBambooUse(BambooUseDto bambooUse, Long totalBamboo);
@@ -38,6 +36,8 @@ public interface TalentService {
 
 	// 뷰 카운트
 	int modifyTalentToViewCount(Long talentNo);
+
+
 
 	
 	

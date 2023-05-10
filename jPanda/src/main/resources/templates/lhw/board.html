@@ -321,7 +321,7 @@ ul, li {
 	 	let lowerCategoryNo = $('#lower-category-list').val();
 	 	let filter =  $(".btn-check:checked:first").val();
 	 	$.ajax({
-	 		url : "/board/talents-list",
+	 		url : "/board/talents",
 	 		type : 'GET',
 	 		data : {upperCategoryNo : upperCategoryNo,
 	 				lowerCategoryNo : lowerCategoryNo,
@@ -339,7 +339,7 @@ ul, li {
 		            $('<span>').addClass('talent-title').text(talent.title).appendTo(li);
 		            $('<span>').addClass('talent-summary').text(talent.summary).appendTo(li);
 		            $('<span>').addClass('talent-seller').text('강사: '+ talent.name).appendTo(li);
-		            $('<span>').addClass('talent-price').text(talent.bamboo + " Bamboo").appendTo(li);
+		            $('<span>').addClass('talent-price').html((talent.bamboo !== talent.saleBamboo) ? talent.bamboo + " Bamboo" : "<br>").appendTo(li);
 		            $('<span>').addClass('talent-sale-price').text(talent.saleBamboo + " Bamboo").appendTo(li);
 		            $('<span>').addClass('talent-bamboo-score').text(talent.bambooScore).appendTo(li);
 		            $('<img>').addClass('bamboo-imges').appendTo(li);
@@ -427,10 +427,10 @@ ul, li {
 	 	           });
 		 	    });
 	 		},
-	 	    error: function(xhr, status, error) {
-	 	        console.log(xhr);
-	 	        alert('잠시 후 다시 시도해주세요.');
-	 	    }
+	 		error : function(xhr, status, error) {
+		        console.log(xhr);
+		        alert('잠시 후 다시 시도해주세요.');
+		    }
 	 	});
 	 	
 	}		
@@ -466,7 +466,11 @@ ul, li {
 		   			$('#lower-category-list').append($('<option>').val(lowerCategory.categoryNo).text(lowerCategory.item));
 		   		});
 		   	 	updateList(1);
-		   	}
+		   	},
+		   	error : function(xhr, status, error) {
+		        console.log(xhr);
+		        alert('잠시 후 다시 시도해주세요.');
+		    }
 		});
 	});
 
