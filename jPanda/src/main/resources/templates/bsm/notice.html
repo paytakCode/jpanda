@@ -157,22 +157,21 @@
 		             	// 기존 테이블 초기화
 		    			noticeListTable.empty();
 
-		    			var noticeListTableBody = $('<tbody></tbody>');
+		    			var noticeListTableBody = $('<tbody>');
 		    			// 테이블 헤더 생성
-		    			var tableHeader = $('<tr></tr>').addClass('notice-header');
-		    			var headerNo = $('<th></th>').addClass('notice notice-no').text('번호');
-		    			var headerTitle = $('<th></th>').addClass('notice notice-title th-title').text('제목');
-		    			var headerRegDate = $('<th></th>').addClass('notice notice-reg-date').text('등록일');
+		    			var tableHeader = $('<tr>').addClass('notice-header');
+		    			var headerNo = $('<th>').addClass('notice notice-no').text('번호');
+		    			var headerTitle = $('<th>').addClass('notice notice-title th-title').text('제목');
+		    			var headerRegDate = $('<th>').addClass('notice notice-reg-date').text('등록일');
 		    			tableHeader.append(headerNo).append(headerTitle).append(headerRegDate);
 		    			noticeListTableBody.append(tableHeader);
 
 		    			// 받아온 데이터를 반복하며 리스트 아이템 생성
 		    			$.each(noticeList, function(index, notice) {
-		    				var tableRow = $('<tr></tr>').addClass('notice-tr');
-		    				var no = $('<td></td>').addClass('notice notice-no').text(notice.noticeNo);
-		    				//var title = $('<td></td>').addClass('notice notice-title notice-detail').attr('data-noticeno', notice.noticeNo).text(notice.title);
-		    				var title = $('<td></td>').addClass('notice notice-title').append($('<a></a>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo).text(notice.title));
-		    				var regDate = $('<td></td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
+		    				var tableRow = $('<tr>').addClass('notice-tr');
+		    				var no = $('<td>').addClass('notice notice-no').text(notice.noticeNo);
+		    				var title = $('<td>').addClass('notice notice-title').append($('<a>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo).text(notice.title));
+		    				var regDate = $('<td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
 
 		    				tableRow.append(no).append(title).append(regDate);
 		    				noticeListTableBody.append(tableRow);
@@ -187,18 +186,18 @@
 		                // 기존 페이지 번호 삭제
 		                pagerDiv.empty();
 		                
-		                var page = $('<a></a>').addClass('notice-page').text('<');
+		                var page = $('<a>').addClass('notice-page').text('<');
 		                pagerDiv.append(page);
 		                
 		           	  	// 페이지 번호 생성
 		                for (var i=startNum; i<=lastNum; i++) {
-		                    var page = $('<a></a>').addClass('notice-page').text(i);
+		                    var page = $('<a>').addClass('notice-page').text(i);
 		    				if(pager.currentPage == i){
 		    					page.css('background-color', '#198754').css('color', 'white');
 		    				}
 		                    pagerDiv.append(page);
 		                }
-		                pagerDiv.append($('<a></a>').addClass('notice-page').text('>'));
+		                pagerDiv.append($('<a>').addClass('notice-page').text('>'));
 		           	  	
 						$('#notice-search-btn').one('click', function(){
 							noticeChange($('#notice-search').val(), 1);
@@ -219,8 +218,9 @@
 						// 해쉬에값 저장
 						hash = currentPage + "," + search;
 						location.hash = hash;
+						
 						$('.notice-detail').on('click', function(){
-							location.href = "/talent/notice/" + $(this).data('noticeno') + "/detail";							
+							location.href = "/talent/notice/" + $(this).data('noticeno');							
 						});
 		          	}
 			});

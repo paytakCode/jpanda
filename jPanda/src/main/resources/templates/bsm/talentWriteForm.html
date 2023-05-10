@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/common/layout/default-layout">
-<!-- 페이지 제목 입력 -->
-<th:block layout:fragment="title">
-	<title>재능 등록</title>
-</th:block>
+<!-- 페이지 제목 입력 -->  
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style type="text/css">
@@ -339,8 +336,8 @@
     }
 	
     function check() {
-   		var isReadyToSubmit = true;
-		var nullArea = '';
+   		let isReadyToSubmit = true;
+   		let nullArea = '';
    	  	$('.submit-check').each(function() {
    	    	if($(this).attr('src') !== '/image/talentImage/check.png') {
    	      		isReadyToSubmit = false;
@@ -361,9 +358,9 @@
     
 	// 사이드바 체크
 	$('.write-check').on('input', function(){
-		var check = '#' + $(this).attr('id') + "-check";
-		var count = 0;
-		var each = 0;
+		const check = '#' + $(this).attr('id') + "-check";
+		let count = 0;
+		let each = 0;
 		var allFilled = false;
 	    $(this).find('input').each(function() {
 	    	each++;
@@ -408,11 +405,11 @@
 	});
 	
 	$('#choose-image-file').on('change', function() {
-		var file_kind = $(this).val().lastIndexOf('.');
-		var file_name = $(this).val().substring(file_kind+1, $(this).val().length);
-		var file_type = file_name.toLowerCase();
+		let file_kind = $(this).val().lastIndexOf('.');
+		let file_name = $(this).val().substring(file_kind+1, $(this).val().length);
+		let file_type = file_name.toLowerCase();
 
-		var check_file_type = ['jpg','gif','png','jpeg','bmp', ''];
+		const check_file_type = ['jpg','gif','png','jpeg','bmp', ''];
 		if(check_file_type.indexOf(file_type)==-1){
 		  	alert('이미지 파일만 선택할 수 있습니다.');
 		  	$('#main-image-check').attr('src', "/image/talentImage/white.png");
@@ -421,7 +418,7 @@
 		
 		if($(this).val() !== ''){
 			// 파일 선택 후 미리보기 기능 구현
-			var reader = new FileReader();
+			let reader = new FileReader();
 		    reader.onload = function(e) {
 		    	$('#main-image-preview').attr('src', e.target.result);
 		    }
@@ -432,7 +429,7 @@
 		    }
 		    
 		    // 이미지 서버 업로드 
-		    var form = new FormData();
+		    const form = new FormData();
 	        form.append( "upload", $("#choose-image-file")[0].files[0]);
 	        $.ajax({
 	            url : "/talent/image-upload",
@@ -477,10 +474,10 @@
 	$('#sale-bamboo').on("input", calculateDiscount);
 
 	function calculateDiscount() {
-		var bambooPrice = $('#bamboo').val();
-	    var saleBambooPrice = $('#sale-bamboo').val();
+		const bambooPrice = $('#bamboo').val();
+	    const saleBambooPrice = $('#sale-bamboo').val();
 	    
-	    var discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
+	    let discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
 	    if (isNaN(discountPercent) || discountPercent === Infinity || discountPercent < 0) {
 	    	discountPercent = 0;
 	    }
@@ -493,17 +490,26 @@
 		  }
 	});
 	
-	// 카테고리 설정
-  	var categoryList = /*[[${categoryList}]]*/ [];
-  
-  	categoryList.forEach(function(category) {
-    	if(category.upperCategoryNo === null) {
-      		$('#upper-category-no').append($("<option>").val(category.categoryNo).text(category.item));
-    	}
- 	});
+	// 카테고리 리스트 요청
+	let categoryList = null;
+	$(function(){
+		$.ajax({
+			url : "/talent/categorys",
+         	type : "GET",
+           	dataType: 'json',
+           	success:function(ajaxCategoryList) {
+           		categoryList = ajaxCategoryList;
+			  	categoryList.forEach(function(category) {
+			    	if(category.upperCategoryNo === null) {
+			      		$('#upper-category-no').append($("<option>").val(category.categoryNo).text(category.item));
+			    	}
+			 	});
+           	}
+		});
+	})
   
 	$('#upper-category-no').on("change", function() {
-  		var selectedCategoryNo = parseInt(this.value);
+		let selectedCategoryNo = parseInt(this.value);
     	$('#lower-category-no').html('');
     	$('#lower-category-no').append($("<option disabled selected>").text("중분류 카테고리를 선택해 주세요."));
     	$('#category-check').attr('src', '/image/talentImage/white.png');
