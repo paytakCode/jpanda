@@ -386,7 +386,6 @@
 		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
 		    	} else {
 		    		alert("잘못된 접근입니다");
-		    		alert("end-sell-btn function error : " + textStatus + ", " + errorThrown);
 		    	} 
 		    	
 			}
@@ -509,7 +508,6 @@
 			    	} else {
 			    		console.error("chargeSubmit() AJAX 요청 실패: ");
 						alert("충전 실패 다시 시도해주세요");
-			    		alert("end-sell-btn function error : " + textStatus + ", " + errorThrown);
 						location.replace("/charge");
 			    	}
 				}
@@ -540,7 +538,6 @@
 				    	} else {
 				    		console.error("chargeSubmit() AJAX 요청 실패: ");
 							alert("충전 실패 다시 시도해주세요");
-				    		alert("end-sell-btn function error : " + textStatus + ", " + errorThrown);
 							location.replace("/charge");
 				    	}
 					},

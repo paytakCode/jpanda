@@ -51,7 +51,9 @@ ul, li {
 #main-image {
 	position: relative;
 	max-width: 500px;
-	max-height: 500px;
+	max-height: 400px;
+	min-width: 500px; 
+	min-height: 400px;
 }
 
 
@@ -313,6 +315,8 @@ ul, li {
 
 #modifyReview, #deleteReview {
 	font-size: 13px;
+	width: 85px;
+    height: 30px;
 }
 
 
@@ -327,7 +331,7 @@ ul, li {
 	<div class="talent-info">
 	
 		<div class="view-image">
-			<img id="main-image" th:src="${talent.mainImg}" alt="상품 이미지">
+			<img id="main-image" th:src="${talent.mainImg}" alt="상품 이미지" onerror="this.src='/image/common/no-img.png'">
 		</div>
 		
 		<div class="view-title">
@@ -364,6 +368,7 @@ ul, li {
 	<div class="quick-move">
 		<a href="#review-list">리뷰</a><a href="#content">상세 내용</a><a href="">상담 및 채팅</a>
 	</div>
+	
 	
 	<div class="quick-menu">
 		<ul>
@@ -506,19 +511,17 @@ ul, li {
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 	
-	const userId = [[${#session.getAttribute('memberId')}]];
-	console.log(userId);
-	
+	console.log(memberId);
 	
 	/* 신고하기 모달 */
 	const reportModal = document.getElementById('reportModal')
 	const reportButton = document.getElementById('report-btn')
 	reportButton.addEventListener('click', () => {
-		if(!userId){
+		if(!memberId){
 			alert('로그인이 필요한 서비스 입니다.');
 			location.href= "/login";
 		} else {
-			const reportId = userId
+			const reportId = memberId
 		  	const blackId = document.getElementById('blackId').value
 		  	const title = document.getElementById('title').value
 		  	const issue = document.getElementById('issue')
@@ -557,45 +560,46 @@ ul, li {
 	
 	// 구매하기 버튼
 	$(document).on('click', '#buy-btn', function(){
-		if(!userId){
-			alert('로그인이 필요한 서비스 입니다.');
-			location.href = "/login";
-		} else {
-			if(confirm("정말로 구매 하시겠습니까? " + $(this).data('salebamboo') + " 포인트가 차감 됩니다.")){
-				const talentNo = $(this).data('talentno');
-				const useBamboo = $(this).data('salebamboo');
-				let bambooUse = {
-			        talentNo     : talentNo,
-			        useBamboo    : useBamboo,
-			        purchaseDate : new Date(Date.now())
-			    };
-				console.log(bambooUse);
-				$.ajax({
-					url 	: "/talents/talent/purchase",
-					method 	: 'POST',
-					data  	: JSON.stringify(bambooUse),
-					contentType: 'application/json',
-					dataType : 'json',
-					success : function(bambooUseInsert){
-						if (bambooUseInsert === -1){
-							alert("이미 구매한 상품 입니다.");
-						} else if (bambooUseInsert === 0){
-							alert("잔액이 부족합니다. 충전 후 구매 해주세요.");
-							location.href= "/charge";
-						} else if (bambooUseInsert === 1){
-							alert("구매가 완료 되었습니다. 감사합니다.");
-							location.href= "/board";
-						} else {
-							alert("구매 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-						}
-					},
-					error : function(xhr, status, error){
-						console.log(xhr);
-						alert('잠시 후 다시 시도해주세요.');
+		
+		if(confirm("정말로 구매 하시겠습니까? " + $(this).data('salebamboo') + " 밤부가 차감 됩니다.")){
+			const talentNo = $(this).data('talentno');
+			const useBamboo = $(this).data('salebamboo');
+			let bambooUse = {
+		        talentNo     : talentNo,
+		        useBamboo    : useBamboo,
+		        purchaseDate : new Date(Date.now())
+		    };
+			console.log(bambooUse);
+			$.ajax({
+				url 	: "/talents/bambooUse",
+				method 	: 'POST',
+				data  	: JSON.stringify(bambooUse),
+				contentType: 'application/json',
+				dataType : 'json',
+				success : function(bambooUseInsert){
+					if (bambooUseInsert === -1){
+						alert("이미 구매한 상품 입니다.");
+					} else if (bambooUseInsert === 0){
+						alert("잔액이 부족합니다. 충전 후 구매 해주세요.");
+						location.href= "/charge";
+					} else if (bambooUseInsert === 1){
+						alert("구매가 완료 되었습니다. 감사합니다.");
+						location.href= "/board";
+					} else {
+						alert("구매 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
 					}
-				});
-			}
-		}	
+				},
+				error : function(xhr, textStatus, errorThrown){
+			    	if(xhr.status === 401){
+			    		alert('로그인이 필요한 서비스 입니다.');
+			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+			    	} else {
+			    		alert("buy-btn function error : " + textStatus + ", " + errorThrown);
+			    	}
+				}
+			});
+		}
+		
 	});
 	
 	
@@ -675,12 +679,13 @@ ul, li {
 		if( $("#insert-content").val().trim() == ''){
 			alert('내용을 입력해주세요');
 			return;
-		};  
+		} 
 		$.ajax({
 		    type : 'POST',
-		    url : "/talents/talent/" + talentNo + "/reviews",
+		    url : "/talents/talent/" + talentNo + "/review",
 		    data : JSON.stringify({
 				talentNo 	: talentNo,
+				reviewerId  : memberId,
 				bambooScore : $("#insert-bambooScore").val(),
 				content 	: $("#insert-content").val(),
 				reviewDate 	: Date.now()
@@ -689,19 +694,20 @@ ul, li {
 		    dataType :'json',
 		    success : function(result) {
 				console.log(result);
-				if(result == -1) {
-					alert("로그인이 필요한 서비스 입니다.");
-					location.href = "/login";
-				} else if (result == 0){
+				if (result == 0){
 					alert("상품을 구매한 사람만 리뷰를 남길 수 있습니다.");
 				} else {
 					location.reload();
 				}
 			},
-		    error : function(xhr, status, error) {
-		        console.log(xhr);
-		        alert('리뷰 작성에 실패하였습니다. 잠시 후 다시 시도해주세요.');
-		    }
+			error : function(xhr, textStatus, errorThrown){
+		    	if(xhr.status === 401){
+		    		alert('로그인이 필요한 서비스 입니다.');
+		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+		    	} else {
+		    		alert("reviewInsert function error : " + textStatus + ", " + errorThrown);
+		    	}
+			}
 		});
 	}
 	
@@ -726,12 +732,14 @@ ul, li {
 	};  
 		var reviewNo = $("#review-no").val();
 		console.log(reviewNo);
+		
 	  	$.ajax({
 	  		type : 'PUT',
 	  		url : talentNo + "/reviews/" + reviewNo,
 			data : JSON.stringify({
 				talentNo 	: talentNo,
 			    reviewNo 	: reviewNo,
+			    reviewerId  : memberId,
 			    bambooScore	: $("#update-bambooScore").val(),
 			    content		: $("#update-content").val(),
 			    reviewDate 	: Date.now()
@@ -786,7 +794,7 @@ ul, li {
 				contentType : "application/json",
 				dataType : 'json',
 				success  : function(reviews) {
-								location.reload();
+					location.reload();
 				},
 		      error : function(xhr, status, error) {
 				console.log(xhr);

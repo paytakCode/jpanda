@@ -41,26 +41,17 @@ public class AdminController {
 	
 	//home
 	@GetMapping(value = "")
-	public String home(HttpSession session) {
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/home";
-		}
+	public String home() {
+
+		return "yjh/home";
 	}
 	
 	//notice
 	@GetMapping(value = "/notice")
-	public String noticePage(HttpSession session) {
+	public String noticePage() {
 		log.info("Notice Controller noticeList() start");
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			
-			return "yjh/notice";
-		}
+
+		return "yjh/notice";
 	}
 	
 	/*
@@ -82,31 +73,22 @@ public class AdminController {
 	 *	시퀀스 생성전이라 필수 입력란에 noticeNo존재, 통합후 시퀀스 생성하면 수정 예정
 	 */
 	@GetMapping(value = "/notice/{noticeNo}")
-	public String noticeDetails(@PathVariable("noticeNo") String noticeNo, Model model, HttpSession session) {
+	public String noticeDetails(@PathVariable("noticeNo") String noticeNo, Model model) {
 		log.info("Notice Controller noticeDetails() start");
 		log.info("noticeNo : "+noticeNo);
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);	
 		model.addAttribute("notice", notice);
 		
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/notice-content";
-		}
+		return "yjh/notice-content";
 	}
 	
 	/*
 	 * 	공지사항 작성을 위한 화면으로 이동
 	 */
 	@GetMapping(value = "/notice-form")
-	public String noticeForm(HttpSession session) {
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/notice-form";
-		}
+	public String noticeForm() {
+		
+		return "yjh/notice-form";
 	}
 	
 	/*
@@ -115,34 +97,24 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PostMapping(value = "/notice")
-	public String noticeAdd(NoticeDto notice, HttpSession session) {
+	public String noticeAdd(NoticeDto notice) {
 		log.info("Notice Controller noticeAdd() start");
 		String resultStr = adminService.addNotice(notice);
-
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return resultStr;
-		}
+		
+		return resultStr;
 	}
 	
 	/*
 	 * 	noticeDetail에서 수정 버튼을 눌러 수정할 페이지에 보내는 기능
 	 */
 	@GetMapping(value = "/notice/{noticeNo}/modify-form")
-	public String noticeModifyForm(@PathVariable String noticeNo, Model model, HttpSession session) {
+	public String noticeModifyForm(@PathVariable String noticeNo, Model model) {
 		log.info("Notice Controller noticeModifyForm() start");
 		log.info("noticeNo : "+noticeNo);
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);
 		model.addAttribute("notice", notice);
 		
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/notice-modifyFrom";
-		}
+		return "yjh/notice-modifyFrom";
 	}
 	
 	/*
@@ -150,28 +122,21 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PutMapping(value = "/notice/{noticeNo}/modify")
-	public String noticeModifyByNoticeNo(NoticeDto notice, HttpSession session) {
+	public String noticeModifyByNoticeNo(NoticeDto notice) {
 		log.info("Notice Controller noticeModifyByNoticeNo() start");
 		log.info("notice : "+notice.toString());
 		String resultStr = adminService.modifyNotice(notice);
+
+		return resultStr;
 		
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return resultStr;
-		}
 	}
 	
 	//exchange	
 	@GetMapping(value = "/exchanges")
-	public String exchangePage(Pagination pagination, Model model, HttpSession session) {	
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/exchange";
-		}
+	public String exchangePage(Pagination pagination, Model model) {	
+		
+		return "yjh/exchange";
+		
 	}
 	
 	@ResponseBody
@@ -191,30 +156,22 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PatchMapping(value = "/exchange/{exchangeNo}")
-	public int exchangeModifyByExchangeNos(@PathVariable("exchangeNo") List<Long> exchangeNo, @RequestBody List<ExchangeDto> exchangeDto, HttpSession session) {
+	public int exchangeModifyByExchangeNos(@PathVariable("exchangeNo") List<Long> exchangeNo, @RequestBody List<ExchangeDto> exchangeDto) {
 		log.info("Exchange Controller exchangeModifyByExchangeNos() start");
 		log.info("exchangeNo : "+exchangeNo);
 		log.info("ExchangeDto : " + exchangeDto.toString());
-		
 		int result = adminService.modifyExchangeStatusByExchangeNos(exchangeDto);
 		
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return -1;
-			
-		} else {
-			return result;
-		}
+		return result;
+		
 	}
 
 	//coupon
 	@GetMapping(value = "/coupons-form")
-	public String couponsPgae(Model model, HttpSession session) {
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/createCoupon";
-		}
+	public String couponsPgae() {
+
+		return "yjh/createCoupon";
+		
 	}
 	
 	@ResponseBody
@@ -257,13 +214,10 @@ public class AdminController {
 	
 	//company-sales
 	@GetMapping(value = "/company-sales")
-	public String companySales(HttpSession session) {
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/company-sales";
-		}
+	public String companySales() {
+
+		return "yjh/company-sales";
+
 	}
 	
 	/*
@@ -286,13 +240,10 @@ public class AdminController {
 	
 	//talent
 	@GetMapping(value = "/talents") // talents
-	public String talentPage(HttpSession session) {
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/talent";
-		}
+	public String talentPage() {
+
+		return "yjh/talent";
+		
 	}
 	
 	@ResponseBody
@@ -309,18 +260,11 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PatchMapping(value = "/talents/{talentNo}")
-	public int talentModifyByTalentNos(@PathVariable("talentNo") List<String> talentNo, @RequestBody List<TalentDto> talentDto, HttpSession session) {
+	public int talentModifyByTalentNos(@PathVariable("talentNo") List<String> talentNo, @RequestBody List<TalentDto> talentDto) {
 		log.info("Talent Controller talentModifyByTalentNos() start");
 		log.info("SellerIds : "+talentNo);
 		log.info("talentDto : "+talentDto.toString());
-		int result = 0;
-		
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			result = -1;
-			
-		} else {
-			result = adminService.modifyTalentByTalentNos(talentDto);
-		}
+		int result = adminService.modifyTalentByTalentNos(talentDto);
 		
 		return result;
 	}
@@ -340,13 +284,10 @@ public class AdminController {
 
 	//talent-refund
 	@GetMapping(value = "/talent-refund")
-	public String talentRefundPage(HttpSession session) {
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/talent-refund";
-		}
+	public String talentRefundPage() {
+
+		return "yjh/talent-refund";
+		
 	}
 	
 	@ResponseBody
@@ -378,17 +319,13 @@ public class AdminController {
 	
 	//report
 	@GetMapping(value = "/report")
-	public String reportPage(Model model, HttpSession session) {
+	public String reportPage(Model model) {
 		log.info("Report Controller reportList() start");
 		List<ReportDto> reportList = adminService.findReport();
 		model.addAttribute("reportList", reportList);
+
+		return "yjh/report";
 		
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			return "redirect:/login";
-			
-		} else {
-			return "yjh/report";
-		}
 	}
 	
 	@ResponseBody
@@ -404,19 +341,13 @@ public class AdminController {
 	
 	@ResponseBody
 	@PatchMapping(value = "/report/{memberId}")
-	public int reportModifyByMemberId(@PathVariable("memberId") String memberId, HttpSession session) {
+	public int reportModifyByMemberId(@PathVariable("memberId") String memberId) {
 		log.info("Report Controller reportModifyByMemberId() start");
 		log.info("memberId : "+memberId);
-		int result = 0;
-		
-		if(session.getAttribute("memberId") == null || !((String)session.getAttribute("memberId")).equals("admin")) {
-			result = -1;
-			
-		} else {
-			result = adminService.modifyReportByMemberId(memberId);
-		}
+		int result = adminService.modifyReportByMemberId(memberId);
 		
 		return result;
+		
 	}
 
 }	

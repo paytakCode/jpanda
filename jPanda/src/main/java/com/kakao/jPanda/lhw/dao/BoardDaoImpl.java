@@ -10,7 +10,9 @@ import com.kakao.jPanda.lhw.domain.FiltersDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class BoardDaoImpl implements BoardDao {
@@ -32,9 +34,9 @@ public class BoardDaoImpl implements BoardDao {
 	// 재능 리스트 필터 기능
 	@Override
 	public List<TalentDto> selectTalentListByFilter(FiltersDto filters) {
-		System.out.println("Filter -> " + filters.getFilter());
-		System.out.println("UpperCategoryNo -> " + filters.getUpperCategoryNo());
-		System.out.println("LowerCategoryNo -> " + filters.getLowerCategoryNo());
+		log.info("Filter -> " + filters.getFilter());
+		log.info("UpperCategoryNo -> " + filters.getUpperCategoryNo());
+		log.info("LowerCategoryNo -> " + filters.getLowerCategoryNo());
 		return sqlSession.selectList("selectTalentListByFilters", filters);
 	}
 	

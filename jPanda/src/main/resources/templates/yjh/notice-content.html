@@ -63,10 +63,11 @@ h2{
 						<th colspan="2">내용</th>
 					</tr>
 					<tr>
-						<td colspan="2" th:text="${notice.content}"></td>
+						<td colspan="2" th:utext="${notice.content.replaceAll('\n', '<br>')}"></td>
 					</tr>
 				</table>
 				<input type="submit" class="btn" value="수정하기">
+				<input style="margin-right: 10px;" type="button" id="back" class="btn" value="목록">
 			</form>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -77,7 +78,9 @@ h2{
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		/* JavaScript영역 */
+		$('#back').on('click', function() {
+			history.back();
+		});
 	</script>
 
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

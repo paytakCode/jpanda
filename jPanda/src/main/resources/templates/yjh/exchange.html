@@ -186,7 +186,14 @@ h2{
 							exchangeChange($(this).text());
 						}
 					});
-				
+	          	},
+	          	erorr : function(xhr, textStatus, errorThrown) {
+	          		if(xhr.status === 401) {
+	          			alert('로그인이 필요한 서비스 입니다');
+	          			location.replace(JSON.parse(xhr.responseText).redirectUrl);
+	          		} else {
+	          			alert('admin exchange errpr : ' + textStatus + ',' + errorThrown);
+	          		}
 	          	}
 		});
 	}
@@ -243,8 +250,13 @@ h2{
 					history.back();
 				}
 			},
-			erorr : function(jqXHR, textStatus, erorrThrown) {
-				alert("처리중 오류가 발생했습니다");
+			erorr : function(xhr, textStatus, erorrThrown) {
+				if(xhr.status === 401) {
+					alert('로그인이 필요한 서비스 입니다');
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);
+				} else {
+					alert('admin exchange modify error : ' + textStatus + ',' + errorThrown);
+				}
 			}
 		});
 	});

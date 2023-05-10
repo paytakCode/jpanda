@@ -52,7 +52,6 @@
 .left,right{
     text-align: center;
     width: 460px;
-    margin: auto;
 }
 ul {
   list-style-type: none;
@@ -103,6 +102,35 @@ li input {
   flex: 1;
   padding: 4px;
 }
+    table {
+        display: flex;
+        flex-direction: column;
+    }
+
+    tr {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    td {
+        display: flex;
+        align-items: center;
+    }
+
+        td input {
+            margin-left: 10px;
+        }
+
+    button {
+        align-self: flex-start;
+    }
+    td span {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+
 
 	</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -123,38 +151,37 @@ li input {
 			</span>	
         </div>
         
-        <div class="right" align="center" style="border-radius: 10; width: auto; margin: 0 auto;" pxth:if="${session.memberId != null}"> 
+        <div class="right" align="center" style="border-radius: 10;" pxth:if="${session.memberId != null}"> 
 				<form method="post" action="/updateMember">
 				<input type="hidden" name="memberId" th:value="${memberInfo.memberId}">
-				    <ul>
-				        <li>
-				            <span>이름: </span>
-				            <input type="text" th:value="${memberInfo.name}" name="name">
-				        </li>
-				        <li>
-				            <span>이메일: </span>
-				            <input type="email" th:value="${memberInfo.email}" name="email" oninput="validateEmailInput(event)">
-				        </li>
-				        <li>
-				            <span>전화번호: </span>
-				            <input type="text" maxlength="11" th:value="${memberInfo.tel}" name="tel" oninput="restrictPhoneNumberInput(event)">
-				        </li>
-				        <li>
-				            <span>성별: </span>
-				            <input type="text" th:value="${memberInfo.gender}" name="gender" readonly>
-				        </li>
-				        <li>
-				            <span>회원등급: </span>
-				            <input type="text" th:value="${memberInfo.memberGrade}" name="memberGrade" readonly>
-				        </li>
-				        <button type="submit" onclick="showSuccessAlertAndRefresh()">수정하기</button>
-				    </ul>
+				    <table>
+					    <tr>
+					        <td>이름:</td>
+					        <td><input type="text" th:value="${memberInfo.name}" name="name"></td>
+					    </tr>
+					    <tr>
+					        <td><span>이메일:</span></td>
+					        <td><input type="email" th:value="${memberInfo.email}" name="email" oninput="validateEmailInput(event)"></td>
+					    </tr>
+					    <tr>
+					        <td><span>전화번호:</span></td>
+					        <td><input type="text" maxlength="11" th:value="${memberInfo.tel}" name="tel" oninput="restrictPhoneNumberInput(event)"></td>
+					    </tr>
+					    <tr>
+					        <td><span>성별:</span></td>
+					        <td><input type="text" th:value="${memberInfo.gender}" name="gender" readonly></td>
+					    </tr>
+					    <tr>
+					        <td><span>회원등급:</span></td>
+					        <td><input type="text" th:value="${memberInfo.memberGrade}" name="memberGrade" readonly></td>
+					    </tr>
+					    <tr>
+					        <td colspan="2"><button type="submit" onclick="showSuccessAlertAndRefresh()">수정하기</button></td>
+					    </tr>
+					</table>
     				
 				</form>
 			<div class="menu">
-				<div>
-					<a href="" onclick="moveFocusToNameInput()">계정설정</a>
-				</div>
 				<div>
 					<a href="/trade" onclick="redirectToTrade()" >거래내역</a>
 				</div>

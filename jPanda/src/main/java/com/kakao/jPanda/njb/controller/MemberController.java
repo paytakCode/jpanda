@@ -52,13 +52,30 @@ public class MemberController {
  	    model.addAttribute("bankList", findBankList);
     	return "njb/signup";
     }
+//	@NoLoginCheck
+//    @PostMapping("/members/signup")
+//    public String join(MemberDto memberInfo) {
+//    	System.out.println("/members/signup start...");
+//    	memberservice.joinMember(memberInfo);
+//    	return "njb/login";	
+//    }
+	
 	@NoLoginCheck
-    @PostMapping("/members/signup")
-    public String join(MemberDto memberInfo) {
-    	System.out.println("/members/signup start...");
-    	memberservice.joinMember(memberInfo);
-    	return "njb/login";	
-    }
+	@PostMapping("/members/signup")
+	public String join(MemberDto memberInfo) {
+	    System.out.println("/members/signup start...");
+	    boolean isJoinSuccessful = memberservice.joinMember(memberInfo);
+
+	    if (isJoinSuccessful) {
+	        // 회원가입 성공
+	    	System.out.println(isJoinSuccessful);
+	        return "redirect:/njb/signup";
+	    } else {
+	        // 회원가입 실패
+	    	System.out.println(isJoinSuccessful);
+	        return "redirect:/njb/signup";
+	    }
+	}
 	@NoLoginCheck
     @GetMapping("/members/id/id")
     @ResponseBody
@@ -243,7 +260,6 @@ public class MemberController {
     	memberservice.editMemberInfo(memberInfo);
         return "redirect:/mypage";
     }
-    
     @NoLoginCheck
     @GetMapping("/verifyCode")
     @ResponseBody

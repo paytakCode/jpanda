@@ -38,7 +38,8 @@
 	
 	<update id="updateTalentRefundToCompanionByPurchaseNosAndStatus" parameterType="AdminTalentRefund">
 		update 	talent_refund
-		set		refund_status = #{refundStatus}
+		set		refund_status = #{refundStatus},
+				approve_date = #{approveDate}
 		where	purchase_no in #{purchaseNo}
 	</update>
 

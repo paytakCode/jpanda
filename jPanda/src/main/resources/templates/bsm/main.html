@@ -392,13 +392,6 @@
 		location.href = "/talents/talent/" + $(this).val();	
 	});
 	</script>
-	<script th:inline="javascript">
-		if([[${#session.getAttribute("memberId")}]] == null){
-			$('#login-out').html('<a class="login-check" href="/login">로그인</a>');
-		}else{
-			$('#login-out').html('<a class="login-check" href="/logout">로그아웃</a>');
-		}
-	</script>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
 </th:block>

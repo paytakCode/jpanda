@@ -22,10 +22,15 @@ public class MemberDaoImpl implements MemberDao {
 	private final SqlSession sqlSession;
 	
 	@Override
-	public void insertMember(MemberDto memberInfo){
+	public boolean insertMember(MemberDto memberInfo){
 		
-		sqlSession.insert("insertMember", memberInfo);
-		sqlSession.insert("insertAccount", memberInfo);
+	    try {
+	        sqlSession.insert("insertMember", memberInfo);
+	        sqlSession.insert("insertAccount", memberInfo);
+	        return true; // 삽입이 성공하면 true 반환
+	    } catch (Exception e) {
+	        return false; // 삽입 중 오류 발생 시 false 반환
+	    }
 	}
 
 
