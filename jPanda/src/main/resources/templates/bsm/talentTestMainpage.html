@@ -50,10 +50,17 @@
 		  	font-size:21px;
 		}
 		
-		.slider-wrap ul.slider li > img{
+		.slide-iamge {
+			width: 240px;
+		  	height: 180px;
+		  	border-radius: 7px;
+		  	overflow: hidden;
+		  	margin: 10px;
+		}
+		.slide-iamge img {
 		  	display:block;
-		  	width: 260px;
-		  	height: 192px;
+		  	width: 240px;
+		  	height: 180px;
 		}
 		
 		/*ANIMATION*/
@@ -68,44 +75,56 @@
 		.slide{
 			display: inline-block;
 			border: 1px solid #EAEAEA;
-			margin: 20px;
+			margin: 10px;
+			border-radius: 7px;
 		}
+		
 		.title{
 			font-size: 17px;
 			font-weight: bold; 
 		}
 		.random-talent {
-		    border: 1px solid #EAEAEA;
-		    margin-top: 30px;
-		    
-		    padding-left: 0px;
-		}
-		
-		.random-talent > img {
-		  	width: 160px;
 		  	height: 120px;
+		    margin-top: 30px;
+			border: 1px solid #EAEAEA;
+		    padding-left: 0px;
+		    border-radius: 7px;
 		}
 		
-		.random-talent > div {
-		  	margin-left: 10px;
+		.slide:hover,
+		.talents:hover {
+		  	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+		  	cursor: pointer;
+		}
+		.random-talent-summary {
 		  	height: 100px;
 		  	width: 800px;
 		}
-		
-		.random-talent > img,
+		.random-talent-image {
+			width: 140px;
+		    border-radius: 7px;
+		  	overflow: hidden;
+		  	margin: 6.5px 10px;
+		}
+		.random-talent-image img{
+			width: 140px;
+		  	height: 105px;
+		}
 		.random-talent > div {
 		  	display: inline-block;
 		  	vertical-align: middle;
 		}
 		
-		.containerMain	{
+		.container-main	{
 			width: 1000px;
 		  	margin: 0 auto;
+			margin-top: 40px;
 		}
 		#talent-slide {
 			text-align: center;
-			border: 1px solid #EAEAEA;
 			margin-bottom: 50px;
+			display: flex;
+			justify-content: space-between;
 		}
 		h4 {
 			margin: 10px;
@@ -155,7 +174,7 @@
 			height: 75px;
 			text-align: left;
 			overflow: hidden;
-			margin-bottom: 15px !important;
+			margin-bottom: 20px !important;
 		}
 		.login-check{
 			float: right;
@@ -171,7 +190,24 @@
 			margin-bottom: 50px;
 		}
 		.talentseller{
-			font-size: 20px;
+			font-size: 22px;
+			font-weight: bold;
+			align-items: center;
+			line-height: 22px;
+			margin: 0;
+		}
+		
+		.main-slide-image{
+			width: 22px;
+			height: 22px;
+		}
+		.talent-slide-image {
+		 	display: flex;
+		 	margin-top: 10px;
+			margin-left: 20px;
+		}
+		.talent-slide-image img {
+			margin-right: 5px;
 		}
 	</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -180,88 +216,109 @@
 
 <div>
 	<th:block layout:fragment="content">
-	<div class="containerMain">
+	<div class="container-main">
 	<form action="/talent/update-form">
-	<div>
-	</div>
 	
 	<div id="talent-slide">
-	<div id="bestSellerTalent" class="slide">
-	<h4 class="talentseller">최다 판매</h4>
-      <div id="slider-wrap1" class="slider-wrap">
-          <ul id="slider1" class="slider mainUl" >
-             <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}">
-				<img th:src="@{${talent.mainImg}}">
-                    <p class="slide-summary pp" th:text="${talent.summary}"></p>
-                    <div class="bamboo">
-                    	<p class="price pp" th:text="${talent.saleBamboo}">
-                    </div>
-		            <div class="slide-other">
-			            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
-			            <div class="review-div">
-				            <img class="bamboo-score" src="../image/bambooScore.jpg">
-				            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
-			            </div>
-		            </div>
-             </li>
-              </ul>
-      </div>
-      </div>
-	<div id="topRatedTalent" class="slide">
-	<h4 class="talentseller">최고 평점</h4>
-      <div id="slider-wrap2" class="slider-wrap">
-          <ul id="slider2" class="slider mainUl" >
-             <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${topRatedTalent}">
-				<img th:src="${talent.mainImg}">
-                   <p class="slide-summary pp" th:text="${talent.summary}"></p>
-		            <div class="slide-other">
-			            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
-			            <div class="review-div">
-				            <img class="bamboo-score" src="../image/bambooScore.jpg">
-				            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
-			            </div>
-		            </div>
-             </li>
-              </ul>
-      </div>
-      </div>
-      
-	<div id="newTrendTalent" class="slide">
-	<h4 class="talentseller">최신 트렌드</h4>
-      <div id="slider-wrap3" class="slider-wrap">
-          <ul id="slider3" class="slider mainUl" >
-             <li class="talents" th:value="${talent.talentNo}" th:each="talent : ${newTrendTalent}">
-				<img th:src="${talent.mainImg}">
-                   	<p class="slide-summary pp" th:text="${talent.summary}"></p>
-		            <div class="slide-other">
-			            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
-			            <div class="review-div">
-				            <img class="bamboo-score" src="../image/bambooScore.jpg">
-				            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
-			            </div>
-		            </div>
-	             </li>
-              </ul>
-      </div>
-      </div>
-      </div> <!-- id="talent-slide" -->
+		<div>
+			<div class="talent-slide-image">
+			<img src="/image/talentImage/panda.png" class="main-slide-image">
+			<h4 class="talentseller">최다 판매</h4>
+			</div>
+			<div id="bestSellerTalent" class="slide">
+				<div id="slider-wrap1" class="slider-wrap">
+		          	<ul id="slider1" class="slider mainUl" >
+		             	<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}">
+			             	<div class="slide-iamge">
+								<img th:src="@{${talent.mainImg}}">
+			             	</div>
+		                    <p class="slide-summary pp" th:text="${talent.summary}"></p>
+		                    <div class="bamboo">
+		                    	<p class="price pp" th:text="${talent.saleBamboo}">
+		                    </div>
+				            <div class="slide-other">
+					            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+					            <div class="review-div">
+						            <img class="bamboo-score" src="/image/bambooScore.jpg">
+						            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+					            </div>
+				            </div>
+		             	</li>
+		             </ul>
+		   		</div>
+		   	</div>
+		</div>
+		<div>
+			<div class="talent-slide-image">
+				<img src="/image/common/bamboo-icon.png" class="main-slide-image">
+				<h4 class="talentseller">최고 평점</h4>
+			</div>
+			<div id="topRatedTalent" class="slide">
+		      	<div id="slider-wrap2" class="slider-wrap">
+		          	<ul id="slider2" class="slider mainUl" >
+		             	<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${topRatedTalent}">
+							<div class="slide-iamge">
+								<img th:src="@{${talent.mainImg}}">
+			             	</div>
+		                   	<p class="slide-summary pp" th:text="${talent.summary}"></p>
+				            <div class="slide-other">
+					            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+					            <div class="review-div">
+						            <img class="bamboo-score" src="/image/bambooScore.jpg">
+						            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+					            </div>
+			            	</div>
+		             	</li>
+		             </ul>
+		      	</div>
+		    </div>
+		</div>
+	      
+		<div>
+			<div class="talent-slide-image">
+				<img src="/image/talentImage/star.png" class="main-slide-image">
+				<h4 class="talentseller">최신 트렌드</h4>
+			</div>
+			<div id="newTrendTalent" class="slide">
+		      	<div id="slider-wrap3" class="slider-wrap">
+		          	<ul id="slider3" class="slider mainUl" >
+		             	<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${newTrendTalent}">
+							<div class="slide-iamge">
+								<img th:src="@{${talent.mainImg}}">
+			             	</div>
+		                   	<p class="slide-summary pp" th:text="${talent.summary}"></p>
+				            <div class="slide-other">
+					            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+					            <div class="review-div">
+						            <img class="bamboo-score" src="/image/bambooScore.jpg">
+						            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+					            </div>
+				            </div>
+		             	</li>
+		           	</ul>
+				</div>
+		    </div>
+		</div>
+	</div> <!-- id="talent-slide" -->
 	
 	<div id="random-talent-div">
 	<h4 class="talentseller">오늘의 재능</h4>
 	<ul class="mainUl">
 		<li class="talents random-talent" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
-			<img th:src="${talent.mainImg}">
-		<div>
-			<p th:text="${talent.title}" class="title pp"></p>
-			<p th:text="${talent.summary}" class="summary pp"></p>
-            <div class="other">
-	            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
-	            <div class="review-div">
-		            <img class="bamboo-score" src="../image/bambooScore.jpg">
-		            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+			<div class="random-talent-image">
+				<img th:src="${talent.mainImg}">
+			</div>
+			<div class="random-talent-summary">
+				<p th:text="${talent.title}" class="title pp"></p>
+				<p th:text="${talent.summary}" class="summary pp"></p>
+	            <div class="other">
+		            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+		            <div class="review-div">
+			            <img class="bamboo-score" src="/image/bambooScore.jpg">
+			            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+		            </div>
 	            </div>
-            </div>
-		</div>
+			</div>
 		</li>
 	</ul>
 	</div>

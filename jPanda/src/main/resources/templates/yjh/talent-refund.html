@@ -19,13 +19,14 @@ table {
 th, td {
 	text-align: left;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
 	background-color: #f2f2f2;
 }
 
-tr:nth-child(even) {
+tr:nth-child(odd) {
 	background-color: #f2f2f2;
 }
 
@@ -34,7 +35,8 @@ td {
 }
 
 .btn {
-	border: 1px solid black;
+	border: 1px solid #ddd;
+	float: right;
 }
 
 .container{
@@ -59,6 +61,11 @@ td {
 	text-decoration: none;
 	color: black;
 }
+
+h2{
+	margin: 30px;
+	text-align: center;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -67,10 +74,12 @@ td {
 <div>
 	<th:block layout:fragment="content">
 		<body>
-			<h1>환불 관리</h1>
+			<h2>환불 관리</h2>
 			<table border="1" id="refundTable"></table>
-				<input type="button" class="btn" th:name="refundStatus" value="환불완료">
-				<input type="button" class="btn" th:name="refundStatus" value="반려">
+			<br>	
+			<input type="button" class="btn" th:name="refundStatus" value="환불완료">
+			<input style="margin-right: 10px" type="button" class="btn" th:name="refundStatus" value="반려">
+			<br>
 			<div id="pagination"></div>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -99,7 +108,7 @@ td {
 
 	    		// 테이블 헤더 생성
 	    		var tableHeader = $('<tr></tr>');
-	    		var headerNo = $('<th></th>').text('번호');
+	    		var headerNo = $('<th></th>').text('선택');
 	    		var headerBuyerId= $('<th></th>').text('신청 아이디');
 	    		var headerPurchaseNo = $('<th></th>').text('구매번호');
 	    		var headerTalentNo = $('<th></th>').text('재능번호');
@@ -159,15 +168,15 @@ td {
 				      value: refund.refundStatus
 				    })
 				  );
-				  var approveDate = $('<td></td>').text(refund.approveDate.substring(0, 10)).append(
+				  var submitDate = $('<td></td>').text(refund.submitDate.substring(0, 10)).append(
 				    $('<input/>').attr({
 				      type: 'hidden',
-				      name: 'approveDate',
+				      name: 'submitDate',
 				      value: refund.approveDate
 				    })
 				  );
 				  
-				  tableRow.append(checkbox, buyerId, purchaseNo, talentNo, refundBamboo, issue, refundStatus, approveDate);
+				  tableRow.append(checkbox, buyerId, purchaseNo, talentNo, refundBamboo, issue, refundStatus, submitDate);
 				  refundTable.append(tableRow);
 				});
 	    			

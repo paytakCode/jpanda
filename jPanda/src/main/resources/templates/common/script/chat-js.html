@@ -8,6 +8,20 @@
 		let selectedPartnerId = null;
 		let stompClient = null;
 		
+		//tooltip init
+		function initTooltip(){
+			$('[data-bs-toggle="tooltip"]').each(function(){
+				new bootstrap.Tooltip(this);
+			});
+		}
+		
+		//popover init
+		function initPopover(){
+			$('[data-bs-toggle="popover"]').each(function(){
+				new bootstrap.Popover(this);
+			});
+		}
+		
 		//WebSocket(STOMP) 연결 함수
 		function connect() {
 		    const socket = new SockJS('/stomp/chat?' + memberId);
@@ -41,25 +55,31 @@
 				if (selectedPartnerId == receivedChat.senderId){
 			    	const lastDate = $('#chat-content a.chat-date').last().text();
 			    	if(getDate(Date.now()) != lastDate){
-						const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+						const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 													.text(getDate(receivedChat.chatDate))
 													.attr("role","button")
 													.attr("aria-disabled","true");
 						$("#chat-content").append(chatDate);
 			    	}
-					const chatElem = $("<div>").addClass("from-other");
+					const chatElem = $("<div>").addClass("from-other")
+												.attr('data-bs-toggle', "modal")
+												.attr('data-bs-target', '#report-chat-modal')
+												.data('chat-no', receivedChat.chatNo);
 					const messageElem = $("<span>").text(receivedChat.message)
-													.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
-													.attr('data-bs-toggle', "modal")
-													.attr('data-bs-target', '#report-chat-modal')
-													.data('chat-no', receivedChat.chatNo);
+													.addClass("chat-message lh-base text-start badge p-2 text-wrap")
+													.attr('data-bs-toggle', "tooltip")
+													.attr('data-bs-placement', "top")
+													.attr('data-bs-custom-class', 'chat-report-tooltip')
+													.attr('data-bs-html', 'true')
+													.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>');
 					const timeElem = $("<span>").text(getTime(receivedChat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
-					chatElem.append(messageElem);
-					chatElem.append(timeElem);
+					chatElem.append(messageElem)
+							.append(timeElem);
 	                $("#chat-content").append(chatElem);
 				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				    $('.partner[value=' + selectedPartnerId + '] .unread-count').text('1');
 				    readPartnerMessage();
+				    initTooltip();
 				} else {
 					updateChatPartnerList();
 				}
@@ -101,69 +121,77 @@
 				dataType : "json",
 				success: function(chatList) {
 					$("#chat-content").empty();
+					$('#chat-content').css('margin','0');
 					
 					chatList.forEach((chat, index) => {
 						if (chat.receiverId == selectedPartnerId) {
 							if(index == 0){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							}
 							const chatElem = $("<div>").addClass("from-me");
-							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-end badge text-bg-success p-2 text-wrap");
+							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-end badge p-2 text-wrap");
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
-							chatElem.append(readToElem(chat.read));
-							chatElem.append(timeElem);
-							chatElem.append(messageElem);
+							chatElem.append(readToElem(chat.read))
+									.append(timeElem)
+									.append(messageElem);
 		                    $("#chat-content").append(chatElem);
 						} else if(chat.senderId == selectedPartnerId){
 							if(index == 0){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
-								const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 															.text(getDate(chat.chatDate))
 															.attr("role","button")
 															.attr("aria-disabled","true");
 								$("#chat-content").append(chatDate);
 							}
 							
-							const chatElem = $("<div>").addClass("from-other");
+							const chatElem = $("<div>").addClass("from-other")
+														.attr('data-bs-toggle', "modal")
+														.attr('data-bs-target', '#report-chat-modal')
+														.data('chat-no', chat.chatNo);
 							const messageElem = $("<span>").text(chat.message)
-															.addClass("chat-message lh-base text-start badge text-bg-success p-2 text-wrap")
-															.attr('data-bs-toggle', "modal")
-															.attr('data-bs-target', '#report-chat-modal')
-															.data('chat-no', chat.chatNo);
+															.addClass("chat-message lh-base text-start badge p-2 text-wrap")
+															.attr('data-bs-toggle', "tooltip")
+															.attr('data-bs-placement', "top")
+															.attr('data-bs-custom-class', 'chat-report-tooltip')
+															.attr('data-bs-html', 'true')
+															.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>');
 							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
 							
 							if(chat.read == 'F' && index == 0){
-								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary disabled")
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary")
 								.text('새로운 채팅')
 								.attr("role","button")
 								.attr("aria-disabled","true");
 								$("#chat-content").append(newChatPoint);
 							} else if(chat.read == 'F' && chatList[index - 1].read == 'T'){
-								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary disabled")
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary")
 								.text('새로운 채팅')
 								.attr("role","button")
 								.attr("aria-disabled","true");
 								$("#chat-content").append(newChatPoint);
 							}
 							
-							chatElem.append(messageElem);
-							chatElem.append(timeElem);
+							chatElem.append(messageElem)
+									.append(timeElem);
 		                    $("#chat-content").append(chatElem);
+		                    
+		                    initTooltip();
 						}
 						
 					});
@@ -211,6 +239,7 @@
 				    }
 				});
 			}
+			
 		}
 		
 		//안읽은 메세지 총 갯수 표시하는 함수(#total-unread-count)
@@ -250,8 +279,6 @@
 					!$(event.target).is("#chat-btn") && $('#report-chat-modal').is(':hidden')) {
 					$("#chat-console").hide();
 				}
-				
-				updateTotalUnreadCount();
 			});
 		});
 		
@@ -270,18 +297,18 @@
 		    	
 		    	const lastDate = $('#chat-content a.chat-date').last().text();
 		    	if(getDate(Date.now()) != lastDate){
-					const chatDate = $("<a>").addClass("chat-date btn btn-secondary disabled")
+					const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
 												.text(getDate(Date.now()))
 												.attr("role","button")
 												.attr("aria-disabled","true");
 					$("#chat-content").append(chatDate);
 		    	}
 				const chatElem = $("<div>").addClass("from-me");
-				const messageElem = $("<span>").text($("#chat-input").val()).addClass("chat-message lh-base text-end badge text-bg-success p-2 text-wrap");
+				const messageElem = $("<span>").text($("#chat-input").val()).addClass("chat-message lh-base text-end badge p-2 text-wrap");
 				const timeElem = $("<span>").text(getTime(Date.now())).addClass("chat-time badge rounded-pill text-bg-light");
-				chatElem.append(readToElem('F'));
-				chatElem.append(timeElem);
-				chatElem.append(messageElem);
+				chatElem.append(readToElem('F'))
+						.append(timeElem)
+						.append(messageElem);
                 $("#chat-content").append(chatElem);
 		    	$("#chat-input").val("");
 		    }
@@ -342,11 +369,7 @@
 						
 						updateSelectedPartner();
 						updateTotalUnreadCount();
-						
-						//채팅 상대 아이디 표기를 위한 Popover 초기화
-						const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-						const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-						
+						initPopover();
 					},
 					error: function(error) {
 						console.log('updateChatPartnerList Failed -> ' + error);
@@ -396,9 +419,18 @@
 		    $('#report-memberId').val(selectedPartnerId);
 		    $('#chat-report-name').val($('#chat-partner-list .active').text());
 		    $('#chat-report-message').val($(this).text());
+	 	    $('#chat-report-message').css("height", "auto");
+		    $('#chat-report-message').css("height", $('#chat-report-message').scrollHeight + "px"); 
 		    $('#report-chat-no').val($(this).data('chat-no'));
 		    $('#chat-report-issue').val('');
+			$('#chat-report-issue').css("height", "auto");
 		});	
+		
+		//report-issue 입력시 높이 조절
+		$('#chat-report-issue').on("input", function() {
+			$(this).css("height", "auto");
+			$(this).css("height", this.scrollHeight + "px");
+		}).trigger("input");
 		
 		//chat-report-modal 신고버튼 클릭 시 호출되는 함수
 		$('#chat-report-btn').click(function(){

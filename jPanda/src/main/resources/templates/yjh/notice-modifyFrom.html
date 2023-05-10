@@ -19,6 +19,7 @@ table {
 th, td {
 	text-align: left;
 	padding: 8px;
+	border: 1px solid #ddd;
 }
 
 th {
@@ -31,10 +32,23 @@ tr:nth-child(even) {
 
 td {
 	border: 1px solid #ddd;
+	text-align: center;
 }
 
 .btn {
-	border: 1px solid black;
+	border: 1px solid #ddd;
+	float: right;
+	margin: 10px 0;
+}
+
+.notice-title, .notice-content{
+	width: 100%;
+	margin: 0 auto;
+}
+
+h2{
+	text-align: center;
+	margin: 30px 0;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -46,17 +60,18 @@ td {
 		<body>
 			<form th:action="'/admin/notice/'+${notice.noticeNo}+'/modify'" method="post">
 				<input type="hidden" name="_method" value="put">
+				<h2>공지사항 수정</h2>
 				<table border="1">
 					<tr>
 						<th>제목</th>
-							<td><input name="title" type="text" th:value="${notice.title}"></td>
+							<td><input class="notice-title" name="title" type="text" th:value="${notice.title}"></td>
 					</tr>
 					<tr>
 						<th colspan="2">내용</th>
 					</tr>
 					<tr>
 						<td colspan="2">
-							<textarea name="content" rows="30" cols="30" th:text="${notice.content}"></textarea>
+							<textarea class="notice-content" name="content" rows="10" cols="10" th:text="${notice.content}"></textarea>
 							<input type="hidden" name="regDate" th:value="${notice.regDate}">
 						</td>
 					</tr>
@@ -72,7 +87,7 @@ td {
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		JavaScript영역
+		/* JavaScript영역 */
 	</script>
 
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

@@ -12,10 +12,8 @@ import com.kakao.jPanda.kyg.dao.ChargeDao;
 import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
-import com.kakao.jPanda.kyg.domain.PaymentDto;
-import com.kakao.jPanda.yjh.domain.NoticeDto;
 import com.kakao.jPanda.kyg.domain.Pagination;
-
+import com.kakao.jPanda.kyg.domain.PaymentDto;
 
 import lombok.extern.slf4j.Slf4j;
 
