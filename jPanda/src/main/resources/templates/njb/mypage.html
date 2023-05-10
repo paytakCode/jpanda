@@ -34,13 +34,14 @@
         float: left;
         box-sizing: border-box;
        	font-size: 30px;
-        
+        border-radius: 10px;
         background: rgb(196, 196, 191);
     }
     div.right {
         width: 70%;
         float: right;
         box-sizing: border-box;
+        border-radius: 10px;
         font-size: 20px;
         border:solid 1px rgb(86 121 107 / 80%);
         
@@ -114,7 +115,7 @@ li input {
         <div class="left" align="center">
 	        <img src="/image/basic.png" alt="기본사진">
 	           <ul>   
-	              <li>내프로필</li>
+	              <h1 th:text="${session.memberId}" font-size=10px;></h1>
 	              <a href="/trade" onclick="redirectToTrade()">거래내역</a>
 	           </ul>
 			<span class="withdrawal-btn-wrap" th:if="${session.memberId != null}">
@@ -122,8 +123,7 @@ li input {
 			</span>	
         </div>
         
-        <div class="right" align="center" th:if="${session.memberId != null}">
-		    <h1 th:text="${session.memberId} + '님 안녕하세요!'"></h1>
+        <div class="right" align="center" style="border-radius: 10; width: auto; margin: 0 auto;" pxth:if="${session.memberId != null}"> 
 				<form method="post" action="/updateMember">
 				<input type="hidden" name="memberId" th:value="${memberInfo.memberId}">
 				    <ul>
@@ -147,9 +147,9 @@ li input {
 				            <span>회원등급: </span>
 				            <input type="text" th:value="${memberInfo.memberGrade}" name="memberGrade" readonly>
 				        </li>
-				        
+				        <button type="submit" onclick="showSuccessAlertAndRefresh()">수정하기</button>
 				    </ul>
-    				<button type="submit" onclick="showSuccessAlertAndRefresh()">수정하기</button>
+    				
 				</form>
 			<div class="menu">
 				<div>
@@ -193,9 +193,9 @@ li input {
 
 	$('#logout-btn').click(function() {
 	  $.ajax({
-	    url: '/logout', // 로그아웃 요청을 보낼 URL
-	    type: 'GET', // HTTP 요청 메서드
-	    dataType: 'text', // 서버 응답 데이터 타입
+	    url: '/logout', 
+	    type: 'GET', 
+	    dataType: 'text', 
 	    success: function(result) {
 	      alert('로그아웃 되었습니다.');
 	      location.href='/login';
