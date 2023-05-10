@@ -149,13 +149,12 @@
 	
 		<div class="btn-container">
 			<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
-				<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn" onclick="moveChargePage(0)">충전하기</button>
-				<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn">결제내역</button>
+				<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn"	onclick="location.href='/charge';">충전하기</button>
+				<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn"	onclick="location.href='/charge-history';">결제내역</button>
 			</div>
 		</div>
 			
 		<div class="charge-details-container">
-		
 		
 			<div style="text-align: center; margin-bottom: 5%; font-weight: bold; font-size: 30px; padding-top: 30px;">
 				<span class="fst-italic">결제내역</span>
@@ -165,8 +164,8 @@
 				</table>
 			</div>
 			<div style="display:flex; justify-content:flex-end; margin-top: 10px; margin-right: 100px">
-				<span class="historyIcon"><img src="/image/bamboo-history.png" alt="image" width="25" height="25"></span>
-				<span th:text="'총 충전회수 : ' + ${totalChargeCnt}" style="font-size: 17px;"></span>
+				<span class="historyIcon"><img alt="totalBamboo" src="/image/common/bamboo-icon.png" style="width: 25px; height: 25px;"></span>
+				<span th:text="'총 충전횟수 : ' + ${totalChargeCnt}" style="font-size: 17px;"></span>
 			</div>
 			<div id="pagination">
 			</div>
@@ -183,15 +182,10 @@
 <th:block layout:fragment="script">
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 	<script th:inline="javascript">
-		
-		function moveChargePage(pageStatus) { 
-			 console.log("pageStatus -> " + pageStatus);
-			 location.href="?pageStatus="+pageStatus;
-		}
-		 
+	
 		function chargeChange(currentPage){
 			$.ajax({
-				url : "/charge/charge-history",
+				url : "/charge-history/history-list",
 				type : "GET",
 				data : { currentPage : currentPage },
 				dataType: 'json',
@@ -199,29 +193,29 @@
 		        	console.log(returnMap.chargeList);
 		          	console.log(returnMap.pagination);
 		          		
-		          	var chargeList = returnMap.chargeList;
-		          	var chargeTable = $('#chargeTable');
+		          	let chargeList = returnMap.chargeList;
+		          	let chargeTable = $('#chargeTable');
 	
 		            // 기존 테이블 초기화
 		    		chargeTable.empty();
 	
 		    		// 테이블 헤더 생성
-		    		var tableTbody = $('<tbody></tbody>');
-		    		var tableHeader = $('<tr></tr>');
-		    		var headerRegDate = $('<th></th>').addClass('charge charge-reg-date').text('충전날짜');
-		    		var headerMethod = $('<th></th>').addClass('charge charge-method').text('충전방법');
-		    		var headerBamboo = $('<th></th>').addClass('charge charge-bamboo').text('충전밤부');
-		    		var headerMoney = $('<th></th>').addClass('charge charge-money').text('충전금액');
+		    		let tableTbody = $('<tbody>');
+		    		let tableHeader = $('<tr>');
+		    		let headerRegDate = $('<th>').addClass('charge charge-reg-date').text('충전날짜');
+		    		let headerMethod = $('<th>').addClass('charge charge-method').text('충전방법');
+		    		let headerBamboo = $('<th>').addClass('charge charge-bamboo').text('충전밤부');
+		    		let headerMoney = $('<th>').addClass('charge charge-money').text('충전금액');
 		    		tableHeader.append(headerRegDate).append(headerMethod).append(headerBamboo).append(headerMoney);
 		    		tableTbody.append(tableHeader);
 		    		
 		    		// 받아온 데이터를 반복하며 리스트 아이템 생성
 		    		$.each(chargeList, function(index, charge) {
-		    			var tableRow = $('<tr></tr>');
-		    			var chargeDate = $('<td></td>').addClass('chargeList chargeDate').text(charge.chargeDate.substring(0, 10));
-		    			var paymentMethod = $('<td></td>').addClass('chargeList paymentMethod').text(charge.paymentMethod);
-		    			var chargeBamboo = $('<td></td>').addClass('chargeList chargeBamboo').text(charge.chargeBamboo);
-		    			var paymentAmount = $('<td></td>').addClass('chargeList paymentAmount').text(charge.paymentAmount);
+		    			let tableRow = $('<tr>');
+		    			let chargeDate = $('<td>').addClass('chargeList chargeDate').text(charge.chargeDate.substring(0, 10));
+		    			let paymentMethod = $('<td>').addClass('chargeList paymentMethod').text(charge.paymentMethod);
+		    			let chargeBamboo = $('<td>').addClass('chargeList chargeBamboo').text(charge.chargeBamboo);
+		    			let paymentAmount = $('<td>').addClass('chargeList paymentAmount').text(charge.paymentAmount);
 		    				tableRow.append(chargeDate)
 		    						.append(paymentMethod)
 		    						.append(chargeBamboo)
@@ -231,26 +225,26 @@
 		    			});
 		    			chargeTable.append(tableTbody);
 		    			
-		                var pagination = returnMap.pagination;
-		                var startNum = parseInt(pagination.startNum);
-		                var lastNum = parseInt(pagination.lastNum);
-		                var paginationDiv = $('#pagination');
+		    			let pagination = returnMap.pagination;
+		    			let startNum = parseInt(pagination.startNum);
+		    			let lastNum = parseInt(pagination.lastNum);
+		    			let paginationDiv = $('#pagination');
 		    			
 		                // 기존 페이지 번호 삭제
 		                paginationDiv.empty();
 		                
-		                var page = $('<a></a>').addClass('charge-page').text('<');
+		                let page = $('<a>').addClass('charge-page').text('<');
 		                paginationDiv.append(page);
 		                
 		           	  	// 페이지 번호 생성
-		                for (var i=startNum; i<=lastNum; i++) {
-		                    var page = $('<a></a>').addClass('charge-page').text(i);
+		                for (let i=startNum; i<=lastNum; i++) {
+		                	let page = $('<a>').addClass('charge-page').text(i);
 		    				if(pagination.currentPage == i){
 		    					page.css('background-color', '#EAEAEA');
 		    				}
 		                    paginationDiv.append(page);
 		                }
-		                paginationDiv.append($('<a></a>').addClass('charge-page').text('>'));
+		                paginationDiv.append($('<a>').addClass('charge-page').text('>'));
 		           	  	
 						$('.charge-page').one('click', function(){
 							if($(this).text() === '<'){
@@ -271,14 +265,11 @@
 						});
 		          	}
 			});
-		}
+		}	// /chargeChange(currentPage)
 		
 		$(function() {
 			chargeChange(1);
 		}); 
-		
-
-		
 		
 	</script>
 	

@@ -20,11 +20,8 @@ public interface ChargeService {
 
 	List<PaymentDto> findPaymentList();
 
-	List<ChargeDto> findBambooChargeList(ChargeDto chargeDto);
+	int totalChargeCntByChargerId(String chargerId);
 
-	int totalChargeCnt(String chargerId);
-
-	Map<String, Object> findchargeByPagination(Pagination pagination);
-
+	Map<String, Object> findchargeHistoryMapByPagination(Pagination pagination);
 
 }
