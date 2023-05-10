@@ -45,9 +45,6 @@ public class TradeController {
 	 */
 	@GetMapping("")
 	public String statList(HttpSession session, Model model) {
-		if (session.getAttribute("memberId") == null) {
-			return "redirect:/login";
-		}
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("statList id check : " + memberId);
 		List<StatDto> statList = tradeService.findStatListByMemberId(memberId);
