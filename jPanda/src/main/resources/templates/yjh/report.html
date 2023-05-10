@@ -181,8 +181,13 @@
 		            tableBody.append($("<input>").attr("type", "button").addClass("btn").val("제제하기"));
 		            
 		      },
-		      error : function(jqXHR, textStatus, errorThrown) {
-		          alert("안 성공");
+		      error : function(xhr, textStatus, errorThrown) {
+		          if(xhr.status === 401) {
+		        	  alert('로그인이 필요합니다');
+		        	  location.replace(JSON.parse(xhr.responseText).redirectUrl);
+		          } else {
+		        	  alert('admin report error : ' + textStatus + ',' + errorThrown);
+		          }
 		      }
 		  });
 		});
@@ -203,8 +208,13 @@
 					 alert("오류가 발생했습니다");
 				 }
 			 },
-			 error : function(){
-				 alert("에러가 발생했습니다");
+			 error : function(xhr, textStatus, errorThrown){
+				if(xhr.status === 401) {
+					alert('로그인이 필요합니다');
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);
+				} else {
+					alert('admin report modify error : ' + textStatus + ',' + errorThrown);
+				}
 			 }
 		 })
 	});
