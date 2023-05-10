@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kakao.jPanda.common.annotation.NoLoginCheck;
 import com.kakao.jPanda.kyg.service.ChargeService;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReportDto;
@@ -25,6 +26,9 @@ import com.kakao.jPanda.lhw.domain.TalentDto;
 import com.kakao.jPanda.lhw.service.TalentService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/talents")
@@ -35,69 +39,50 @@ public class TalentDetailController {
 	
 	
 	// 재능 상세페이지 및 리뷰 리스트 불러오기
-	@GetMapping("/talent/{talentNo}")
+	@NoLoginCheck
+	@GetMapping("/talent/{talentNo}")  //s
 	public String talentDetails(@PathVariable Long talentNo, Model model, HttpSession session) {
-		System.out.println("Controller talentDetails Start");
+		log.info("Controller talentDetails Start");
+		// 조회수 업데이트
+		talentService.modifyTalentToViewCount(talentNo);
+		// 상세 페이지 탤런트 정보
 		TalentDto talent = talentService.findBoardTalentByTalentNo(talentNo);
-		int viewCount = talentService.modifyTalentToViewCount(talentNo);
+		// 리뷰 리스트 
 		List<ReviewDto> reviewList = talentService.findReviewListByTalentNo(talentNo);
-		
+		// 상세 페이지에서 memberId 검증 필요
 		String memberId = (String)session.getAttribute("memberId");
 
 		model.addAttribute("memberId", memberId);
 		model.addAttribute("talent", talent);
 		model.addAttribute("reviewList", reviewList);
+		
 		return "lhw/talent";
 	}
 	
 	
 	// 리뷰 인서트
 	@ResponseBody
-	@PostMapping("/talent/{talentNo}/reviews")
-	public int reviewAdd(@PathVariable("talentNo") Long talentNo, @RequestBody ReviewDto review, HttpSession session, Model model) {
-	    System.out.println("Controller reviewAdd Start");
-	    List<BambooUseDto> bambooUseList = talentService.findBambooUseListByTalentNo(talentNo);
+	@PostMapping("/talent/{talentNo}/review") //s
+	public int reviewAdd(@PathVariable("talentNo") Long talentNo, @RequestBody ReviewDto review) {
+		log.info("Controller reviewAdd Start");
+		log.info("review : " + review);
+	    // 리뷰 구매 검증 완료 후 인서트
+	    int result = talentService.addReview(review);
+	    log.info("Review Insert Success 1-> "+ result );
 	    
-	    String memberId = (String)session.getAttribute("memberId");
-	    review.setTalentNo(talentNo); // talentNo를 review 객체에 설정
-	    review.setReviewerId(memberId); // reviewerId를 review 객체에 설정
-
-	    int result = -1;
-
-	    for (BambooUseDto bambooUseDto : bambooUseList) {
-	        if (memberId == null) {
-	            // 로그인이 안되어 있을 때
-	            result = -1;
-	            break;
-	        } else if (bambooUseDto.getBuyerId().equals(memberId)) {
-	            // 구매자일 때
-	            if (talentService.addReview(review) == 1) {
-	                result = 1;
-	                break;
-	            }
-	        } else {
-	            // 해당 재능의 구매자가 아닐 때
-	            result = 0;
-	        }
-	    }
-	    model.addAttribute("memberId", memberId);
-	    System.out.println("리뷰 인서트 완료시1 -> " + result);
 	    return result;
 	}
 	
 	
 	// 리뷰 업데이트
 	@ResponseBody
-	@PutMapping("/talent/{talentNo}/reviews/{reviewNo}")
+	@PutMapping("/talent/{talentNo}/reviews/{reviewNo}") //s
 	public List<ReviewDto> reviewModify(@PathVariable("talentNo") Long talentNo, @PathVariable("reviewNo") Long reviewNo, 
 							   @RequestBody ReviewDto review, HttpSession session) {
-		System.out.println("Controller reviewModify Start");
-		System.out.println("talentNo : " + talentNo);
-		System.out.println("reviweNo : " + reviewNo);
-		String memberId = (String)session.getAttribute("memberId");
-		review.setReviewerId(memberId);
+		log.info("Controller reviewModify Start");
+		
 	    int modifyReview = talentService.modifyReview(review);
-	    System.out.println("리뷰 수정 완료시 1 -> " + modifyReview);
+	    log.info("Review Update Success 1-> "+ modifyReview );
 	    
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
@@ -105,27 +90,27 @@ public class TalentDetailController {
 	
 	// 리뷰 딜리트
 	@ResponseBody
-	@DeleteMapping("/talent/{talentNo}/reviews/{reviewNo}")
+	@DeleteMapping("/talent/{talentNo}/reviews/{reviewNo}") //s
 	public List<ReviewDto> reviewRemove(@PathVariable("talentNo") Long talentNo, @PathVariable("reviewNo") Long reviewNo,
 									@RequestBody ReviewDto review, HttpSession session) {
 		System.out.println("Controller reviewRemove Start");
 		int reviewRemove = talentService.removeReview(review);
-		System.out.println("리뷰 삭제 완료시1 -> " + reviewRemove);
+		log.info("Review Delset Success 1-> "+ reviewRemove);
 		return talentService.findReviewListByTalentNo(talentNo);
 	}
 	
 	
 	// 게시글 삭제 버튼 눌렀을때 게시글 상태 판매 종료로 전환
-	@GetMapping("/talent/updateStatus/{talentNo}")
+	@GetMapping("/talent/updateStatus/{talentNo}")  //talents/{talentNo}/status 게시글 삭제가 아닌 판매 종료로 변경 및 put 매핑으로 변경 , 
 	public String talentStatusUpdate(@PathVariable Long talentNo) {
 		talentService.updateTalentStatus(talentNo);
 		return "redirect:/board";
 	}
 	
 	
-	// 구매하기 버튼 인서트
+	// 구매하기 버튼 인서트              
 	@ResponseBody
-	@PostMapping("/talent/purchase")
+	@PostMapping("/bambooUse") // /BambooUse
 	public int purchaseAdd(@RequestBody BambooUseDto bambooUse, HttpSession session) {
 		System.out.println("Controller purchaseAdd Start");
 		// memberId 변수에 세션안에 있는 memberId 저장
@@ -146,9 +131,10 @@ public class TalentDetailController {
 		return bambooUseInsert;
 	}
 	
-	// 신고하기 조회
+	
+	// 신고하기 
 	@ResponseBody
-	@PostMapping("/talent/report/{talentNo}")
+	@PostMapping("/talent/report/{talentNo}")  // /talents/{talentNo}/report  
 	public String reportAdd(@PathVariable Long talentNo, @RequestParam("reportId")String reportId, @RequestParam("blackId")String blackId, 
 					     @RequestParam("issue")String issue, @RequestParam("reportDate") Timestamp reportDate) {
 		System.out.println("Controller reportAdd Start");

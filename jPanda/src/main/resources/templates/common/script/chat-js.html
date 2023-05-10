@@ -198,8 +198,13 @@
 					readPartnerMessage();
 				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				},
-				error: function(error) {
-					console.log('updateChatContent Failed -> ' + JSON.stringify(error));
+				error: function(xhr, textStatus, errorThrown) {
+					if(xhr.status == 401){
+						alert('로그인이 필요합니다.');
+						location.replace(JSON.parse(xhr.responseText).redirectUrl);
+					} else {
+						console.log('updateChatContent Failed -> ' + textStatus + ", " + errorThrown);
+					}
 				}
 			});
 		}
@@ -234,9 +239,15 @@
 						stompClient.send("/chat/read", {}, readerIdAndPartnerId);
 						updateTotalUnreadCount();
 				    },
-				    error: function(error) {
-				        console.log('[readPartnerMessage] read Update Failed -> ' + JSON.stringify(error));
-				    }
+
+					error: function(xhr, textStatus, errorThrown) {
+						if(xhr.status == 401){
+							alert('로그인이 필요합니다.');
+							location.replace(JSON.parse(xhr.responseText).redirectUrl);
+						} else {
+							console.log('readPartnerMessage Failed -> ' + textStatus + ", " + errorThrown);
+						}
+					}
 				});
 			}
 			
@@ -329,8 +340,13 @@
 			   	    stompClient.send("/chat/message", {}, JSON.stringify(savedChat));
 			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				},
-				error: function(error) {
-					console.log('saveChat Failed -> ' + JSON.stringify(error));
+				error: function(xhr, textStatus, errorThrown) {
+					if(xhr.status == 401){
+						alert('로그인이 필요합니다.');
+						location.replace(JSON.parse(xhr.responseText).redirectUrl);
+					} else {
+						console.log('saveChat Failed -> ' + textStatus + ", " + errorThrown);
+					}
 				}
 			});
 		}
@@ -373,8 +389,13 @@
 						updateTotalUnreadCount();
 						initPopover();
 					},
-					error: function(error) {
-						console.log('updateChatPartnerList Failed -> ' + JSON.stringify(error));
+					error: function(xhr, textStatus, errorThrown) {
+						if(xhr.status == 401){
+							alert('로그인이 필요합니다.');
+							location.replace(JSON.parse(xhr.responseText).redirectUrl);
+						} else {
+							console.log('updateChatPartnerList Failed -> ' + textStatus + ", " + errorThrown);
+						}
 					}
 				});
 		}
@@ -455,10 +476,13 @@
 						$('#report-chat-modal').modal('hide');
 						showToast('#report-success-toast');
 					},
-					error: function(error) {
-						console.log('Chat Report Failed -> ' + JSON.stringify(error));
-						$('#report-chat-modal').modal('hide');
-						showToast('#report-fail-toast');
+					error: function(xhr, textStatus, errorThrown) {
+						if(xhr.status == 401){
+							alert('로그인이 필요합니다.');
+							location.replace(JSON.parse(xhr.responseText).redirectUrl);
+						} else {
+							console.log('report Failed -> ' + textStatus + ", " + errorThrown);
+						}
 					}
 				});
 				

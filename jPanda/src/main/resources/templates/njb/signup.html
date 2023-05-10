@@ -57,11 +57,11 @@
                     email: email
                 },
                 success: function(response) {
-                    // 이메일 인증 요청 성공 시 동작
+                    alert("인증번호가 이메일로 전송되었습니다.");
                     console.log("이메일 인증번호 전송 성공");
                 },
                 error: function() {
-                    // 이메일 인증 요청 실패 시 동작
+                    alert("이메일 인증번호 전송 실패");
                     console.log("이메일 인증번호 전송 실패");
                 }
             });
@@ -127,7 +127,33 @@
             });
         });
     }); 
-     
+     $(document).ready(function() {
+    	    // 가입하기 버튼 클릭
+    	    $("#signup-btn").click(function() {
+    	        // 모든 필드에 값이 입력되었는지 확인
+    	        var fields = ["signup-id", "signup-pw", "signup-pwchk", "signup-name", "signup-birth-yy", "signup-birth-mm", "signup-birth-dd",
+    	             "signup-gender", "signup-email", "signup-echeck", "signup-phone", "signup-account"];
+    	        var isFilled = true;
+
+    	        for (var i = 0; i < fields.length; i++) {
+    	            var value = $("#" + fields[i]).val();
+    	            if (value === "") {
+    	                isFilled = false;
+    	                break;
+    	            }
+    	        }
+
+    	        if (!isFilled) {
+    	            alert("모든 입력 필드에 값을 입력해주세요.");
+    	            return; // 이 부분을 추가하여 함수 실행 종료
+    	        }
+
+    	        // 모든 필드 값이 입력된 경우
+    	        alert("회원가입을 축하합니다.");
+    	        window.location.href = "/njb/signup"; // 수정된 부분: 절대 경로로 변경
+
+    	    });
+    	});
     
     </script>
 ​<script type="text/javascript">
@@ -155,6 +181,7 @@
             input.value = input.value.slice(0, 11); // 11자리 이상은 자르기
         }
     }
+    
 </script>
 <style type="text/css">
 .main-signup{
@@ -421,7 +448,7 @@ h3{
                         <input id="signup-email" type="email" placeholder="이메일 입력" name="email"></input>
                     </span>
                     <span class="echeck-btn-wrap">
-                        <button type="button" id="echeck-btn">이메일 인증</button>
+                        <button type="button" id="echeck-btn" >이메일 인증</button>
                     </span>
                 </div>
                 

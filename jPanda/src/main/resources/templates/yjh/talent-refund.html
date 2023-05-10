@@ -219,7 +219,15 @@ h2{
 						}
 					});
 				
-	          	}
+	          	},
+	          	error : function(xhr, textStatus, errorThrown) {
+	          		if(xhr.status === 401) {
+	          			alert('로그인이 필요합니다');
+		          		location.replace(JSON.parse(xhr.responseText).redirectUrl);          			
+	          		} else {
+	          			alert('admin talent refund error : ' + textStatus + ',' + errorThrown);
+	          		}
+	          }
 		});
 	}
 	
@@ -271,8 +279,13 @@ h2{
 				}
 				
 			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("처리 중 오류가 발생했습니다.");
+			error : function(xhr, textStatus, errorThrown) {
+				if(xhr.status === 401) {
+					alert("로그인이 필요합니다");
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);			
+				} else {
+					alert('refund modify error : ' + textStatus + ',' + errorThrown);
+				}
 			}
 		});
 	}); 
