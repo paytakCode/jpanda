@@ -22,6 +22,7 @@ import com.kakao.jPanda.bsm.domain.PagerDto;
 import com.kakao.jPanda.bsm.domain.TalentDto;
 import com.kakao.jPanda.bsm.service.NoticeService;
 import com.kakao.jPanda.bsm.service.TalentService;
+import com.kakao.jPanda.common.annotation.NoLoginCheck;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +34,7 @@ public class TalentController {
 	private final NoticeService noticeService;
 
 	// Test Main 페이지 이동
+	@NoLoginCheck
 	@GetMapping("/")
 	public String talentTest(Model model, HttpSession session) {
 		model = talentService.findMainPageTalents(model);
@@ -52,17 +54,34 @@ public class TalentController {
 	// 재능 DB Insert
 	@ResponseBody
 	@PostMapping("/talent")
-	public String talentAdd(TalentDto talent) {
-		String result = talentService.addTalent(talent);
-		return result;
+	public String talentAdd(TalentDto talent, HttpSession session) {
+		if(talent.getSellerId() != (String)session.getAttribute("memberId")) {
+			return "<script>" +
+					"alert('비정상적인 재능 등록입니다. 다시 로그인해 주세요.');" + 
+					"location.href = '/login';" + 
+					"</script>";
+		}else {
+			String result = talentService.addTalent(talent);
+			return result;
+		}
 	}
 	
-	// 재능 수정 Update
+	// 재능 DB Update
 	@ResponseBody
 	@PutMapping("/talent")
-	public String talentModify(TalentDto talent) {
-		String result = talentService.modifyTalent(talent);
-		return result;
+	public String talentModify(TalentDto talent, HttpSession session) {
+		
+		String sellerId = talentService.findSellerIdByTalent(talent);
+		
+		if(sellerId != (String) session.getAttribute("memberId")) {
+			return "<script>" +
+					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
+					"location.href = '/login';" + 
+					"</script>";
+		}else {
+			String result = talentService.modifyTalent(talent);
+			return result;
+		}
 	}
 	
 	// 이미지 서버 저장 후 상대 경로 반환
@@ -86,12 +105,14 @@ public class TalentController {
 	}	
 	
 	// 공지사항 페이지 이동
+	@NoLoginCheck
 	@GetMapping("/notice") 
 	public String noticePage() {
 		return "bsm/notice";
 	}
 	
 	// 공지사항 불러오기
+	@NoLoginCheck
 	@ResponseBody
 	@GetMapping("/notice/notices")
 	public Map<String, Object> noticeListBySearchAndCurrentPage(PagerDto pager) {
@@ -101,6 +122,7 @@ public class TalentController {
 	}
 	
 	// 공지사항 세부 페이지
+	@NoLoginCheck
 	@GetMapping("/notice/{noticeNo}/detail")
 	public String noticeDetailByNoticeNo(@PathVariable Long noticeNo, Model model) {
 		NoticeDto notice = noticeService.findNoticeByNoticeNo(noticeNo);

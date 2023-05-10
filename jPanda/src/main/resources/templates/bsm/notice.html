@@ -74,8 +74,26 @@
 			width: 160px;
 		}
 		.notice-header th {
-			background-color: #1ABC9C;
+			background-color: #198754;
 			color: white !important;
+		}
+		.notice-detail:hover {
+			cursor: pointer;
+		}
+		.notice-detail{
+			text-decoration: none;
+			color: black;
+			font-weight: bold;
+		}
+		.notice-detail:hover {
+			color: #198754;
+		}
+		.notice-tr .notice-reg-date,
+		.notice-tr .notice-no {
+			font-size: 15px;
+		}
+		.notice-tr:hover {
+			background-color: #EAEAEA;
 		}
 	</style>
 		
@@ -92,7 +110,7 @@
 		<button id="notice-search-btn" class="btn btn-outline-success text-nowrap">검색</button>
 	</div>
 	<div id="notice-list-div">
-	<table id="notice-list-table" class="table table-striped table-hover">
+	<table id="notice-list-table" class="table">
 	<tbody id="notice-list-table-body">
 	</tbody>
 	</table>
@@ -150,9 +168,10 @@
 
 		    			// 받아온 데이터를 반복하며 리스트 아이템 생성
 		    			$.each(noticeList, function(index, notice) {
-		    				var tableRow = $('<tr></tr>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo);
+		    				var tableRow = $('<tr></tr>').addClass('notice-tr');
 		    				var no = $('<td></td>').addClass('notice notice-no').text(notice.noticeNo);
-		    				var title = $('<td></td>').addClass('notice notice-title').text(notice.title);
+		    				//var title = $('<td></td>').addClass('notice notice-title notice-detail').attr('data-noticeno', notice.noticeNo).text(notice.title);
+		    				var title = $('<td></td>').addClass('notice notice-title').append($('<a></a>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo).text(notice.title));
 		    				var regDate = $('<td></td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
 
 		    				tableRow.append(no).append(title).append(regDate);
@@ -175,7 +194,7 @@
 		                for (var i=startNum; i<=lastNum; i++) {
 		                    var page = $('<a></a>').addClass('notice-page').text(i);
 		    				if(pager.currentPage == i){
-		    					page.css('background-color', '#1ABC9C').css('color', 'white');
+		    					page.css('background-color', '#198754').css('color', 'white');
 		    				}
 		                    pagerDiv.append(page);
 		                }

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kakao.jPanda.bsm.service.TalentService;
+import com.kakao.jPanda.common.annotation.NoLoginCheck;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ public class PageController {
 	private final TalentService talentService;
 	
 	// Test Main 페이지 이동
+	@NoLoginCheck
 	@GetMapping("/main")
 	public String talentTest(Model model, HttpSession session) {
 		model = talentService.findMainPageTalents(model);

@@ -18,5 +18,6 @@ public interface TalentService {
 	TalentDto 		findTalentByTalentNo(Long talentNo);
 	String 			modifyTalent(TalentDto talent);
 	Model			findMainPageTalents(Model model);
+	String findSellerIdByTalent(TalentDto talent);
 	
 }

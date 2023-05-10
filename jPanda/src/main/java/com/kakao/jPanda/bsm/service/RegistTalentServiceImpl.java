@@ -149,4 +149,9 @@ public class RegistTalentServiceImpl implements TalentService{
 		return model;
 	}
 
+	@Override
+	public String findSellerIdByTalent(TalentDto talent) {
+		return talentDao.selectSellerIdByTalent(talent);
+	}
+
 }
