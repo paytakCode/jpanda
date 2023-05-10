@@ -78,12 +78,15 @@
 		});
 		// 검색 기능
 		$('#search-btn').on('click', function(){
-			location.href = "/board?search=" + $('#search').val();
+			var searchValue = encodeURIComponent($('#search').val());
+			console.log("searchValue -> " + searchValue);
+			location.href = "/board?search=" + searchValue;
 		});
 		// 통합검색 EnterKey 입력 시 검색 기능
 		$('#search').on('keydown', function(value) {
 			if(value.keyCode == 13) {
-				location.href = "/board?search=" + $('#search').val();
+				var searchValue = encodeURIComponent($('#search').val());
+				location.href = "/board?search=" + searchValue;
 				return false;
 			}
 		});

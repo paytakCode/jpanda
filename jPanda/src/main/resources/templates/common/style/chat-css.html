@@ -77,6 +77,7 @@
 			box-sizing: border-box;
 			padding: 10px;
 			overflow-y: auto;
+			margin: auto;
 		}
 		
 		/* 채팅 입력창 스타일 */
@@ -159,6 +160,7 @@
 		    background-color: RGBA(129,193,71,var(--bs-bg-opacity,1))!important;
 			max-width: 60%;
 			display: inline-block;
+			overflow-wrap: break-word;
 		}
 				
 		.from-other {
@@ -203,6 +205,20 @@
 		    --bs-tooltip-bg: darkred;
 		    --bs-tooltip-color: white;
 			z-index: 10001;
+		}
+		
+		#chat-report-message {
+			overflow-wrap: break-word;
+		}
+		
+		#chat-report-name {
+			display: inline-block;
+			width: 100px;
+			text-align: center;
+		}
+		
+		.report-modal-content {
+    		background-color: ghostwhite;
 		}
 		
 	</style>
