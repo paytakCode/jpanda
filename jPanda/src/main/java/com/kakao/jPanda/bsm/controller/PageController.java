@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +25,7 @@ public class PageController {
 	// 메인 페이지 이동
 	@NoLoginCheck
 	@GetMapping("/main")
-	public String main(Model model, HttpSession session) {
+	public String main(Model model) {
 		model.addAttribute("bestSellerTalent", talentService.findBestSellerTalents());
 		model.addAttribute("topRatedTalent", talentService.findTopRatedTalents());
 		model.addAttribute("newTrendTalent", talentService.findNewTrendTalents());
@@ -35,7 +34,7 @@ public class PageController {
 		return "bsm/main";
 	}
 	
-	// 메인
+	// 메인페이지 데이터 로드
 	@NoLoginCheck
 	@ResponseBody
 	@GetMapping("/main-talents")
