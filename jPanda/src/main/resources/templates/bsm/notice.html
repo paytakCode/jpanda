@@ -46,8 +46,8 @@
 		.notice-page {
 			display: inline-block;
 			border: 1px solid #EAEAEA;
-			width: 30px;
-			height: 30px;
+			width: 40px;
+			height: 40px;
 			cursor: pointer;
 		}
 		.notice-page, .notice-no, .notice-reg-date {
@@ -65,7 +65,7 @@
 		.notice-page {
 			text-decoration: none;
 			color: black;
-			line-height: 30px;
+			line-height: 40px;
 		}
 		.th-title {
 			text-align: center;
@@ -175,7 +175,7 @@
 		                for (var i=startNum; i<=lastNum; i++) {
 		                    var page = $('<a></a>').addClass('notice-page').text(i);
 		    				if(pager.currentPage == i){
-		    					page.css('background-color', '#EAEAEA');
+		    					page.css('background-color', '#1ABC9C').css('color', 'white');
 		    				}
 		                    pagerDiv.append(page);
 		                }
