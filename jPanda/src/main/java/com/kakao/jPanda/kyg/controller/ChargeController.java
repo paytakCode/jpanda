@@ -70,7 +70,7 @@ public class ChargeController {
 	 * @return	resultMap	/	resultMap을 return하여 callback시 success, fail에 따라 resultMap.put()을 console에 출력 
 	 */
 	@ResponseBody
-	@PostMapping("/add-charge") 
+	@PostMapping("/charge") 
 	public Map<String, String> addCharge(@RequestBody ChargeDto chargeDto, HttpSession session) {
 		String chargerId = (String) session.getAttribute("memberId");
 		log.info("ChargeContoller addCharge() Start...");
