@@ -483,6 +483,7 @@
 							location.replace(JSON.parse(xhr.responseText).redirectUrl);
 						} else {
 							console.log('report Failed -> ' + textStatus + ", " + errorThrown);
+							showToast('#report-fail-toast');
 						}
 					}
 				});
