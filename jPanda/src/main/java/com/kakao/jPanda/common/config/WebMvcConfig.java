@@ -38,12 +38,13 @@ public class WebMvcConfig implements WebMvcConfigurer{
         converters.add(new MappingJackson2HttpMessageConverter());
     }
     
-	// 이미지 업로드 시 저장 경로 설정(외부 디텍토리)
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		int index = System.getProperty("user.dir").indexOf(File.separator + "jPanda");
 		String path = System.getProperty("user.dir").substring(0, index) + File.separator + "uploadImage" + File.separator;
+		// path = 프로젝트 상위 경로/uploadImage
 		registry.addResourceHandler("/uploadImage/**").addResourceLocations("file:" + path);
+		// /uploadImage/**로 시작하는 경로를 요청할 시 외부 디텍토리에서 찾도록 설정함
 	}
 	
 }
