@@ -47,6 +47,9 @@ public interface TalentDao {
 	// 뷰 카운트 업데이트
 	int updateTalentToViewCount(Long talentNo);
 	
+	// 리뷰 중복 인서트 검증용
+	List<ReviewDto> selectReviewInsertCheck(ReviewDto review);
+	
 	
 	
 }

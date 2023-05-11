@@ -339,7 +339,7 @@ ul, li {
 		</div>
 		
 		<div class="side-info">
-			<div id="name" th:text="'판매자: ' + ${talent.name}"></div>
+			<div id="name" th:text="'강사: ' + ${talent.name} + ' / ' + ${talent.sellerId}"></div>
 			<input id="seller-id" type="hidden" th:value='${talent.sellerId}'>
          	<input id="seller-name" type="hidden" th:value='${talent.name}'>
 			<br><div id="summary" th:text="${talent.summary}"></div>
@@ -712,6 +712,8 @@ ul, li {
 				console.log(reviewInsert);
 				if (reviewInsert == 0){
 					alert("상품을 구매한 사람만 리뷰를 남길 수 있습니다.");
+				} else if (reviewInsert == -1) {
+					alert("리뷰는 게시물 당 하나만 남길 수 있습니다.")
 				} else {
 					location.reload();
 				}
@@ -852,7 +854,8 @@ ul, li {
 	   $(function(){
 	      $('#seller-chat-btn').click(function () {
 	         if(memberId == null){
-	            alert('로그인 후 이용 가능합니다.');
+	            alert('로그인이 필요한 서비스 입니다.');
+	            location.href= "/login";
 	         } else {
 	            const sellerId = $('#seller-id').val();
 	            const sellerName = $('#seller-name').val();

@@ -91,6 +91,12 @@ public class TalentDaoImpl implements TalentDao {
 	public int updateTalentToViewCount(Long talentNo) {
 		return sqlSession.update("updateTalentToViewCount", talentNo);
 	}
+
+	// 리뷰 중복 인서트 검증용
+	@Override
+	public List<ReviewDto> selectReviewInsertCheck(ReviewDto review) {
+		return sqlSession.selectList("selectReviewInsertCheck", review);
+	}
 	
 	
 	
