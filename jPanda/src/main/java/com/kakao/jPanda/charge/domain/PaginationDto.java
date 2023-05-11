@@ -1,4 +1,4 @@
-package com.kakao.jPanda.kyg.domain;
+package com.kakao.jPanda.charge.domain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class Pagination {
+public class PaginationDto {
 	// 전체 글의 개수
 	private int totalCount;
 	// 전체 페이지의 개수

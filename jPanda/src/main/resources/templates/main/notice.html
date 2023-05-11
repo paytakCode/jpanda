@@ -143,7 +143,7 @@
 		// 페이징, 검색 기능
 		function noticeChange(search, currentPage){
 			$.ajax({
-				url : "/talent/notice/notices",
+				url : "/notice/notices",
 				type : "GET",
 				data : {
 						search : search, 
@@ -220,7 +220,7 @@
 					location.hash = hash;
 					
 					$('.notice-detail').on('click', function(){
-						location.href = "/talent/notices/" + $(this).data('noticeno');							
+						location.href = "/notices/" + $(this).data('noticeno');							
 					});
 	          	},
 	           	error: function(xhr, textStatus, errorThrown){

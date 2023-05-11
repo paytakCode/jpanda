@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.kakao.jPanda.kyg.service.ChargeService;
+import com.kakao.jPanda.charge.service.ChargeService;
 import com.kakao.jPanda.talent.detail.dao.TalentDao;
 import com.kakao.jPanda.talent.detail.domain.BambooUseDto;
 import com.kakao.jPanda.talent.detail.domain.ReportDto;

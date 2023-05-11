@@ -1,7 +1,6 @@
-package com.kakao.jPanda.kyg.domain;
+package com.kakao.jPanda.charge.domain;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 
 import lombok.Data;
 

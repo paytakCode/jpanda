@@ -1,12 +1,12 @@
-package com.kakao.jPanda.kyg.service;
+package com.kakao.jPanda.charge.service;
 
 import java.util.List;
 import java.util.Map;
 
-import com.kakao.jPanda.kyg.domain.ChargeDto;
-import com.kakao.jPanda.kyg.domain.CouponUseDto;
-import com.kakao.jPanda.kyg.domain.PaymentDto;
-import com.kakao.jPanda.kyg.domain.Pagination;
+import com.kakao.jPanda.charge.domain.ChargeDto;
+import com.kakao.jPanda.charge.domain.CouponUseDto;
+import com.kakao.jPanda.charge.domain.PaginationDto;
+import com.kakao.jPanda.charge.domain.PaymentDto;
 
 public interface ChargeService {
 
@@ -22,6 +22,6 @@ public interface ChargeService {
 
 	int totalChargeCntByChargerId(String chargerId);
 
-	Map<String, Object> findchargeHistoryMapByPagination(Pagination pagination);
+	Map<String, Object> findchargeHistoryMapByPagination(PaginationDto paginationDto);
 
 }

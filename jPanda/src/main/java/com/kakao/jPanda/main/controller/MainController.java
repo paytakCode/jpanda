@@ -38,9 +38,9 @@ public class MainController {
 	
 	// 공지사항 페이지 이동
 	@NoLoginCheck
-	@GetMapping("/notice") 
+	@GetMapping("/main/notice") 
 	public String notice() {
-		return "talent/register/notice";
+		return "main/notice";
 	}
 	
 	// 공지사항 불러오기
@@ -59,7 +59,7 @@ public class MainController {
 	public String noticeDetailByNoticeNo(@PathVariable Long noticeNo, Model model) {
 		NoticeDto notice = noticeService.findNoticeByNoticeNo(noticeNo);
 		model.addAttribute("notice", notice);
-		return "talent/register/noticeDetail";
+		return "main/noticeDetail";
 	}
 	
 }

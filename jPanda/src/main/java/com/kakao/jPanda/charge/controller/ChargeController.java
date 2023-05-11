@@ -1,4 +1,4 @@
-package com.kakao.jPanda.kyg.controller;
+package com.kakao.jPanda.charge.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kakao.jPanda.kyg.domain.ChargeDto;
-import com.kakao.jPanda.kyg.domain.CouponUseDto;
-import com.kakao.jPanda.kyg.domain.PaymentDto;
-import com.kakao.jPanda.kyg.service.ChargeService;
+import com.kakao.jPanda.charge.domain.ChargeDto;
+import com.kakao.jPanda.charge.domain.CouponUseDto;
+import com.kakao.jPanda.charge.domain.PaymentDto;
+import com.kakao.jPanda.charge.service.ChargeService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,25 +41,23 @@ public class ChargeController {
 	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
 	 * Model	TB payment -> method, bonusRatio 
 	 * @param	Session, chargeDto, model
-	 * @return	kyg/charge
+	 * @return	charge/charge
 	 */
 	@GetMapping(value = "")
 	public String charge(HttpSession session, Model model) {
-		log.info("ChargeContoller charge() Start...");
-		
 		String chargerId = (String) session.getAttribute("memberId");
-		log.info("ChargeContoller charge() chargerId -> {}", chargerId);
+		log.info("[charge] chargerId -> {}", chargerId);
 		
 		int totalChargeCnt = chargeService.totalChargeCntByChargerId(chargerId);
-		log.info("ChargeContoller charge() totalChargeCntByChargerId -> {}", totalChargeCnt);
+		log.info("[charge] totalChargeCntByChargerId -> {}", totalChargeCnt);
 		
 		// 충전수단
 		List<PaymentDto> getPaymentList = chargeService.findPaymentList();
-		log.info("ChargeContoller charge() getPaymentList.size() -> {}", getPaymentList.size());
+		log.info("[charge] getPaymentList.size() -> {}", getPaymentList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
 		 
-		return "kyg/charge";
+		return "charge/charge";
 	}
 	
 	/*
@@ -71,23 +69,23 @@ public class ChargeController {
 	 */
 	@ResponseBody
 	@PostMapping("/charge") 
-	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto, HttpSession session) {
+	public Map<String, String> addCharge(@RequestBody ChargeDto chargeDto, HttpSession session) {
 		String chargerId = (String) session.getAttribute("memberId");
-		log.info("ChargeContoller charge() Start...");
-		log.info("ChargeContoller checkAvailableCoupon() chargerId -> {}", chargerId);
+		log.info("ChargeContoller addCharge() Start...");
+		log.info("ChargeContoller addCharge() chargerId -> {}", chargerId);
 		chargeDto.setChargerId(chargerId);
-		log.info("ChargeContoller checkAvailableCoupon() couponUseDto.toString() -> {}", chargeDto.toString());
+		log.info("ChargeContoller addCharge() couponUseDto.toString() -> {}", chargeDto.toString());
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
 		Map<String, String> resultMap = new HashMap<>();
 		
 		if(resultCharge > 0) {
-			log.info("ChargeController charge() resultCharge 완료");
+			log.info("ChargeController addCharge() resultAddCharge 완료");
 			 resultMap.put("result", "success");
 			return resultMap;
 			
 		} else {
-			log.error("ChargeContoller charge() resultCharge 실패");
+			log.error("ChargeContoller addCharge() resultAddCharge 실패");
 			resultMap.put("result", "fail");
 			return resultMap;
 		}

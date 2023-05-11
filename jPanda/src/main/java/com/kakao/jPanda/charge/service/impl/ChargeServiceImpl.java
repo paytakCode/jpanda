@@ -1,4 +1,4 @@
-package com.kakao.jPanda.kyg.service;
+package com.kakao.jPanda.charge.service.impl;
 
 
 import java.sql.Timestamp;
@@ -8,12 +8,13 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.kakao.jPanda.kyg.dao.ChargeDao;
-import com.kakao.jPanda.kyg.domain.ChargeDto;
-import com.kakao.jPanda.kyg.domain.CouponDto;
-import com.kakao.jPanda.kyg.domain.CouponUseDto;
-import com.kakao.jPanda.kyg.domain.Pagination;
-import com.kakao.jPanda.kyg.domain.PaymentDto;
+import com.kakao.jPanda.charge.dao.ChargeDao;
+import com.kakao.jPanda.charge.domain.ChargeDto;
+import com.kakao.jPanda.charge.domain.CouponDto;
+import com.kakao.jPanda.charge.domain.CouponUseDto;
+import com.kakao.jPanda.charge.domain.PaginationDto;
+import com.kakao.jPanda.charge.domain.PaymentDto;
+import com.kakao.jPanda.charge.service.ChargeService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,14 +60,16 @@ public class ChargeServiceImpl implements ChargeService {
 	// 사용가능한 쿠폰 체크
 	@Override
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
-		
+		log.info("ChargeServiceImpl checkAvailableCoupon selectedcouponUseDto Start...");
 		boolean isAvailable = false;	
 		boolean isValidPeriod = false;
 		int returnResult = 0;
 		
+		//chargeDao.selectCouponUse(couponUseDto);
+		
 		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isAvailable 검증
 		CouponUseDto selectedcouponUseDto = chargeDao.selectCouponUse(couponUseDto);
-		log.info("checkAvailableCoupon selectedcouponUseDto -> {}", selectedcouponUseDto);
+		log.info("ChargeServiceImpl checkAvailableCoupon selectedcouponUseDto -> {}", selectedcouponUseDto);
 		
 		//DTO(memberId, couponCode)가 Coupon_Use 테이블에 존재하면 사용 불가 / 존재하지 않으면 사용 가능
 		if(selectedcouponUseDto == null) {
@@ -160,27 +163,27 @@ public class ChargeServiceImpl implements ChargeService {
 	@Override
 	public int totalChargeCntByChargerId(String chargerId) {
 		log.info("ChargeServiceImpl totalChargeCntByChargerId() Start...");
-		int totalChargeCntByChargerId = chargeDao.totalChargeCntChargerId(chargerId);
+		int totalChargeCntByChargerId = chargeDao.totalChargeCntByChargerId(chargerId);
 		log.info("ChargeServiceImpl totalChargeCntByChargerId() count -> {}", totalChargeCntByChargerId);
 		
 		return totalChargeCntByChargerId;
 	}
 
 	@Override
-	public Map<String, Object> findchargeHistoryMapByPagination(Pagination pagination) {
+	public Map<String, Object> findchargeHistoryMapByPagination(PaginationDto paginationDto) {
 		Map<String, Object> chargeHistoryMapByPagination = new HashMap<String, Object>();
 		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() Start...");
-		String chargeId = pagination.getChargerId();
-		int totalCount = chargeDao.totalChargeCntChargerId(chargeId);
+		String chargeId = paginationDto.getChargerId();
+		int totalCount = chargeDao.totalChargeCntByChargerId(chargeId);
 		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() totalCount -> {}", totalCount);
 		
-		pagination.setTotalCount(totalCount);
+		paginationDto.setTotalCount(totalCount);
 		
-		List<ChargeDto> chargeListByPagination = chargeDao.selectChargeListByPagination(pagination);
+		List<ChargeDto> chargeListByPagination = chargeDao.selectChargeListByPagination(paginationDto);
 		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() chargeList.size() -> {}", chargeListByPagination.size());
 		
 		chargeHistoryMapByPagination.put("chargeList", chargeListByPagination);
-		chargeHistoryMapByPagination.put("pagination", pagination);
+		chargeHistoryMapByPagination.put("pagination", paginationDto);
 		
 		return chargeHistoryMapByPagination;
 	}

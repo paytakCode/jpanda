@@ -1,7 +1,6 @@
 package com.kakao.jPanda.talent.detail.domain;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;

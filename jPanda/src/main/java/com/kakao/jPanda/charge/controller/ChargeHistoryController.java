@@ -1,4 +1,4 @@
-package com.kakao.jPanda.kyg.controller;
+package com.kakao.jPanda.charge.controller;
 
 import java.util.Map;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kakao.jPanda.kyg.domain.Pagination;
-import com.kakao.jPanda.kyg.service.ChargeService;
+import com.kakao.jPanda.charge.domain.PaginationDto;
+import com.kakao.jPanda.charge.service.ChargeService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,10 +32,10 @@ public class ChargeHistoryController {
 	
 	/*
 	 * 결제내역페이지
-	 * 총충전횟수를 전달
+	 * 총 충전횟수를 전달
 	 * Model	총 충전횟수 -> totalChargeCnt 전달
 	 * @param	Session, model
-	 * @return	kyg/chargeHistory
+	 * @return	charge/chargeHistory
 	 */
 	@GetMapping(value = "")
 	public String chargeHistory(HttpSession session, Model model) {
@@ -49,7 +49,7 @@ public class ChargeHistoryController {
 		
 		model.addAttribute("totalChargeCnt", totalChargeCnt);
 		 
-		return "kyg/chargeHistory";
+		return "charge/chargeHistory";
 	}
 	
 	/*
@@ -60,15 +60,14 @@ public class ChargeHistoryController {
 	 */
 	@ResponseBody
 	@GetMapping(value = "/history-list")
-//	public Map<String, Object> chargeListByPagination(Pagination pagination, HttpSession session) {
-	public Map<String, Object> chargeHistoryByPagination(Pagination pagination, HttpSession session) {
+	public Map<String, Object> chargeHistoryByPagination(PaginationDto paginationDto, HttpSession session) {
 		log.info("ChargeHistoryController chargeHistoryByPagination() start");
-		log.info("pagination -> {}", pagination);
+		log.info("pagination -> {}", paginationDto);
 		
 		String chargerId = (String) session.getAttribute("memberId");
-		pagination.setChargerId(chargerId);
+		paginationDto.setChargerId(chargerId);
 		log.info("ChargeHistoryController chargeHistoryByPagination() chargerId -> {}", chargerId);
-		Map<String, Object> chargeHistoryMapByPagination = chargeService.findchargeHistoryMapByPagination(pagination);
+		Map<String, Object> chargeHistoryMapByPagination = chargeService.findchargeHistoryMapByPagination(paginationDto);
 		log.info("ChargeHistoryController chargeHistoryByPagination returnMap -> {} ", chargeHistoryMapByPagination);
 		log.info("ChargeHistoryController chargeHistoryByPagination() returnMap.size() -> {}", chargeHistoryMapByPagination.size());
 		

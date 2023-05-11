@@ -1,4 +1,4 @@
-package com.kakao.jPanda.kyg.domain;
+package com.kakao.jPanda.charge.domain;
 
 import lombok.Data;
 

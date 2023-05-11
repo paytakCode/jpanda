@@ -41,10 +41,10 @@
   		<typeAlias alias="DetailReportDto" type="com.kakao.jPanda.talent.detail.domain.ReportDto"/>
   		
   		<!-- 충전 -->
-  		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
-		<typeAlias alias="ChargeCouponUseDto" type="com.kakao.jPanda.kyg.domain.CouponUseDto"/>
-		<typeAlias alias="ChargeCouponDto" type="com.kakao.jPanda.kyg.domain.CouponDto"/>
-		<typeAlias alias="ChargePaymentDto" type="com.kakao.jPanda.kyg.domain.PaymentDto"/>
+  		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.charge.domain.ChargeDto"/>
+		<typeAlias alias="ChargeCouponUseDto" type="com.kakao.jPanda.charge.domain.CouponUseDto"/>
+		<typeAlias alias="ChargeCouponDto" type="com.kakao.jPanda.charge.domain.CouponDto"/>
+		<typeAlias alias="ChargePaymentDto" type="com.kakao.jPanda.charge.domain.PaymentDto"/>
 		
 		<!-- 채팅 -->
 		<typeAlias alias="ChatDto" type="com.kakao.jPanda.chat.domain.ChatDto"/>
