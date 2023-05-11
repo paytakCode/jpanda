@@ -71,23 +71,23 @@ public class ChargeController {
 	 */
 	@ResponseBody
 	@PostMapping("/charge") 
-	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto, HttpSession session) {
+	public Map<String, String> addCharge(@RequestBody ChargeDto chargeDto, HttpSession session) {
 		String chargerId = (String) session.getAttribute("memberId");
-		log.info("ChargeContoller charge() Start...");
-		log.info("ChargeContoller checkAvailableCoupon() chargerId -> {}", chargerId);
+		log.info("ChargeContoller addCharge() Start...");
+		log.info("ChargeContoller addCharge() chargerId -> {}", chargerId);
 		chargeDto.setChargerId(chargerId);
-		log.info("ChargeContoller checkAvailableCoupon() couponUseDto.toString() -> {}", chargeDto.toString());
+		log.info("ChargeContoller addCharge() couponUseDto.toString() -> {}", chargeDto.toString());
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
 		Map<String, String> resultMap = new HashMap<>();
 		
 		if(resultCharge > 0) {
-			log.info("ChargeController charge() resultCharge 완료");
+			log.info("ChargeController addCharge() resultAddCharge 완료");
 			 resultMap.put("result", "success");
 			return resultMap;
 			
 		} else {
-			log.error("ChargeContoller charge() resultCharge 실패");
+			log.error("ChargeContoller addCharge() resultAddCharge 실패");
 			resultMap.put("result", "fail");
 			return resultMap;
 		}

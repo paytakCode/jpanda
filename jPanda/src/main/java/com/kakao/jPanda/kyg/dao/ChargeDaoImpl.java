@@ -38,7 +38,7 @@ public class ChargeDaoImpl implements ChargeDao {
 				resultInsertCouponUse = sqlSession.insert("insertCouponUse", chargeDto);
 				log.info("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> {}", resultInsertCouponUse);
 			} catch (Exception e) {
-				log.error("ChargeDaoImpl insertCouponUse() Exception ->  {}", e.getMessage(), e);
+				log.error("ChargeDaoImpl insertCouponUse() Exception -> {}", e.getMessage(), e);
 			}
 			if(resultInsertCouponUse > 0) {
 				resultInsertCouponUse = 1;
@@ -85,13 +85,15 @@ public class ChargeDaoImpl implements ChargeDao {
 	public CouponUseDto selectCouponUse(CouponUseDto couponUseDto) {
 		log.info("ChargeDaoImpl selectCouponUse() Start...");
 		log.info("ChargeDaoImpl selectCouponUse() chargeDto.toString -> {}", couponUseDto.toString());
+		log.info("ChargeDaoImpl selectCouponUse() couponUseDto.getCouponCode().toString(); -> {}", couponUseDto.getCouponCode().toString());
 		
 		CouponUseDto selectCouponUseResult = null;
 		try {
 			selectCouponUseResult = sqlSession.selectOne("selectCouponUse", couponUseDto);
-			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponUseResult -> " + selectCouponUseResult);
+			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponUseResult -> {}", selectCouponUseResult);
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectCouponUse() Exception -> " + e.getMessage(), e);
+			log.error("ChargeDaoImpl selectCouponUse() Exception -> {}, {}", e.getMessage(), e);
+			return null;
 		}
 		
 		return selectCouponUseResult;
@@ -101,14 +103,14 @@ public class ChargeDaoImpl implements ChargeDao {
 	@Override
 	public CouponDto selectCouponByCouponCode(String couponCode) {
 		log.info("ChargeDaoImpl selectCouponByCouponCode() Start...");
-		log.info("ChargeDaoImpl selectCouponUse() chargeDto.toString -> {}", couponCode.toString());
+		log.info("ChargeDaoImpl selectCouponByCouponCode() chargeDto.toString -> {}", couponCode.toString());
 		
 		CouponDto selectCouponByCouponCodeResult = null;
 		try {
 			selectCouponByCouponCodeResult = sqlSession.selectOne("selectCouponByCouponCode", couponCode);
 			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponCodeResult -> {}", selectCouponByCouponCodeResult);
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectCouponByCouponCode() Exception -> {}", e.getMessage(), e);
+			log.error("ChargeDaoImpl selectCouponByCouponCode() Exception -> {}, {}", e.getMessage(), e);
 		}
 		
 		return selectCouponByCouponCodeResult;
@@ -200,18 +202,18 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public int totalChargeCntChargerId(String chargerId) {
+	public int totalChargeCntByChargerId(String chargerId) {
 		log.info("ChargeDaoImpl totalChargeCntChargerId() Start...");
-		int totalChargeCntChargerId = 0;
+		int totalChargeCntByChargerId = 0;
 		
 		try {
-			totalChargeCntChargerId = sqlSession.selectOne("totalChargeCntChargerId", chargerId);
-			log.info("ChargeDaoImpl totalChargeCntChargerId() count -> {}",  totalChargeCntChargerId);
+			totalChargeCntByChargerId = sqlSession.selectOne("totalChargeCntByChargerId", chargerId);
+			log.info("ChargeDaoImpl totalChargeCntByChargerId() count -> {}",  totalChargeCntByChargerId);
 		} catch (Exception e) {
-			log.debug("ChargeDaoImpl totalChargeCntChargerId() Exception -> {}", e.getMessage());
+			log.debug("ChargeDaoImpl totalChargeCntByChargerId() Exception -> {}", e.getMessage());
 		}
 		
-		return totalChargeCntChargerId;
+		return totalChargeCntByChargerId;
 	}
 
 	@Override
