@@ -30,26 +30,26 @@ public class ChargeDaoImpl implements ChargeDao {
 	// 밤부 충전시 coupon_use Insert
 	@Override
 	public int insertCouponUse(ChargeDto chargeDto) {
-		log.info("ChargeDaoImpl insertCouponUse() Start...");
-		log.info("ChargeDaoImpl insertCouponUse chargeDto.toString -> " + chargeDto.toString());
+		log.info("[insertCouponUse] Start...");
+		log.info("[insertCouponUse] chargeDto.toString -> " + chargeDto.toString());
 		int resultInsertCouponUse = 0; 
 		
 		if(chargeDto.getCouponCode() != null) {
 			try {
 				resultInsertCouponUse = sqlSession.insert("insertCouponUse", chargeDto);
-				log.info("ChargeDaoImpl insertCouponUse resultinsertCouponUse -> {}", resultInsertCouponUse);
+				log.info("[insertCouponUse] resultinsertCouponUse -> {}", resultInsertCouponUse);
 			} catch (Exception e) {
-				log.error("ChargeDaoImpl insertCouponUse() Exception -> {}", e.getMessage(), e);
+				log.error("[insertCouponUse] Exception -> {}", e.getMessage(), e);
 			}
 			if(resultInsertCouponUse > 0) {
 				resultInsertCouponUse = 1;
-				log.info("ChargeDaoImpl resultinsertCouponUse가 삽입되었습니다");
+				log.info("[insertCouponUse] resultinsertCouponUse가 삽입되었습니다");
 			} else {
 				resultInsertCouponUse = 0;
-				log.error("ChargeDaoImpl resultinsertCouponUse가 삽입되지 않았습니다");
+				log.error("[insertCouponUse] resultinsertCouponUse가 삽입되지 않았습니다");
 			}
 		} else {
-			log.info("ChargeDaoImpl insertCouponUse() chargeDto.getCouponCode()가 null입니다. 0을 반환합니다.");
+			log.info("[insertCouponUse] chargeDto.getCouponCode()가 null입니다. 0을 반환합니다.");
 			return resultInsertCouponUse;
 		}
 		
@@ -60,21 +60,21 @@ public class ChargeDaoImpl implements ChargeDao {
 	// 밤부 충전시 bamboo_charge Insert
 	@Override
 	public int insertCharge(ChargeDto chargeDto) {
-		log.info("ChargeDaoImpl insertCharge() Start...");
-		log.info("ChargeDaoImpl insertCharge chargeDto.toString -> {}", chargeDto.toString());
+		log.info("[insertCharge] Start...");
+		log.info("[insertCharge] chargeDto.toString -> {}", chargeDto.toString());
 		
 		int resultCharge = 0;
 		try {
 			resultCharge = sqlSession.insert("insertCharge", chargeDto);
-			log.info("ChargeDaoImpl insertCharge resultCharge -> {}", resultCharge);
+			log.info("[insertCharge] resultCharge -> {}", resultCharge);
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl insertCharge() Exception -> {}", e.getMessage(), e);
+			log.error("[insertCharge] Exception -> {}", e.getMessage(), e);
 		}
 		
 		if(resultCharge > 0) {
-			log.info("ChargeDaoImpl insertCharge() resultCharge 완료 ");
+			log.info("[insertCharge] resultCharge 완료 ");
 		} else {
-			log.info("ChargeDaoImpl insertCharge() resultCharge 실패 ");
+			log.info("[insertCharge] resultCharge 실패 ");
 		}
 		
 		return resultCharge;
@@ -84,16 +84,16 @@ public class ChargeDaoImpl implements ChargeDao {
 	// coupon_use isUsed 쿠폰 검증
 	@Override
 	public CouponUseDto selectCouponUse(CouponUseDto couponUseDto) {
-		log.info("ChargeDaoImpl selectCouponUse() Start...");
-		log.info("ChargeDaoImpl selectCouponUse() chargeDto.toString -> {}", couponUseDto.toString());
-		log.info("ChargeDaoImpl selectCouponUse() couponUseDto.getCouponCode().toString(); -> {}", couponUseDto.getCouponCode().toString());
+		log.info("[selectCouponUse] Start...");
+		log.info("[selectCouponUse] chargeDto.toString -> {}", couponUseDto.toString());
+		log.info("[selectCouponUse] couponUseDto.getCouponCode().toString(); -> {}", couponUseDto.getCouponCode().toString());
 		
 		CouponUseDto selectCouponUseResult = null;
 		try {
 			selectCouponUseResult = sqlSession.selectOne("selectCouponUse", couponUseDto);
-			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponUseResult -> {}", selectCouponUseResult);
+			log.info("[selectCouponUse] selectCouponUseResult -> {}", selectCouponUseResult);
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectCouponUse() Exception -> {}, {}", e.getMessage(), e);
+			log.error("[selectCouponUse] selectCouponUseResult() Exception -> {}, {}", e.getMessage(), e);
 			return null;
 		}
 		
@@ -103,15 +103,15 @@ public class ChargeDaoImpl implements ChargeDao {
 	// coupon isPeriod 쿠폰 검증
 	@Override
 	public CouponDto selectCouponByCouponCode(String couponCode) {
-		log.info("ChargeDaoImpl selectCouponByCouponCode() Start...");
-		log.info("ChargeDaoImpl selectCouponByCouponCode() chargeDto.toString -> {}", couponCode.toString());
+		log.info("[selectCouponByCouponCode] Start...");
+		log.info("[selectCouponByCouponCode] chargeDto.toString -> {}", couponCode.toString());
 		
 		CouponDto selectCouponByCouponCodeResult = null;
 		try {
 			selectCouponByCouponCodeResult = sqlSession.selectOne("selectCouponByCouponCode", couponCode);
-			log.info("ChargeDaoImpl ChargeDaoImpl selectCouponByCouponCodeResult -> {}", selectCouponByCouponCodeResult);
+			log.info("[selectCouponByCouponCode] selectCouponByCouponCodeResult -> {}", selectCouponByCouponCodeResult);
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectCouponByCouponCode() Exception -> {}, {}", e.getMessage(), e);
+			log.error("[selectCouponByCouponCode] Exception -> {}, {}", e.getMessage(), e);
 		}
 		
 		return selectCouponByCouponCodeResult;
@@ -120,15 +120,15 @@ public class ChargeDaoImpl implements ChargeDao {
 	// 사용 가능한 쿠폰의 금액을 검증
 	@Override
 	public Long selectAvailAmountCoupon(CouponUseDto couponUseDto) {
-		log.info("ChargeDaoImpl selectAvailAmountCoupon() Start...");
-		log.info("ChargeDaoImpl selectAvailAmountCoupon() chargeDto.toString -> {}", couponUseDto.toString());
+		log.info("[selectAvailAmountCoupon] Start...");
+		log.info("[selectAvailAmountCoupon] chargeDto.toString -> {}", couponUseDto.toString());
 		
 		Long selectAvailAmountCouponResult = (long) 0;
 		try {
 			selectAvailAmountCouponResult = sqlSession.selectOne("selectAvailAmountCoupon", couponUseDto);
-			log.info(" ChargeDaoImpl selectAvailAmountCoupon -> " + selectAvailAmountCouponResult);		
+			log.info("[selectAvailAmountCoupon] selectAvailAmountCouponResult -> " + selectAvailAmountCouponResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectAvailAmountCoupon() Exception -> " + e.getMessage(), e);
+			log.error("[selectAvailAmountCoupon] selectAvailAmountCouponResult Exception -> " + e.getMessage(), e);
 		}
 		
 		return selectAvailAmountCouponResult;
@@ -137,16 +137,16 @@ public class ChargeDaoImpl implements ChargeDao {
 	// findTotalBamboo 계산 DAO
 	@Override
 	public Long selectChargeBambooAmountByMemberId(String memberId) {
-		log.info("ChargeDaoImpl selectChargeBambooAmountByMemberId() Start...");
-		log.info("ChargeDaoImpl selectChargeBambooAmountByMemberId() memberId -> {}", memberId);
+		log.info("[selectChargeBambooAmountByMemberId] Start...");
+		log.info("[selectChargeBambooAmountByMemberId] memberId -> {}", memberId);
 		
 		Long selectChargeBambooAmountByMemberIdResult = (long) 0;
 		
 		try {
 			selectChargeBambooAmountByMemberIdResult = sqlSession.selectOne("selectChargeBambooAmountByMemberId", memberId);
-			log.info(" ChargeDaoImpl selectChargeBambooAmountByMemberId -> " + selectChargeBambooAmountByMemberIdResult);		
+			log.info("[selectChargeBambooAmountByMemberId] selectChargeBambooAmountByMemberIdResult -> " + selectChargeBambooAmountByMemberIdResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectChargeBambooAmountByMemberId() Exception -> " + e.getMessage(), e);
+			log.error("[selectChargeBambooAmountByMemberId] selectChargeBambooAmountByMemberIdResult Exception -> " + e.getMessage(), e);
 		}
 		
 		return selectChargeBambooAmountByMemberIdResult;
@@ -154,16 +154,16 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	@Override
 	public Long selectBambooUseAmountByMemberId(String memberId) {
-		log.info("ChargeDaoImpl selectBambooUseAmount() Start...");
-		log.info("ChargeDaoImpl selectBambooUseAmount() memberId -> {}", memberId);
+		log.info("[selectBambooUseAmountByMemberId] Start...");
+		log.info("[selectBambooUseAmountByMemberId] memberId -> {}", memberId);
 		
 		Long selectBambooUseAmountByMemberIdResult = (long) 0;
 		
 		try {
 			selectBambooUseAmountByMemberIdResult = sqlSession.selectOne("selectBambooUseAmountByMemberId", memberId);
-			log.info(" ChargeDaoImpl selectBambooUseAmountByMemberId -> " + selectBambooUseAmountByMemberIdResult);		
+			log.info("[selectBambooUseAmountByMemberId] selectBambooUseAmountByMemberIdResult -> " + selectBambooUseAmountByMemberIdResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectBambooUseAmountByMemberId() Exception -> " + e.getMessage(), e);
+			log.error("[selectBambooUseAmountByMemberId] selectBambooUseAmountByMemberIdResult Exception -> " + e.getMessage(), e);
 		}
 		
 		return selectBambooUseAmountByMemberIdResult;
@@ -171,16 +171,16 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	@Override
 	public Long selectTalentRefundAmountByMemberId(String memberId) {
-		log.info("ChargeDaoImpl selectTalentRefundAmountByMemberId() Start...");
-		log.info("ChargeDaoImpl selectTalentRefundAmountByMemberId() memberId -> {}", memberId);
+		log.info("[selectTalentRefundAmountByMemberId] Start...");
+		log.info("[selectTalentRefundAmountByMemberId] memberId -> {}", memberId);
 		
 		Long selectTalentRefundAmountByMemberIdResult = (long) 0;
 		
 		try {
 			selectTalentRefundAmountByMemberIdResult = sqlSession.selectOne("selectTalentRefundAmountByMemberId", memberId);
-			log.info("ChargeDaoImpl selectTalentRefundAmountByMemberId -> {}", selectTalentRefundAmountByMemberIdResult);		
+			log.info("[selectTalentRefundAmountByMemberId] selectTalentRefundAmountByMemberIdResult -> {}", selectTalentRefundAmountByMemberIdResult);		
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectTalentRefundAmountByMemberId() Exception -> {}", e.getMessage(), e);
+			log.error("[selectTalentRefundAmountByMemberId] selectTalentRefundAmountByMemberIdResult Exception -> {}", e.getMessage(), e);
 		}
 		
 		return selectTalentRefundAmountByMemberIdResult;
@@ -188,15 +188,14 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	@Override
 	public List<PaymentDto> selectPaymentList() {
-		log.info("ChargeDaoImpl selectPaymentList() Start...");
+		log.info("[selectPaymentList] Start...");
 		
 		List<PaymentDto> selectPaymentListResult = null;
-		log.info("ChargeDaoImpl selectPaymentList Start...");
 		try {
 			selectPaymentListResult = sqlSession.selectList("selectPaymentList");	 
-			log.info("ChargeDaoImpl selectPaymentList() selectPaymentListResult.size() -> {}", selectPaymentListResult.size());
+			log.info("[selectPaymentList] selectPaymentListResult.size() -> {}", selectPaymentListResult.size());
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectPaymentList() Exception -> {}", e.getMessage(), e);
+			log.error("[selectPaymentList] selectPaymentListResult Exception -> {}", e.getMessage(), e);
 		}
 		
 		return selectPaymentListResult;
@@ -204,14 +203,14 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	@Override
 	public int totalChargeCntByChargerId(String chargerId) {
-		log.info("ChargeDaoImpl totalChargeCntChargerId() Start...");
+		log.info("[totalChargeCntByChargerId] Start...");
 		int totalChargeCntByChargerId = 0;
 		
 		try {
 			totalChargeCntByChargerId = sqlSession.selectOne("totalChargeCntByChargerId", chargerId);
-			log.info("ChargeDaoImpl totalChargeCntByChargerId() count -> {}",  totalChargeCntByChargerId);
+			log.info("[totalChargeCntByChargerId] totalChargeCntByChargerId count -> {}",  totalChargeCntByChargerId);
 		} catch (Exception e) {
-			log.debug("ChargeDaoImpl totalChargeCntByChargerId() Exception -> {}", e.getMessage());
+			log.debug("[totalChargeCntByChargerId] totalChargeCntByChargerId Exception -> {}", e.getMessage());
 		}
 		
 		return totalChargeCntByChargerId;
@@ -219,15 +218,15 @@ public class ChargeDaoImpl implements ChargeDao {
 
 	@Override
 	public List<ChargeDto> selectChargeListByPagination(PaginationDto paginationDto) {
-		log.info("Dao selectChargeListByPagination() start");
-		log.info("ChargeDaoImpl selectChargeListByPagination pagination.toString -> " + paginationDto.toString());
+		log.info("[selectChargeListByPagination] start");
+		log.info("[selectChargeListByPagination] pagination.toString -> " + paginationDto.toString());
 		List<ChargeDto> chargeListByPagination = null;
 		
 		try {
 			chargeListByPagination = sqlSession.selectList("selectChargeListByPagination", paginationDto);
-			log.info("ChargeDaoImpl selectChargeListByPagination chargeList.toString -> " + chargeListByPagination.toString());
+			log.info("[selectChargeListByPagination] chargeListByPagination.toString -> " + chargeListByPagination.toString());
 		} catch(Exception e) {
-			log.debug("ChargeDaoImpl selectChargeListByPagination() Exception -> {}", e.getMessage());
+			log.debug("[selectChargeListByPagination] chargeListByPagination Exception -> {}", e.getMessage());
 			e.printStackTrace();
 		}
 		

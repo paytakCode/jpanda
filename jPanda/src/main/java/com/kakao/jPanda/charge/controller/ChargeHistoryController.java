@@ -35,21 +35,21 @@ public class ChargeHistoryController {
 	 * 총 충전횟수를 전달
 	 * Model	총 충전횟수 -> totalChargeCnt 전달
 	 * @param	Session, model
-	 * @return	charge/chargeHistory
+	 * @return	charge/charge-history
 	 */
 	@GetMapping(value = "")
 	public String chargeHistory(HttpSession session, Model model) {
-		log.info("ChargeHistoryController chargeHistory() Start...");
+		log.info("[chargeHistory] Start...");
 		
 		String chargerId = (String) session.getAttribute("memberId");
-		log.info("ChargeHistoryController chargeHistory() chargerId -> {}", chargerId);
+		log.info("[chargeHistory] chargerId -> {}", chargerId);
 		
 		int totalChargeCnt = chargeService.totalChargeCntByChargerId(chargerId);
-		log.info("ChargeHistoryController chargeHistory() totalChargeCntByChargerId -> {}", totalChargeCnt);
+		log.info("[chargeHistory] totalChargeCntByChargerId -> {}", totalChargeCnt);
 		
 		model.addAttribute("totalChargeCnt", totalChargeCnt);
 		 
-		return "charge/chargeHistory";
+		return "charge/charge-history";
 	}
 	
 	/*
@@ -61,15 +61,15 @@ public class ChargeHistoryController {
 	@ResponseBody
 	@GetMapping(value = "/history-list")
 	public Map<String, Object> chargeHistoryByPagination(PaginationDto paginationDto, HttpSession session) {
-		log.info("ChargeHistoryController chargeHistoryByPagination() start");
-		log.info("pagination -> {}", paginationDto);
+		log.info("[chargeHistoryByPagination] start");
+		log.info("[chargeHistoryByPagination] pagination -> {}", paginationDto);
 		
 		String chargerId = (String) session.getAttribute("memberId");
 		paginationDto.setChargerId(chargerId);
-		log.info("ChargeHistoryController chargeHistoryByPagination() chargerId -> {}", chargerId);
+		log.info("[chargeHistoryByPagination] chargerId -> {}", chargerId);
 		Map<String, Object> chargeHistoryMapByPagination = chargeService.findchargeHistoryMapByPagination(paginationDto);
-		log.info("ChargeHistoryController chargeHistoryByPagination returnMap -> {} ", chargeHistoryMapByPagination);
-		log.info("ChargeHistoryController chargeHistoryByPagination() returnMap.size() -> {}", chargeHistoryMapByPagination.size());
+		log.info("[chargeHistoryByPagination] returnMap -> {} ", chargeHistoryMapByPagination);
+		log.info("[chargeHistoryByPagination] returnMap.size() -> {}", chargeHistoryMapByPagination.size());
 		
 		return chargeHistoryMapByPagination;
 	}
