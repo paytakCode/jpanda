@@ -87,6 +87,14 @@
 		WHERE talent_no = #{talentNo}
 	</update>
 	
+	<!-- 리뷰 중복 인서트 검증  -->
+	<select id="selectReviewInsertCheck" parameterType="BoardReview" resultType="BoardReview">
+		SELECT reviewer_id
+		FROM review
+		WHERE talent_no = #{talentNo}
+		AND reviewer_id = #{reviewerId}
+	</select>
+	
 </mapper>
 
 

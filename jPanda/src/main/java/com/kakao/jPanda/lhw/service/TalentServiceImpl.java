@@ -58,16 +58,21 @@ public class TalentServiceImpl implements TalentService {
 	@Override
 	public int addReview(ReviewDto review) {
 		String talentNo = review.getTalentNo().toString();
-		String buyerId = review.getReviewerId();
+		String reviewerId = review.getReviewerId();
 		int result = 0;
+		Map<String, Object> selectBambooUseByTalentNoAndBuyerId = new HashMap<String, Object>();
 		
-		Map<String, Object> talentNoAndBuyerIdMap = new HashMap<String, Object>();
-		talentNoAndBuyerIdMap.put("talentNo", talentNo);
-		talentNoAndBuyerIdMap.put("buyerId", buyerId);
+		selectBambooUseByTalentNoAndBuyerId.put("talentNo", talentNo);
+		selectBambooUseByTalentNoAndBuyerId.put("buyerId", reviewerId);
 		
-		if (!talentDao.selectBambooUseByTalentNoAndBuyerId(talentNoAndBuyerIdMap).isEmpty() ) {
+		// 리뷰 중복 인서트 검증 및 구매 검증
+		if (!talentDao.selectReviewInsertCheck(review).isEmpty()) {
+			result = -1;
+		} else if (!talentDao.selectBambooUseByTalentNoAndBuyerId(selectBambooUseByTalentNoAndBuyerId).isEmpty() ) {
 			result = talentDao.insertReview(review);
-		}
+		} 
+		
+		log.info("ReviewInsertCheck -> " + result);
 		
 		return result;
 	}
