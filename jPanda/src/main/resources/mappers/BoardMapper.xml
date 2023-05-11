@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardMapper">
+	
+	
+	<!--  재능 리스트 불러오기 with 필터 -->
+	<select id="selectTalentListByFilters" resultType="DetailTalentDto" parameterType="BoardFiltersDto">
+	SELECT *
+	FROM
+	(SELECT ROWNUM rn, searchTalent.*
+	FROM (
+		SELECT t.talent_no, t.seller_id, t.main_img, t.title, 
+		t.summary, t.bamboo, t.sale_bamboo, NVL((ROUND(AVG(r.bamboo_score) * 2) / 2),0) AS bambooScore, t.view_count, t.reg_date, m.name
+		FROM talent t
+		INNER JOIN member m ON t.seller_id = m.member_id
+		LEFT OUTER JOIN review r ON t.talent_no = r.talent_no
+		WHERE t.talent_status = '게시중'
+		AND (
+			#{search} IS NULL OR #{search} = '' OR 
+			t.title LIKE '%' || #{search} || '%' OR 
+			CONTAINS(t.content,'%' || #{search} || '%') > 0
+		)
+		<if test="upperCategoryNo != null and upperCategoryNo != ''">
+		AND t.upper_category_no = #{upperCategoryNo}
+		</if>
+		<if test="lowerCategoryNo != null and lowerCategoryNo != ''">
+		AND t.lower_category_no = #{lowerCategoryNo}
+		</if>
+		GROUP BY t.talent_no, t.seller_id, t.main_img, t.title, t.summary, t.bamboo, t.sale_bamboo, 
+				 t.talent_status, t.reg_date, t.view_count, m.name
+		ORDER BY 
+		<if test="filter != null and filter != ''">
+			<choose>
+				<when test="filter eq 'reg_date'"> reg_date DESC</when>
+				<when test="filter eq 'view_count'"> view_count DESC</when>
+				<when test="filter eq 'bambooScore'"> bambooScore DESC</when>
+				<when test="filter eq 'sale_bamboo'"> sale_bamboo DESC </when>
+				<otherwise> sale_bamboo ASC</otherwise>
+			</choose>
+		</if>
+		) searchTalent 
+	)
+		<if test="startRow != null and startRow != ''">
+			WHERE rn BETWEEN #{startRow} AND #{endRow}
+		</if>
+	</select> 
+	
+
+	<!-- 대분류 카테고리 리스트  -->
+	<select id="selectUpperCategoryList" resultType="BoardCategoryDto" >
+		SELECT *
+		FROM category
+		WHERE upper_category_no IS null
+	</select>
+	
+	
+	<!-- 중분류 카테고리 리스트  -->
+	<select id="selectLowerCategoryListByUpperCategoryNo" resultType="BoardCategoryDto" parameterType="Long">
+		SELECT *
+		FROM category
+		WHERE upper_category_no = #{upperCategoryNo}
+	</select>
+	
+	
+</mapper>

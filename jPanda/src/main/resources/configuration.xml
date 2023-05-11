@@ -8,29 +8,37 @@
     
   	<typeAliases>
   		<!-- 관리자 페이지 -->
-  		<typeAlias alias="AdminNotice" type="com.kakao.jPanda.yjh.domain.NoticeDto"/>
-  		<typeAlias alias="AdminExchange" type="com.kakao.jPanda.yjh.domain.ExchangeDto"/>
-  		<typeAlias alias="AdminCoupon" type="com.kakao.jPanda.yjh.domain.CouponDto"/>
-  		<typeAlias alias="AdminTalent" type="com.kakao.jPanda.yjh.domain.TalentDto"/>
-  		<typeAlias alias="AdminCompanySales" type="com.kakao.jPanda.yjh.domain.CompanySalesDto"/>
-  		<typeAlias alias="AdminTalentRefund" type="com.kakao.jPanda.yjh.domain.TalentRefundDto"/>
-  		<typeAlias alias="AdminReport" type="com.kakao.jPanda.yjh.domain.ReportDto"/>
-  		<typeAlias alias="AdminPagination" type="com.kakao.jPanda.yjh.domain.Pagination"/>
+  		<typeAlias alias="AdminNoticeDto" type="com.kakao.jPanda.admin.domain.NoticeDto"/>
+  		<typeAlias alias="AdminExchangeDto" type="com.kakao.jPanda.admin.domain.ExchangeDto"/>
+  		<typeAlias alias="AdminCouponDto" type="com.kakao.jPanda.admin.domain.CouponDto"/>
+  		<typeAlias alias="AdminTalentDto" type="com.kakao.jPanda.admin.domain.TalentDto"/>
+  		<typeAlias alias="AdminCompanySalesDto" type="com.kakao.jPanda.admin.domain.CompanySalesDto"/>
+  		<typeAlias alias="AdminTalentRefundDto" type="com.kakao.jPanda.admin.domain.TalentRefundDto"/>
+  		<typeAlias alias="AdminReportDto" type="com.kakao.jPanda.admin.domain.ReportDto"/>
+  		<typeAlias alias="AdminPaginationDto" type="com.kakao.jPanda.admin.domain.PaginationDto"/>
   		
   		<!-- 로그인, 회원가입, 마이페이지 -->
-		<typeAlias alias="MemberDto" type="com.kakao.jPanda.njb.domain.MemberDto"/>
-  		<typeAlias alias="BankDto" type="com.kakao.jPanda.njb.domain.BankDto"/>
-  		<typeAlias alias="EmailVerifDto" type="com.kakao.jPanda.njb.domain.EmailVerifDto"/>
+		<typeAlias alias="MemberDto" type="com.kakao.jPanda.member.domain.MemberDto"/>
+  		<typeAlias alias="BankDto" type="com.kakao.jPanda.member.domain.BankDto"/>
+  		<typeAlias alias="EmailVerifDto" type="com.kakao.jPanda.member.domain.EmailVerifDto"/>
   		
+  		<!-- 메인페이지 -->
+    	<typeAlias alias="MainNoticeDto" type="com.kakao.jPanda.main.domain.NoticeDto"/>
+    	<typeAlias alias="MainPagerDto" type="com.kakao.jPanda.main.domain.PagerDto"/>
+    	
+    	<!-- 재능 등록 및 수정 -->
+		<typeAlias alias="RegistCategoryDto" type="com.kakao.jPanda.talent.register.domain.CategoryDto"/>
+		<typeAlias alias="RegistTalentDto" type="com.kakao.jPanda.talent.register.domain.TalentDto"/>   
   		
+  		<!-- 재능 게시판 -->
+  		<typeAlias alias="BoardFiltersDto" type="com.kakao.jPanda.board.domain.FiltersDto"/>
+  		<typeAlias alias="BoardCategoryDto" type="com.kakao.jPanda.board.domain.CategoryDto"/>
   		
-  		<!-- 판매게시판 -->
-		<typeAlias alias="BoardTalent" type="com.kakao.jPanda.lhw.domain.TalentDto"/>
-  		<typeAlias alias="BoardCategory" type="com.kakao.jPanda.lhw.domain.CategoryDto"/>
-  		<typeAlias alias="BoardReview" type="com.kakao.jPanda.lhw.domain.ReviewDto"/>
-  		<typeAlias alias="BoardFilters" type="com.kakao.jPanda.lhw.domain.FiltersDto"/>
-  		<typeAlias alias="BoardBambooUse" type="com.kakao.jPanda.lhw.domain.BambooUseDto"/>
-  		<typeAlias alias="BoardReport" type="com.kakao.jPanda.lhw.domain.ReportDto"/>
+  		<!-- 재능 상세 -->
+		<typeAlias alias="DetailTalentDto" type="com.kakao.jPanda.talent.detail.domain.TalentDto"/>
+  		<typeAlias alias="DetailReviewDto" type="com.kakao.jPanda.talent.detail.domain.ReviewDto"/>
+  		<typeAlias alias="DetailBambooUseDto" type="com.kakao.jPanda.talent.detail.domain.BambooUseDto"/>
+  		<typeAlias alias="DetailReportDto" type="com.kakao.jPanda.talent.detail.domain.ReportDto"/>
   		
   		<!-- 충전 -->
   		<typeAlias alias="ChargeDto" type="com.kakao.jPanda.kyg.domain.ChargeDto"/>
@@ -38,22 +46,16 @@
 		<typeAlias alias="ChargeCouponDto" type="com.kakao.jPanda.kyg.domain.CouponDto"/>
 		<typeAlias alias="ChargePaymentDto" type="com.kakao.jPanda.kyg.domain.PaymentDto"/>
 		
-		<!-- 판매등록, 메인페이지 -->
-		<typeAlias alias="RegistCategory" type="com.kakao.jPanda.bsm.domain.CategoryDto"/>
-    	<typeAlias alias="RegistNotice" type="com.kakao.jPanda.bsm.domain.NoticeDto"/>
-    	<typeAlias alias="RegistPager" type="com.kakao.jPanda.bsm.domain.PagerDto"/>
-		<typeAlias alias="RegistTalent" type="com.kakao.jPanda.bsm.domain.TalentDto"/>    	
-      
 		<!-- 채팅 -->
-		<typeAlias type="com.kakao.jPanda.kts.domain.Chat" alias="Chat"/>
-		<typeAlias type="com.kakao.jPanda.kts.domain.ChatPartner" alias="ChatPartner"/>
-		<typeAlias type="com.kakao.jPanda.kts.domain.ChatReport" alias="ChatReport"/>
+		<typeAlias alias="ChatDto" type="com.kakao.jPanda.chat.domain.ChatDto"/>
+		<typeAlias alias="ChatPartnerDto" type="com.kakao.jPanda.chat.domain.ChatPartnerDto"/>
+		<typeAlias alias="ChatReportDto" type="com.kakao.jPanda.chat.domain.ChatReportDto"/>
 		
 		<!-- 거래게시판 -->
-		<typeAlias type="com.kakao.jPanda.jst.domain.StatDto" alias="StatDto"/>
-  		<typeAlias type="com.kakao.jPanda.jst.domain.TalentDto" alias="TradeTalentDto"/>
-  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeDto" alias="TradeDto"/>
-  		<typeAlias type="com.kakao.jPanda.jst.domain.TradeSearchDto" alias="TradeSearchDto"/>
+		<typeAlias alias="StatDto" type="com.kakao.jPanda.trade.domain.StatDto"/>
+  		<typeAlias alias="TradeTalentDto" type="com.kakao.jPanda.trade.domain.TalentDto"/>
+  		<typeAlias alias="TradeDto" type="com.kakao.jPanda.trade.domain.TradeDto"/>
+  		<typeAlias alias="TradeSearchDto" type="com.kakao.jPanda.trade.domain.TradeSearchDto"/>
 
   	</typeAliases>
     
