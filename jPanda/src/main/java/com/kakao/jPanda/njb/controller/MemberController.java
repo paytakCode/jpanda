@@ -203,6 +203,7 @@ public class MemberController {
     	}
     }
     
+    @NoLoginCheck
     @ResponseBody
     @DeleteMapping("/logout")
     public String logout(HttpSession session) {
