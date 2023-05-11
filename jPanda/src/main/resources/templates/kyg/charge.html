@@ -484,7 +484,7 @@
 			alert("쿠폰이 적용되었습니다.");
 	        
 			$.ajax({
-				url: "/charge/charge", 
+				url: "/charge/add-charge", 
 				type: "POST", 
 				data: JSON.stringify({
 					couponCode	  : couponCode,
@@ -518,7 +518,7 @@
 				console.log("chargeSubmit else 시작");
 				  
 				$.ajax({
-					url: "/charge/charge", 
+					url: "/charge/add-charge", 
 					type: "POST",
 					data: JSON.stringify({
 						paymentAmount : actualPaymentAmount,

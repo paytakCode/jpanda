@@ -70,24 +70,24 @@ public class ChargeController {
 	 * @return	resultMap	/	resultMap을 return하여 callback시 success, fail에 따라 resultMap.put()을 console에 출력 
 	 */
 	@ResponseBody
-	@PostMapping("/charge") 
-	public Map<String, String> chargeAdd(@RequestBody ChargeDto chargeDto, HttpSession session) {
+	@PostMapping("/add-charge") 
+	public Map<String, String> addCharge(@RequestBody ChargeDto chargeDto, HttpSession session) {
 		String chargerId = (String) session.getAttribute("memberId");
-		log.info("ChargeContoller chargeAdd() Start...");
-		log.info("ChargeContoller chargeAdd() chargerId -> {}", chargerId);
+		log.info("ChargeContoller addCharge() Start...");
+		log.info("ChargeContoller addCharge() chargerId -> {}", chargerId);
 		chargeDto.setChargerId(chargerId);
-		log.info("ChargeContoller chargeAdd() couponUseDto.toString() -> {}", chargeDto.toString());
+		log.info("ChargeContoller addCharge() couponUseDto.toString() -> {}", chargeDto.toString());
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
 		Map<String, String> resultMap = new HashMap<>();
 		
 		if(resultCharge > 0) {
-			log.info("ChargeController chargeAdd() resultCharge 완료");
+			log.info("ChargeController addCharge() resultAddCharge 완료");
 			 resultMap.put("result", "success");
 			return resultMap;
 			
 		} else {
-			log.error("ChargeContoller chargeAdd() resultCharge 실패");
+			log.error("ChargeContoller addCharge() resultAddCharge 실패");
 			resultMap.put("result", "fail");
 			return resultMap;
 		}
