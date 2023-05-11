@@ -9,6 +9,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.kakao.jPanda.common.interceptor.AdminInterceptor;
 import com.kakao.jPanda.common.interceptor.CommonInterceptor;
 
 @Configuration
@@ -16,13 +17,19 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	
 	@Autowired
 	private CommonInterceptor commonInterceptor;
+	@Autowired
+	private AdminInterceptor adminInterceptor;
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(commonInterceptor)
 				.addPathPatterns("/**")
 				.excludePathPatterns("");
+		
+		registry.addInterceptor(adminInterceptor)
+				.addPathPatterns("/admin/**");
 	}
+	
 	
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

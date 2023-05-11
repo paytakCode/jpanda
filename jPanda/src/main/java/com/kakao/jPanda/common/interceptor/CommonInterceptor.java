@@ -43,7 +43,7 @@ public class CommonInterceptor implements HandlerInterceptor, AsyncHandlerInterc
 					response.setCharacterEncoding("UTF-8");
 					response.getWriter().write("{\"redirectUrl\": \"/login\"}");
 				} else {
-					response.sendRedirect("login");
+					response.sendRedirect("/login");
 				}
 				
 	            return false;
