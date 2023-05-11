@@ -44,7 +44,7 @@ public class TalentDaoImpl implements TalentDao {
 		return sqlSession.delete("deleteReview", review);
 	}
 
-	// 재능 삭제 (업데이트)
+	// 재능 판매종료 (업데이트)
 	@Override
 	public int updateTalent(Long talentNo) {
 		return sqlSession.update("updateTalent", talentNo);

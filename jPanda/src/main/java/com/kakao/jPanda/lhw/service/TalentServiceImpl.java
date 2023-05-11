@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.kakao.jPanda.kyg.service.ChargeService;
 import com.kakao.jPanda.lhw.dao.TalentDao;
 import com.kakao.jPanda.lhw.domain.BambooUseDto;
 import com.kakao.jPanda.lhw.domain.ReportDto;
@@ -14,11 +15,14 @@ import com.kakao.jPanda.lhw.domain.ReviewDto;
 import com.kakao.jPanda.lhw.domain.TalentDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TalentServiceImpl implements TalentService {
 	private final TalentDao talentDao;
+	private final ChargeService chargeService;
 	
 	// 재능 상세 페이지 
 	@Override
@@ -44,7 +48,7 @@ public class TalentServiceImpl implements TalentService {
 		return talentDao.deleteReview(review);
 	}
 
-	// 재능 삭제(업데이트)
+	// 재능 판매종료(업데이트)
 	@Override
 	public int updateTalentStatus(Long talentNo) {
 		return talentDao.updateTalent(talentNo);
@@ -70,8 +74,14 @@ public class TalentServiceImpl implements TalentService {
 	
 	// 재능 구매자 정보 인서트
 	@Override
-	public int addBambooUse(BambooUseDto bambooUse, Long totalBamboo) {
-		int result = 2;
+	public int addBambooUse(BambooUseDto bambooUse) {
+		String memberId = bambooUse.getBuyerId();
+		// 영광씨 토탈 밤부 가져와서 bambooUse 객체에 저장
+		Long totalBamboo = chargeService.findTotalBambooByMemberId(memberId);
+		bambooUse.setTotalBamboo(totalBamboo);
+		log.info("totalBamboo -> " + totalBamboo);
+		
+		int result = 0;
 		
 		if(isItBuyBefore(bambooUse) == 1) {
 			result = -1; // 구매한 적이 있으면 -1을 리턴

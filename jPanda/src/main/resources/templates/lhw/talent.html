@@ -340,6 +340,8 @@ ul, li {
 		
 		<div class="side-info">
 			<div id="name" th:text="'판매자: ' + ${talent.name}"></div>
+			<input id="seller-id" type="hidden" th:value='${talent.sellerId}'>
+         	<input id="seller-name" type="hidden" th:value='${talent.name}'>
 			<br><div id="summary" th:text="${talent.summary}"></div>
 			<br>
 			<br>
@@ -351,22 +353,23 @@ ul, li {
 			<div id="sale-bamboo" th:text="${talent.saleBamboo} + 'Bamboo'"></div>
 			<br>
 		    <div class="review-filter"></div>
+		    
 			<div class="d-grid gap-2">
 		 		<button type="button" class="btn btn-success btn" id="buy-btn" th:data-talentno="${talent.talentNo}" th:data-salebamboo="${talent.saleBamboo}">구매하기</button><br>
  			</div>
+ 			
  			<div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
  				<input type="hidden" id="login-id" value="${memberId}">
 			  	<button type="button" class="btn btn-success" th:if="${talent.sellerId == memberId}" id="modify-btn" th:data-talentno="${talent.talentNo}">게시물 수정</button>
-			  	<button type="button" class="btn btn-danger" th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentno="${talent.talentNo}">게시물 삭제</button>
+			  	<button type="button" class="btn btn-danger" th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentno="${talent.talentNo}">판매 종료</button>
 			  	<button type="button" class="btn btn-warning" id="report-btn" th:data-talentno="${talent.talentNo}" th:data-sellerid="${talent.sellerId}">게시물 신고하기</button>
 			</div>
 		</div>
  			
 	</div>
 	
-	
 	<div class="quick-move">
-		<a href="#review-list">리뷰</a><a href="#content">상세 내용</a><a href="">상담 및 채팅</a>
+		<a href="#review-list">리뷰</a><a href="#content">상세 내용</a><a id="seller-chat-btn" href='' onclick='return false'>상담 및 채팅</a>
 	</div>
 	
 	
@@ -533,7 +536,7 @@ ul, li {
 		  	reportModal.querySelector('#blackId').value = blackId
 		  	reportModal.querySelector('#title').value = title
 		  	reportModal.querySelector('#issue').value = issue.value
-		  	reportModal.querySelector('form').setAttribute('action', "/talents/talent/report/" +talentNo);
+		  	reportModal.querySelector('form').setAttribute('action', "/talents/talent/" + talentNo + "/report");
 		  	const cancelButton = reportModal.querySelector('.cancel-btn')
 		  	cancelButton.addEventListener('click', () => {
 			    reportModal.querySelector('form').reset()
@@ -560,11 +563,11 @@ ul, li {
 	
 	// 구매하기 버튼
 	$(document).on('click', '#buy-btn', function(){
-		
 		if(confirm("정말로 구매 하시겠습니까? " + $(this).data('salebamboo') + " 밤부가 차감 됩니다.")){
 			const talentNo = $(this).data('talentno');
 			const useBamboo = $(this).data('salebamboo');
 			let bambooUse = {
+				buyerId 	 : memberId,
 		        talentNo     : talentNo,
 		        useBamboo    : useBamboo,
 		        purchaseDate : new Date(Date.now())
@@ -589,13 +592,8 @@ ul, li {
 						alert("구매 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
 					}
 				},
-				error : function(xhr, textStatus, errorThrown){
-			    	if(xhr.status === 401){
-			    		alert('로그인이 필요한 서비스 입니다.');
-			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-			    	} else {
-			    		alert("buy-btn function error : " + textStatus + ", " + errorThrown);
-			    	}
+				error : function(xhr){
+					handleError(xhr);
 				}
 			});
 		}
@@ -636,7 +634,7 @@ ul, li {
              }
 		    $(this).next('.bamboo-imges').attr('src', '/image/bambooScore/' + starImages[index]);
 		  });
-		});
+	});
 	
 
 	// 게시글 수정 버튼 눌렀을때 수정 페이지로 이동
@@ -647,13 +645,31 @@ ul, li {
 	});
 
 
-	//게시글 삭제 버튼 눌렀을때 업데이트로 판매 상태를 판매 종료로 변경
+	// 업데이트로 판매 상태를 판매 종료로 변경
 	$(document).on('click', '#delete-btn', function(){
-	    // talentNo 값 가져오기
-	    var talentNo = $(this).data('talentno');
-	    if (confirm('정말로 게시물을 삭제하시겠습니까?')) {
-	        // 컨트롤러 이동
-	        location.href = '/talents/talent/updateStatus/' + talentNo;
+	    if (confirm('게시물을 판매종료 하시겠습니까?')) {
+	    	var talentNo = $(this).data('talentno');
+	    	$.ajax({
+	    		type : 'PUT',
+	    		url  : "/talents/talent/" + talentNo + "/status",
+	    		data : JSON.stringify({
+	    			talentNo : talentNo
+	    		}),
+    			contentType : "application/json",
+    		    dataType :'json',
+    		    success : function(talentUpdate){
+    		    	console.log(talentUpdate);
+    		    	if(talentUpdate === 1){
+    		    		alert("게시물이 판매종료 되었습니다.");
+    		    		location.href= "/board";
+    		    	} else {
+    		    		alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    		    	}
+    		    },
+    		    error : function(xhr){
+					handleError(xhr);
+				}
+	    	});
 	    }
 	});
 
@@ -692,21 +708,16 @@ ul, li {
 	   		}),
 		    contentType : "application/json",
 		    dataType :'json',
-		    success : function(result) {
-				console.log(result);
-				if (result == 0){
+		    success : function(reviewInsert) {
+				console.log(reviewInsert);
+				if (reviewInsert == 0){
 					alert("상품을 구매한 사람만 리뷰를 남길 수 있습니다.");
 				} else {
 					location.reload();
 				}
 			},
-			error : function(xhr, textStatus, errorThrown){
-		    	if(xhr.status === 401){
-		    		alert('로그인이 필요한 서비스 입니다.');
-		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-		    	} else {
-		    		alert("reviewInsert function error : " + textStatus + ", " + errorThrown);
-		    	}
+			error : function(xhr){
+				handleError(xhr);
 			}
 		});
 	}
@@ -735,7 +746,7 @@ ul, li {
 		
 	  	$.ajax({
 	  		type : 'PUT',
-	  		url : talentNo + "/reviews/" + reviewNo,
+	  		url : "/talents/talent/" + talentNo + "/reviews/" + reviewNo,
 			data : JSON.stringify({
 				talentNo 	: talentNo,
 			    reviewNo 	: reviewNo,
@@ -767,11 +778,18 @@ ul, li {
 						$('<br>').appendTo(li);
 						modifyBtn.appendTo(li);
 						deleteBtn.appendTo(li);
+						
 					});  
 	  			},
 				error : function(xhr, status, error) {
-			        console.log(xhr);
-			        alert('리뷰 수정에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+					let responseText = JSON.parse(xhr.responseText);
+					if(xhr.status === 401){
+						alert('로그인이 필요합니다.');
+						location.replace(responseText.redirectUrl);
+					} else {
+						console.log("error code : " + responseText.code + ", status : " + responseText.status);
+			       		alert('리뷰 수정에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+					}
 			    }
 	  	});
 	}
@@ -786,20 +804,26 @@ ul, li {
 	  	if (confirm('리뷰를 삭제하시겠습니까?')) {
 		    $.ajax({
 				type : 'DELETE',
-				url : talentNo + "/reviews/" + reviewNo,
+				url : "/talents/talent/" + talentNo + "/reviews/" + reviewNo,
 				data : JSON.stringify({
 					reviewNo : reviewNo,
 					talentNo : talentNo
 				}),
 				contentType : "application/json",
 				dataType : 'json',
-				success  : function(reviews) {
+				success  : function(reviewRemove) {
 					location.reload();
 				},
-		      error : function(xhr, status, error) {
-				console.log(xhr);
-				alert('리뷰 삭제에 실패하였습니다. 잠시 후 다시 시도해주세요.');
-		      }
+				error : function(xhr, status, error) {
+					let responseText = JSON.parse(xhr.responseText);
+					if(xhr.status === 401){
+						alert('로그인이 필요합니다.');
+						location.replace(responseText.redirectUrl);
+					} else {
+						console.log("error code : " + responseText.code + ", status : " + responseText.status);
+			       		alert('리뷰 삭제에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+					}
+			    }
 			});
 		}
 	});
@@ -822,6 +846,48 @@ ul, li {
 	}
 	$('.review-filter').text(avgBambooScore.toFixed(1) + ' / (' + reviewCount + ')개의 리뷰');
 	
+	
+	
+	//채팅 문의 
+	   $(function(){
+	      $('#seller-chat-btn').click(function () {
+	         if(memberId == null){
+	            alert('로그인 후 이용 가능합니다.');
+	         } else {
+	            const sellerId = $('#seller-id').val();
+	            const sellerName = $('#seller-name').val();
+	            if (stompClient !== null) {
+	                $('#chat-console').css('display', 'grid');
+	                $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+	                const sellerPartner = $('.partner[value=' + sellerId + ']');
+	                if (sellerPartner.length) {
+	                   sellerPartner.detach().prependTo('#chat-partner-list');
+	                   selectedPartnerId = sellerId;
+	                  updateSelectedPartner();
+	                    updateChatContent();
+	                    $('#chat-input').focus();
+	                } else {
+	                    const sellerElem = $('<li>', {
+	                     class: 'partner list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center',
+	                     value: sellerId,
+	                     text: sellerName
+	                    });
+	                    sellerElem.click(function() { 
+	                       selectedPartnerId = sellerId;
+	                     updateSelectedPartner();
+	                     updateChatContent();
+	                  }); 
+	                    $('#chat-partner-list li:first').before(sellerElem);
+	                    selectedPartnerId = sellerId;
+	                  updateSelectedPartner();
+	                    updateChatContent();
+	                    $('#chat-input').focus();
+	               }      
+	            }
+	            
+	         }
+	      });
+	   });
 
 	</script>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
