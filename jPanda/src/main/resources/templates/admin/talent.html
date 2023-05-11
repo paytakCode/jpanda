@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>관리자 판매등록 신청 건 조회</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+	table-layout: auto;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+	border: 1px solid #ddd;
+}
+
+th {
+	background-color: #f2f2f2;
+	white-space: nowrap;
+}
+
+tr:nth-child(odd) {
+	background-color: #f2f2f2;
+}
+
+td {
+	border: 1px solid #ddd;
+}
+
+.btn{
+	border: 1px solid #ddd;
+	float: right;
+}
+	
+.container{
+	margin: 0 auto;
+	width: 1000px;
+}
+
+.talent-page {
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+.regDate, .status {
+	white-space: nowrap;
+}
+#pagination{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.talent-page{
+	text-decoration: none;
+	color: black;
+}
+
+.statusDate, .status{
+	white-space: nowrap;
+}
+
+h2{
+	margin: 30px;
+	text-align: center;
+}
+
+a {
+	text-decoration: none;
+}
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<h2>판매 등록 신청 현황</h2>
+			<table border="1" id="talentTable"></table>
+			<br>
+			<input type="button" id="btn" class="btn" value="검토 완료">
+			<br>
+			<div id="pagination"></div>
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	function talentChange(currentPage){
+		$.ajax({
+			url : "/admin/talent/talents",
+			type : "GET",
+			data : { currentPage : currentPage },
+			dataType: 'json',
+	        success:function(returnMap) {
+	        	console.log(returnMap.talentList);
+	          	console.log(returnMap.pagination);
+	          		
+	          	var talentList = returnMap.talentList;
+	          	var talentTable = $('#talentTable');
+
+	            // 기존 테이블 초기화
+	    		talentTable.empty();
+
+	    		// 테이블 헤더 생성
+	    		var tableHeader = $('<tr></tr>');
+	    		var headerNo = $('<th></th>').text('선택');
+	    		var headerSellerId = $('<th></th>').text('아이디');
+	    		var headerTalentNo = $('<th></th>').text('재능번호');
+	    		var headerTitle = $('<th></th>').text('제목');
+	    		var headerSummary = $('<th></th>').text('요약설명');
+	    		var headerRegDate = $('<th></th>').text('신청날짜');
+	    		var headerStatus = $('<th></th>').text('상태');
+	    		
+	    		tableHeader.append(headerNo).append(headerSellerId).append(headerTalentNo)
+	    				   .append(headerTitle).append(headerSummary).append(headerRegDate).append(headerStatus);
+	    		talentTable.append(tableHeader);
+
+	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
+				$.each(talentList, function(index, talent) {
+				  var tableRow = $('<tr></tr>').addClass('talent-detail');
+				  var checkbox = $('<td></td>').append(
+				    $('<input/>').attr({
+				      type: 'checkbox',
+				      class: 'checkbox',
+				      name: 'talentNo',
+				      value: talent.talentNo
+				    })
+				  );
+				  var sellerId = $('<td></td>').text(talent.sellerId).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'sellerId',
+				      value: talent.sellerId
+				    })
+				  );
+				  var talentNo = $('<td></td>').text(talent.talentNo);
+				  var title = $('<td></td>').append(
+				    $('<a></a>').addClass('detail').attr({
+				      href: '/admin/talents/' + talent.talentNo
+				    }).text(talent.title)
+				  );
+				  var summary = $('<td></td>').text(talent.summary);
+				  var statusDate = $('<td></td>').text(talent.statusDate.substring(0, 10)).addClass("statusDate");
+				  var statusDate = $('<td></td>').text(talent.statusDate.substring(0, 10)).addClass("regDate");
+				  var talentStatus = $('<td></td>').text(talent.talentStatus.substring(0, 10)).addClass("status");
+				  
+				  tableRow.append(checkbox, sellerId, talentNo, title, summary, statusDate, talentStatus);
+				  talentTable.append(tableRow);
+				});
+	    			
+	                var pagination = returnMap.pagination;
+	                var startNum = parseInt(pagination.startNum);
+	                var lastNum = parseInt(pagination.lastNum);
+	                var paginationDiv = $('#pagination');
+	    			
+	                // 기존 페이지 번호 삭제
+	                paginationDiv.empty();
+	                
+	                var page = $('<a></a>').addClass('talent-page').text('<');
+	                paginationDiv.append(page);
+	                
+	           	  	// 페이지 번호 생성
+	                for (var i=startNum; i<=lastNum; i++) {
+	                    var page = $('<a></a>').addClass('talent-page').text(i);
+	    				if(pagination.currentPage == i){
+	    					page.css('background-color', '#EAEAEA');
+	    				}
+	                    paginationDiv.append(page);
+	                }
+	                paginationDiv.append($('<a></a>').addClass('talent-page').text('>'));
+	           	  	
+					$('.talent-page').one('click', function(){
+						if($(this).text() === '<'){
+							if(parseInt(pagination.currentPage) === 1){
+								talentChange(pagination.currentPage);
+							}else{
+								talentChange(parseInt(pagination.currentPage) - 1);
+							}
+						}else if($(this).text() === '>'){
+							if(parseInt(pagination.currentPage) === parseInt(pagination.totalPage)){
+								talentChange(pagination.currentPage);
+							}else{
+								talentChange(parseInt(pagination.currentPage) + 1);
+							}
+						}else{
+							talentChange($(this).text());
+						}
+					});
+						hash = currentPage;
+						location.hash = hash;
+	          	},
+	          	error : function(xhr) {
+	          				handleError(xhr);
+	          	}
+		});
+	}
+	
+	$(function() {
+		hashCheck();
+	});
+	
+	function hashCheck() {
+		let currentPage;
+		
+		if(location.hash) {
+			let hash = decodeURI(location.hash);
+			currentPage = hash.substring(1);
+		} else {
+			talentChange(1);
+		}
+		talentChange(currentPage);
+	}
+	
+	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
+
+ 	$("#btn").on("click", function(){
+		let talentNo = $("input.checkbox:checked").map(function(){
+			return $(this).val();
+		}).get();
+		
+		if(talentNo.length == 0) {
+			alert("하나 이상의 데이터를 체크해주세요.");
+			return;
+		}
+		
+		let talentDto = [];
+		let regDate = Date.now();
+		let statusDate = Date.now();
+		
+		for(var i = 0; i < talentNo.length; i++) {
+			talentDto.push({regDate: regDate, statusDate: statusDate, talentNo: talentNo[i]});
+		}
+		
+		$.ajax({
+			url : "/admin/talents/" + talentNo.join(","),
+			method : "PATCH",
+			contentType : "application/json",
+			data : JSON.stringify(talentDto),
+			success : function(result) {
+				if(result > 0) {
+					webSocket.send(JSON.stringify(talentDto));
+					alert("성공적으로 반영되었습니다");
+					location.href="/admin/talent";
+				} else {
+					alert("수정사항 입력 중 오류 발생했습니다");
+					history.back();
+				}
+			},
+			error : function(xhr, textStatus, errorThrown) {
+				if(xhr.status === 401) {
+					alert('로그인이 필요합니다');
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);
+				} else {
+					alert('admin talent modify error : ' + textStatus + ',' + errorThrown);
+				}
+			}
+		});
+	});
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

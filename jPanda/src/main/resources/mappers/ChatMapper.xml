@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ChatMapper">
+	<select id="selectChatListByMemberIdAndPartnerId" parameterType="Map" resultType="ChatDto">
+		SELECT *
+		FROM chat
+		WHERE (receiver_id = #{memberId} AND sender_id = #{partnerId})
+			OR (sender_id = #{memberId} AND receiver_id = #{partnerId})
+		ORDER BY chat_date ASC
+	</select>
+	
+	<select id="selectPartnerListByMemberId" parameterType="String" resultType="ChatPartnerDto">	
+		SELECT member_id, name, SUM(unread_count) AS unread_count
+		FROM (
+			    SELECT DISTINCT(c.sender_id) as member_id, m.name, COUNT(CASE WHEN c.read = 'F' THEN 1 END) AS unread_count
+			    FROM chat c JOIN member m ON(c.sender_id = m.member_id)
+			    WHERE c.receiver_id = #{memberId}
+			    GROUP BY c.sender_id, m.name
+			    UNION ALL
+			    SELECT DISTINCT(c.receiver_id) as member_id, m.name, 0 AS unread_count
+			    FROM chat c JOIN member m ON(c.receiver_id = m.member_id)
+			    WHERE c.sender_id = #{memberId}
+			    GROUP BY c.receiver_id, m.name
+			)
+		GROUP BY member_id, name
+		ORDER BY name
+	</select>
+	
+	<insert id="insertChat" parameterType="ChatDto">  
+		<selectKey keyProperty="chatNo" resultType="Long" order="BEFORE">
+			SELECT chat_no_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO 
+			chat(chat_no, sender_id, receiver_id, message, chat_date, read) 
+			VALUES(#{chatNo}, #{senderId}, #{receiverId}, #{message}, #{chatDate}, #{read})
+	</insert>
+	
+	<update id="updateChatByReaderIdAndPartnerId" parameterType="Map">
+		UPDATE chat
+		 SET read = 'T'
+		WHERE receiver_id = #{readerId}
+			AND sender_id = #{partnerId} 
+			AND read = 'F'
+	</update>
+	
+	<insert id="insertReportByChatReport" parameterType="ChatReportDto">  
+		<selectKey keyProperty="reportNo" resultType="Long" order="BEFORE">
+			SELECT report_no_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO 
+			report(report_no, black_id, report_id, issue, report_date, chat_no) 
+			VALUES(#{reportNo}, #{blackId}, #{reportId}, #{issue}, #{reportDate}, #{chatNo})
+	</insert>
+</mapper>
