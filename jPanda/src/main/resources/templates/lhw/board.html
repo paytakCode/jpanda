@@ -427,10 +427,9 @@ ul, li {
 	 	           });
 		 	    });
 	 		},
-	 		error : function(xhr, status, error) {
-		        console.log(xhr);
-		        alert('잠시 후 다시 시도해주세요.');
-		    }
+	 		error : function(xhr){
+				handleError(xhr);
+			}
 	 	});
 	 	
 	}		
@@ -467,10 +466,9 @@ ul, li {
 		   		});
 		   	 	updateList(1);
 		   	},
-		   	error : function(xhr, status, error) {
-		        console.log(xhr);
-		        alert('잠시 후 다시 시도해주세요.');
-		    }
+		   	error : function(xhr){
+				handleError(xhr);
+			}
 		});
 	});
 

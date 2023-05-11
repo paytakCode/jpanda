@@ -23,7 +23,7 @@ public interface TalentDao {
 	// 리뷰 삭제
 	int deleteReview(ReviewDto review);
 
-	// 재능 삭제(업데이트)
+	// 재능 판매종료(업데이트)
 	int updateTalent(Long talentNo);
 	
 	// 리뷰 인서트
