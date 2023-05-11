@@ -23,10 +23,12 @@ public class BoardServiceImpl implements BoardService {
 	// 재능 리스트 필터 기능
 	@Override
 	public HashMap<String, Object> findTalentListByFilter(FiltersDto filters) {
+		// 필터 걸린 리스트
 		List<TalentDto> talentListByFilters = boardDao.selectTalentListByFilter(filters);
-		
+		// 페이징용 토탈 카운트
 		filters.setTotalCount(talentListByFilters.size());
 		log.info("talentList Total Count-> "+ talentListByFilters.size());
+		// 카운트와 리스트 다시 가져오기
 		talentListByFilters = boardDao.selectTalentListByFilter(filters);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
