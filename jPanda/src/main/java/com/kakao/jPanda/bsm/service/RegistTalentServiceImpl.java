@@ -33,7 +33,7 @@ public class RegistTalentServiceImpl implements TalentService{
 		String result = null;
 		System.out.println("talent.getSellerId() " + talent.getSellerId());
 		System.out.println("(String)session.getAttribute(\"memberId\") " + (String)session.getAttribute("memberId"));
-		if(talent.getSellerId().equals((String) session.getAttribute("memberId"))) {
+		if(!talent.getSellerId().equals((String) session.getAttribute("memberId"))) {
 			result = "<script>" +
 					"alert('비정상적인 재능 등록입니다. 다시 로그인해 주세요.');" + 
 					"location.href = '/login';" + 
@@ -68,7 +68,7 @@ public class RegistTalentServiceImpl implements TalentService{
 		String result = null;;
 		String sellerId = findSellerIdByTalent(talent);
 		
-		if(sellerId.equals((String) session.getAttribute("memberId"))) {
+		if(!sellerId.equals((String) session.getAttribute("memberId"))) {
 			result = "<script>" +
 					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
 					"location.href = '/login';" + 
@@ -111,7 +111,7 @@ public class RegistTalentServiceImpl implements TalentService{
 		// 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
 		String newFileName = UUID.randomUUID() + ext;
 		
-		int index = System.getProperty("user.dir").indexOf("\\jPanda");
+		int index = System.getProperty("user.dir").indexOf(File.separator + "jPanda");
 		String path = System.getProperty("user.dir").substring(0, index);
 		
 		// 현재경로/talentImage/파일명이 저장 경로

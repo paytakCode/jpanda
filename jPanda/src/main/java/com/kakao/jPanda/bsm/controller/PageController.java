@@ -34,17 +34,4 @@ public class PageController {
 		return "bsm/main";
 	}
 	
-	// 메인페이지 데이터 로드
-	@NoLoginCheck
-	@ResponseBody
-	@GetMapping("/main-talents")
-	public Map<String, List<TalentDto>> mainTalentList(){
-		Map<String, List<TalentDto>> mainTalentList = new HashMap<String, List<TalentDto>>();
-		mainTalentList.put("bestSellerTalent", talentService.findBestSellerTalents());
-		mainTalentList.put("topRatedTalent", talentService.findTopRatedTalents());
-		mainTalentList.put("newTrendTalent", talentService.findNewTrendTalents());
-		mainTalentList.put("randomTalent", talentService.findRandomTalents());
-		
-		return mainTalentList;
-	}
 }
