@@ -350,6 +350,9 @@
    	  	if (!isReadyToSubmit) {
    	  		alert(nullArea + '을(를) 다시 확인해주세요.');
    	  	}
+   	  	if($('#main-img-value').val() == '' || $('#main-img-value').val() == null){
+   	  		$('#main-img-value').val('/image/common/no-img.png');
+   	  	}
    	  	$('#status-date').val(getNow());
    	  	// status-date로 변경
    	  	return isReadyToSubmit;
@@ -441,16 +444,11 @@
 	               	$('#main-img-value').val(data.url);
 	               	$('#main-img-value').trigger('input');
 	           	},
-	           	error: function(xhr, textStatus, errorThrown){
-			    	if(xhr.status === 401){
-			    		alert('로그인이 필요합니다.');
-			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-			    	}else {
-	           			$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
-			    		alert('Image Upload Fail 다시 시도해주세요.');
-	           			console.error(xhr);
-			    	}
-	           	}
+	           	error: function(xhr){
+	           		handleError(xhr);
+		    		alert('Image Upload Fail 다시 시도해주세요.');
+           			$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
+		    	}
 	       	});
 		}
 	});
