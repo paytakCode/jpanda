@@ -46,34 +46,24 @@ public class MemberController {
 	@NoLoginCheck
     @GetMapping("/signup")
     public String signupForm(Model model) {
-    	System.out.println("signup Start...");
  	    List<BankDto> findBankList = memberservice.selectBankList();
- 	    System.out.println("findBankList.size() --> "+ findBankList.size());
  	    model.addAttribute("bankList", findBankList);
     	return "njb/signup";
     }
-//	@NoLoginCheck
-//    @PostMapping("/members/signup")
-//    public String join(MemberDto memberInfo) {
-//    	System.out.println("/members/signup start...");
-//    	memberservice.joinMember(memberInfo);
-//    	return "njb/login";	
-//    }
-	
+
 	@NoLoginCheck
 	@PostMapping("/members/signup")
 	public String join(MemberDto memberInfo) {
-	    System.out.println("/members/signup start...");
 	    boolean isJoinSuccessful = memberservice.joinMember(memberInfo);
 
 	    if (isJoinSuccessful) {
 	        // 회원가입 성공
 	    	System.out.println(isJoinSuccessful);
-	        return "redirect:/njb/signup";
+	        return "redirect:/login";
 	    } else {
 	        // 회원가입 실패
 	    	System.out.println(isJoinSuccessful);
-	        return "redirect:/njb/signup";
+	        return "redirect:/signup";
 	    }
 	}
 	@NoLoginCheck
@@ -83,18 +73,14 @@ public class MemberController {
         Map<String, String> resultMap = new HashMap<>();
         System.out.println("checkId Start...");
         try {
-            // 아이디 중복체크를 위해 DAO 호출
             int count = memberDao.checkId(memberId);
 
             if (count == 0) {
-                // 아이디가 중복되지 않은 경우
                 resultMap.put("result", "success");
             } else {
-                // 아이디가 중복된 경우
                 resultMap.put("result", "fail");
             }
         } catch (Exception e) {
-            // 예외 발생 시 에러 처리
             resultMap.put("result", "error");
             resultMap.put("errorMessage", e.getMessage());
         }
@@ -217,6 +203,7 @@ public class MemberController {
     	}
     }
     
+    @NoLoginCheck
     @ResponseBody
     @DeleteMapping("/logout")
     public String logout(HttpSession session) {
@@ -268,16 +255,12 @@ public class MemberController {
     	EmailVerifDto foundedEmailVerif = memberservice.findEmailVerif(emailVerifDto);
 
         if (foundedEmailVerif != null) {
-            // 인증번호 일치
             return ResponseEntity.ok("일치");
         } else {
-            // 인증번호 불일치
             return ResponseEntity.ok("불일치");
         }
     	
     }
-    
-
   }
 
 
