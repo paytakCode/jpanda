@@ -360,7 +360,6 @@
 			
 		});
 	});
-	 
 
 	/**
 	 * statList 가공
@@ -485,13 +484,8 @@
 							    alert('선택한 재능이 존재하지 않습니다. 다시 시도해주세요.');
 							}
 						},
-						error : function(xhr, textStatus, errorThrown){
-					    	if(xhr.status === 401){
-					    		alert('로그인이 필요합니다.');
-					    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-					    	} else {
-					    		alert("end-sell-btn function error : " + textStatus + ", " + errorThrown);
-					    	}
+						error : function(xhr){
+							handleError(xhr);
 						}
 					}
 				);
@@ -527,12 +521,7 @@
 						}
 					},
 					error : function(xhr, textStatus, errorThrown){
-				    	if(xhr.status === 401){
-				    		alert('로그인이 필요합니다.');
-				    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-				    	} else {
-				    		alert("repost-btn function error : " + textStatus + ", " + errorThrown);
-				    	}
+						handleError(xhr);
 					}
 			});	
 		}
@@ -564,12 +553,7 @@
 	
 						},
 						error : function(xhr, textStatus, errorThrown){
-					    	if(xhr.status === 401){
-					    		alert('로그인이 필요합니다.');
-					    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-					    	} else {
-					    		alert("exchange-btn function error : " + textStatus + ", " + errorThrown);
-					    	}
+							handleError(xhr);
 						}
 					}		
 				);	 
@@ -595,13 +579,8 @@
 							alert('환전 재신청에 성공하였습니다.');
 							$(".filter-button[value='all']").click();	
 						},
-						error : function(xhr, textStatus, errorThrown){
-					    	if(xhr.status === 401){
-					    		alert('로그인이 필요합니다.');
-					    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-					    	} else {
-					    		alert("re-exchange-btn function error : " + textStatus + ", " + errorThrown);
-					    	}
+						error : function(xhr){
+					    	handleError(xhr);
 						}
 					}		
 				);	 
@@ -659,16 +638,18 @@
 			    success: function(result){
 		    		console.log('Success posted : ' + result);
 		    		alert('재능 환불 신청에 성공하였습니다.');
-		    		$('#refund-modal').modal('hide');
+		    		location.reload();
 			    },
-			    error: function(xhr, textStatus, errorThrown){
-			    	if(xhr.status === 401){
-			    		alert('로그인이 필요합니다.');
-			    		$('#refund-modal').modal('hide');
-			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-			    	} else {
-			    		alert("refund-submit-btn function error : " + textStatus + ", " + errorThrown);
-			    	}
+			    error: function(xhr){
+					let responseText = JSON.parse(xhr.responseText);
+					if(xhr.status === 401){
+						alert('로그인이 필요합니다.');
+						$('#refund-modal').modal('hide');
+						location.replace(responseText.redirectUrl);
+					} else {
+						console.log("error code : " + responseText.code + ", status : " + responseText.status);
+						alert(responseText.message);
+					}
 			        
 			    }
 			});
@@ -691,6 +672,7 @@
 						contentType: 'application/json',
 						dataType : 'text',
 						success : function(result, textStatus, xhr){
+							console.log("st : " + xhr.status);
 							if(xhr.status === 200){
 								console.log('Success, deleted : ' + result);
 								alert("환불 신청이 취소되었습니다.");
@@ -701,13 +683,8 @@
 							}
 
 						},
-						error : function(xhr, textStatus, errorThrown){
-					    	if(xhr.status === 401){
-					    		alert('로그인이 필요합니다.');
-					    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-					    	} else {
-					    		alert("refund-cancle-btn function error : " + textStatus + ", " + errorThrown);
-					    	}
+						error : function(xhr){
+							handleError(xhr);
 						}
 					}
 				);		
@@ -727,7 +704,7 @@
 						url : "/trade/refunds/"+ refundPurchaseNo,
 						contentType: 'application/json',
 						dataType : 'text',
-						success : function(result, textStatus, xhr){
+						success : function(result, xhr){
 							if(xhr.status === 200){
 								console.log('Success, deleted : ' + result);
 								$(".filter-button[value='all']").click();
@@ -737,13 +714,8 @@
 							}
 
 						},
-						error : function(xhr, textStatus, errorThrown){
-					    	if(xhr.status === 401){
-					    		alert('로그인이 필요합니다.');
-					    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-					    	} else {
-					    		alert("reject-confirm-btn function error : " + textStatus + ", " + errorThrown);
-					    	}
+						error : function(xhr){
+							handleError(xhr);
 						}
 					}
 				);
@@ -924,15 +896,14 @@
 								if(item.listType === 'buy'){
 									getBuyList(item);
 								}
-								
 							});
-
+							
 							resolve(list);
 							
 						},
-						error : function(error){
-							console.log(error);
-							reject(error);
+						error : function(xhr, textStatus){
+							handleError(xhr);
+					    	reject(textStatus);
 						}
 					}		
 			);
