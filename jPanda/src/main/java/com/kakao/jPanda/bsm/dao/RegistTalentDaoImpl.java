@@ -103,7 +103,7 @@ public class RegistTalentDaoImpl implements TalentDao{
 	public String selectSellerIdByTalent(TalentDto talent) {
 		String sellerId = null;
 		try {
-			sellerId = session.selectOne("selectSellerIdByTalent");
+			sellerId = session.selectOne("selectSellerIdByTalent", talent);
 		} catch (Exception e) {
 			log.error("TalentDaoImpl selectSellerIdByTalent e.getMessage() ->" + e.getMessage());
 		}

@@ -56,7 +56,6 @@ public class RegistTalentServiceImpl implements TalentService{
 	@Override
 	public String modifyTalent(TalentDto talent, HttpSession session) {
 		String sellerId = findSellerIdByTalent(talent);
-		
 		if(!sellerId.equals((String) session.getAttribute("memberId"))) {
 			return "<script>" +
 					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
