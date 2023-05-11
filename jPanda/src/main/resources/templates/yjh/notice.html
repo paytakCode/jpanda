@@ -99,7 +99,7 @@ a{
 			<h2 id="notice-main">공지사항</h2>
 			<div id="noticelistDiv">
 				<table id="noticeTable"></table>
-				<br><input type="button" class="btn" value="작성하기"><br>
+				<br><input type="button" class="btn" id="btn-notice" value="작성하기"><br>
 			</div>
 			<div id="pagination"></div>
 		</body>
@@ -112,7 +112,7 @@ a{
 <!-- 현재 화면에서만 사용하는 js -->
 <th:block layout:fragment="script">
 	<script th:inline="javascript">	
-	$(".btn").on("click", function(){
+	$("#btn-notice").on("click", function(){
 		location.href="/admin/notice-form";
 	});
 	
@@ -190,10 +190,9 @@ a{
 							noticeChange($(this).text());
 						}
 					});
-				 	cookie = 'currentPage='+currentPage;
-					console.log(cookie);
-					document.cookie = cookie;
-					console.log("밑     " +document.cookie);
+				 	hash = currentPage;
+				 	console.log('This page hash : ' + hash);
+				 	location.hash = hash;
 	          	},
 	          	error : function(xhr, textStatus, errorThrown) {
 	          		if(xhr.status === 401) {
@@ -207,18 +206,20 @@ a{
 	}
 	
 	$(function() {
-		let cookie = document.cookie;
-		console.log("0. cookie"+cookie);
-		let currentPage = "";
-		if(cookie == "" || cookie == null) {
-			currentPage = 1;
-			
+		hashCheck();
+	});
+	
+	function hashCheck() {
+		let currentPage = 1;
+		
+		if(location.hash) {
+			let hash = decodeURI(location.hash);
+			currentPage = hash.substring(1);
 		} else {
-			currentPage = cookie.substring(12);
-			console.log("0. currentPage : "+currentPage);
+			noticeChange(1);
 		}
 		noticeChange(currentPage);
-	});
+	}
 	</script>
 
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

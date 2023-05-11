@@ -5,8 +5,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +41,7 @@ public class AdminController {
 	@GetMapping(value = "")
 	public String home() {
 
-		return "yjh/home";
+		return "yjh/notice";
 	}
 	
 	//notice
@@ -132,7 +130,7 @@ public class AdminController {
 	}
 	
 	//exchange	
-	@GetMapping(value = "/exchanges")
+	@GetMapping(value = "/exchange")
 	public String exchangePage(Pagination pagination, Model model) {	
 		
 		return "yjh/exchange";
@@ -188,7 +186,7 @@ public class AdminController {
 	 * 	쿠폰 생성 페이지에서 생성하기 버튼을 누르면 쿠폰번호가 자동 생성되는 기능
 	 */
 	@ResponseBody
-	@PostMapping(value = "/coupons/coupons-no")
+	@PostMapping(value = "/coupon/coupon-no")
 	public String genetateCouponNo() {
 		log.info("Coupon Controller genetateCouponNo() start");
 
@@ -201,7 +199,7 @@ public class AdminController {
 	 * 	통합 후 사용기한에 대한 논의 후 관련 로직 추가 예정
 	 */
 	@ResponseBody
-	@PostMapping(value = "/coupons/{couponNo}") 
+	@PostMapping(value = "/coupon/{couponNo}") 
 	public Map<String, Integer> couponAdd(@PathVariable("couponNo") String couponNo, @RequestBody CouponDto couponDto) {
 		log.info("Coupon Controller couponAdd() start");
 		log.info("couponDto : "+couponDto.toString());
@@ -239,7 +237,7 @@ public class AdminController {
 	}
 	
 	//talent
-	@GetMapping(value = "/talents") // talents
+	@GetMapping(value = "/talent") // talents
 	public String talentPage() {
 
 		return "yjh/talent";
@@ -350,4 +348,4 @@ public class AdminController {
 		
 	}
 
-}	
+}

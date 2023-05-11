@@ -242,7 +242,7 @@ h3 {
 			};
 
 			$.ajax({
-				url : "/admin/coupons/" + couponNo,
+				url : "/admin/coupon/" + couponNo,
 				type : "POST",
 				contentType : "application/json",
 				data : JSON.stringify(couponDto),
@@ -268,7 +268,7 @@ h3 {
 		$("#create-coupon").click(function() {
 			$.ajax({
 				type : "POST",
-				url : "/admin/coupons/coupons-no",
+				url : "/admin/coupon/coupon-no",
 				dataType : "text",
 				success : function(data) {
 					console.log(data);
