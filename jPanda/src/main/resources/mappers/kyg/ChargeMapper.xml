@@ -117,7 +117,7 @@
 	
 	</select>
 	
-	<select id="totalChargeCntChargerId" parameterType="String" resultType="int">
+	<select id="totalChargeCntByChargerId" parameterType="String" resultType="int">
 	
 		SELECT  count(*)
 		FROM	bamboo_charge

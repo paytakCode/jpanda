@@ -28,7 +28,7 @@ public interface ChargeDao {
 
 	List<PaymentDto> selectPaymentList();
 
-	int totalChargeCntChargerId(String chargerId);
+	int totalChargeCntByChargerId(String chargerId);
 
 	List<ChargeDto> selectChargeListByPagination(Pagination pagination);
 

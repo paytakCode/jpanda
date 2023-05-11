@@ -59,14 +59,16 @@ public class ChargeServiceImpl implements ChargeService {
 	// 사용가능한 쿠폰 체크
 	@Override
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
-		
+		log.info("ChargeServiceImpl checkAvailableCoupon selectedcouponUseDto Start...");
 		boolean isAvailable = false;	
 		boolean isValidPeriod = false;
 		int returnResult = 0;
 		
+		//chargeDao.selectCouponUse(couponUseDto);
+		
 		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isAvailable 검증
 		CouponUseDto selectedcouponUseDto = chargeDao.selectCouponUse(couponUseDto);
-		log.info("checkAvailableCoupon selectedcouponUseDto -> {}", selectedcouponUseDto);
+		log.info("ChargeServiceImpl checkAvailableCoupon selectedcouponUseDto -> {}", selectedcouponUseDto);
 		
 		//DTO(memberId, couponCode)가 Coupon_Use 테이블에 존재하면 사용 불가 / 존재하지 않으면 사용 가능
 		if(selectedcouponUseDto == null) {
@@ -160,7 +162,7 @@ public class ChargeServiceImpl implements ChargeService {
 	@Override
 	public int totalChargeCntByChargerId(String chargerId) {
 		log.info("ChargeServiceImpl totalChargeCntByChargerId() Start...");
-		int totalChargeCntByChargerId = chargeDao.totalChargeCntChargerId(chargerId);
+		int totalChargeCntByChargerId = chargeDao.totalChargeCntByChargerId(chargerId);
 		log.info("ChargeServiceImpl totalChargeCntByChargerId() count -> {}", totalChargeCntByChargerId);
 		
 		return totalChargeCntByChargerId;
@@ -171,7 +173,7 @@ public class ChargeServiceImpl implements ChargeService {
 		Map<String, Object> chargeHistoryMapByPagination = new HashMap<String, Object>();
 		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() Start...");
 		String chargeId = pagination.getChargerId();
-		int totalCount = chargeDao.totalChargeCntChargerId(chargeId);
+		int totalCount = chargeDao.totalChargeCntByChargerId(chargeId);
 		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() totalCount -> {}", totalCount);
 		
 		pagination.setTotalCount(totalCount);
