@@ -236,7 +236,6 @@
 			 <input type="hidden" name="_method" value="put">
 			<h1 class="head">재능 등록</h1>
 			<hr class="talent-hr">
-			<input type="hidden" name="sellerId" id="seller-id">
 			<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
 		
 			<div id="category" class="category write-check">
@@ -346,6 +345,9 @@
    	  	if (!isReadyToSubmit) {
    	    	alert(nullarea + '을(를) 다시 확인해주세요.');
    	  	}
+   	 	if($('#main-img-value') == null || $('#main-img-value') == ''){
+	  		$('#main-img-value').val('/image/common/no-img.png');
+	  	}
    	  	return isReadyToSubmit;
    	}
 	
@@ -438,16 +440,11 @@
 	               	$('#main-img-value').val(data.url);
 	               	$('#main-img-value').trigger('input');
 	           	},
-	           	error: function(xhr, textStatus, errorThrown){
-			    	if(xhr.status === 401){
-			    		alert('로그인이 필요합니다.');
-			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-			    	}else {
-	           			$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
-			    		alert('Image Upload Fail 다시 시도해주세요.');
-	           			console.error(xhr);
-			    	}
-	           	}
+	           	error: function(xhr){
+	           		handleError(xhr);
+		    		alert('Image Upload Fail 다시 시도해주세요.');
+           			$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
+		    	}
 	       	});
 		}
 	});
@@ -518,14 +515,9 @@
            	    	}
            	 	});
            	},
-           	error: function(xhr, textStatus, errorThrown){
-		    	if(xhr.status === 401){
-		    		alert('로그인이 필요합니다.');
-		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
-		    	}else {
-		    		alert('CategoryList Load Fail 다시 시도해주세요.');
-		    		console.error(xhr);
-		    	}
+           	error: function(xhr){
+           		handleError(xhr);
+	    		alert('CategoryList Load Fail 다시 시도해주세요.');
            	}
 		});
 	})
