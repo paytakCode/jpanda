@@ -20,8 +20,6 @@ import com.kakao.jPanda.kyg.domain.ChargeDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
 import com.kakao.jPanda.kyg.service.ChargeService;
-import com.kakao.jPanda.kyg.service.Paging;
-import com.kakao.jPanda.kyg.domain.Pagination;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,72 +39,34 @@ public class ChargeController {
 	/*
 	 * 메인페이지
 	 * 결제수단, RATIO를 테이블에 List형식으로 나타냄
-	 * 충전내역, chargeHistory를 테이블에 List형식으로 나타냄
-	 * button에 따라 pageStatus의 값을 변경, pageStatus의 값에 따라 returnPage를 다르게 전달
 	 * Model	TB payment -> method, bonusRatio 
-	 * @param	HttpSession, ChargeDto chargeDto, String currentPage, String pageStatus, Model
-	 * @return	kyg/chargePage, kyg/chargeHistoryPage
+	 * @param	Session, chargeDto, model
+	 * @return	kyg/charge
 	 */
 	@GetMapping(value = "")
-	public String chargePage(HttpSession session, ChargeDto chargeDto, String currentPage, String pageStatus, Model model) {
-		String returnPage = "kyg/chargePage";
-		if(pageStatus == null) pageStatus = "0";
-		log.info("ChargeContoller chargePage() pageStatus -> {}", pageStatus);
-		
-		if (session.getAttribute("memberId") == null) {
-			return "redirect:/login";
-		}
+	public String charge(HttpSession session, Model model) {
+		log.info("ChargeContoller charge() Start...");
 		
 		String chargerId = (String) session.getAttribute("memberId");
-		log.info("ChargeContoller chargePage() Start...");
+		log.info("ChargeContoller charge() chargerId -> {}", chargerId);
 		
-		chargeDto.setChargerId(chargerId);
-		log.info("ChargeContoller chargePage() chargerId -> {}", chargerId);
-		
-		// 페이징 작업
-		log.info("ChargeContoller chargePage() chargeDto -> {}", chargeDto);
-		log.info("ChargeContoller chargePage() currentPage -> {}", currentPage);
-		
-		int totalChargeCnt = chargeService.totalChargeCnt(chargerId);
-		log.info("ChargeContoller chargePage() totalChargeCnt -> {}", totalChargeCnt);
-		
-		Paging page = new Paging(totalChargeCnt, currentPage);
-		chargeDto.setStartRow(page.getStartRow());
-		chargeDto.setEndRow(page.getEndRow());
+		int totalChargeCnt = chargeService.totalChargeCntByChargerId(chargerId);
+		log.info("ChargeContoller charge() totalChargeCntByChargerId -> {}", totalChargeCnt);
 		
 		// 충전수단
 		List<PaymentDto> getPaymentList = chargeService.findPaymentList();
-		log.info("ChargeContoller chargePage() getPaymentList.size() -> {}", getPaymentList.size());
-		
-		// 충전내역
-		List<ChargeDto> getBambooChargeList = chargeService.findBambooChargeList(chargeDto);
-		log.info("ChargeContoller chargePage() getBambooChargeList.size() -> {}", getBambooChargeList.size());
+		log.info("ChargeContoller charge() getPaymentList.size() -> {}", getPaymentList.size());
 		
 		model.addAttribute("listPayment", getPaymentList);
-		model.addAttribute("listChargeHistory", getBambooChargeList);
-		model.addAttribute("pageStatus", pageStatus);
-		model.addAttribute("totalChargeCnt", totalChargeCnt);
-		model.addAttribute("page", page);
-		
-		if (pageStatus.equals("0")) {
-			log.info("ChargeContoller chargePage() 충전하기 페이지 pageStatus(0) -> {}", pageStatus);
-			returnPage = "kyg/chargePage";
-		} else if (pageStatus.equals("1")) {
-			log.info("ChargeContoller chargePage() 충전내역 페이지 pageStatus(1) -> {}", pageStatus);
-			returnPage = "kyg/chargeHistoryPage";
-		} else 	{
-			log.info("ChargeContoller chargePage() default -> {}", pageStatus);
-			returnPage = "kyg/chargePage";
-		}
 		 
-		return returnPage;
+		return "kyg/charge";
 	}
 	
 	/*
 	 * 밤부 충전
-	 * chargePage에서 ajax 요청 처리
+	 * charge.html에서 ajax 요청 처리
 	 * 전달된 data를 ChargeDto에 저장 후 DB에 삽입
-	 * @param	ChargeDto
+	 * @param	chargeDto, session
 	 * @return	resultMap	/	resultMap을 return하여 callback시 success, fail에 따라 resultMap.put()을 console에 출력 
 	 */
 	@ResponseBody
@@ -136,10 +96,10 @@ public class ChargeController {
 	
 	/*
 	 *	이용 가능한 쿠폰 체크
-	 *	chargePage에서 ajax 요청 처리
+	 *	charge.html에서 ajax 요청 처리
 	 *	전달받은 memberId와 couponCode를 TB coupon, TB coupon_use와 비교하여 validation check
 	 *	사용 불가능한 쿠폰 : resultInt 0을 반환, 사용 가능한 쿠폰 : resultInt 1은 반환 ,couponValue를 반환
-	 *	@param	CouponUseDto
+	 *	@param	session, couponUseDto
 	 *	@return	checkedcouponUseDto
 	 */
 	@GetMapping(value = "/check-available-coupon")
@@ -190,22 +150,6 @@ public class ChargeController {
 	}
 	
 	
-		/*
-		 *  페이징 처리된 List를 Map형식으로 리턴하여 ajax처리
-		 */
-		@ResponseBody
-		@GetMapping(value = "/charge-history")
-		public Map<String, Object> chargeListByPagination(Pagination pagination, HttpSession session) {
-			log.info("Notice Controller noticeListByPagination() start");
-			log.info("pagination : "+pagination);
-			
-			String chargerId = (String) session.getAttribute("memberId");
-			pagination.setChargerId(chargerId);
-			log.info("ChargeContoller chargeListByPagination() chargerId -> {}", chargerId);
-			Map<String, Object> returnMap = chargeService.findchargeByPagination(pagination);
-			
-			return returnMap;
-		}
 }
 	
 

@@ -91,4 +91,10 @@
 		        )
 		WHERE   ROWNUM BETWEEN 1 AND 5
 	</select>
+	<select id="selectSellerIdByTalent" resultType="String" parameterType="RegistTalent">
+		SELECT 	seller_id
+		FROM	talent
+		WHERE	talent_no = #{talentNo}
+	
+	</select>
 </mapper>

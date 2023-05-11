@@ -11,7 +11,7 @@ import com.kakao.jPanda.njb.domain.MemberDto;
 public interface MemberService {
 
 	List<BankDto>selectBankList(); //find 로 바꾸기  
-	void joinMember(MemberDto memberInfo);
+	boolean joinMember(MemberDto memberInfo);
 	int checkId(String memberId);
 	String findPwByIdAndEmail(String memberId, String email);
 	String findIdByNameAndEmail(String name, String email);

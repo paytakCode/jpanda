@@ -11,7 +11,6 @@ import com.kakao.jPanda.kyg.domain.CouponDto;
 import com.kakao.jPanda.kyg.domain.CouponUseDto;
 import com.kakao.jPanda.kyg.domain.Pagination;
 import com.kakao.jPanda.kyg.domain.PaymentDto;
-import com.kakao.jPanda.yjh.domain.NoticeDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -201,52 +200,35 @@ public class ChargeDaoImpl implements ChargeDao {
 	}
 
 	@Override
-	public List<ChargeDto> selectBambooChargeList(ChargeDto chargeDto) {
-		log.info("ChargeDaoImpl selectBambooChargeListbyChargerId() Start...");
-		log.info("ChargeDaoImpl selectBambooChargeListbyChargerId() chargeDto.toString() -> {}", chargeDto.toString());
-		List<ChargeDto> selectBambooChargeListResult = null;
-		log.info("ChargeDaoImpl selectBambooChargeList Start...");
+	public int totalChargeCntChargerId(String chargerId) {
+		log.info("ChargeDaoImpl totalChargeCntChargerId() Start...");
+		int totalChargeCntChargerId = 0;
+		
 		try {
-			selectBambooChargeListResult = sqlSession.selectList("selectBambooChargeList", chargeDto);
-			log.info("ChargeDaoImpl selectBambooChargeList() selectBambooChargeListResult.size() -> {}", selectBambooChargeListResult.size());
+			totalChargeCntChargerId = sqlSession.selectOne("totalChargeCntChargerId", chargerId);
+			log.info("ChargeDaoImpl totalChargeCntChargerId() count -> {}",  totalChargeCntChargerId);
 		} catch (Exception e) {
-			log.error("ChargeDaoImpl selectBambooChargeList() Exception -> {}", e.getMessage(), e);
+			log.debug("ChargeDaoImpl totalChargeCntChargerId() Exception -> {}", e.getMessage());
 		}
 		
-		return selectBambooChargeListResult;
+		return totalChargeCntChargerId;
 	}
 
 	@Override
-	public int totalChargeCnt(String chargerId) {
-		log.info("ChargeDaoImpl totalChargeCnt() Start...");
-		int totalChargeCnt = 0;
+	public List<ChargeDto> selectChargeListByPagination(Pagination pagination) {
+		log.info("Dao selectChargeListByPagination() start");
+		log.info("ChargeDaoImpl selectChargeListByPagination pagination.toString -> " + pagination.toString());
+		List<ChargeDto> chargeListByPagination = null;
 		
 		try {
-			totalChargeCnt = sqlSession.selectOne("totalChargeCnt", chargerId);
-			log.info("ChargeDaoImpl totalChargeCnt() count -> {}",  totalChargeCnt);
-		} catch (Exception e) {
-			System.out.println("EmpDaoImpl totalChargeCnt() Exception -> " + e.getMessage());
-		}
-		
-		return totalChargeCnt;
-	}
-
-	@Override
-	public List<ChargeDto> selectChargeByPagination(Pagination pagination) {
-		log.info("Dao selectNoticeByPagination() start");
-		List<ChargeDto> chargeList = null;
-		
-		try {
-			chargeList = sqlSession.selectList("selectBambooChargeList", pagination);
+			chargeListByPagination = sqlSession.selectList("selectChargeListByPagination", pagination);
+			log.info("ChargeDaoImpl selectChargeListByPagination chargeList.toString -> " + chargeListByPagination.toString());
 		} catch(Exception e) {
-			log.debug("EmpDaoImpl selectChargeByPagination() Exception : "+e.getMessage());
+			log.debug("ChargeDaoImpl selectChargeListByPagination() Exception -> {}", e.getMessage());
 			e.printStackTrace();
 		}
 		
-		return chargeList;
+		return chargeListByPagination;
 	}
-
-
-
 
 }

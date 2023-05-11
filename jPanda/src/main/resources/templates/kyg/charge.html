@@ -80,7 +80,7 @@
 		/* 오른쪽 사이드바 */
 		#right-sidebar {
 			width: 500px;
-			height: 400px;
+			height: 500px;
 			flex: 1;
 			padding: 24px 12px 24px 0;
 			border-radius: 16px 16px 16px 16px;
@@ -167,8 +167,8 @@
 	 	
 	 	<div class="btn-container">
 			<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
-				<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn">충전하기</button>
-				<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn"  onclick="moveChargePage(1)">결제내역</button>
+				<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn"	onclick="location.href='/charge'">충전하기</button>
+				<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn"	onclick="location.href='/charge-history'">결제내역</button>
 			</div>
 		</div>
 	    
@@ -185,14 +185,14 @@
 						<tr>
 							<th scope="col"><span class="inputIcon"><img src="/image/bamboo-charge.png" alt="image" width="30" height="30"></span></th>
 							<th scope="col">충전 수단</th>
-							<th scope="col">충전밤부 포인트 비율</th>
+							<th scope="col">충전 할인율</th>
 						</tr>
 					</thead>
 					<tbody th:each="paymentList, i : ${listPayment}">
 						<tr>
 							<th scope="row" th:text="${i.index + 1}"></th>
 							<td th:text="${paymentList.method}"></td>
-							<td th:text="${paymentList.bonusRatio}"></td>
+							<td class="formatted-value" th:text="${paymentList.bonusRatio}"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -218,14 +218,14 @@
 				
 				<div class="payment-method">
 					 
-					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio1" autocomplete="off" value="휴대폰" checked="checked">
-					<label class="btn btn-dark" for="payment-method-radio1">휴대폰</label>
-					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio2" autocomplete="off" value="상품권">
-					<label class="btn btn-dark" for="payment-method-radio2">상품권</label>
-					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio3" autocomplete="off" value="신용카드">
-					<label class="btn btn-dark" for="payment-method-radio3">신용카드</label>
-					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio4" autocomplete="off" value="계좌이체">
-					<label class="btn btn-dark" for="payment-method-radio4">계좌이체</label>
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio1" autocomplete="off" value="계좌이체">
+					<label class="btn btn-dark" for="payment-method-radio1">계좌이체</label>
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio2" autocomplete="off" value="신용카드">
+					<label class="btn btn-dark" for="payment-method-radio2">신용카드</label>
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio3" autocomplete="off" value="휴대폰" checked="checked">
+					<label class="btn btn-dark" for="payment-method-radio3">휴대폰</label>
+					<input type="radio" class="btn-check" name="paymentMethod" id="payment-method-radio4" autocomplete="off" value="상품권">
+					<label class="btn btn-dark" for="payment-method-radio4">상품권</label>
 					
 				</div>
 					
@@ -234,13 +234,18 @@
 			<div id="right-sidebar">
 				
 				<div class="input-group input-group-default mb-3 w-50">
-					<span class="input-group-text" id="inputGroup-sizing-sm">쿠폰 할인 금액</span>
-					<input type="number" id = "coupon-discount" name="couponDiscount" value="0" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+					<span class="input-group-text" id="inputGroup-sizing-sm">기본 충전 금액</span>
+					<input type="number" id = "payment-amount" name="paymentAmount" required="required" value="5000" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
 				</div>
 				
 				<div class="input-group input-group-default mb-3 w-50">
-					<span class="input-group-text" id="inputGroup-sizing-sm">기본 충전 금액</span>
-					<input type="number" id = "payment-amount" name="paymentAmount" required="required" value="5000" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+					<span class="input-group-text" id="inputGroup-sizing-sm">충전 할인 금액</span>
+					<input type="text" id = "payment-discount-amount" name="paymentDiscountAmount" value="0" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+				</div>
+				
+				<div class="input-group input-group-default mb-3 w-50">
+					<span class="input-group-text" id="inputGroup-sizing-sm">쿠폰 할인 금액</span>
+					<input type="number" id = "coupon-discount" name="couponDiscount" value="0" readonly="readonly" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
 				</div>
 				
 				<div class="input-group input-group-default mb-3 w-50">
@@ -269,51 +274,61 @@
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 	<script th:inline="javascript">
 	
-	// 충전 예상 금액 계산 후 client에 update
-	$(function(){
-		function updatePaymentAmount(){
-			
-			let paymentAmount = $('#payment-amount').val();
-			let chargeBamboo = $('#charge-bamboo').val();
-			
-			paymentAmount = Math.floor(chargeBamboo * 1000);
-			$('#payment-amount').val(paymentAmount);
-		}
-		
-		$('#charge-bamboo').on('input', updatePaymentAmount);				
-		
-		updatePaymentAmount();											
+	// class="table table-default"내 ${paymentList.bonusRatio}의 소수점 제거
+	const formattedValues = document.querySelectorAll('.formatted-value');
+	formattedValues.forEach(function(formattedValue) {
+		formattedValue.innerText = Number(formattedValue.innerText).toFixed(0);
 	});
 	
-	$(function(){
-		function updateActualPaymentAmount(){
-			
-			let chargeBamboo = $('#charge-bamboo').val();
-			let actualPaymentAmount = $('#actual-payment-amount').val();
-			let couponDiscount = $('#coupon-discount').val();
-			let paymentMethod = $('input[name="paymentMethod"]:checked').val();
-			let ratio = 1.2;
-			
-			if (paymentMethod == '휴대폰') {
-				ratio = 1.2;
-			} else if (paymentMethod == '상품권') {
-				ratio = 1.2;
-			} else if (paymentMethod == '신용카드') {
-				ratio = 1.4;
-			} else if (paymentMethod == '계좌이체') {
-				ratio = 1.4;
-			}
-			
-			actualPaymentAmount = Math.floor(chargeBamboo * 1000 / ratio) - couponDiscount;
-			$('#actual-payment-amount').val(actualPaymentAmount);
-			
+	// 충전 예상 금액 계산 후 client에 update
+	function updatePaymentAmount(){
+		
+		let paymentAmount = $('#payment-amount').val();
+		let chargeBamboo = $('#charge-bamboo').val();
+		
+		paymentAmount = Math.floor(chargeBamboo * 1000);
+		$('#payment-amount').val(paymentAmount);
+	}
+      
+	function showBonusRatioDiscount(){ 
+		let paymentMethod = $('input[name="paymentMethod"]:checked').val();
+		let	ratio = 0;
+		
+		if (paymentMethod == '계좌이체') {
+			ratio = 40;
+		} else if (paymentMethod == '신용카드') {
+			ratio = 30;
+		} else if (paymentMethod == '휴대폰') {
+			ratio = 20;
+		} else if (paymentMethod == '상품권') {
+			ratio = 10;
 		}
 		
-		$('#charge-bamboo').on('input', updateActualPaymentAmount);				
-		$('input[name="paymentMethod"]').change(updateActualPaymentAmount);		
-
-		updateActualPaymentAmount();											
-	});
+		$('#payment-discount-amount').val($('#payment-amount').val()*ratio/100);
+	}
+	
+	function updateActualPaymentAmount(){
+		
+		let chargeBamboo = $('#charge-bamboo').val();
+		let actualPaymentAmount = $('#actual-payment-amount').val();
+		let couponDiscount = $('#coupon-discount').val();
+		let paymentMethod = $('input[name="paymentMethod"]:checked').val();
+		let ratio = 0.8;
+		
+		if (paymentMethod == '휴대폰') {
+			ratio = 0.8;
+		} else if (paymentMethod == '상품권') {
+			ratio = 0.9;
+		} else if (paymentMethod == '신용카드') {
+			ratio = 0.7;
+		} else if (paymentMethod == '계좌이체') {
+			ratio = 0.6;
+		}
+		
+		actualPaymentAmount = Math.floor(chargeBamboo * 1000 * ratio) - couponDiscount;
+		$('#actual-payment-amount').val(actualPaymentAmount);
+		
+	}
 	
 	// 쿠폰입력 onchange 쿠폰입력시 사용가능쿠폰 자동 검증 후 결제기능 노출
 	function couponInsertOnBlur(){
@@ -361,14 +376,20 @@
 		          $('#result-check-coupon').html('사용이 불가능한 쿠폰입니다. 쿠폰을 재입력 후 쿠폰검사를 눌러주세요').css('color', 'red');
 		          $('#coupon-code').val('').trigger('focus');
 		          $('#coupon-status').val('').trigger('focus');
-
 		          $("#request-pay-button").hide();
 		          
 		       }
 	       },
-	       error: function() {
-	         alert("잘못된 접근입니다");
-	       }
+	       error: function(xhr, textStatus, errorThrown){
+		    	if(xhr.status === 401){
+		    		alert('로그인이 필요합니다.');
+		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+		    	} else {
+		    		alert("잘못된 접근입니다");
+		    	} 
+		    	
+			}
+	       
 		});  
 	}	/* /couponCheck() */
 	
@@ -379,8 +400,8 @@
 
     function requestPay() {
     	
-    	let subPaymentAmount = $('#actual-payment-amount').val();			 
-    	if (subPaymentAmount <= 0) {
+    	let validationPaymentAmount = $('#actual-payment-amount').val();			 
+    	if (validationPaymentAmount <= 0) {
     		alert("충전금액은 0원 초과이어야 합니다.");
     	    console.error("Error: 충전금액은 0원 초과이어야 합니다.");
     	    return;
@@ -413,8 +434,8 @@
 		IMP.request_pay({
 		 
 			pg : pgSelect,								
-			pay_method : pay_method, 					// 지불 수단
-			name : 'panda충전',							// 상품 명
+			pay_method : pay_method, 						// 지불 수단
+			name : 'panda충전',								// 상품 명
 			amount : actualPaymentAmount,					// 가격 숫자 타입
 			buyer_name : '',
 			buyer_email : '',
@@ -423,7 +444,7 @@
 			buyer_postcode : '',
 			custom_data : couponCode
            
-		}, function (rsp) { 							// callback
+		}, function (rsp) { 								// callback
 			if (rsp.success) {
 				console.log("rsp : ", rsp);
 				alert("rsp.success 결제가 완료되었습니다.");
@@ -477,13 +498,18 @@
 					console.log("chargeSubmit() AJAX 요청 성공: ", data);
 					alert("충전 성공");
 					setTimeout(function() {
-						location.replace("/charge/"); 				// redirect
+						location.replace("/charge"); 				// redirect
 					}, 2000); 										// 2초 후 이동
 				},
-				error: function(data) { 							
-					console.error("chargeSubmit() AJAX 요청 실패: ");
-					alert("충전 실패 다시 시도해주세요");
-					location.replace("/charge/");
+				error: function(xhr, textStatus, errorThrown){
+			    	if(xhr.status === 401){
+			    		alert('로그인이 필요합니다.');
+			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+			    	} else {
+			    		console.error("chargeSubmit() AJAX 요청 실패: ");
+						alert("충전 실패 다시 시도해주세요");
+						location.replace("/charge");
+			    	}
 				}
 			});
 	        
@@ -503,12 +529,17 @@
 					dataType: "json", 									
 					success: function(data) { 							
 						console.log("chargeSubmit() AJAX 요청 성공: ", data);
-						location.replace("/charge/"); 				
+						location.replace("/charge"); 				
 					},
-					error: function() {
-					console.error("chargeSubmit() AJAX 요청 실패: ");
-					alert("충전 실패 다시 시도해주세요");
-					location.replace("/charge/");
+					error: function(xhr, textStatus, errorThrown){
+				    	if(xhr.status === 401){
+				    		alert('로그인이 필요합니다.');
+				    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+				    	} else {
+				    		console.error("chargeSubmit() AJAX 요청 실패: ");
+							alert("충전 실패 다시 시도해주세요");
+							location.replace("/charge");
+				    	}
 					},
 				});
 				
@@ -520,12 +551,19 @@
 	
 	}	/* /chargeSubmit(rsp) */
 	   
-	// 충전/내역 페이지 이동 status변경
-	function moveChargePage(pageStatus) { 
-		console.log("pageStatus -> " + pageStatus);
-		location.href="?pageStatus="+pageStatus;
-	}
-	 
+	
+	
+	//document ready
+	$(function(){
+		$('#charge-bamboo').on('input', updateActualPaymentAmount);				
+		$('input[name="paymentMethod"]').change(updateActualPaymentAmount);
+		$('input[name="paymentMethod"]').change(showBonusRatioDiscount);
+		$('#charge-bamboo').on('input', updatePaymentAmount);
+		$('#charge-bamboo').on('input', showBonusRatioDiscount);				
+		showBonusRatioDiscount();	
+		updatePaymentAmount();	
+		updateActualPaymentAmount();
+	});
 	</script>
 	
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->

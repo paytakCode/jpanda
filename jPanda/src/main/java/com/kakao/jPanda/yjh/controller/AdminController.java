@@ -5,8 +5,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -348,17 +346,6 @@ public class AdminController {
 		
 		return result;
 		
-	}
-	
-	private boolean adminCheck(HttpSession session) {
-		boolean check = true;
-		String memberId = (String) session.getAttribute("memberId");
-		
-		if(memberId.equals("admin")) {
-			return check;
-		} else {
-			return false;
-		}
 	}
 
 }

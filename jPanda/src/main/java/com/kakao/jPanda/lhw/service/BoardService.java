@@ -1,21 +1,21 @@
 package com.kakao.jPanda.lhw.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.kakao.jPanda.lhw.domain.CategoryDto;
 import com.kakao.jPanda.lhw.domain.FiltersDto;
-import com.kakao.jPanda.lhw.domain.TalentDto;
 
 public interface BoardService {
+	
+	// 재능 리스트 필터 기능
+	HashMap<String, Object> findTalentListByFilter(FiltersDto filters);
 	
 	// 사이드바 대분류 카테고리 리스트
 	List<CategoryDto> findUpperCategoryList();
 	
 	// 중분류 카테고리 리스트 불러오기 
 	List<CategoryDto> findLowerCategoryListByUpperCategoryNo(Long upperCategoryNo);
-	
-	// 재능 리스트 필터 기능
-	List<TalentDto> findTalentListByFilter(FiltersDto filters);
 	
 
 }

@@ -30,11 +30,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void joinMember(MemberDto memberInfo) {
+	public boolean joinMember(MemberDto memberInfo) {
 
-	    String encryptedPassword = PasswordEncryptor.encrypt(memberInfo.getPassword()); // 비밀번호 암호화
-	    memberInfo.setPassword(encryptedPassword); // 암호화된 비밀번호로 설정
-		memberDao.insertMember(memberInfo);		
+	    String encryptedPassword = PasswordEncryptor.encrypt(memberInfo.getPassword());
+	    memberInfo.setPassword(encryptedPassword);
+	    boolean isJoinSuccessful = memberDao.insertMember(memberInfo);
+	    return isJoinSuccessful;		
 	}
 
 	@Override
