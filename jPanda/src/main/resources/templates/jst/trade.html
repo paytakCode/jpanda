@@ -319,20 +319,6 @@
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 	/**
-	 * Error Handle
-	 */
-	function handleError(xhr){
-		let responseText = JSON.parse(xhr.responseText);
-		if(xhr.status === 401){
-			alert('로그인이 필요합니다.');
-			location.replace(responseText.redirectUrl);
-		} else {
-			console.log("error code : " + responseText.code + ", status : " + responseText.status);
-			alert(responseText.message);
-		}
-	}
-	
-	/**
 	 * statList 콜랩스
 	 */
 	$(function(){
