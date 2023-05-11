@@ -168,7 +168,7 @@ public class AdminController {
 	@GetMapping("/coupons-form")
 	public String couponsPgae() {
 
-		return "admin/createCoupon";
+		return "admin/create-coupon";
 		
 	}
 	
