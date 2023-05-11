@@ -30,29 +30,19 @@ public class RegistTalentServiceImpl implements TalentService{
 	
 	@Override
 	public String addTalent(TalentDto talent, HttpSession session) {
-		String result = null;
-		System.out.println("talent.getSellerId() " + talent.getSellerId());
-		System.out.println("(String)session.getAttribute(\"memberId\") " + (String)session.getAttribute("memberId"));
-		if(!talent.getSellerId().equals((String) session.getAttribute("memberId"))) {
-			result = "<script>" +
-					"alert('비정상적인 재능 등록입니다. 다시 로그인해 주세요.');" + 
-					"location.href = '/login';" + 
+		talent.setSellerId((String) session.getAttribute("memberId"));
+		int insertResult = talentDao.insertTalent(talent);
+		if(insertResult > 0) {
+			return "<script> " +
+					"alert('재능 등록이 완료되었습니다.');" + 
+					"location.href = '/main';" + 
 					"</script>";
 		}else {
-			int insertResult = talentDao.insertTalent(talent);
-			if(insertResult > 0) {
-				result = "<script> " +
-						"alert('재능 등록이 완료되었습니다.');" + 
-						"location.href = '/main';" + 
-						"</script>";
-			}else {
-				result = "<script> " +
-						"alert('재능 등록이 완료되지 않았습니다. 다시 확인해주세요.');" + 
-						"history.back();" + 
-						"</script>";
-			}
+			return "<script> " +
+					"alert('재능 등록이 완료되지 않았습니다. 다시 확인해주세요.');" + 
+					"history.back();" + 
+					"</script>";
 		}
-		return result;
 	}
 	
 	
@@ -65,29 +55,27 @@ public class RegistTalentServiceImpl implements TalentService{
 
 	@Override
 	public String modifyTalent(TalentDto talent, HttpSession session) {
-		String result = null;;
 		String sellerId = findSellerIdByTalent(talent);
 		
 		if(!sellerId.equals((String) session.getAttribute("memberId"))) {
-			result = "<script>" +
+			return "<script>" +
 					"alert('비정상적인 재능 수정입니다. 다시 로그인해 주세요.');" + 
 					"location.href = '/login';" + 
 					"</script>";
 		}else {
 			int updateResult = talentDao.updateTalent(talent);
 			if(updateResult > 0) {
-				result = "<script> " +
+				return "<script> " +
 						"alert('재능 수정 완료되었습니다.');" + 
-						"location.href = '/talent/';" + 
+						"location.href = '/main';" + 
 						"</script>";
 			}else {
-				result = "<script> " +
+				return "<script> " +
 						"alert('재능 수정이 완료되지 않았습니다. 다시 확인해주세요.');" + 
 						"history.back();" + 
 						"</script>";
 			}
 		}
-		return result;
 	}
 	
 	@Override
@@ -125,6 +113,7 @@ public class RegistTalentServiceImpl implements TalentService{
 			fileDirectory.mkdirs();
 		}
 		
+		// 반환할 경로
 		String uploadPath = "/uploadImage/" + newFileName; 
 		
 		// 저장 경로로 파일 객체 생성

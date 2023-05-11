@@ -82,7 +82,7 @@
 		background-color: rgb(129,193,71);
 	}
 	
-	.btn {
+	.btn-report {
 		border: 1px solid #ddd;
 		float: right;
 		margin: 10px 0;
@@ -177,8 +177,8 @@
 		                row.appendTo(body);
 		            }
 		            
-		          
-		            tableBody.append($("<input>").attr("type", "button").addClass("btn").val("제제하기"));
+		            tableBody.append($("<input>").attr("type", "button").addClass("btn-report").val("제제하기"));
+
 		            
 		      },
 		      error : function(xhr, textStatus, errorThrown) {
@@ -192,7 +192,7 @@
 		  });
 		});
 	 
-	$(document).on("click", ".btn", function(){
+	$(document).on("click", ".btn-report", function(){
 		 let memberId = $(this).closest(".anw").data('blackid');
 		 console.log(memberId);
 		 

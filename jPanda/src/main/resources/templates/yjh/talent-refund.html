@@ -34,7 +34,7 @@ td {
 	border: 1px solid #ddd;
 }
 
-.btn {
+.btn-refund {
 	border: 1px solid #ddd;
 	float: right;
 }
@@ -77,8 +77,8 @@ h2{
 			<h2>환불 관리</h2>
 			<table border="1" id="refundTable"></table>
 			<br>	
-			<input type="button" class="btn" th:name="refundStatus" value="환불완료">
-			<input style="margin-right: 10px" type="button" class="btn" th:name="refundStatus" value="반려">
+			<input type="button" class="btn-refund" th:name="refundStatus" value="환불완료">
+			<input style="margin-right: 10px" type="button" class="btn-refund" th:name="refundStatus" value="반려">
 			<br>
 			<div id="pagination"></div>
 		</body>
@@ -237,7 +237,7 @@ h2{
 	
 	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
 	
-	$(".btn").on("click", function() {
+	$(".btn-refund").on("click", function() {
 		let purchaseNo = $("input.checkbox:checked").map(function() {
 			return $(this).val();
 		}).get();

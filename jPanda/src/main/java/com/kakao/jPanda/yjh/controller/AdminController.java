@@ -41,7 +41,7 @@ public class AdminController {
 	@GetMapping(value = "")
 	public String home() {
 
-		return "yjh/home";
+		return "yjh/notice";
 	}
 	
 	//notice

@@ -90,7 +90,7 @@ a {
 			<h2>판매 등록 신청 현황</h2>
 			<table border="1" id="talentTable"></table>
 			<br>
-			<input type="button" class="btn" value="검토 완료">
+			<input type="button" id="btn" class="btn" value="검토 완료">
 			<br>
 			<div id="pagination"></div>
 		</body>
@@ -203,38 +203,34 @@ a {
 							talentChange($(this).text());
 						}
 					});
-						cookie = 'currentPage=' + currentPage;
-						document.cookie = cookie;
-						console.log("function.cookie : "+document.cookie);
+						hash = currentPage;
+						location.hash = hash;
 	          	},
-	          	error : function(xhr, textStatus, errorThrown) {
-	          		if(xhr.status === 401) {
-	          			alert('로그인이 필요합니다');
-	          			location.replace(JSON.parse(xhr.responseText).redirectUrl);
-	          		} else {
-	          			alert('admin talent error : ' + textStatus + ',' + errorThrown);
-	          		}
+	          	error : function(xhr) {
+	          				handleError(xhr);
 	          	}
 		});
 	}
 	
 	$(function() {
-		let cookie = document.cookie;
-		console.log("0. cookie : "+cookie);
-		let currentPage = "";
+		hashCheck();
+	});
+	
+	function hashCheck() {
+		let currentPage;
 		
-		if(cookie == "" || cookie == null) {
-			currentPage = 1;
+		if(location.hash) {
+			let hash = decodeURI(location.hash);
+			currentPage = hash.substring(1);
 		} else {
-			currentPage = cookie.substring(12);
-			console.log("0.else. currentPage : "+currentPage);
+			talentChange(1);
 		}
 		talentChange(currentPage);
-	});
+	}
 	
 	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
 
- 	$(".btn").on("click", function(){
+ 	$("#btn").on("click", function(){
 		let talentNo = $("input.checkbox:checked").map(function(){
 			return $(this).val();
 		}).get();
@@ -261,7 +257,7 @@ a {
 				if(result > 0) {
 					webSocket.send(JSON.stringify(talentDto));
 					alert("성공적으로 반영되었습니다");
-					location.href="/admin/talents";
+					location.href="/admin/talent";
 				} else {
 					alert("수정사항 입력 중 오류 발생했습니다");
 					history.back();

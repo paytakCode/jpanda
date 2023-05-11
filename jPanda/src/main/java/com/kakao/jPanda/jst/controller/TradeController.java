@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kakao.jPanda.common.exception.CustomException;
+import com.kakao.jPanda.common.exception.ErrorCode;
 import com.kakao.jPanda.jst.domain.StatDto;
 import com.kakao.jPanda.jst.domain.TalentDto;
 import com.kakao.jPanda.jst.domain.TradeDto;
@@ -79,18 +82,18 @@ public class TradeController {
 	 */
 	@PutMapping("/talents/{talent-no}")
 	@ResponseBody
-	public ResponseEntity<Integer> tradesByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
+	public ResponseEntity<Object> tradesByTalentNo(@PathVariable(name = "talent-no") String talentNo, 
 								   @RequestBody TalentDto talentDto) {
 		log.info("tradeModifyStatusByTalentNo talentNo, status : " + talentNo + ", " + talentDto);
 		Integer result = tradeService.modifyTalentByTalentNo(talentNo, talentDto);
 		log.info("tradeModifyStatusByTalentNo result : " + result);
 		
 		if (result == 1) {
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(talentNo);
 		} else if (result == 0){
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(talentNo);
 		} else {
-			return ResponseEntity.internalServerError().build();
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
@@ -102,7 +105,7 @@ public class TradeController {
 	 */
 	@PostMapping("/exchanges/{talent-no}")
 	@ResponseBody
-	public ResponseEntity<Integer> exchangeAddByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
+	public ResponseEntity<Object> exchangeAddByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
 		log.info("exchangeAddByTalentNo purchaseNo : " + talentNo);
 		TalentDto talentDto = tradeService.findTalentByTalentNo(talentNo);
 		if (talentDto == null) {
@@ -111,11 +114,11 @@ public class TradeController {
 			Integer result = tradeService.addExchangeByTalentNo(talentDto);
 			log.info("exchangeAddByTalentNo result : " + result);
 			if (result == 1) {
-				return ResponseEntity.ok(result);
+				return ResponseEntity.ok(talentNo);
 			} else if(result == 0) {
-				return ResponseEntity.noContent().build();
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(talentNo);
 			} else {
-				return ResponseEntity.internalServerError().build();
+				throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 			}
 			
 		}
@@ -130,15 +133,15 @@ public class TradeController {
 	 */
 	@PutMapping("/exchanges/{talent-no}/status")
 	@ResponseBody
-	public ResponseEntity<Integer> exchangeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
+	public ResponseEntity<Object> exchangeStatusModifyByTalentNo(@PathVariable(name = "talent-no") String talentNo) {
 		log.info("exchangeStatusModifyByTalentNo talentNo : " + talentNo);
 		Integer result = tradeService.modifyExchangeStatusByTalentNo(talentNo);
 		log.info("exchangeStatusModifyByTalentNo result : " + result);
 		
 		if (result == 1) {
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(talentNo);
 		} else {
-			return ResponseEntity.internalServerError().build();
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -150,16 +153,16 @@ public class TradeController {
 	 */
 	@PostMapping("/refund")
 	@ResponseBody
-	public ResponseEntity<Integer> refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
+	public ResponseEntity<Object> refundAdd(HttpSession session, @RequestBody TradeDto tradeDto) {
 		String memberId = (String)session.getAttribute("memberId");
 		log.info("refundAdd tradeListDto : " + tradeDto.toString());
 		Integer result = tradeService.addRefund(memberId, tradeDto);
 		log.info("refundAdd resultMessage : " + result);
 		
 		if (result == 1) {
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(tradeDto.getTalentNo());
 		} else {
-			return ResponseEntity.internalServerError().build();
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -171,7 +174,7 @@ public class TradeController {
 	 */
 	@DeleteMapping("/refunds/{refund-purchase-no}")
 	@ResponseBody
-	public ResponseEntity<Integer> refundRemoveByrefundPurchaseNo(@PathVariable(name = "refund-purchase-no") String refundPurchaseNo) {
+	public ResponseEntity<Object> refundRemoveByrefundPurchaseNo(@PathVariable(name = "refund-purchase-no") String refundPurchaseNo) {
 		log.info("refundRemoveByrefundPurchaseNo purchaseNo : " + refundPurchaseNo);
 		Integer result = tradeService.removeRefundByrefundPurchaseNo(refundPurchaseNo);
 		log.info("refundRemoveByrefundPurchaseNo result : " + result);
@@ -179,9 +182,9 @@ public class TradeController {
 		if (result == 1) {
 			return ResponseEntity.ok(result);
 		} else if (result == 0){
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(refundPurchaseNo);
 		} else {
-			return ResponseEntity.internalServerError().build();
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
