@@ -96,10 +96,7 @@ h2{
 			type : "GET",
 			data : { currentPage : currentPage },
 			dataType: 'json',
-	        success:function(returnMap) {
-	        	console.log(returnMap.refundList);
-	          	console.log(returnMap.pagination);
-	          		
+	        success:function(returnMap) {     		
 	          	var refundList = returnMap.refundList;
 	          	var refundTable = $('#refundTable');
 

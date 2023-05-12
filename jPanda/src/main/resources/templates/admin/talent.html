@@ -108,10 +108,7 @@ a {
 			type : "GET",
 			data : { currentPage : currentPage },
 			dataType: 'json',
-	        success:function(returnMap) {
-	        	console.log(returnMap.talentList);
-	          	console.log(returnMap.pagination);
-	          		
+	        success:function(returnMap) {	          		
 	          	var talentList = returnMap.talentList;
 	          	var talentTable = $('#talentTable');
 
@@ -217,7 +214,7 @@ a {
 	});
 	
 	function hashCheck() {
-		let currentPage;
+		let currentPage = 1;
 		
 		if(location.hash) {
 			let hash = decodeURI(location.hash);
