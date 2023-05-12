@@ -152,6 +152,11 @@
 		
 		    text-align: center;
 		}
+		
+		.bamboo-ratio-msg {
+			display: flex;
+			justify-content: flex-end;
+		}
 		    
 	    
 	</style>
@@ -196,6 +201,9 @@
 						</tr>
 					</tbody>
 				</table>
+				<div class="bamboo-ratio-msg">
+					<span class="cautionMsg" style="font-size:12px;">밤부 충전 비율은 1000 : 1 입니다</span>
+				</div>
 				
 				<div class="input-div">
 				
@@ -274,10 +282,10 @@
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 	<script th:inline="javascript">
 	
-	// class="table table-default"내 ${paymentList.bonusRatio}의 소수점 제거
+	// class="table table-default"내 ${paymentList.bonusRatio}의 소수점 제거 
 	const formattedValues = document.querySelectorAll('.formatted-value');
 	formattedValues.forEach(function(formattedValue) {
-		formattedValue.innerText = Number(formattedValue.innerText).toFixed(0);
+		formattedValue.innerText = Number(formattedValue.innerText).toFixed(0) + '%';
 	});
 	
 	// 충전 예상 금액 계산 후 client에 update
@@ -353,7 +361,7 @@
 	  		url: '/charge/check-available-coupon?couponCode=' + couponCode,
 	  		dataType: 'json',															
 	  		success: function(couponUseDto) {
-				console.log(couponUseDto.result);
+	  			
 		        if (couponUseDto.result == '1') {
 		          $('#result-check-coupon').html('사용 가능한 쿠폰입니다. 쿠폰이 적용되었습니다.').css('color', 'green');
 		          $('#coupon-status').val('1');
@@ -403,7 +411,7 @@
     	let validationPaymentAmount = $('#actual-payment-amount').val();			 
     	if (validationPaymentAmount <= 0) {
     		alert("충전금액은 0원 초과이어야 합니다.");
-    	    console.error("Error: 충전금액은 0원 초과이어야 합니다.");
+    		
     	    return;
     	} 
     	
@@ -412,10 +420,6 @@
     	let paymentMethod = $('input[name="paymentMethod"]:checked').val();
     	let actualPaymentAmount = $('#actual-payment-amount').val();
     	let couponCode = $('#coupon-code').val();
-		
-		console.log("충전 금액 : " + actualPaymentAmount);
-		console.log("쿠폰 번호 : " + chargerNo);
-		console.log("결제 방법 : " + $("input[name='paymentMethod']:checked").val());
 		
 		if (paymentMethod == '휴대폰') {
 			pgSelect = 'danal';			    
@@ -446,19 +450,16 @@
            
 		}, function (rsp) { 								// callback
 			if (rsp.success) {
-				console.log("rsp : ", rsp);
 				alert("rsp.success 결제가 완료되었습니다.");
 				chargeSubmit(rsp);
 			     
 			} else {
-				console.log('rsp', rsp);
 				alert("rsp.fail 결제가 취소되었습니다. 주의사항을 참고해주세요.");
 			}
 		});
-	}	/* /requestPay() */
+	}	 /* /requestPay() */
 
 	function chargeSubmit(rsp) { 
-		console.log("chargeSubmit Start...");
 		
 		let couponCode = rsp.custom_data;
 		let actualPaymentAmount = $('#actual-payment-amount').val();
@@ -475,10 +476,6 @@
 			paymentMethod = '계좌이체';
 		}
 	    
-		console.log("rsp.success chargeSubmit couponCode : ", couponCode);
-		console.log("rsp.success chargeSubmit actualPaymentAmount : ", actualPaymentAmount);
-		console.log("rsp.success chargeSubmit pay_method : ", paymentMethod);
-		console.log("rsp.success chargeSubmit chargeBamboo : ", chargeBamboo);
 		
 		if ($('#coupon-status').val() == '1') {
 			alert("쿠폰이 적용되었습니다.");
@@ -495,7 +492,6 @@
 				contentType: 'application/JSON',						
 				dataType: "json", 									
 				success: function(data) { 							
-					console.log("chargeSubmit() AJAX 요청 성공: ", data);
 					alert("충전 성공");
 					setTimeout(function() {
 						location.replace("/charge"); 				// redirect
@@ -506,7 +502,6 @@
 			    		alert('로그인이 필요합니다.');
 			    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
 			    	} else {
-			    		console.error("chargeSubmit() AJAX 요청 실패: ");
 						alert("충전 실패 다시 시도해주세요");
 						location.replace("/charge");
 			    	}
@@ -515,7 +510,6 @@
 	        
 		} else {
 			if (couponCode == null && actualPaymentAmount > '0') {
-				console.log("chargeSubmit else 시작");
 				  
 				$.ajax({
 					url: "/charge/charge", 
@@ -528,7 +522,6 @@
 					contentType: 'application/JSON',						
 					dataType: "json", 									
 					success: function(data) { 							
-						console.log("chargeSubmit() AJAX 요청 성공: ", data);
 						location.replace("/charge"); 				
 					},
 					error: function(xhr, textStatus, errorThrown){
@@ -536,7 +529,6 @@
 				    		alert('로그인이 필요합니다.');
 				    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
 				    	} else {
-				    		console.error("chargeSubmit() AJAX 요청 실패: ");
 							alert("충전 실패 다시 시도해주세요");
 							location.replace("/charge");
 				    	}
