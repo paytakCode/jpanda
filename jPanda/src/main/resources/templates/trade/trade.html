@@ -478,7 +478,7 @@
 							if (xhr.status === 200) {
 							    console.log('Success, put : ' + result);
 							    alert('판매가 성공적으로 종료되었습니다.');
-								$(".filter-button[value='all']").click();
+								$(".filter-button[value='sell']").click();
 							} else if (xhr.status === 204) {
 							    console.log('Success, put : No content');
 							    alert('선택한 재능이 존재하지 않습니다. 다시 시도해주세요.');
@@ -514,7 +514,7 @@
 						if (xhr.status === 200) {
 						    console.log('Success, put : ' + result);
 						    alert('재능이 성공적으로 재등록되었습니다.');
-							$(".filter-button[value='all']").click();
+							$(".filter-button[value='sell']").click();
 						} else if (xhr.status === 204) {
 						    console.log('Success, put : No content');
 						    alert('선택한 재능이 존재하지 않습니다. 다시 시도해주세요.');
@@ -545,7 +545,7 @@
 							if(xhr.status === 200){
 								console.log('Success, posted : ' + result);
 								alert('환전 신청에 성공하였습니다.');
-								$(".filter-button[value='all']").click();	
+								$(".filter-button[value='sell']").click();	
 							} else if (xhr.status === 204) {
 							    console.log('Success, posted : : No content');
 							    alert('환전 신청에 실패하였습니다. 다시 시도해주세요.');
@@ -577,7 +577,7 @@
 						success : function(result){
 							console.log('Success put : ' + result);
 							alert('환전 재신청에 성공하였습니다.');
-							$(".filter-button[value='all']").click();	
+							$(".filter-button[value='sell']").click();	
 						},
 						error : function(xhr){
 					    	handleError(xhr);
@@ -670,12 +670,12 @@
 						type : "DELETE",
 						url : "/trade/refunds/"+ refundPurchaseNo,
 						contentType: 'application/json',
-						dataType : 'text',
+						dataType : 'json',
 						success : function(result, textStatus, xhr){
 							if(xhr.status === 200){
 								console.log('Success, deleted : ' + result);
 								alert("환불 신청이 취소되었습니다.");
-								$(".filter-button[value='all']").click();
+								$(".filter-button[value='refund']").click();
 							} else if (xhr.status === 204) {
 							    console.log('Success, deleted : : No content');
 							    alert('환불 취소 신청에 실패하였습니다. 다시 시도해주세요.');
@@ -702,11 +702,11 @@
 						type : "DELETE",
 						url : "/trade/refunds/"+ refundPurchaseNo,
 						contentType: 'application/json',
-						dataType : 'text',
-						success : function(result, xhr){
+						dataType : 'json',
+						success : function(result, textStatus, xhr){
 							if(xhr.status === 200){
 								console.log('Success, deleted : ' + result);
-								$(".filter-button[value='all']").click();
+								$(".filter-button[value='refund']").click();
 							} else if (xhr.status === 204) {
 							    console.log('Success, deleted : : No content');
 							    alert('환불 반려 확인에 실패하였습니다. 다시 시도해주세요.');
