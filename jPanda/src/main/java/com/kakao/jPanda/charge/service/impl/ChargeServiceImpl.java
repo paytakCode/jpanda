@@ -31,8 +31,8 @@ public class ChargeServiceImpl implements ChargeService {
 	 //밤부 충전
 	 @Override
 		public int addCharge(ChargeDto chargeDto) {
-			log.info("ChargeServiceImpl insertCharge() Start...");
-			log.info("ChargeServiceImpl insertCharge() chargeDto.toString() : " + chargeDto.toString());
+			log.info("[addCharge] Start...");
+			log.info("[addCharge] chargeDto.toString() : " + chargeDto.toString());
 			
 			if (chargeDto.getCouponCode() == "0") {
 				chargeDto.setCouponCode(null);
@@ -40,18 +40,18 @@ public class ChargeServiceImpl implements ChargeService {
 			
 			//coupon_use insert
 			int insertCouponUse = chargeDao.insertCouponUse(chargeDto);
-			log.info("insertCouponUse 결과값 : {}", insertCouponUse);
+			log.info("[addCharge] insertCouponUse 결과값 : {}", insertCouponUse);
 			
-			log.info("chargeDto.getCouponCode() : " + chargeDto.getCouponCode());
+			log.info("[addCharge] chargeDto.getCouponCode() : " + chargeDto.getCouponCode());
 			int resultInsertCharge = chargeDao.insertCharge(chargeDto);
 			
 			if(insertCouponUse > 0) {
-				log.info("ChargeServiceImpl insertCouponUse 삽입 완료");
+				log.info("[addCharge] insertCouponUse 삽입 완료");
 			} else {
-				log.info("ChargeServiceImpl insertCouponUse 삽입 안함(미삽입 or 오류)");
+				log.info("[addCharge] insertCouponUse 삽입 안함(미삽입 or 오류)");
 			}
 			
-			log.info("ChargeServiceImpl insertCharge() DAO에서 반환받은 resultInsertCharge-> {}", resultInsertCharge);
+			log.info("[addCharge] DAO에서 반환받은 resultInsertCharge-> {}", resultInsertCharge);
 			return resultInsertCharge;
 			
 		}
@@ -60,16 +60,14 @@ public class ChargeServiceImpl implements ChargeService {
 	// 사용가능한 쿠폰 체크
 	@Override
 	public int checkAvailableCoupon(CouponUseDto couponUseDto) {
-		log.info("ChargeServiceImpl checkAvailableCoupon selectedcouponUseDto Start...");
+		log.info("[checkAvailableCoupon] selectedcouponUseDto Start...");
 		boolean isAvailable = false;	
 		boolean isValidPeriod = false;
 		int returnResult = 0;
 		
-		//chargeDao.selectCouponUse(couponUseDto);
-		
 		// selectCouponUse가 있으면 사용 불가한 쿠폰  boolean isAvailable 검증
 		CouponUseDto selectedcouponUseDto = chargeDao.selectCouponUse(couponUseDto);
-		log.info("ChargeServiceImpl checkAvailableCoupon selectedcouponUseDto -> {}", selectedcouponUseDto);
+		log.info("[checkAvailableCoupon] selectedcouponUseDto -> {}", selectedcouponUseDto);
 		
 		//DTO(memberId, couponCode)가 Coupon_Use 테이블에 존재하면 사용 불가 / 존재하지 않으면 사용 가능
 		if(selectedcouponUseDto == null) {
@@ -81,7 +79,7 @@ public class ChargeServiceImpl implements ChargeService {
 			
 			// 해당 쿠폰이 기한남아있는지 확인 boolean isAvailable 검증
 			CouponDto selectedCouponDto = chargeDao.selectCouponByCouponCode(couponUseDto.getCouponCode());
-			log.info("CouponDto에 할당된 ChargeServiceImpl checkAvailableCoupon selectedCouponDto -> "+selectedCouponDto);
+			log.info("CouponDto에 할당된 [checkAvailableCoupon] selectedCouponDto -> "+selectedCouponDto);
 			
 			// coupon TB에 쿠폰이 없는경우 isValidPeriod = false
 			if(selectedCouponDto == null) {
@@ -103,8 +101,8 @@ public class ChargeServiceImpl implements ChargeService {
 					isValidPeriod = false;
 				}
 				
-				log.info("checkAvailableCoupon isAvailable -> "+isAvailable);
-				log.info("checkAvailableCoupon isValidPeriod -> "+isValidPeriod);
+				log.info("[checkAvailableCoupon] isAvailable -> "+isAvailable);
+				log.info("[checkAvailableCoupon] isValidPeriod -> "+isValidPeriod);
 
 			}
 	
@@ -117,17 +115,17 @@ public class ChargeServiceImpl implements ChargeService {
 			returnResult = 0;
 		}
 		
-		log.info("checkAvailableCoupon returnResult->"+returnResult);
+		log.info("[checkAvailableCoupon] returnResult->"+returnResult);
 		return returnResult;
 	}
 
 	@Override
 	public Long getAvailAmountCoupon(CouponUseDto couponUseDto) {
-		log.info("ChargeServiceImpl getAvailAmountCoupon() Start...");
-		log.info("ChargeServiceImpl getAvailAmountCoupon() chargeDto.toString() -> {}", couponUseDto.toString());
+		log.info("[getAvailAmountCoupon] Start...");
+		log.info("[getAvailAmountCoupon] chargeDto.toString() -> {}", couponUseDto.toString());
 		
 		Long findAvailAmountCoupon = chargeDao.selectAvailAmountCoupon(couponUseDto);
-		log.info("ChargeServiceImpl getAvailAmountCoupon() findAvailAmountCoupon -> " + findAvailAmountCoupon);
+		log.info("[getAvailAmountCoupon] findAvailAmountCoupon -> " + findAvailAmountCoupon);
 		
 		return findAvailAmountCoupon;
 	}
@@ -138,12 +136,12 @@ public class ChargeServiceImpl implements ChargeService {
 		Long findBambooChargeAmountByMemberId = chargeDao.selectChargeBambooAmountByMemberId(memberId);
 		Long findBambooUseAmountByMemberId    = chargeDao.selectBambooUseAmountByMemberId(memberId);
 		Long findTalentRefundAmountByMemberId = chargeDao.selectTalentRefundAmountByMemberId(memberId);
-		log.info("ChargeServiceImpl calculateTotalBamboo findBambooChargeAmountMemberId -> {}", findBambooChargeAmountByMemberId);
-		log.info("ChargeServiceImpl calculateTotalBamboo findBambooUseAmountMemberId    -> {}", findBambooUseAmountByMemberId);
-		log.info("ChargeServiceImpl calculateTotalBamboo findTalentRefundAmountMemberId -> {}", findTalentRefundAmountByMemberId);
+		log.info("[findTotalBambooByMemberId] findBambooChargeAmountMemberId -> {}", findBambooChargeAmountByMemberId);
+		log.info("[findTotalBambooByMemberId] findBambooUseAmountMemberId    -> {}", findBambooUseAmountByMemberId);
+		log.info("[findTotalBambooByMemberId] findTalentRefundAmountMemberId -> {}", findTalentRefundAmountByMemberId);
 		
 		Long foundTotalBambooByMemberId = findBambooChargeAmountByMemberId + findTalentRefundAmountByMemberId - findBambooUseAmountByMemberId;
-		log.info("ChargeServiceImpl calculateTotalBamboo calculatedTotalBamboo  -> {}", foundTotalBambooByMemberId);
+		log.info("[findTotalBambooByMemberId] foundTotalBambooByMemberId  -> {}", foundTotalBambooByMemberId);
 		
 		return foundTotalBambooByMemberId;
 	}
@@ -152,19 +150,19 @@ public class ChargeServiceImpl implements ChargeService {
 	public List<PaymentDto> findPaymentList() {
 		
 		List<PaymentDto> selectPaymentList = null;
-		log.info("ChargeServiceImpl findPaymentList() Start...");
+		log.info("[findPaymentList] Start...");
 		
 		selectPaymentList = chargeDao.selectPaymentList();
-		log.info("ChargeServiceImpl findPaymentList() selectPaymentList.size() -> {}", selectPaymentList.size());
+		log.info("[findPaymentList] selectPaymentList.size() -> {}", selectPaymentList.size());
 		
 		return selectPaymentList;
 	}
 
 	@Override
 	public int totalChargeCntByChargerId(String chargerId) {
-		log.info("ChargeServiceImpl totalChargeCntByChargerId() Start...");
+		log.info("[totalChargeCntByChargerId] Start...");
 		int totalChargeCntByChargerId = chargeDao.totalChargeCntByChargerId(chargerId);
-		log.info("ChargeServiceImpl totalChargeCntByChargerId() count -> {}", totalChargeCntByChargerId);
+		log.info("[totalChargeCntByChargerId] count -> {}", totalChargeCntByChargerId);
 		
 		return totalChargeCntByChargerId;
 	}
@@ -172,15 +170,15 @@ public class ChargeServiceImpl implements ChargeService {
 	@Override
 	public Map<String, Object> findchargeHistoryMapByPagination(PaginationDto paginationDto) {
 		Map<String, Object> chargeHistoryMapByPagination = new HashMap<String, Object>();
-		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() Start...");
+		log.info("[findchargeHistoryMapByPagination] Start...");
 		String chargeId = paginationDto.getChargerId();
 		int totalCount = chargeDao.totalChargeCntByChargerId(chargeId);
-		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() totalCount -> {}", totalCount);
+		log.info("[findchargeHistoryMapByPagination] totalCount -> {}", totalCount);
 		
 		paginationDto.setTotalCount(totalCount);
 		
 		List<ChargeDto> chargeListByPagination = chargeDao.selectChargeListByPagination(paginationDto);
-		log.info("ChargeServiceImpl findchargeHistoryMapByPagination() chargeList.size() -> {}", chargeListByPagination.size());
+		log.info("[findchargeHistoryMapByPagination] chargeListByPagination -> {}", chargeListByPagination.size());
 		
 		chargeHistoryMapByPagination.put("chargeList", chargeListByPagination);
 		chargeHistoryMapByPagination.put("pagination", paginationDto);

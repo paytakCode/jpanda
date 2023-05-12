@@ -71,21 +71,21 @@ public class ChargeController {
 	@PostMapping("/charge") 
 	public Map<String, String> addCharge(@RequestBody ChargeDto chargeDto, HttpSession session) {
 		String chargerId = (String) session.getAttribute("memberId");
-		log.info("ChargeContoller addCharge() Start...");
-		log.info("ChargeContoller addCharge() chargerId -> {}", chargerId);
+		log.info("[addCharge] Start...");
+		log.info("[addCharge] chargerId -> {}", chargerId);
 		chargeDto.setChargerId(chargerId);
-		log.info("ChargeContoller addCharge() couponUseDto.toString() -> {}", chargeDto.toString());
+		log.info("[addCharge] couponUseDto.toString() -> {}", chargeDto.toString());
 		
 		int resultCharge = chargeService.addCharge(chargeDto);
 		Map<String, String> resultMap = new HashMap<>();
 		
 		if(resultCharge > 0) {
-			log.info("ChargeController addCharge() resultAddCharge 완료");
+			log.info("[addCharge] resultAddCharge 완료");
 			 resultMap.put("result", "success");
 			return resultMap;
 			
 		} else {
-			log.error("ChargeContoller addCharge() resultAddCharge 실패");
+			log.error("[addCharge] resultAddCharge 실패");
 			resultMap.put("result", "fail");
 			return resultMap;
 		}
@@ -105,10 +105,10 @@ public class ChargeController {
 	public CouponUseDto checkAvailableCoupon(HttpSession session, CouponUseDto couponUseDto) {
 		String memberId = (String) session.getAttribute("memberId");
 		CouponUseDto checkedcouponUseDto = new CouponUseDto();				
-		log.info("ChargeContoller checkAvailableCoupon() Start...");
-		log.info("ChargeContoller checkAvailableCoupon() memberId -> {}", memberId);
+		log.info("[checkAvailableCoupon] Start...");
+		log.info("[checkAvailableCoupon] memberId -> {}", memberId);
 		couponUseDto.setMemberId(memberId);
-		log.info("ChargeContoller checkAvailableCoupon() couponUseDto.toString() -> {}", couponUseDto.toString());
+		log.info("[checkAvailableCoupon] couponUseDto.toString() -> {}", couponUseDto.toString());
 		
 		// 사용 결과만 가져옴 -> 사용 가능한 쿠폰, 사용 했던 쿠폰을 비교하여, 회원이 사용했던 이력이 있는 쿠폰의 결과를 가져와 사용가능 여부를 따짐
 		int resultInt = chargeService.checkAvailableCoupon(couponUseDto);
@@ -119,8 +119,8 @@ public class ChargeController {
 		checkedcouponUseDto.setResult(resultInt);
 		checkedcouponUseDto.setCouponValue(couponValue);
 		
-		log.info("ChargeContoller checkAvailableCoupon resultInt-> {}", resultInt);
-		log.info("ChargeContoller checkAvailableCoupon couponValue-> {}", couponValue);
+		log.info("[checkAvailableCoupon] resultInt-> {}", resultInt);
+		log.info("[checkAvailableCoupon] couponValue-> {}", couponValue);
 		
 		return checkedcouponUseDto;
 	}
@@ -135,14 +135,14 @@ public class ChargeController {
 	@GetMapping(path = "/members/total-bamboo")
 	@ResponseBody
 	public String  totalBambooByMemberId(@RequestParam("memberId") String memberId) {
-		log.info("ChargeContoller totalBambooByMemberId Start...");
-		log.info("ChargeContoller totalBambooByMemberId() memberId -> {}", memberId);
+		log.info("[totalBambooByMemberId] Start...");
+		log.info("[totalBambooByMemberId] memberId -> {}", memberId);
 		
 		Long foundTotalBambooByMemberId = chargeService.findTotalBambooByMemberId(memberId);
 		
 		String  foundTotalBambooByMemberIdStr =  Long.toString(foundTotalBambooByMemberId);
 		
-		log.info("ChargeContoller totalBambooByMemberId calculatedTotalBamboo -> {}", foundTotalBambooByMemberIdStr);
+		log.info("[totalBambooByMemberId] foundTotalBambooByMemberIdStr -> {}", foundTotalBambooByMemberIdStr);
 		
 		return foundTotalBambooByMemberIdStr;
 	}
