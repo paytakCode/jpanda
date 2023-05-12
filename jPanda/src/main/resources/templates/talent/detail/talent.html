@@ -28,11 +28,10 @@ ul, li {
 
 
 .talent-info {
-	z-index: 3;
 	margin-top: 10px;
 	position: relative;
 	width: 100%;
-	height: 550px;
+	height: 500px;
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-start;
@@ -40,7 +39,7 @@ ul, li {
 
 
 .view-image {
-	position: absolute;
+	position: relative;
 	left: 100px;
 	top: 30px;
 	width: 500px;
@@ -70,12 +69,12 @@ ul, li {
 
 
 .side-info {
-	position: absolute;
+	position: relative;
 	top: calc(30px + 24px + 20px);
 	right: 30px;
 	text-align: left;
 	width: 50%;
-	height: 470px;
+	height: 430px;
 }
 
 
@@ -118,46 +117,27 @@ ul, li {
 }
 
 
+.all-content {
+	border-top: 1px solid gray;
+	position: relative;
+}
+
+
 .btn-group {
 	font-size: 15px;
 	font-weight: bold;
 	color: white;
-	float: right;
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	top: 0;
+	right: 30px;
+	transform: translateY(-100%);
 }
 
-
-.quick-move {
-	border-top: 1px solid gray;
-	text-align: center;
-	width: 100%;
-	white-space: nowrap;
-}
-
-
-.quick-move a {
-	display: inline-block;
-	text-decoration: none;
-	color: rgb(81,149,252);
-	padding: 5px 10px;
-	font-size: 20px;
-	font-weight: bold;
-	border: 1px solid #ccc;
-	width: auto;
-}
-
-
-.quick-move a:hover {
-	background-color: #f2f2f2;
-	color: rgb(81,149,252);
-}
 
 
 .content-wrapper {
     position: relative;
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
     text-align: center;
 }
@@ -172,15 +152,40 @@ ul, li {
     max-width: 100%;
 }
 
+
 .quick-menu {
-    position: sticky;
-    top: 0;
-    bottom: 20px;
-    left: 20px;
-    transform: translateY(-50%);
-    max-width: 100px;
+	z-index: 1;
+	position: sticky;
+	top: 50%;
+	transform: translateY(-50%);
+	max-width: 100px;
+	z-index: 1;
 }
 
+.quick-menu ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.quick-menu li {
+	margin-bottom: 10px;
+}
+
+.quick-menu a {
+	display: block;
+	padding: 5px;
+	color: white;
+	background-color: #198754;
+	text-align: center;
+	border-radius: 5px;
+	text-decoration: none;
+	transition: background-color 0.3s ease-in-out;
+}
+
+.quick-menu a:hover {
+	background-color: gray;
+}
 
 
 .review-form {
@@ -357,115 +362,113 @@ ul, li {
 			<div class="d-grid gap-2">
 		 		<button type="button" class="btn btn-success btn" id="buy-btn" th:data-talentno="${talent.talentNo}" th:data-salebamboo="${talent.saleBamboo}">구매하기</button><br>
  			</div>
+		</div>
  			
- 			<div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+	</div>
+	
+	<div class="all-content">
+		<div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
  				<input type="hidden" id="login-id" value="${memberId}">
 			  	<button type="button" class="btn btn-success" th:if="${talent.sellerId == memberId}" id="modify-btn" th:data-talentno="${talent.talentNo}">게시물 수정</button>
 			  	<button type="button" class="btn btn-danger" th:if="${talent.sellerId == memberId}" id="delete-btn" th:data-talentno="${talent.talentNo}">판매 종료</button>
 			  	<button type="button" class="btn btn-warning" id="report-btn" th:data-talentno="${talent.talentNo}" th:data-sellerid="${talent.sellerId}">게시물 신고하기</button>
-			</div>
 		</div>
- 			
-	</div>
-	
-	<div class="quick-move">
-		<a href="#review-list">리뷰</a><a href="#content">상세 내용</a><a id="seller-chat-btn" href='' onclick='return false'>상담 및 채팅</a>
-	</div>
-	
-	
-	<div class="quick-menu">
+		
+		
+		<div class="quick-menu">
 		<ul>
 			<li><a href="#">맨위로 이동</a></li>
 			<li><a href="#content">상세 내용</a></li>
 			<li><a href="#review-list">리뷰</a></li>
+			<li><a id="seller-chat-btn" href='' onclick='return false'>상담 및 채팅</a></li>
 		</ul>
+		</div>
+	
+		<div class="content-wrapper">
+			<div class="content">
+				<a name="content"></a>
+					<div class="content-detail" th:utext="${talent.content}"></div>
+			</div>
+		</div>
+		
+			<!-- 리뷰 작성 폼  -->
+			<div>
+				<form class="review-form" id="insert-review-form" method="post">
+					<h5 class="insert-bambooScore">리뷰를 작성해주세요.</h5>
+						<label for="score">평점</label>
+							<select id="insert-bambooScore" name="bambooScore">
+								<option value="5.0">5점</option>
+						        <option value="4.5">4.5점</option>
+						        <option value="4.0">4점</option>
+						        <option value="3.5">3.5점</option>
+						        <option value="3.0">3점</option>
+						        <option value="2.5">2.5점</option>
+						        <option value="2.0">2점</option>
+						        <option value="1.5">1.5점</option>
+						        <option value="1.0">1점</option>
+							</select>
+						<br>
+						<textarea id="insert-content" name="content" rows="1" cols="1"></textarea>
+						<br>
+						<button type="button" th:onclick="'reviewInsert(' + ${talent.talentNo} + ')'">등록</button>
+				</form>
+			</div>
+		
+			<!-- 리뷰 수정 폼  -->
+			<div>
+				<form class="review-form" id="update-review-form" method="post" style="display: none;">
+					<h5 class="update-bambooScore">리뷰를 수정해주세요.</h5>
+						<label for="score">평점</label>
+							<select id="update-bambooScore" name="bambooScore">
+								<option value="5.0">5점</option>
+						        <option value="4.5">4.5점</option>
+						        <option value="4.0">4점</option>
+						        <option value="3.5">3.5점</option>
+						        <option value="3.0">3점</option>
+						        <option value="2.5">2.5점</option>
+						        <option value="2.0">2점</option>
+						        <option value="1.5">1.5점</option>
+						        <option value="1.0">1점</option>
+							</select>
+						<br>
+						<textarea id="update-content" name="content" rows="1" cols="1"></textarea>
+						<input id="review-no" value="" type="hidden">
+						<br>
+						<button type="button" th:onclick="'reviewUpdate(' + ${talent.talentNo} + ')'">수정 완료</button>
+				</form>
+			</div>
+		
+		
+		<div class="review-list">
+		<a name="review-list"></a>
+			<ul id="review-list">
+				<th:block th:if="${reviewList.isEmpty()}">
+					<p style="font-weight: bold;">리뷰가 존재하지 않습니다.</p>
+				</th:block>
+				
+				<th:block th:if="${not reviewList.isEmpty()}">
+					<p id="review-title" style="font-weight: bold; color: gray; font-size: 15px;">강사에 대한 비방이나 욕설은 삼가해주세요.</p>
+					<div class="review-filter" id="review-list-filter"></div>
+					<li th:each="review : ${reviewList}">
+						<span id="reviewer-id" th:text="${review.reviewerId}"></span>
+						<span id="review-date" th:text="'('+${#strings.substring(review.reviewDate, 0, 10)+')'}"></span>
+						<span class="bamboo-score" th:text="${review.bambooScore}" style="display: none;"></span>
+						<img class="bamboo-imges"><br>
+						<span id="review-content" th:text="${review.content}"></span>
+					
+						<div class="review-btn">
+					 		<input type="hidden" id="login-id" value="${memberId}">
+					 		<button type="button" class="btn btn-outline-success" id="modifyReview" th:if="${review.reviewerId == memberId}" 
+					 				th:data-reviewno="${review.reviewNo}" th:data-content="${review.content}" th:data-reviewerid="${review.reviewerId}">댓글 수정</button>
+					 		<button type="button" class="btn btn-outline-danger" id="deleteReview" th:if="${review.reviewerId == memberId}"
+					 				th:data-reviewno="${review.reviewNo}" th:data-talentno="${talent.talentNo}" th:data-reviewerid="${review.reviewerId}">댓글 삭제</button>
+				 		</div>
+			        </li>
+				</th:block>
+		    </ul>
+		</div>
 	</div>
-	
-	
-	<div class="content-wrapper">
-		<div class="content">
-			<a name="content"></a>
-				<div class="content-detail" th:utext="${talent.content}"></div>
-		</div>
-		
-		
-		<!-- 리뷰 작성 폼  -->
-		<div>
-			<form class="review-form" id="insert-review-form" method="post">
-				<h5 class="insert-bambooScore">리뷰를 작성해주세요.</h5>
-					<label for="score">평점</label>
-						<select id="insert-bambooScore" name="bambooScore">
-							<option value="5.0">5점</option>
-					        <option value="4.5">4.5점</option>
-					        <option value="4.0">4점</option>
-					        <option value="3.5">3.5점</option>
-					        <option value="3.0">3점</option>
-					        <option value="2.5">2.5점</option>
-					        <option value="2.0">2점</option>
-					        <option value="1.5">1.5점</option>
-					        <option value="1.0">1점</option>
-						</select>
-					<br>
-					<textarea id="insert-content" name="content" rows="1" cols="1"></textarea>
-					<br>
-					<button type="button" th:onclick="'reviewInsert(' + ${talent.talentNo} + ')'">등록</button>
-			</form>
-		</div>
-	
-		<!-- 리뷰 수정 폼  -->
-		<div>
-			<form class="review-form" id="update-review-form" method="post" style="display: none;">
-				<h5 class="update-bambooScore">리뷰를 수정해주세요.</h5>
-					<label for="score">평점</label>
-						<select id="update-bambooScore" name="bambooScore">
-							<option value="5.0">5점</option>
-					        <option value="4.5">4.5점</option>
-					        <option value="4.0">4점</option>
-					        <option value="3.5">3.5점</option>
-					        <option value="3.0">3점</option>
-					        <option value="2.5">2.5점</option>
-					        <option value="2.0">2점</option>
-					        <option value="1.5">1.5점</option>
-					        <option value="1.0">1점</option>
-						</select>
-					<br>
-					<textarea id="update-content" name="content" rows="1" cols="1"></textarea>
-					<input id="review-no" value="" type="hidden">
-					<br>
-					<button type="button" th:onclick="'reviewUpdate(' + ${talent.talentNo} + ')'">수정 완료</button>
-			</form>
-		</div>
-	
-	
-	<div class="review-list">
-	<a name="review-list"></a>
-	<ul id="review-list">
-		<th:block th:if="${reviewList.isEmpty()}">
-			<p style="font-weight: bold;">리뷰가 존재하지 않습니다.</p>
-		</th:block>
-		
-		<th:block th:if="${not reviewList.isEmpty()}">
-			<p id="review-title" style="font-weight: bold; color: gray; font-size: 15px;">강사에 대한 비방이나 욕설은 삼가해주세요.</p>
-			<div class="review-filter" id="review-list-filter"></div>
-			<li th:each="review : ${reviewList}">
-				<span id="reviewer-id" th:text="${review.reviewerId}"></span>
-				<span id="review-date" th:text="'('+${#strings.substring(review.reviewDate, 0, 10)+')'}"></span>
-				<span class="bamboo-score" th:text="${review.bambooScore}" style="display: none;"></span>
-				<img class="bamboo-imges"><br>
-				<span id="review-content" th:text="${review.content}"></span>
-			
-				<div class="review-btn">
-			 		<input type="hidden" id="login-id" value="${memberId}">
-			 		<button type="button" class="btn btn-outline-success" id="modifyReview" th:if="${review.reviewerId == memberId}" 
-			 				th:data-reviewno="${review.reviewNo}" th:data-content="${review.content}" th:data-reviewerid="${review.reviewerId}">댓글 수정</button>
-			 		<button type="button" class="btn btn-outline-danger" id="deleteReview" th:if="${review.reviewerId == memberId}"
-			 				th:data-reviewno="${review.reviewNo}" th:data-talentno="${talent.talentNo}" th:data-reviewerid="${review.reviewerId}">댓글 삭제</button>
-		 		</div>
-	        </li>
-		</th:block>
-    </ul>
-</div>
-</div>
+
 	
 	
 	  <!-- 신고하기 Modal -->
@@ -514,7 +517,6 @@ ul, li {
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 	
-	console.log(memberId);
 	
 	/* 신고하기 모달 */
 	const reportModal = document.getElementById('reportModal')
@@ -551,16 +553,6 @@ ul, li {
 	});
 		
 	
-	// 퀵 메뉴 설정
-	$(document).ready(function(){
-		  var currentPosition = parseInt($(".quick-menu").css("top"));
-		  $(window).scroll(function() {
-		    var position = $(window).scrollTop(); 
-		    $(".quick-menu").stop().animate({"top":position+currentPosition+"px"},1000);
-		  });
-		});
-	
-	
 	// 구매하기 버튼
 	$(document).on('click', '#buy-btn', function(){
 		if(confirm("정말로 구매 하시겠습니까? " + $(this).data('salebamboo') + " 밤부가 차감 됩니다.")){
@@ -572,7 +564,6 @@ ul, li {
 		        useBamboo    : useBamboo,
 		        purchaseDate : new Date(Date.now())
 		    };
-			console.log(bambooUse);
 			$.ajax({
 				url 	: "/talents/bambooUse",
 				method 	: 'POST',
@@ -709,7 +700,6 @@ ul, li {
 		    contentType : "application/json",
 		    dataType :'json',
 		    success : function(reviewInsert) {
-				console.log(reviewInsert);
 				if (reviewInsert == 0){
 					alert("상품을 구매한 사람만 리뷰를 남길 수 있습니다.");
 				} else if (reviewInsert == -1) {
@@ -744,7 +734,6 @@ ul, li {
 			return;
 	};  
 		var reviewNo = $("#review-no").val();
-		console.log(reviewNo);
 		
 	  	$.ajax({
 	  		type : 'PUT',
@@ -761,7 +750,6 @@ ul, li {
 	  			dataType : 'json',
 	  			success : function(review){
 					$('#review-list').empty();
-					console.log(review);
 					review.forEach(function(review){
 						const li = $('<li>').appendTo('#review-list');
 			        	$('<span>').text(review.reviewerId).appendTo(li);
@@ -789,7 +777,6 @@ ul, li {
 						alert('로그인이 필요합니다.');
 						location.replace(responseText.redirectUrl);
 					} else {
-						console.log("error code : " + responseText.code + ", status : " + responseText.status);
 			       		alert('리뷰 수정에 실패하였습니다. 잠시 후 다시 시도해주세요.');
 					}
 			    }
@@ -801,8 +788,6 @@ ul, li {
 	$(document).on('click', '#deleteReview', function() {
 		var reviewNo = $(this).data("reviewno");
 		var talentNo = $(this).data("talentno");
-		console.log(reviewNo);
-		console.log(talentNo);
 	  	if (confirm('리뷰를 삭제하시겠습니까?')) {
 		    $.ajax({
 				type : 'DELETE',
@@ -822,7 +807,6 @@ ul, li {
 						alert('로그인이 필요합니다.');
 						location.replace(responseText.redirectUrl);
 					} else {
-						console.log("error code : " + responseText.code + ", status : " + responseText.status);
 			       		alert('리뷰 삭제에 실패하였습니다. 잠시 후 다시 시도해주세요.');
 					}
 			    }
@@ -866,8 +850,8 @@ ul, li {
 	                if (sellerPartner.length) {
 	                   sellerPartner.detach().prependTo('#chat-partner-list');
 	                   selectedPartnerId = sellerId;
-	                  updateSelectedPartner();
-	                    updateChatContent();
+	                   updateSelectedPartner();
+	                   updateChatContent();
 	                    $('#chat-input').focus();
 	                } else {
 	                    const sellerElem = $('<li>', {
@@ -876,7 +860,7 @@ ul, li {
 	                     text: sellerName
 	                    });
 	                    sellerElem.click(function() { 
-	                       selectedPartnerId = sellerId;
+	                     selectedPartnerId = sellerId;
 	                     updateSelectedPartner();
 	                     updateChatContent();
 	                  }); 
