@@ -27,7 +27,6 @@
 		    const socket = new SockJS('/stomp/chat?' + memberId);
 		    stompClient = Stomp.over(socket);
 		    stompClient.connect({}, function (frame) {
-		        console.log('Connected: ' + frame);
 		        onConnect();
 		    });
 		}
@@ -90,7 +89,6 @@
 		function onRead(response){
 			const readerId = response.body;
 			if (selectedPartnerId == readerId){
-				console.log('상대방(' + readerId + ')이 메세지를 읽었습니다.')
 				$('.read-status').each(function() {
 				    $(this).text('읽음')
 				    		.removeClass('text-bg-warning')
@@ -203,7 +201,6 @@
 						alert('로그인이 필요합니다.');
 						location.replace(JSON.parse(xhr.responseText).redirectUrl);
 					} else {
-						console.log('updateChatContent Failed');
 					}
 				}
 			});
@@ -235,7 +232,6 @@
 				    data: readerIdAndPartnerId,
 					contentType: 'application/json',
 				    success: function(result) {
-				        console.log(result + '개의 메세지를 읽었습니다. 상대방에게 읽었다고 알립니다.');
 						stompClient.send("/chat/read", {}, readerIdAndPartnerId);
 						updateTotalUnreadCount();
 				    },
@@ -244,9 +240,7 @@
 						if(xhr.status == 401){
 							alert('로그인이 필요합니다.');
 							location.replace(JSON.parse(xhr.responseText).redirectUrl);
-						} else {
-							console.log('readPartnerMessage Failed');
-						}
+						} 
 					}
 				});
 			}
@@ -337,7 +331,6 @@
 				contentType : "application/json",
 				dataType : "json",
 				success: function(savedChat) {
-					console.log('상대방에게 메세지를 보냅니다.' + JSON.stringify(savedChat));
 			   	    stompClient.send("/chat/message", {}, JSON.stringify(savedChat));
 			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
 				},
@@ -345,8 +338,6 @@
 					if(xhr.status == 401){
 						alert('로그인이 필요합니다.');
 						location.replace(JSON.parse(xhr.responseText).redirectUrl);
-					} else {
-						console.log('saveChat Failed');
 					}
 				}
 			});
@@ -359,7 +350,6 @@
 					method: "GET",
 					dataType : "json",
 					success: function(partnerList) {
-						console.log('채팅 상대 목록을 불러옵니다.' + JSON.stringify(partnerList));
 						$("#chat-partner-list").empty();
 						partnerList.forEach((partner, index) => {
 							let chatPartnerElem = $("<li>");
@@ -394,8 +384,6 @@
 						if(xhr.status == 401){
 							alert('로그인이 필요합니다.');
 							location.replace(JSON.parse(xhr.responseText).redirectUrl);
-						} else {
-							console.log('updateChatPartnerList Failed');
 						}
 					}
 				});
@@ -473,7 +461,6 @@
 					contentType : "application/json",
 					dataType : "json",
 					success: function(reportedData) {
-						console.log('신고 완료.' + JSON.stringify(reportedData));
 						$('#report-chat-modal').modal('hide');
 						showToast('#report-success-toast');
 					},
@@ -482,7 +469,6 @@
 							alert('로그인이 필요합니다.');
 							location.replace(JSON.parse(xhr.responseText).redirectUrl);
 						} else {
-							console.log('report Failed');
 							showToast('#report-fail-toast');
 						}
 					}
