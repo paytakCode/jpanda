@@ -30,7 +30,7 @@ public class TalentController {
 	// 재능 등록 페이지 이동
 	@GetMapping("/write-form")
 	public String talentWriteForm(Model model) {
-		return "talent/register/talentWriteForm";
+		return "talent/register/talent-write-form";
 	}
 	
 	// 카테고리 불러오기
@@ -53,7 +53,7 @@ public class TalentController {
 		return registTalentService.modifyTalent(talent, session);
 	}
 	
-	// 이미지 서버 저장 후 상대 경로 반환
+	// 이미지  외부 디텍토리 저장 후 경로 반환
 	@ResponseBody
 	@PostMapping("/image-upload")
 	public ModelAndView talentImageUpload(MultipartHttpServletRequest request) {
@@ -63,11 +63,11 @@ public class TalentController {
 	}
 	
 	// 수정 페이지 이동
-	@GetMapping("/talents/{talentNo}/update-form") // /talents/{talentNo}/update-form
-	public String talentUpdateFrom(@PathVariable Long talentNo, Model model, HttpSession session) { // @PathVariable
+	@GetMapping("/talents/{talentNo}/update-form")
+	public String talentUpdateFrom(@PathVariable Long talentNo, Model model, HttpSession session) {
 		TalentDto talent = registTalentService.findTalentByTalentNo(talentNo);
 		model.addAttribute("talent", talent);
-		return "talent/register/talentUpdateForm";
+		return "talent/register/talent-update-form";
 	}
 	
 }

@@ -66,7 +66,7 @@ public class RegistTalentServiceImpl implements RegistTalentService{
 			int updateResult = registTalentDao.updateTalent(talent);
 			if(updateResult > 0) {
 				return "<script> " +
-						"alert('재능 수정 완료되었습니다.');" + 
+						"alert('재능 수정이 완료되었습니다.');" + 
 						"location.href = '/main';" + 
 						"</script>";
 			}else {
@@ -99,10 +99,12 @@ public class RegistTalentServiceImpl implements RegistTalentService{
 		// 서버에 저장될 때 중복된 파일 이름인 경우를 방지하기 위해 UUID에 확장자를 붙여 새로운 파일 이름을 생성
 		String newFileName = UUID.randomUUID() + ext;
 		
+		// System.getProperty("user.dir")은 현재 프로젝트의 경로를 출력함
+		// 프로젝트의 상위 경로에 이미지를 저장하기 위해 프로젝트명을 경로에서 자름
 		int index = System.getProperty("user.dir").indexOf(File.separator + "jPanda");
 		String path = System.getProperty("user.dir").substring(0, index);
 		
-		// 현재경로/talentImage/파일명이 저장 경로
+		// 프로젝트상위경로/uploadImage/업로드할 이미지 파일 이름
 		String savePath = path + "/uploadImage/" + newFileName;
 		
 		
@@ -114,6 +116,8 @@ public class RegistTalentServiceImpl implements RegistTalentService{
 		}
 		
 		// 반환할 경로
+		// /uploadImage/업로드할 이미지 파일 이름으로 경로를 반환해주는 이유는
+		// /uploadImage/**로 시작하는 경로를 요청하면 @Configuration에서 프로젝트상위경로/uploadImage/에서 찾도록 설정함
 		String uploadPath = "/uploadImage/" + newFileName; 
 		
 		// 저장 경로로 파일 객체 생성
@@ -127,8 +131,8 @@ public class RegistTalentServiceImpl implements RegistTalentService{
 		}
 		
 		// uploaded, url 값을 Modelandview를 통해 보냄
-		mav.addObject("uploaded", true); // 업로드 완료
-		mav.addObject("url", uploadPath); // 업로드 완료
+		mav.addObject("uploaded", true);
+		mav.addObject("url", uploadPath);
 		return mav;
 	}
 	

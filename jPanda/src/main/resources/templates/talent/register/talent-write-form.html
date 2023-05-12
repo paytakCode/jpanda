@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="/common/layout/default-layout">
 <!-- 페이지 제목 입력 -->  
+<th:block layout:fragment="title">
+	<title>재능 등록</title>
+</th:block>
 <!-- 현재 화면에서만 사용하는 css -->
 <th:block layout:fragment="css">
 	<style type="text/css">
@@ -31,6 +34,8 @@
 			font-size: 15px;
 			font-weight: bold;
 			text-align: left;
+			height: 20px;
+			line-height: 20px;
 			
 		}
 		
@@ -48,7 +53,7 @@
 		.talent-input {
 			width: 700px;
 		  	height: 40px;
-		  	border-radius: 5px;
+		  	border-radius: 7px;
 		  	border: 1px solid #ccc;
 		  	margin: 10px;
 		  	padding: 5px;
@@ -139,7 +144,7 @@
 			border-radius: 13px;
 			
 		}
-		#price > div:not(.talent-image-summary) {
+		.price {
 		   display: inline-block;
 		   text-align: left;
 		   margin-left: 30px;
@@ -171,6 +176,11 @@
 			width: auto;
 			max-height: 291.666px;
 		}
+		#main-image-preview:hover {
+		  	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+		  	cursor: pointer;
+		}
+		
 		.warning-image {
 			width: 25px;
 			height: 25px;
@@ -205,6 +215,19 @@
     	.talent-summary-in-div {
     		margin-left: 0px;
     	}
+    	.submit-check{
+    		vertical-align: baseline;
+    	}
+		.essential{
+    		background-color: #198754;
+    		height: 18px;
+    		font-size: 10px;
+    		width: 42px;
+    		margin: 20px 0px 0px 7px;
+    	}
+    	.essential-div {
+    		display: flex;
+    	}
 	</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -230,7 +253,10 @@
 		<input type="hidden" name="statusDate" id="status-date">
 		
 		<div id="category" class="category write-check">
-			<h4 class="talent-h4">카테고리<img class="essential-image" src="/image/talentImage/essentialmage.png"></h4>
+			<div class="essential-div">
+					<h4  class="talent-h4">카테고리</h4>
+					<span class="badge essential">필수</span>
+				</div>
 			<p class="talent-summary">강의하실 분야를 선택해 주세요.</p>
 			
 			<select id="upper-category-no" class="category-select" name="upperCategoryNo">
@@ -244,7 +270,10 @@
 		</div>
 		
 		<div id="main-image" class="main-img-value write-check">
-			<h4 class="talent-h4">대표 이미지<img class="essential-image" src="/image/talentImage/essentialmage.png"></h4>
+			<div class="essential-div">
+					<h4  class="talent-h4">대표 이미지</h4>
+					<span class="badge essential">필수</span>
+				</div>
 			<p class="talent-summary">메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요 <br>비율은 4:3이 가장 좋아요.</p>
 			<div class="talent-image-summary">
 				<img class="warning-image" src="/image/talentImage/red!.png">
@@ -256,7 +285,10 @@
 		</div>
 		
 		<div id="title" class="title write-check">
-			<h4 class="talent-h4">제목<img class="essential-image" src="/image/talentImage/essentialmage.png"></h4>
+			<div class="essential-div">
+					<h4  class="talent-h4">제목</h4>
+					<span class="badge essential">필수</span>
+				</div>
 			<p class="talent-summary">메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.</p>
 			<div class="talent-image-summary">
 				<img class="warning-image" src="/image/talentImage/orange!.png">
@@ -266,13 +298,19 @@
 		</div>
 		
 		<div id ="content" class="content write-check">
-			<h4 class="talent-h4">강의 소개<img class="essential-image" src="/image/talentImage/essentialmage.png"></h4>
+			<div class="essential-div">
+					<h4  class="talent-h4">강의 소개</h4>
+					<span class="badge essential">필수</span>
+				</div>
 			<p class="talent-summary content-summary">강의에 대한 소개를 작성해주세요.</p>
 			<textarea id ="content-textarea" name = "content" class="content"></textarea>
 		</div>
 		
 		<div id="price" class="bamboo write-check">
-			<h4 class="talent-h4">가격<img class="essential-image" src="/image/talentImage/essentialmage.png"></h4>
+			<div class="essential-div">
+					<h4  class="talent-h4">가격</h4>
+					<span class="badge essential">필수</span>
+				</div>
 			<p class="talent-summary">정상 가격과 판매 가격을 입력해 주세요.</p>
 			<div class="talent-image-summary">
 				<img class="warning-image" src="/image/talentImage/red!.png">
@@ -293,7 +331,10 @@
 		</div>
 		
 		<div id="summary" class="summary write-check">
-			<h4 class="talent-h4">요약 설명<img class="essential-image" src="/image/talentImage/essentialmage.png"></h4>
+			<div class="essential-div">
+					<h4  class="talent-h4">요약 설명</h4>
+					<span class="badge essential">필수</span>
+				</div>
 			<p class="talent-summary">해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
 			<div class="talent-image-summary">
 				<img class="warning-image" src="/image/talentImage/orange!.png">
