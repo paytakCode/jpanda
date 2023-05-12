@@ -120,10 +120,7 @@ h3 {
 			type : "GET",
 			data : { currentPage : currentPage },
 			dataType: 'json',
-	        success:function(returnMap) {
-	        	console.log(returnMap.couponList);
-	          	console.log(returnMap.pagination);
-	          		
+	        success:function(returnMap) {	          		
 	          	var couponList = returnMap.couponList;
 	          	var couponTable = $('#couponTable');
 

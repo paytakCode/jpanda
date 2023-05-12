@@ -36,7 +36,7 @@
 	
 	.que.on>span {
 		font-weight: bold;
-		color: black;
+		color: white;
 	}
 	
 	.anw {
@@ -79,7 +79,9 @@
 	}
 	
 	.que.on {
-		background-color: rgb(129,193,71);
+		background-color: #198754;
+		color: white;
+		border-top-color: #198754
 	}
 	
 	.btn-report {
@@ -138,8 +140,6 @@
 	<script th:inline="javascript">
 	$(".que").click(function() {
 		  let blackId = $(this).next(".anw").data('blackid');
-		  console.log(blackId);
-		  
 		  let question = $(this);
 		  let answer = question.next(".anw"); 
 
@@ -156,10 +156,10 @@
 		      method : "GET",
 		      data : blackId,
 		      success : function(reportList) {
-		            console.log(reportList);
-
 		            var tableBody = $(".anw");
+		            
 		            tableBody.empty(); // 테이블 내용 초기화
+		            
 		            var table = $("<table>").appendTo(tableBody);
 		            var header = $("<thead>").appendTo(table);
 		            var row = $("<tr>").appendTo(header);
@@ -194,7 +194,6 @@
 	 
 	$(document).on("click", ".btn-report", function(){
 		 let memberId = $(this).closest(".anw").data('blackid');
-		 console.log(memberId);
 		 
 		 $.ajax({
 			 url : "/admin/report/" + memberId,

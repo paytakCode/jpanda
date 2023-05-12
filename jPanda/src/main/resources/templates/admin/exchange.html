@@ -98,10 +98,7 @@ h2{
 			type : "GET",
 			data : { currentPage : currentPage },
 			dataType: 'json',
-	        success:function(returnMap) {
-	        	console.log(returnMap.exList);
-	          	console.log(returnMap.pagination);
-	          		
+	        success:function(returnMap) {         		
 	          	var exList = returnMap.exList;
 	          	var exchangeTable = $('#exchangeTable');
 
@@ -117,7 +114,9 @@ h2{
 	    		var headerSubmitDate = $('<th></th>').text('신청일');
 	    		var headerTotal = $('<th></th>').text('총금액');
 	    		var headerStatus = $('<th></th>').text('상태');
-	    		tableHeader.append(headerNo).append(headerTitle).append(headerTalentNo).append(headerSellerId).append(headerSubmitDate).append(headerTotal).append(headerStatus);
+	    		tableHeader.append(headerNo).append(headerTitle).append(headerTalentNo)
+	    				   .append(headerSellerId).append(headerSubmitDate).append(headerTotal)
+	    				   .append(headerStatus);
 	    		exchangeTable.append(tableHeader);
 
 	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
