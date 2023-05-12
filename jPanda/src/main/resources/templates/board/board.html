@@ -333,7 +333,6 @@ ul, li {
 	 		dataType : 'json',
 	 		success : function(map){
 	 			$('#defalut-list').empty();
-	 	        console.log(map);
 	 	       	map.talentList.forEach(function(talent){
 	       		 	const li = $('<li>').appendTo('#defalut-list').addClass('talent-ajax-list');
 		            $('<img>').attr('src', talent.mainImg).addClass('talent-image').appendTo(li);
