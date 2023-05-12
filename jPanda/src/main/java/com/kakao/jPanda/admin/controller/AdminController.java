@@ -112,7 +112,7 @@ public class AdminController {
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);
 		model.addAttribute("notice", notice);
 		
-		return "admin/notice-modifyFrom";
+		return "admin/notice-modify-form";
 	}
 	
 	/*
@@ -168,7 +168,7 @@ public class AdminController {
 	@GetMapping("/coupons-form")
 	public String couponsPgae() {
 
-		return "admin/createCoupon";
+		return "admin/create-coupon";
 		
 	}
 	

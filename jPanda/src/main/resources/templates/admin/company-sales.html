@@ -32,15 +32,14 @@ body {
 		<body>
 			<h2>(주)재능판다 매출 현황</h2>
 			<br>
-			<label class="la">연간 매출
-				<input type="radio" class="periodicData" th:name="periodicData" th:value="Y">
-			</label>
-			<label class="la">월간 매출
-				<input type="radio" class="periodicData" th:name="periodicData" th:value="M">
-			</label>
-			<label class="la">일간 매출
-				<input type="radio" class="periodicData" th:name="periodicData" th:value="D">
-			</label>
+			<input type="radio" class="periodicData" th:name="periodicData" th:value="Y">
+			<label class="la">연간 매출</label>
+			
+			<input type="radio" class="periodicData" th:name="periodicData" th:value="M">
+			<label class="la">월간 매출</label>
+			
+			<input type="radio" class="periodicData" th:name="periodicData" th:value="D">
+			<label class="la">일간 매출</label>
 			<br><br>
 			<label>매출 집계 시작일<input type="date" class="start-period">
 				~
