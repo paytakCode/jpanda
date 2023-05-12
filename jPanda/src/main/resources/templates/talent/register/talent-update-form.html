@@ -256,7 +256,7 @@
 		<div class="container-update-form">
 		<form id="update-form" action="/talent/talent" method="post" name="frm" onsubmit="return check()">
 			<input type="hidden" name="_method" value="put">
-			<h1 class="head">재능 등록</h1>
+			<h1 class="head">재능 수정</h1>
 			<hr class="talent-hr">
 			<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
 		
@@ -391,8 +391,8 @@
    	  	return isReadyToSubmit;
    	}
 	
-    // 사이드바 체크표시
-	$('.write').on('input', function(){
+ // 사이드바 체크
+	$('.write-check').on('input', function(){
 		const check = '#' + $(this).attr('id') + "-check";
 		let count = 0;
 		let each = 0;
@@ -415,15 +415,16 @@
 	        	}else{
 	            	count++;
         		}
-	    	}else if($(this).attr('id') == 'choose-image-file'){
+        	}else if($(this).attr('id') == 'choose-image-file'){
             	count++;
         	}
 	    });
-		if(count == each){
+		if(count === each){
 			$(check).attr('src', '/image/talentImage/check.png');
 		}else {
 			$(check).attr('src', '/image/talentImage/white.png');
 		}
+		
 	});
 	// input태그 엔터키 입력시 submit되는 것 방지
 	$(function() {
