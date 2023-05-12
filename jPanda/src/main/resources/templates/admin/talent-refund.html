@@ -16,26 +16,29 @@ table {
 	width: 100%;
 }
 
+tr:hover {
+	background-color: #FFFFF0;
+}
+
 th, td {
 	text-align: left;
 	padding: 8px;
-	border: 1px solid #ddd;
+	border-top: 1px solid #ddd;
 }
 
 th {
-	background-color: #f2f2f2;
+	background-color: #198754;
+	color: white;
 }
 
-tr:nth-child(odd) {
-	background-color: #f2f2f2;
-}
 
 td {
-	border: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding: 20px 0;
 }
 
 .btn-refund {
-	border: 1px solid #ddd;
+	border: 1px solid #198754;
 	float: right;
 }
 
@@ -63,8 +66,26 @@ td {
 }
 
 h2{
-	margin: 30px;
-	text-align: center;
+	clear: both;
+	float: left;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+}
+
+.btn-refund:hover {
+	background-color: #198754;
+	color: white;
+}
+
+.refund-check {
+	padding: 0 20px;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -75,10 +96,10 @@ h2{
 	<th:block layout:fragment="content">
 		<body>
 			<h2>환불 관리</h2>
-			<table border="1" id="refundTable"></table>
+			<table id="refundTable"></table>
 			<br>	
-			<input type="button" class="btn-refund" th:name="refundStatus" value="환불완료">
-			<input style="margin-right: 10px" type="button" class="btn-refund" th:name="refundStatus" value="반려">
+			<input type="button" class="btn btn-refund" th:name="refundStatus" value="환불완료">
+			<input style="margin-right: 10px" type="button" class="btn btn-refund" th:name="refundStatus" value="반려">
 			<br>
 			<div id="pagination"></div>
 		</body>
@@ -121,7 +142,7 @@ h2{
 	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
 				$.each(refundList, function(index, refund) {
 				  var tableRow = $('<tr></tr>').addClass('refund-detail');
-				  var checkbox = $('<td></td>').append(
+				  var checkbox = $('<td></td>').addClass('refund-check').append(
 				    $('<input/>').attr({
 				      type: 'checkbox',
 				      class: 'checkbox',
@@ -192,7 +213,7 @@ h2{
 	                for (var i=startNum; i<=lastNum; i++) {
 	                    var page = $('<a></a>').addClass('refund-page').text(i);
 	    				if(pagination.currentPage == i){
-	    					page.css('background-color', '#EAEAEA');
+	    					page.css('background-color', '#198754').css('color', 'white');
 	    				}
 	                    paginationDiv.append(page);
 	                }
