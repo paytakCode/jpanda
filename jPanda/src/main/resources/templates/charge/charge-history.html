@@ -4,7 +4,7 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>충전</title>
+	<title>결제내역</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
@@ -189,8 +189,6 @@
 				data : { currentPage : currentPage },
 				dataType: 'json',
 		        success:function(returnMap) {
-		        	console.log(returnMap.chargeList);
-		          	console.log(returnMap.pagination);
 		          		
 		          	let chargeList = returnMap.chargeList;
 		          	let chargeTable = $('#chargeTable');
