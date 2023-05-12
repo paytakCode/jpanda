@@ -4,7 +4,7 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>페이지 제목</title>
+	<title>로그인</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
@@ -20,6 +20,11 @@
 		    outline: none;
 		    background: #f5f6f7;
 		    border: 1px solid #999;
+		}
+		
+		h2 {
+			margin-top : 10%;
+			font-weight: bold;
 		}
 		
 		a {
@@ -43,7 +48,7 @@
 		/*input 아이디박스*/
 		.login-id-wrap{
 		
-		    margin: 15% 10px 8px 10px;
+		    margin: 10% 10px 8px 10px;
 		    padding: 10px;
 		    border: solid 1px #dadada;
 		    background: #fff;
@@ -72,16 +77,6 @@
 		    border: none;
 		    outline:none;
 		    width:100%;
-		}
-		/*로그인버튼박스*/
-/* 		.login-btn-wrap{
-		    height: 52px;
-		    line-height: 55px;
-		    margin: 0px 10px 8px 10px;
-		    border: solid 1px rgba(0,0,0,.1);
-		    background-color: black;
-		    color: #fff;
-		    cursor: pointer; */
 		}
 		/*로그인버튼*/
 		#login-btn{
@@ -146,9 +141,9 @@
 <div>
 	<th:block layout:fragment="content">
 		<div id="login-container">
-	
 			<!--로그인 부분-->
 			<section class="login-wrap">
+				<h2 align="center">JPANDA</h2>
 				<form action="/login" method="post">
 					<div class="login-id-wrap">
 						<input id="input-id" placeholder="아이디" name="memberId" type="text"></input>
@@ -159,7 +154,9 @@
 					<div class="login-btn-wrap">
 						<button type="submit" class='btn btn-dark' id="login-btn">로그인</button>
 					</div>
-	
+					<script th:if="${alertMsg}" th:inline="javascript">
+					    alert([[${alertMsg}]]); // 알람 창 띄우기
+					</script>
 				</form>
 			</section>
 	
@@ -184,7 +181,7 @@
 			</section>
 	
 		</div> <!-- main -->
+		
 	</th:block>
 </div>
-
 </html>

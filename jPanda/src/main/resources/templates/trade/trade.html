@@ -4,7 +4,7 @@
 
 <!-- 페이지 제목 입력 -->
 <th:block layout:fragment="title">
-	<title>거래관리</title>
+	<title>거래 관리</title>
 </th:block>
 
 <!-- 현재 화면에서만 사용하는 css -->
@@ -122,8 +122,7 @@
 		height: 100%;
 	}
 	
-	.refund-btn, .exchange-btn, .repost-btn, .repost-btn, .end-sell-btn, .refund-cancle-btn, .reject-confirm-btn{
-		float: right;
+	.refund-btn, .exchange-btn, .repost-btn, .repost-btn, .end-sell-btn, .refund-cancle-btn, .reject-confirm-btn, .re-exchange-btn{
 		margin-right: 1%;
 	}
 	
@@ -144,7 +143,6 @@
 	
 	.new-cards{
 		position: relative;
-		border : medium inset highlight;
 		animation: shake ease-in-out;
 		animation-duration: 0.4s;
 		animation-iteration-count: infinite;
@@ -195,8 +193,10 @@
 		border-color: gray;
 	}
 	
-	
-	
+	/* empty msg */
+	.empty-msg{
+		text-align: center;
+	}
 	
 	</style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -540,7 +540,7 @@
 						type : "POST",
 						url : "/trade/exchanges/"+ talentNo,
 						contentType: 'application/json',
-						dataType : 'text',
+						dataType : 'json',
 						success : function(result, textStatus, xhr){
 							if(xhr.status === 200){
 								console.log('Success, posted : ' + result);
@@ -573,7 +573,7 @@
 					{
 						type : "PUT",
 						url : "/trade/exchanges/"+ talentNo + "/status",
-						dataType : 'text',
+						dataType : 'json',
 						success : function(result){
 							console.log('Success put : ' + result);
 							alert('환전 재신청에 성공하였습니다.');
@@ -672,7 +672,6 @@
 						contentType: 'application/json',
 						dataType : 'text',
 						success : function(result, textStatus, xhr){
-							console.log("st : " + xhr.status);
 							if(xhr.status === 200){
 								console.log('Success, deleted : ' + result);
 								alert("환불 신청이 취소되었습니다.");
@@ -741,16 +740,16 @@
 		const $endSellBtn = $('<button>', { class: 'end-sell-btn btn btn-dark', text: '판매종료', id: `sell-no-${item.talentNo}`});
 		const $exchangeBtn = $('<button>', { class: 'exchange-btn btn btn-dark', text: '환전하기', id: `sell-no-${item.talentNo}`});
 		const $repostBtn = $('<button>', { class: 'repost-btn btn btn-dark', text: '재등록', id: `sell-no-${item.talentNo}`});
-		const $reExchangeBtn = $('<button>', { class: 're-exchange-btn btn btn-dark', text: '재신청', id: `sell-no-${item.talentNo}`});
+		const $reExchangeBtn = $('<button>', { class: 're-exchange-btn btn btn-dark', text: '환전 재신청', id: `sell-no-${item.talentNo}`});
 		
 		const $cardTextCol = $('<div>', { class: 'col-md-8' });
 		const $cardBody = $('<div>', { class: 'card-body' });
 		
 		if(item.talentStatus === '게시중' && item.exchangeStatus == null) {
-			$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<div>', { class: 'card-text' }).append($endSellBtn));
+			$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<br>'), $('<div>', { class: 'card-text' }).append($endSellBtn));
 			$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `판매등록날짜 : ${timestampToCustomFormat(item.regDate)}`}));
 		} else if(item.talentStatus === '판매종료' && item.exchangeStatus == null){
-			$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<div>', { class: 'card-text'}).append($exchangeBtn, $repostBtn));
+			$cardBody.append($cardTitle, $cardSaleBamboo, $cardSellCount, $('<br>'), $('<div>', { class: 'card-text'}).append($exchangeBtn, $repostBtn));
 			$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `판매종료날짜 : ${timestampToCustomFormat(item.statusDate)}`}));
 			if(item.sellCount === 0){
 				$exchangeBtn.prop('disabled', true);
@@ -870,7 +869,40 @@
 		const $cardRow = $('<div>', { class: 'row g-0' }).append($cardImgCol, $cardTextCol);
 		$('#list-print').append($card.append($cardHeader, $cardRow));
 	}
-
+	
+	/**
+	 * 판매/구매/환불 내역이 미존재시 처리
+	 */	
+	function showEmptyMessage(listType){
+		let emptyListType = null;
+		
+		switch(listType){
+			case 'all':
+				emptyListType = '거래'
+				break;
+			case 'sell':
+				emptyListType = '판매'
+				break;
+			case 'buy':
+				emptyListType = '구매'
+				break;
+			case 'refund':
+				emptyListType = '환불'
+				break;
+		}
+		
+		const alertMessage = emptyListType + '내역이 존재하지 않습니다';
+		const closeBtn = $('<button>').addClass('btn-close')
+									  .attr('data-bs-dismiss', 'alert')
+									  .attr('aria-label', 'Close');
+		const emptyMessage = $('<div>').addClass('alert alert-dark alert-dismissible shadow empty-msg')
+									   .attr('role', 'alert')
+									   .text(alertMessage)
+									   .append(closeBtn);
+		
+		$('#list-print').append(emptyMessage);
+	}
+	 
 	/**
 	 * List Update
 	 * 동기적 처리 필요성이 있어서 Promise 객체를 return
@@ -884,6 +916,11 @@
 						data : {'list-type' : listType},
 						success : function(list){
 							$('#list-print').empty();
+							
+							if(list.length === 0){
+								showEmptyMessage(listType);
+							}
+							
 							$.each(list, function(index, item){
 								if(item.listType === 'sell'){
 									getSellList(item);
