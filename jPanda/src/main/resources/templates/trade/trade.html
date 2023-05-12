@@ -156,18 +156,6 @@
 		100% { transform: translate(0, 0); }
 	}
 		
-	@keyframes blink {
-	   0% {
-	      opacity: 0;
-	   }
-	   50% {
-	      opacity: 1;
-	   }
-	   100% {
-	      opacity: 0;
-	   }
-	}
-	
 	.update-alarm{
 		animation: shake ease-in-out;
 		animation-duration: 0.4s;
@@ -322,7 +310,7 @@
 	 * statList 콜랩스
 	 */
 	$(function(){
-		const collapseElementList = $('.collapse');
+		let collapseElementList = [$('#sell-collapse'), $('#buy-collapse'), $('#refund-collapse')];
 		const collapseList = [...collapseElementList].map(collapseEl => new bootstrap.Collapse(collapseEl));
 		const sellCollapse = new bootstrap.Collapse('#sell-collapse', {
 			  toggle: false
