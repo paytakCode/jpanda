@@ -112,7 +112,7 @@ public class AdminController {
 		NoticeDto notice = adminService.findNoticeByNoticeNo(noticeNo);
 		model.addAttribute("notice", notice);
 		
-		return "admin/notice-modifyFrom";
+		return "admin/notice-modify-form";
 	}
 	
 	/*
