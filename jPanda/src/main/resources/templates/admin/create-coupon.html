@@ -16,22 +16,23 @@ table {
 	width: 100%;
 }
 
+.used-coupon tr:hover {
+	background-color: #FFFFF0;
+}
+
 th, td {
 	text-align: left;
 	padding: 8px;
-	border: 1px solid #ddd;
 }
 
 th {
-	background-color: #f2f2f2;
-}
-
-tr:nth-child(odd) {
-	background-color: #f2f2f2;
+	background-color: #198754;
+	color: white;
 }
 
 td {
-	border: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding: 20px 0;
 }
 
 
@@ -58,8 +59,16 @@ td {
 }
 
 h3 {
-	margin: 20px;
-	text-align: center;
+	clear: both;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -102,8 +111,10 @@ h3 {
 				</div>
 				<br><br>
 				<h3>만료된 쿠폰</h3>
-				<table border="1" id="couponTable"></table>
+				<div class="used-coupon">
+				<table id="couponTable"></table>
 				<div id="pagination"></div>
+				</div>
 			</form>
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -165,7 +176,7 @@ h3 {
 	                for (var i=startNum; i<=lastNum; i++) {
 	                    var page = $('<a></a>').addClass('coupon-page').text(i);
 	    				if(pagination.currentPage == i){
-	    					page.css('background-color', '#EAEAEA');
+	    					page.css('background-color', '#198754').css('color', 'white');
 	    				}
 	                    paginationDiv.append(page);
 	                }

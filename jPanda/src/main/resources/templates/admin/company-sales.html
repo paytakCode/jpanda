@@ -22,6 +22,30 @@ label {
 body {
 	text-align: center;
 }
+
+.title h2 {
+	clear: both;
+	float: left;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+}
+
+.radio {
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 20px;
+}
+
+.since {
+	border-bottom: 1px solid #ddd;
+	padding: 20px 0;
+}
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
@@ -30,26 +54,33 @@ body {
 <div>
 	<th:block layout:fragment="content">
 		<body>
+			<div class="title">
 			<h2>(주)재능판다 매출 현황</h2>
+			</div>
 			<br>
+			
+			<div class="radio">
 			<input type="radio" class="periodicData" th:name="periodicData" th:value="Y">
 			<label class="la">연간 매출</label>
 			
-			<input type="radio" class="periodicData" th:name="periodicData" th:value="M">
+			<input type="radio" class="periodicData" th:name="periodicData" th:value="M" checked="checked">
 			<label class="la">월간 매출</label>
 			
 			<input type="radio" class="periodicData" th:name="periodicData" th:value="D">
 			<label class="la">일간 매출</label>
-			<br><br>
+			</div>
+			
+			<div class="since">
 			<label>매출 집계 시작일<input type="date" class="start-period">
 				~
 			</label>
 			<label>매출 집계 종료일<input type="date" class="end-period"></label>
 			<input type="button" onclick="callData()" value="적용하기">
-			<br>
-			<br>
+			</div>
+			
+			<br><br>
 
-			<div id="chartContainer" style="width: 900px; height: 900px; display: block; margin: 0 auto;">
+			<div id="chartContainer" style="width: 900px; height: 500px; display: block; margin: 0 auto;">
 				<!--차트가 그려질 부분-->
 				<canvas id="myChart" style="display: block; margin: 0 auto;"></canvas>
 			</div>

@@ -17,28 +17,34 @@ table {
 	table-layout: auto;
 }
 
+tr:hover {
+	background-color: #FFFFF0;
+}
+
 th, td {
 	text-align: left;
 	padding: 8px;
-	border: 1px solid #ddd;
 }
 
 th {
-	background-color: #f2f2f2;
+	background-color: #198754;
 	white-space: nowrap;
-}
-
-tr:nth-child(odd) {
-	background-color: #f2f2f2;
+	color: white;
 }
 
 td {
-	border: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding: 20px 0;
 }
 
-.btn{
-	border: 1px solid #ddd;
+.btn-talent{
+	border: 1px solid #198754;
 	float: right;
+}
+
+.btn-talent:hover {
+	background-color: #198754;
+	color: white;
 }
 	
 .container{
@@ -76,8 +82,28 @@ h2{
 	text-align: center;
 }
 
-a {
+.detail {
 	text-decoration: none;
+	color: black;
+	font-weight: bold;
+}
+
+.talent-check {
+	padding: 0 20px;
+}
+
+h2{
+	clear: both;
+	float: left;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -88,9 +114,9 @@ a {
 	<th:block layout:fragment="content">
 		<body>
 			<h2>판매 등록 신청 현황</h2>
-			<table border="1" id="talentTable"></table>
+			<table id="talentTable"></table>
 			<br>
-			<input type="button" id="btn" class="btn" value="검토 완료">
+			<input type="button" id="btn" class="btn btn-talent" value="검토 완료">
 			<br>
 			<div id="pagination"></div>
 		</body>
@@ -132,7 +158,7 @@ a {
 	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
 				$.each(talentList, function(index, talent) {
 				  var tableRow = $('<tr></tr>').addClass('talent-detail');
-				  var checkbox = $('<td></td>').append(
+				  var checkbox = $('<td></td>').addClass('talent-check').append(
 				    $('<input/>').attr({
 				      type: 'checkbox',
 				      class: 'checkbox',
@@ -177,7 +203,7 @@ a {
 	                for (var i=startNum; i<=lastNum; i++) {
 	                    var page = $('<a></a>').addClass('talent-page').text(i);
 	    				if(pagination.currentPage == i){
-	    					page.css('background-color', '#EAEAEA');
+	    					page.css('background-color', '#198754').css('color', 'white');
 	    				}
 	                    paginationDiv.append(page);
 	                }

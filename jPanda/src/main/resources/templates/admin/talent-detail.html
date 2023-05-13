@@ -23,11 +23,8 @@ th, td {
 }
 
 th {
-	background-color: #f2f2f2;
-}
-
-tr:nth-child(even) {
-	background-color: #f2f2f2;
+	background-color: #198754;
+	color: white;
 }
 
 td {
@@ -35,14 +32,28 @@ td {
 }
 
 h2{
-	margin: 30px;
-	text-align: center;
+	clear: both;
+	float: left;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
 }
 
-.btn{
+.btn-detail{
 	float: right;
-	border: 1px solid #ddd;
+	border: 1px solid #198754;
 	margin: 10px 0;
+}
+
+.btn-detail:hover {
+	background-color: #198754;
+	color: white;
 }
 </style>
 	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
@@ -65,7 +76,7 @@ h2{
 					<td colspan="2" th:utext="${talent.content}"></td>
 				</tr>
 			</table>
-			<input id="btn" type="button" class="btn" value="목록">
+			<input id="btn" type="button" class="btn btn-detail" value="목록">
 		</body>
 		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
 		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
