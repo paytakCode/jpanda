@@ -19,7 +19,6 @@ public class CommonInterceptor implements HandlerInterceptor, AsyncHandlerInterc
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String memberId = (String)request.getSession().getAttribute("memberId");
-		
 		//view 관련 요청 handler들은 모두 통과시킴
 		//로직 없을 시 Class Casting Error
         if (!(handler instanceof HandlerMethod)) {
@@ -27,9 +26,7 @@ public class CommonInterceptor implements HandlerInterceptor, AsyncHandlerInterc
         }
         
         NoLoginCheck noLoginCheck = ((HandlerMethod) handler).getMethodAnnotation(NoLoginCheck.class);
-        String contentTypeHeader = request.getHeader("Content-Type");
-        boolean isAjaxRequest = contentTypeHeader != null && contentTypeHeader.startsWith("application/json");
-        
+        boolean isAjaxRequest = "XMLHttpRequest".equals(request.getHeader("x-requested-with"));
         
 		if (noLoginCheck == null) {
 			
