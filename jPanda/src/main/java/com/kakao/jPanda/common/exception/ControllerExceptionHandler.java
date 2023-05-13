@@ -16,8 +16,8 @@ public class ControllerExceptionHandler {
 		return ErrorResponseEntity.toResponseEntity(e.getErrCode());
 	}
 	
-	@ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseEntity> handleException(RuntimeException e) {
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseEntity> handleException(Exception e) {
 		log.warn("error : {}, trace : {}", e, e.getStackTrace());
 		return ErrorResponseEntity.toResponseEntity(new CustomException(ErrorCode.INTERNAL_SERVER_ERROR).getErrCode());
     }

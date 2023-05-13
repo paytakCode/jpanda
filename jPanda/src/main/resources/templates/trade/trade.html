@@ -842,10 +842,10 @@
 				break;
 			case '환불완료':
 				$cardBody.append($cardTitle, $cardUseBamboo);
-				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }), $('<div>', { class: 'card-footer text-muted', text: `승인날짜 : ${timestampToCustomFormat(item.refundApproveDate)}` }));
+				$cardTextCol.append($cardBody, $('<br><br><br>'), $('<div>', { class: 'card-text text-muted', text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }), $('<div>', { class: 'card-footer text-muted', text: `승인날짜 : ${timestampToCustomFormat(item.refundApproveDate)}` }));
 				break;
 			case '반려':
-				$cardBody.append($cardTitle, $cardUseBamboo).append($rejectConfirmButton);
+				$cardBody.append($cardTitle, $cardUseBamboo).append($('<br><br>'), $rejectConfirmButton);
 				$cardTextCol.append($cardBody, $('<br><br>'), $('<div>', { class: 'card-text text-muted', 'data-refund-submit-date' : item.refundSubmitDate, text: `환불신청날짜 : ${timestampToCustomFormat(item.refundSubmitDate)}` }));
 				$cardImgCol.remove();
 				break;
