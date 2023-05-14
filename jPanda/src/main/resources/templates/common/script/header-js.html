@@ -1,0 +1,95 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="headerJsFragment">
+	<script th:inline = 'javascript'>
+		$(function(){
+			const memberId = [[${#session.getAttribute('memberId')}]];
+			if(memberId == "" || memberId == null){
+				$("#login-image").attr("src", "/image/login-before.png");
+				
+				var liElement1 = $("<li></li>");
+				var aElement1 = $("<a></a>", {
+					class: "dropdown-item",
+					href: "/login",
+					text: "로그인"
+				});
+				liElement1.append(aElement1);
+				$(".dropdown-menu").append(liElement1);
+			  
+				var liElement2 = $("<li></li>");
+				var aElement2 = $("<a></a>", {
+					class: "dropdown-item",
+					href: "/signup",
+					text: "회원가입"
+				});
+				liElement2.append(aElement2);
+				$(".dropdown-menu").append(liElement2);
+			  
+			} else {
+				$("#login-image").attr("src", "/image/login-after.png");
+				
+				var liElement1 = $("<li></li>");
+				var aElement1 = $("<a></a>", {
+					class: "dropdown-item",
+					href: "/mypage",
+					text: "마이페이지"
+				});
+				liElement1.append(aElement1);
+				$(".dropdown-menu").append(liElement1);
+				
+				var liElement2 = $("<li></li>");
+				var aElement2 = $("<a></a>", {
+					class: "dropdown-item",
+					text: "로그아웃"
+				});
+				aElement2.on('click', function() {
+					 $.ajax({
+						    url: '/logout',
+						    type: 'DELETE',
+						    success: function(response) {
+								console.log(response);
+						    	location.href='/main';
+								
+						    }
+						  });
+				});
+				liElement2.append(aElement2);
+				$(".dropdown-menu").append(liElement2);
+			}
+		});
+		$(function(){
+			const memberId = [[${#session.getAttribute('memberId')}]];
+			if(memberId == "" || memberId == null){
+				$('#navbar-total-bamboo').empty(); 
+			} else{
+				$.ajax({
+					url: "/charge/members/total-bamboo",
+					type: "GET",
+					dataType: "text",
+					data: {memberId : memberId},
+					success: function(foundTotalBambooStr){
+						console.log("Ajax success foundTotalBambooStr : " + foundTotalBambooStr);
+						$('#total-bamboo').html(foundTotalBambooStr);	
+					},
+					error: function(){
+						console.error("total-bamboo function error");
+					}
+				});    
+			}
+		});
+		// 검색 기능
+		$('#search-btn').on('click', function(){
+			var searchValue = encodeURIComponent($('#search').val());
+			console.log("searchValue -> " + searchValue);
+			location.href = "/board?search=" + searchValue;
+		});
+		// 통합검색 EnterKey 입력 시 검색 기능
+		$('#search').on('keydown', function(value) {
+			if(value.keyCode == 13) {
+				var searchValue = encodeURIComponent($('#search').val());
+				location.href = "/board?search=" + searchValue;
+				return false;
+			}
+		});
+	</script>
+</div> <!-- headerJsFragment -->
+</html>

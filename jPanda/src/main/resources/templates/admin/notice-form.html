@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>관리자 공지사항 작성</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: center;
+	padding: 8px;
+	border: 1px solid #ddd;
+}
+
+th {
+	background-color: #198754;
+	color: white;
+}
+
+td {
+	border: 1px solid #ddd;
+	text-align: center;
+}
+
+.btn {
+	border: 1px solid #198754;
+	float: right;
+	margin: 10px 0;
+}
+
+.btn:hover {
+	background-color: #198754;
+	color: white;
+}
+
+.notice-title, .notice-content{
+	width: 90%;
+	margin: 0 auto;
+}
+
+h2{
+	clear: both;
+	float: left;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+}
+
+.d-flex{
+	align-items: center;
+}
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<form action="/admin/notice" method="post" onsubmit="return chk()">
+				<h2>공지사항 작성</h2>
+				<table border="1">
+					<tr>
+						<th>제목</th>
+							<td><input class="notice-title" type="text" name="title"></td>
+					</tr>
+					<tr>
+						<th>내용</th>
+							<td style="background-color: white;">
+								<textarea class="notice-content" rows="10" cols="10" name="content"></textarea>
+							</td>
+					</tr>
+				</table>
+				<button type="submit" class="btn" value="적용">공지사항 적용</button>
+				<input type="hidden" class="regDate" name="regDate" pattern="YYYYMMDD">
+			</form>
+
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		function chk() {
+			const title = $("input[name=title]");
+			const content = $("textarea[name=content]");
+			const regDate = $("input[name=regDate]");
+			const noticeNo = $("input[name=noticeNo]");
+
+			$(".regDate").val(getNow());
+
+			if (title.val() === null || title.val() === "") {
+				alert("제목을 입력하세요");
+				title.focus();
+				return false;
+			} else if (content.val() === null || content.val() === "") {
+				alert("내용을 입력하세요");
+				content.focus();
+				return false;
+			} else if (regDate.val() === null || regDate.val() === "") {
+				alert("게시일을 입력하세요");
+				regDate.focus();
+				return false;
+			} else {
+				return true;
+			}
+
+		}
+
+		function getNow() {
+			const now = new Date(Date.now());
+			const year = now.getFullYear();
+			const month = String(now.getMonth() + 1).padStart(2, '0');
+			const day = String(now.getDate()).padStart(2, '0');
+			const hours = String(now.getHours()).padStart(2, '0');
+			const minutes = String(now.getMinutes()).padStart(2, '0');
+			const seconds = String(now.getSeconds()).padStart(2, '0');
+
+			const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+			return formattedDate;
+		}
+	</script>
+
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

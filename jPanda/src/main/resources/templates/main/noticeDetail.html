@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>공지사항</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style type="text/css">
+		.container-notice-detail{
+			margin: 0 auto;
+			width: 1000px;
+			margin-top: 30px;
+		}
+		#notice-main{
+			margin-left: 108px;
+			font-weight: bolder;
+			margin-bottom: 30px;
+		}
+		#title, #reg-date{
+			width: 650px;
+			height: 45px;
+			line-height: 45px;
+			padding-left: 10px;
+		}
+		#content{
+			width: 800px;
+			height: 500px;
+			padding: 20px;
+			vertical-align: top;
+		}
+		#notice-detail-table tr {
+			border: 1px solid #EAEAEA;
+		}
+		#notice-detail-table {
+			margin: 0 auto;
+			border-collapse: collapse;
+			border-radius: 10px;
+		}
+		.table-th{
+			background-color: #198754;
+			width: 120px;
+			height: 45px;
+			text-align: center;
+			line-height: 45px;
+			color: white;
+		}
+		#back-button{
+			float: right;
+			margin-right: 100px;
+			margin-top: 10px;
+			margin-bottom: 50px;
+		}
+	</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<div class="container-notice-detail">
+			<h1 id="notice-main">공지사항</h1>
+			<table id="notice-detail-table">
+				<tr><th class="table-th">제목</th><td id="title" th:text="${notice.title}"></td></tr>
+				<tr><th class="table-th">등록일</th><td id="reg-date" th:text="${#strings.substring(notice.regDate, 0, 10)}"></td></tr>
+				<tr><td colspan="2" id="content" th:utext="${notice.content.replaceAll('\n', '<br>')}"></td></tr>
+			</table>
+				<button id="back-button" class="btn btn-outline-success text-nowrap">목록</button>
+		</div> <!-- class="container" -->
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+		$('#back-button').on('click', function(){
+			history.back();
+		});
+	</script>
+	
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

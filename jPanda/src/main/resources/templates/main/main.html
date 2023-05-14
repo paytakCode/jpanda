@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>재능 판다</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style type="text/css">
+		/*GLOBALS*/
+		*{margin:0; padding:0; list-style:none;}
+		a{text-decoration:none; color:#666;}
+		a:hover{color:#1bc1a3;}
+		
+		.slider-wrap{
+		  	width:260px;
+		  	height:330px;
+		  	position:relative;
+		  	overflow:hidden;
+		}
+		
+		.slider-wrap ul.slider{
+		  	position:absolute;
+		  	top:0;
+		  	left:0;   
+		}
+		
+		.slider-wrap ul.slider li{
+		  	float:left;
+		  	position:relative;
+		  	width:260px;
+		  	height:330px; 
+		}
+		
+		.slider-wrap ul.slider li > div{
+		  	top:20px;
+		  	left:35px;  
+		}
+		
+		.slider-wrap ul.slider li > h3{
+		  	font-size:16px;
+		  	text-transform:uppercase; 
+		}
+		
+		.slider-wrap ul.slider li > div span{
+		  	font-family: Neucha, Arial, sans serif;
+		  	font-size:21px;
+		}
+		
+		.slide-iamge {
+			width: 240px;
+		  	height: 180px;
+		  	border-radius: 7px;
+		  	overflow: hidden;
+		  	margin: 10px;
+		}
+		.slide-iamge img {
+		  	display:block;
+		  	width: 240px;
+		  	height: 180px;
+		}
+		
+		/*ANIMATION*/
+		.slider-wrap ul{
+		  	-webkit-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	-moz-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	-o-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	-ms-transition: all 0.3s cubic-bezier(1,.01,.32,1);
+		  	transition: all 0.3s cubic-bezier(1,.01,.32,1); 
+		}
+		
+		.slide{
+			display: inline-block;
+			border: 1px solid #EAEAEA;
+			margin: 10px;
+			border-radius: 7px;
+		}
+		
+		.title{
+			font-size: 17px;
+			font-weight: bold; 
+		}
+		.random-talent {
+		  	height: 120px;
+		    margin-top: 30px;
+			border: 1px solid #EAEAEA;
+		    padding-left: 0px;
+		    border-radius: 7px;
+		}
+		
+		.slide:hover,
+		.talents:hover {
+		  	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+		  	cursor: pointer;
+		}
+		.random-talent-summary {
+		  	height: 100px;
+		  	width: 800px;
+		}
+		.random-talent-image {
+			width: 140px;
+		    border-radius: 7px;
+		  	overflow: hidden;
+		  	margin: 6.5px 10px;
+		}
+		.random-talent-image img{
+			width: 140px;
+		  	height: 105px;
+		}
+		.random-talent > div {
+		  	display: inline-block;
+		  	vertical-align: middle;
+		}
+		
+		.container-main	{
+			width: 1000px;
+		  	margin: 0 auto;
+			margin-top: 40px;
+		}
+		#talent-slide {
+			text-align: center;
+			margin-bottom: 50px;
+			display: flex;
+			justify-content: space-between;
+		}
+		h4 {
+			margin: 10px;
+			text-align: left;
+		}
+		.slider {
+			padding-left: 0px;
+		}
+		
+		.bamboo-score {
+			width: 15px;
+			height: 15px;
+		}
+		
+		.review-div {
+			display: flex;
+		  	align-items: center;
+		}
+		
+		.other {
+		  	display: flex;
+		  	align-items: center;
+		  	justify-content: space-between;
+		}
+		.slide-other {
+		  	display: flex;
+		  	align-items: center;
+		  	justify-content: space-between;
+		  	margin: 0 10px;
+		}
+		
+		.review {
+			font-weight: bold;
+			color: gray;
+			font-size: 13px;
+		}
+		.item-name{
+			font-size: 13px;	
+		}
+		.summary {
+			height: 45px;
+			width: 500px;
+		}
+		.slide-summary {
+			margin: 10px;
+			width: 240px;
+			height: 75px;
+			text-align: left;
+			overflow: hidden;
+			margin-bottom: 20px !important;
+		}
+		.login-check{
+			float: right;
+			margin-right: 50px;
+			font-size: 20px;
+		}
+		.pp{
+			margin-bottom: 0px;
+			padding: 1px;
+		}
+		.mainUl{
+			padding-left: 0px;
+			margin-bottom: 50px;
+		}
+		.talentseller{
+			font-size: 22px;
+			font-weight: bold;
+			align-items: center;
+			line-height: 22px;
+			margin: 0;
+		}
+		
+		.main-slide-image{
+			width: 22px;
+			height: 22px;
+		}
+		.talent-slide-image {
+		 	display: flex;
+		 	margin-top: 10px;
+			margin-left: 20px;
+		}
+		.talent-slide-image img {
+			margin-right: 5px;
+		}
+	</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+	<div class="container-main">
+	<form action="/talent/update-form">
+	
+	<div id="talent-slide">
+		<div>
+			<div class="talent-slide-image">
+			<img src="/image/talentImage/panda.png" class="main-slide-image">
+			<h4 class="talentseller">최다 판매</h4>
+			</div>
+			<div id="bestSellerTalent" class="slide">
+				<div id="slider-wrap1" class="slider-wrap">
+		          	<ul id="slider1" class="slider mainUl" >
+		             	<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${bestSellerTalent}">
+			             	<div class="slide-iamge">
+								<img th:src="@{${talent.mainImg}}">
+			             	</div>
+		                    <p class="slide-summary pp" th:text="${talent.summary}"></p>
+				            <div class="slide-other">
+					            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+					            <div class="review-div">
+						            <img class="bamboo-score" src="/image/bambooScore.jpg">
+						            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+					            </div>
+				            </div>
+		             	</li>
+		             </ul>
+		   		</div>
+		   	</div>
+		</div>
+		<div>
+			<div class="talent-slide-image">
+				<img src="/image/common/bamboo-icon.png" class="main-slide-image">
+				<h4 class="talentseller">최고 평점</h4>
+			</div>
+			<div id="topRatedTalent" class="slide">
+		      	<div id="slider-wrap2" class="slider-wrap">
+		          	<ul id="slider2" class="slider mainUl" >
+		             	<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${topRatedTalent}">
+							<div class="slide-iamge">
+								<img th:src="@{${talent.mainImg}}">
+			             	</div>
+		                   	<p class="slide-summary pp" th:text="${talent.summary}"></p>
+				            <div class="slide-other">
+					            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+					            <div class="review-div">
+						            <img class="bamboo-score" src="/image/bambooScore.jpg">
+						            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+					            </div>
+			            	</div>
+		             	</li>
+		             </ul>
+		      	</div>
+		    </div>
+		</div>
+	      
+		<div>
+			<div class="talent-slide-image">
+				<img src="/image/talentImage/star.png" class="main-slide-image">
+				<h4 class="talentseller">최신 트렌드</h4>
+			</div>
+			<div id="newTrendTalent" class="slide">
+		      	<div id="slider-wrap3" class="slider-wrap">
+		          	<ul id="slider3" class="slider mainUl" >
+		             	<li class="talents" th:value="${talent.talentNo}" th:each="talent : ${newTrendTalent}">
+							<div class="slide-iamge">
+								<img th:src="@{${talent.mainImg}}">
+			             	</div>
+		                   	<p class="slide-summary pp" th:text="${talent.summary}"></p>
+				            <div class="slide-other">
+					            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+					            <div class="review-div">
+						            <img class="bamboo-score" src="/image/bambooScore.jpg">
+						            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+					            </div>
+				            </div>
+		             	</li>
+		           	</ul>
+				</div>
+		    </div>
+		</div>
+	</div> <!-- id="talent-slide" -->
+	
+	<div id="random-talent-div">
+	<h4 class="talentseller">오늘의 재능</h4>
+	<ul class="mainUl">
+		<li class="talents random-talent" th:value="${talent.talentNo}" th:each="talent : ${randomTalent}">
+			<div class="random-talent-image">
+				<img th:src="${talent.mainImg}">
+			</div>
+			<div class="random-talent-summary">
+				<p th:text="${talent.title}" class="title pp"></p>
+				<p th:text="${talent.summary}" class="summary pp"></p>
+	            <div class="other">
+		            <p class="item-name pp" th:text="${talent.item} + ' | ' + ${talent.name}"></p>
+		            <div class="review-div">
+			            <img class="bamboo-score" src="/image/bambooScore.jpg">
+			            <p class="review pp" th:text="${talent.reviewAvgScore} + ' | (' + ${talent.reviewCount} + ')'"></p>
+		            </div>
+	            </div>
+			</div>
+		</li>
+	</ul>
+	</div>
+	</form>
+	</div> <!-- container -->
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+	var sliderInfo = [
+		{
+			wrap: "#slider-wrap1",
+			pos: 0,
+		    autoSlider: null,
+		    sliderWidth : 0,
+		    totalSlides : 0
+		},
+		{
+		    wrap: "#slider-wrap2",
+		    pos: 0,
+		    autoSlider: null,
+		    sliderWidth : 0,
+		    totalSlides : 0
+		},
+		{
+		    wrap: "#slider-wrap3",
+		    pos: 0,
+		    autoSlider: null,
+		    sliderWidth : 0,
+		    totalSlides : 0
+		}
+	];
+
+	$(function(){
+		
+	  	sliderInfo.forEach(function(slider) {
+			slider.totalSlides = $(slider.wrap + " ul li").length;
+	    	slider.sliderWidth = $(slider.wrap + " ul li").width();
+	    	$(slider.wrap + " ul").width(slider.totalSlides * slider.sliderWidth);
+	    	slider.autoSlider = setInterval(function() {
+	    		slideRight(slider);
+	    	}, 3000);
+
+			$(slider.wrap).hover(
+		      	function() { 
+		        	$(this).addClass("active");
+		        	clearInterval(slider.autoSlider);
+		      	},
+		      	function() { 
+		        	$(this).removeClass("active");
+		        	slider.autoSlider = setInterval(function() {
+		          		slideRight(slider);
+		        	}, 3000);
+		      	}
+		    );
+	  	});
+	});
+
+	function slideRight(slider) {
+		slider.pos++;
+		if (slider.pos == slider.totalSlides) {
+			slider.pos = 0;
+		}
+		$(slider.wrap + " ul").css("left", -(slider.sliderWidth * slider.pos));
+	}
+		
+	$('.talents').on('click', function(){
+		location.href = "/talents/talent/" + $(this).val();	
+	});
+	</script>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

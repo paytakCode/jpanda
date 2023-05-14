@@ -1,0 +1,491 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="chatJsFragment">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script type="text/javascript">
+	
+		//전역 변수 선언	
+		let selectedPartnerId = null;
+		let stompClient = null;
+		
+		//tooltip init
+		function initTooltip(){
+			$('[data-bs-toggle="tooltip"]').each(function(){
+				new bootstrap.Tooltip(this);
+			});
+		}
+		
+		//popover init
+		function initPopover(){
+			$('[data-bs-toggle="popover"]').each(function(){
+				new bootstrap.Popover(this);
+			});
+		}
+		
+		//WebSocket(STOMP) 연결 함수
+		function connect() {
+		    const socket = new SockJS('/stomp/chat?' + memberId);
+		    stompClient = Stomp.over(socket);
+		    stompClient.connect({}, function (frame) {
+		        onConnect();
+		    });
+		}
+		
+		//Connect 성공 시 호출되는 함수
+		function onConnect(){
+	        subscribe();
+	        updateChatPartnerList();
+		}
+		
+		//STOMP Url 구독
+		function subscribe(){
+			stompClient.subscribe('/message/' + memberId, function (response) {
+				onMessage(response);
+			});
+			stompClient.subscribe('/read/' + memberId, function (response) {
+				onRead(response);
+			});
+		}
+		
+		//메세지 수신시 호출하는 함수
+		function onMessage(response){
+			let receivedChat = JSON.parse(response.body);
+			if (receivedChat != null){
+				if (selectedPartnerId == receivedChat.senderId){
+			    	const lastDate = $('#chat-content a.chat-date').last().text();
+			    	if(getDate(Date.now()) != lastDate){
+						const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
+													.text(getDate(receivedChat.chatDate))
+													.attr("role","button")
+													.attr("aria-disabled","true");
+						$("#chat-content").append(chatDate);
+			    	}
+					const chatElem = $("<div>").addClass("from-other")
+												.attr('data-bs-toggle', "modal")
+												.attr('data-bs-target', '#report-chat-modal');
+					const messageElem = $("<span>").text(receivedChat.message)
+													.addClass("chat-message lh-base text-start badge p-2 text-wrap")
+													.attr('data-bs-toggle', "tooltip")
+													.attr('data-bs-placement', "top")
+													.attr('data-bs-custom-class', 'chat-report-tooltip')
+													.attr('data-bs-html', 'true')
+													.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>')
+													.data('chat-no', receivedChat.chatNo);
+					const timeElem = $("<span>").text(getTime(receivedChat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+					chatElem.append(messageElem)
+							.append(timeElem);
+	                $("#chat-content").append(chatElem);
+				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+				    $('.partner[value=' + selectedPartnerId + '] .unread-count').text('1');
+				    readPartnerMessage();
+				    initTooltip();
+				} else {
+					updateChatPartnerList();
+				}
+			}
+		}
+		
+		//상대가 메세지를 읽었을 때 채팅을 보고있다면 읽음으로 수정
+		function onRead(response){
+			const readerId = response.body;
+			if (selectedPartnerId == readerId){
+				$('.read-status').each(function() {
+				    $(this).text('읽음')
+				    		.removeClass('text-bg-warning')
+				    		.addClass('text-bg-info');
+				});
+			}
+		}
+	
+		//채팅 버튼 클릭 시 채팅 팝업 띄우기
+		$('#chat-btn').click(function () {
+			if (stompClient !== null) {
+			    $('#chat-console').toggle();
+			    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+			}
+		});
+	
+		//선택된 채팅 상대 표시 업데이트
+		function updateSelectedPartner() {    
+			$('.partner').removeClass('active');
+			$($('.partner[value=' + selectedPartnerId + ']')).addClass('active');
+		}
+	
+		//채팅 대화 내용 업데이트
+		function updateChatContent() {
+			$.ajax({
+				url: "/chats/" + memberId + "?partner-id=" + selectedPartnerId,
+				method: "GET",
+				dataType : "json",
+				success: function(chatList) {
+					$("#chat-content").empty();
+					$('#chat-content').css('margin','0');
+					
+					chatList.forEach((chat, index) => {
+						if (chat.receiverId == selectedPartnerId) {
+							if(index == 0){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
+															.text(getDate(chat.chatDate))
+															.attr("role","button")
+															.attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
+															.text(getDate(chat.chatDate))
+															.attr("role","button")
+															.attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							}
+							const chatElem = $("<div>").addClass("from-me");
+							const messageElem = $("<span>").text(chat.message).addClass("chat-message lh-base text-end badge p-2 text-wrap");
+							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+							chatElem.append(readToElem(chat.read))
+									.append(timeElem)
+									.append(messageElem);
+		                    $("#chat-content").append(chatElem);
+						} else if(chat.senderId == selectedPartnerId){
+							if(index == 0){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
+															.text(getDate(chat.chatDate))
+															.attr("role","button")
+															.attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							} else if(getDate(chatList[index - 1].chatDate) != getDate(chatList[index].chatDate)){
+								const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
+															.text(getDate(chat.chatDate))
+															.attr("role","button")
+															.attr("aria-disabled","true");
+								$("#chat-content").append(chatDate);
+							}
+							
+							const chatElem = $("<div>").addClass("from-other")
+														.attr('data-bs-toggle', "modal")
+														.attr('data-bs-target', '#report-chat-modal');
+							const messageElem = $("<span>").text(chat.message)
+															.addClass("chat-message lh-base text-start badge p-2 text-wrap")
+															.attr('data-bs-toggle', "tooltip")
+															.attr('data-bs-placement', "top")
+															.attr('data-bs-custom-class', 'chat-report-tooltip')
+															.attr('data-bs-html', 'true')
+															.attr('data-bs-title', '<small>메세지를 신고하려면 클릭하세요.</small>')
+															.data('chat-no', chat.chatNo);
+							const timeElem = $("<span>").text(getTime(chat.chatDate)).addClass("chat-time badge rounded-pill text-bg-light");
+							
+							if(chat.read == 'F' && index == 0){
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary")
+								.text('새로운 채팅')
+								.attr("role","button")
+								.attr("aria-disabled","true");
+								$("#chat-content").append(newChatPoint);
+							} else if(chat.read == 'F' && chatList[index - 1].read == 'T'){
+								const newChatPoint = $("<a>").addClass("new-chat-point btn btn-primary")
+								.text('새로운 채팅')
+								.attr("role","button")
+								.attr("aria-disabled","true");
+								$("#chat-content").append(newChatPoint);
+							}
+							
+							chatElem.append(messageElem)
+									.append(timeElem);
+		                    $("#chat-content").append(chatElem);
+		                    
+		                    initTooltip();
+						}
+						
+					});
+					readPartnerMessage();
+				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					if(xhr.status == 401){
+						alert('로그인이 필요합니다.');
+						location.replace(JSON.parse(xhr.responseText).redirectUrl);
+					} else {
+					}
+				}
+			});
+		}
+		
+		//읽음 여부에 따라 element 반환
+		function readToElem(read){
+			if(read == 'T'){
+				return $('<span>').text('읽음').addClass("read-status badge rounded-pill text-bg-info");
+			} else if (read == 'F'){
+				return $('<span>').text('안읽음').addClass("read-status badge rounded-pill text-bg-warning");
+			}
+		}
+		
+		//채팅 읽음 처리 함수
+		function readPartnerMessage(){
+			if ($('.partner[value=' + selectedPartnerId + '] .unread-count').text() != ''){
+
+				$('.partner[value=' + selectedPartnerId + '] .unread-count').text('');
+				
+				const readerIdAndPartnerId = JSON.stringify({
+												"readerId" : memberId,
+												"partnerId" : selectedPartnerId
+											});
+				
+				$.ajax({
+				    url: '/chats',
+				    type: 'PATCH',
+				    data: readerIdAndPartnerId,
+					contentType: 'application/json',
+				    success: function(result) {
+						stompClient.send("/chat/read", {}, readerIdAndPartnerId);
+						updateTotalUnreadCount();
+				    },
+
+					error: function(xhr, textStatus, errorThrown) {
+						if(xhr.status == 401){
+							alert('로그인이 필요합니다.');
+							location.replace(JSON.parse(xhr.responseText).redirectUrl);
+						} 
+					}
+				});
+			}
+			
+		}
+		
+		//안읽은 메세지 총 갯수 표시하는 함수(#total-unread-count)
+		function updateTotalUnreadCount(){
+			let totalUnreadCount = 0;
+			$(".unread-count").each(function() {
+			    let count = parseInt($(this).text());
+			    if (!isNaN(count)) {
+			        totalUnreadCount += count;
+			    }
+			});
+			if (totalUnreadCount == 0){
+				$('#total-unread-count').empty();
+			} else if (totalUnreadCount > 99) {
+				$('#total-unread-count').text('99+');
+			} else {
+				$('#total-unread-count').text(totalUnreadCount);
+			}
+		}
+	
+	
+		//채팅창 열기
+		$("#chat-btn").click(function() {
+			$("#chat-console").css("display", "grid");
+			
+			//채팅창을 열었을때 선택된 상대가 있을경우  읽음 처리
+			if(selectedPartnerId != null){
+				readPartnerMessage();
+			}
+		});
+	
+	
+		//채팅창 닫기
+		$(function(){
+			$(document).on("click", function(event) {
+				if (!$(event.target).closest("#chat-console").length 
+					&& !$(event.target).is("#chat-btn") 
+					&& $('#report-chat-modal').is(':hidden')
+					&& !$(event.target).is('#admin-chat-btn')
+					&& !$(event.target).is('#seller-chat-btn')) {
+					$("#chat-console").hide();
+				}
+			});
+		});
+		
+		//Enter 키로 메시지 전송
+		$("#chat-input").keyup(function(e) {
+		    if (e.keyCode == 13 && selectedPartnerId && $("#chat-input").val().trim() != "") {
+		    	
+		    	chat = JSON.stringify({
+		   	            'receiverId': selectedPartnerId,
+		   	            'senderId' : memberId,
+		   	            'message' : $('#chat-input').val(),
+		   	            'chatDate' : Date.now()
+		   	        });
+		    	
+		    	saveChat(chat);
+		    	
+		    	const lastDate = $('#chat-content a.chat-date').last().text();
+		    	if(getDate(Date.now()) != lastDate){
+					const chatDate = $("<a>").addClass("chat-date btn btn-secondary")
+												.text(getDate(Date.now()))
+												.attr("role","button")
+												.attr("aria-disabled","true");
+					$("#chat-content").append(chatDate);
+		    	}
+				const chatElem = $("<div>").addClass("from-me");
+				const messageElem = $("<span>").text($("#chat-input").val()).addClass("chat-message lh-base text-end badge p-2 text-wrap");
+				const timeElem = $("<span>").text(getTime(Date.now())).addClass("chat-time badge rounded-pill text-bg-light");
+				chatElem.append(readToElem('F'))
+						.append(timeElem)
+						.append(messageElem);
+                $("#chat-content").append(chatElem);
+		    	$("#chat-input").val("");
+		    }
+		});
+		
+		//message를 DB에 저장하는 함수
+		function saveChat(chat){
+			$.ajax({
+				url: "/chat" ,
+				method: "POST",
+				data : chat,
+				contentType : "application/json",
+				dataType : "json",
+				success: function(savedChat) {
+			   	    stompClient.send("/chat/message", {}, JSON.stringify(savedChat));
+			   	    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					if(xhr.status == 401){
+						alert('로그인이 필요합니다.');
+						location.replace(JSON.parse(xhr.responseText).redirectUrl);
+					}
+				}
+			});
+		}
+	
+		//채팅 상대 리스트 업데이트
+		function updateChatPartnerList() {
+				$.ajax({
+					url: "/chats/" + memberId + "/partners",
+					method: "GET",
+					dataType : "json",
+					success: function(partnerList) {
+						$("#chat-partner-list").empty();
+						partnerList.forEach((partner, index) => {
+							let chatPartnerElem = $("<li>");
+							chatPartnerElem.text(partner.name)
+											.attr('value', partner.memberId)
+											.attr('class', 'partner list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center')
+											.attr('data-bs-toggle', "popover")
+											.attr('data-bs-placement', "left")
+											.attr('data-bs-custom-class', 'partner-id-popover')
+											.attr('data-bs-trigger', 'hover focus')
+											.attr('data-bs-content', partner.memberId);
+						 		chatPartnerElem.click(function() { 
+									selectedPartnerId = partner.memberId;
+									updateSelectedPartner();
+									updateChatContent();
+								}); 
+							
+							let unReadChatNoElem = $('<span>');
+							unReadChatNoElem.attr('class', 'unread-count badge bg-warning rounded-pill');
+							if(partner.unreadCount != 0){
+								unReadChatNoElem.text(partner.unreadCount);
+							}
+							chatPartnerElem.append(unReadChatNoElem);
+							$("#chat-partner-list").append(chatPartnerElem);  
+						});
+						
+						updateSelectedPartner();
+						updateTotalUnreadCount();
+						initPopover();
+					},
+					error: function(xhr, textStatus, errorThrown) {
+						if(xhr.status == 401){
+							alert('로그인이 필요합니다.');
+							location.replace(JSON.parse(xhr.responseText).redirectUrl);
+						}
+					}
+				});
+		}
+		
+		//Timestamp -> chatTime
+		function getTime(chatDate){
+			const date = new Date(chatDate);
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			
+			const formattedTime = `${hours}:${minutes}`;
+			return formattedTime;
+		}
+		
+
+		//Timestamp -> chatDate
+		function getDate(chatDate){
+			const date = new Date(chatDate);
+			const year = date.getFullYear();
+			const month = String(date.getMonth() + 1).padStart(2, '0');
+			const day = String(date.getDate()).padStart(2, '0');
+			const hours = String(date.getHours()).padStart(2, '0');
+			const minutes = String(date.getMinutes()).padStart(2, '0');
+			const seconds = String(date.getSeconds()).padStart(2, '0');
+			
+			const formattedDate = `${month}월 ${day}일`;
+			return formattedDate;
+		}
+		
+		//접속
+		$(function(){
+			if(memberId != null){
+				connect();
+				$("#chat-btn").show();
+			}
+		});
+		
+		//채팅 상대 메세지 선택 시 report-chat-modal 내용 업데이트하는 이벤트 등록
+		$('#chat-console').on('click', '.from-other .chat-message', function() {
+		    $('#report-memberId').val(selectedPartnerId);
+		    $('#chat-report-name').val($('#chat-partner-list .active').text());
+		    $('#chat-report-message').val($(this).text());
+	 	    $('#chat-report-message').css("height", "auto");
+		    $('#chat-report-message').css("height", $('#chat-report-message').scrollHeight + "px"); 
+		    $('#report-chat-no').val($(this).data('chat-no'));
+		    $('#chat-report-issue').val('');
+			$('#chat-report-issue').css("height", "auto");
+		});	
+		
+		//report-issue 입력시 높이 조절
+		$('#chat-report-issue').on("input", function() {
+			$(this).css("height", "auto");
+			$(this).css("height", this.scrollHeight + "px");
+		}).trigger("input");
+		
+		//chat-report-modal 신고버튼 클릭 시 호출되는 함수
+		$('#chat-report-btn').click(function(){
+			if ($.trim($('#chat-report-issue').val()) != ''){
+				
+				$.ajax({
+					url: "/chat/report" ,
+					method: "POST",
+					data : JSON.stringify({
+						"blackId" : $('#report-memberId').val(),
+						"reportId" : memberId,
+						"issue" : $('#chat-report-issue').val(),
+						"reportDate" : Date.now(), 
+						"chatNo" : $('#report-chat-no').val()
+					}),
+					contentType : "application/json",
+					dataType : "json",
+					success: function(reportedData) {
+						$('#report-chat-modal').modal('hide');
+						showToast('#report-success-toast');
+					},
+					error: function(xhr, textStatus, errorThrown) {
+						if(xhr.status == 401){
+							alert('로그인이 필요합니다.');
+							location.replace(JSON.parse(xhr.responseText).redirectUrl);
+						} else {
+							showToast('#report-fail-toast');
+						}
+					}
+				});
+				
+			} else {
+				showToast('#insert-issue-toast');
+			}
+		});
+		
+		//Toast Show
+		function showToast(toastId){
+			const toast = new bootstrap.Toast($(toastId));
+			toast.show();
+		}
+		
+	</script>
+</div> <!-- chatJsFragment -->
+</html>
+        

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>관리자 환불신청 건 조회</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+tr:hover {
+	background-color: #FFFFF0;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+	border-top: 1px solid #ddd;
+}
+
+th {
+	background-color: #198754;
+	color: white;
+}
+
+
+td {
+	border-bottom: 1px solid #ddd;
+	padding: 20px 0;
+}
+
+.btn-refund {
+	border: 1px solid #198754;
+	float: right;
+}
+
+.container{
+	margin: 0 auto;
+	width: 1000px;
+}
+
+.refund-page {
+	display: inline-block;
+	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+#pagination{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.refund-page{
+	text-decoration: none;
+	color: black;
+}
+
+h2{
+	clear: both;
+	float: left;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+}
+
+.btn-refund:hover {
+	background-color: #198754;
+	color: white;
+}
+
+.refund-check {
+	padding: 0 20px;
+}
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<h2>환불 관리</h2>
+			<table id="refundTable"></table>
+			<br>	
+			<input type="button" class="btn btn-refund" th:name="refundStatus" value="환불완료">
+			<input style="margin-right: 10px" type="button" class="btn btn-refund" th:name="refundStatus" value="반려">
+			<br>
+			<div id="pagination"></div>
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	function refundChange(currentPage){
+		$.ajax({
+			url : "/admin/talent-refund/talent-refunds",
+			type : "GET",
+			data : { currentPage : currentPage },
+			dataType: 'json',
+	        success:function(returnMap) {     		
+	          	var refundList = returnMap.refundList;
+	          	var refundTable = $('#refundTable');
+
+	            // 기존 테이블 초기화
+	    		refundTable.empty();
+
+	    		// 테이블 헤더 생성
+	    		var tableHeader = $('<tr></tr>');
+	    		var headerNo = $('<th></th>').text('선택');
+	    		var headerBuyerId= $('<th></th>').text('신청 아이디');
+	    		var headerPurchaseNo = $('<th></th>').text('구매번호');
+	    		var headerTalentNo = $('<th></th>').text('재능번호');
+	    		var headerRefundBamboo = $('<th></th>').text('환불 밤부');
+	    		var headerIssue = $('<th></th>').text('환불 사유');
+	    		var headerRefundStatus = $('<th></th>').text('상태');
+	    		var headerSubmitDate = $('<th></th>').text('신청일');	    		
+	    		tableHeader.append(headerNo).append(headerBuyerId).append(headerPurchaseNo)
+	    				   .append(headerTalentNo).append(headerRefundBamboo).append(headerIssue)
+	    				   .append(headerRefundStatus).append(headerSubmitDate);
+	    		refundTable.append(tableHeader);
+
+	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
+				$.each(refundList, function(index, refund) {
+				  var tableRow = $('<tr></tr>').addClass('refund-detail');
+				  var checkbox = $('<td></td>').addClass('refund-check').append(
+				    $('<input/>').attr({
+				      type: 'checkbox',
+				      class: 'checkbox',
+				      name: 'purchaseNo',
+				      value: refund.purchaseNo
+				    })
+				  );
+				  var buyerId = $('<td></td>').text(refund.buyerId).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'buyerId',
+				      value: refund.buyerId
+				    })
+				  );
+				  var purchaseNo = $('<td></td>').text(refund.purchaseNo);
+				  var talentNo = $('<td></td>').text(refund.talentNo).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'talentNo',
+				      value: refund.talentNo
+				    })
+				  );
+				  var refundBamboo = $('<td></td>').text(refund.refundBamboo).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'refundBamboo',
+				      value: refund.refundBamboo
+				    })
+				  );
+				  var issue = $('<td></td>').text(refund.issue).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'issue',
+				      value: refund.issue
+				    })
+				  );
+				  var refundStatus = $('<td></td>').text(refund.refundStatus).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'status',
+				      value: refund.refundStatus
+				    })
+				  );
+				  var submitDate = $('<td></td>').text(refund.submitDate.substring(0, 10)).append(
+				    $('<input/>').attr({
+				      type: 'hidden',
+				      name: 'submitDate',
+				      value: refund.approveDate
+				    })
+				  );
+				  
+				  tableRow.append(checkbox, buyerId, purchaseNo, talentNo, refundBamboo, issue, refundStatus, submitDate);
+				  refundTable.append(tableRow);
+				});
+	    			
+	                var pagination = returnMap.pagination;
+	                var startNum = parseInt(pagination.startNum);
+	                var lastNum = parseInt(pagination.lastNum);
+	                var paginationDiv = $('#pagination');
+	    			
+	                // 기존 페이지 번호 삭제
+	                paginationDiv.empty();
+	                
+	                var page = $('<a></a>').addClass('refund-page').text('<');
+	                paginationDiv.append(page);
+	                
+	           	  	// 페이지 번호 생성
+	                for (var i=startNum; i<=lastNum; i++) {
+	                    var page = $('<a></a>').addClass('refund-page').text(i);
+	    				if(pagination.currentPage == i){
+	    					page.css('background-color', '#198754').css('color', 'white');
+	    				}
+	                    paginationDiv.append(page);
+	                }
+	                paginationDiv.append($('<a></a>').addClass('refund-page').text('>'));
+	           	  	
+					$('.refund-page').one('click', function(){
+						if($(this).text() === '<'){
+							if(parseInt(pagination.currentPage) === 1){
+								refundChange(pagination.currentPage);
+							}else{
+								refundChange(parseInt(pagination.currentPage) - 1);
+							}
+						}else if($(this).text() === '>'){
+							if(parseInt(pagination.currentPage) === parseInt(pagination.totalPage)){
+								refundChange(pagination.currentPage);
+							}else{
+								refundChange(parseInt(pagination.currentPage) + 1);
+							}
+						}else{
+							refundChange($(this).text());
+						}
+					});
+				
+	          	},
+	          	error : function(xhr, textStatus, errorThrown) {
+	          		if(xhr.status === 401) {
+	          			alert('로그인이 필요합니다');
+		          		location.replace(JSON.parse(xhr.responseText).redirectUrl);          			
+	          		} else {
+	          			alert('admin talent refund error : ' + textStatus + ',' + errorThrown);
+	          		}
+	          }
+		});
+	}
+	
+	$(function() {
+		refundChange(1);
+	});
+	
+	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
+	
+	$(".btn-refund").on("click", function() {
+		let purchaseNo = $("input.checkbox:checked").map(function() {
+			return $(this).val();
+		}).get();
+
+		if (purchaseNo.length === 0) {
+			alert("선택된 항목이 없습니다.");
+			return;
+		}
+		
+		let talentRefundDto = [];
+		let statusValue = $(this).val();
+		let approveDate = Date.now();
+		
+		if (statusValue == "환불완료") {
+		    for (var i = 0; i < purchaseNo.length; i++) {
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
+		    }
+		    
+		} else if (statusValue == "반려") {
+		    for (var i = 0; i < purchaseNo.length; i++) {
+		        talentRefundDto.push({refundStatus: statusValue, purchaseNo: purchaseNo[i], approveDate: approveDate});
+		    }
+		}
+		
+		$.ajax({
+			type : "PATCH",
+			url : "/admin/talent-refunds/" + purchaseNo.join(","),
+			contentType : "application/json",
+			data : JSON.stringify(talentRefundDto),
+			success : function(result) {
+				if(result > 0) {
+					webSocket.send(JSON.stringify(talentRefundDto));
+					alert("성공적으로 수정되었습니다");
+					location.href="/admin/talent-refund";
+					
+				} else {
+					alert("수정 중 오류가 발생했습니다");
+					history.back();
+				}
+				
+			},
+			error : function(xhr, textStatus, errorThrown) {
+				if(xhr.status === 401) {
+					alert("로그인이 필요합니다");
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);			
+				} else {
+					alert('refund modify error : ' + textStatus + ',' + errorThrown);
+				}
+			}
+		});
+	}); 
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

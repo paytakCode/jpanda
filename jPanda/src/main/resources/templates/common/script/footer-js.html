@@ -1,0 +1,43 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="footerJsFragment">
+	<script th:inline="javascript">
+	$(function(){
+		$('#admin-chat-btn').click(function () {
+			if (memberId == null){
+				alert('로그인 후 이용가능합니다.');
+			} else {
+				if (stompClient !== null) {
+				    $('#chat-console').css('display', 'grid');
+				    $("#chat-content").scrollTop($("#chat-content").prop("scrollHeight"));
+				    const adminPartner = $('.partner[value="admin"]');
+				    if (adminPartner.length) {
+			    		adminPartner.detach().prependTo('#chat-partner-list');
+			    		selectedPartnerId = 'admin';
+						updateSelectedPartner();
+				        updateChatContent();
+				        $('#chat-input').focus();
+				    } else {
+			        	const adminElem = $('<li>', {
+							class: 'partner list-group-item list-group-item-action list-group-item-secondary d-flex justify-content-between align-items-center',
+							value: 'admin',
+							text: '관리자'
+				        });
+			        	adminElem.click(function() { 
+			        		selectedPartnerId = 'admin';
+							updateSelectedPartner();
+							updateChatContent();
+						}); 
+				        $('#chat-partner-list li:first').before(adminElem);
+				        selectedPartnerId = 'admin';
+						updateSelectedPartner();
+				        updateChatContent();
+				        $('#chat-input').focus();
+					}		
+				}
+				
+			}
+		});
+	});
+	</script>
+</div> <!-- footerJsFragment -->
+</html>

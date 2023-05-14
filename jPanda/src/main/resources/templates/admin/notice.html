@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>관리자 공지사항</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+	border-top: 1px solid #ddd;
+}
+
+th {
+	background-color: #198754;
+	color: white;
+}
+
+tr:hover {
+	background-color: #FFFFF0;
+}
+
+td {
+	border-bottom: 1px solid #ddd;
+	padding:20px 0;
+}
+
+.btn{
+	border: 1px solid #198754;
+	float: right;
+}
+
+.btn:hover{
+	background-color: #198754;
+	color: white;
+}
+
+.container{
+	margin: 0 auto;
+	width: 1000px;
+}
+
+.notice-no{
+	width: 40px;
+}
+.notice-title{
+	width: 540px;
+	margin-right: 100px;
+	max-height: 21.33px;
+	overflow: hidden;
+}
+.notice-reg-date{
+	width: 90px;
+}
+.notice-page {
+	display: inline-block;
+ 	border: 1px solid #EAEAEA;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+.notice-page, .notice-no, .notice-reg-date{
+	text-align: center;
+	line-height: 30px; /* 중간 높이로 해줌  */
+}
+
+#pagination{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.notice-page{
+	text-decoration: none;
+	color: black;
+}
+
+h2{
+	clear: both;
+	float: left;
+	margin: 29px 0 22px;
+	font-size: 1.5em;
+	line-height: 1.5;
+	color: black;
+	border-bottom: 2px solid #198754;
+	border-left: 10px solid #198754;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+}
+
+.detail {
+	text-decoration: none;
+	color: black;
+	font-weight: bold;
+	float: left;
+}
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<h2 id="notice-main">공지사항</h2>
+			<div id="noticelistDiv">
+				<table id="noticeTable"></table>
+				<br><input type="button" class="btn" id="btn-notice" value="작성하기"><br>
+			</div>
+			<div id="pagination"></div>
+		</body>
+
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">	
+	$("#btn-notice").on("click", function(){
+		location.href="/admin/notice-form";
+	});
+	
+	function noticeChange(currentPage) {
+		$.ajax({
+			url : "/admin/notice/notices",
+			type : "GET",
+			data : { currentPage : currentPage },
+			dataType: 'json',
+	        success:function(returnMap) {
+	          	var noticeList = returnMap.noticeList;
+	          	var noticeTable = $('#noticeTable');
+
+	            // 기존 테이블 초기화
+	    		noticeTable.empty();
+
+	    		// 테이블 헤더 생성
+	    		var tableHeader = $('<tr></tr>');
+	    		var headerNo = $('<th></th>').addClass('notice notice-no').text('번호');
+	    		var headerTitle = $('<th></th>').addClass('notice notice-title').text('제목');
+	    		var headerRegDate = $('<th></th>').addClass('notice notice-reg-date').text('등록일');
+	    		
+	    		tableHeader.append(headerNo).append(headerTitle).append(headerRegDate);
+	    		noticeTable.append(tableHeader);
+
+	    		// 받아온 데이터를 반복하며 리스트 아이템 생성
+	    		$.each(noticeList, function(index, notice) {
+	    			var tableRow = $('<tr></tr>').addClass('notice-detail').attr('data-noticeno', notice.noticeNo);
+	    			var no = $('<td></td>').addClass('notice notice-no').text(notice.noticeNo);
+	    			var title = $('<td></td>');
+	    			var regDate = $('<td></td>').addClass('notice notice-reg-date').text(notice.regDate.substring(0, 10));
+	    			var detail = $('<a></a>').text(notice.title).addClass("detail").attr('href', '/admin/notice/'+notice.noticeNo);
+	    			title.append(detail);
+	    			tableRow.append(no).append(title).append(regDate);
+	    			noticeTable.append(tableRow);
+	    			});
+	    			
+	                var pagination = returnMap.pagination;
+	                var startNum = parseInt(pagination.startNum);
+	                var lastNum = parseInt(pagination.lastNum);
+	                var paginationDiv = $('#pagination');
+	    			
+	                // 기존 페이지 번호 삭제
+	                paginationDiv.empty();
+	                
+	                var page = $('<a></a>').addClass('notice-page').text('<');
+	                paginationDiv.append(page);
+	                
+	           	  	// 페이지 번호 생성
+	                for (var i=startNum; i <= lastNum; i++) {
+	                    var page = $('<a></a>').addClass('notice-page').text(i);
+	    				if(pagination.currentPage == i){
+	    					page.css('background-color', '#198754').css('color', 'white');
+	    				}
+	                    paginationDiv.append(page);
+	                }
+	                paginationDiv.append($('<a></a>').addClass('notice-page').text('>'));
+	           	          
+					$('.notice-page').one('click', function(){
+						if($(this).text() === '<'){
+							if(parseInt(pagination.currentPage) === 1){
+								noticeChange(pagination.currentPage);
+							}else{
+								noticeChange(parseInt(pagination.currentPage) - 1);
+							}
+						}else if($(this).text() === '>') {
+							if(parseInt(pagination.currentPage) === parseInt(pagination.totalPage)){
+								noticeChange(pagination.currentPage);
+							}else{
+								noticeChange(parseInt(pagination.currentPage) + 1);
+							}
+						}else{
+							noticeChange($(this).text());
+						}
+					});
+				 	hash = currentPage;
+				 	location.hash = hash;
+	          	},
+	          	error : function(xhr, textStatus, errorThrown) {
+	          		if(xhr.status === 401) {
+	          			alert('로그인이 필요한 서비스 입니다');
+	          			location.replace(JSON.parse(xhr.responseText).redirectUrl);
+	          		} else {
+	          			alert('admin notice erorr : ' + textStatus + ',' + errorThrown);
+	          		}
+	          	}
+		});
+	}
+	
+	$(function() {
+		hashCheck();
+	});
+	
+	function hashCheck() {
+		let currentPage = 1;
+		
+		if(location.hash) {
+			let hash = decodeURI(location.hash);
+			currentPage = hash.substring(1);
+		} else {
+			noticeChange(1);
+		}
+		noticeChange(currentPage);
+	}
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

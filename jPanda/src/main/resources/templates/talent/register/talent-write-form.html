@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
+<!-- 페이지 제목 입력 -->  
+<th:block layout:fragment="title">
+	<title>재능 등록</title>
+</th:block>
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style type="text/css">
+		.insert-form-container {
+		  	font-family: Arial, sans-serif;
+		  	font-size: 16px;
+		  	margin-top: 30px;
+		}
+		
+		.talent-hr {
+			height: 2px;
+			width: 760px;
+			border: 0;
+    		margin: auto;
+    		margin-top: 30px;
+    		margin-bottom: 30px;
+    		background-color: #ccc;
+		}
+		.head{
+			text-align: left;
+			margin-left: 10px;
+			font-weight: bolder;
+		}
+		.talent-h4 {
+			margin-top: 20px;
+			margin-left: 15px;
+			font-size: 15px;
+			font-weight: bold;
+			text-align: left;
+			height: 20px;
+			line-height: 20px;
+			
+		}
+		
+		.talent-summary{
+			margin-left: 15px;
+			margin-bottom: 5px;
+			text-align: left;
+			font-size: 14px;
+		}
+		
+		#main-image-preview {
+			margin-top: 30px;
+			margin-bottom: 10px;
+		}
+		.talent-input {
+			width: 700px;
+		  	height: 40px;
+		  	border-radius: 7px;
+		  	border: 1px solid #ccc;
+		  	margin: 10px;
+		  	padding: 5px;
+		  	font-size: 16px;
+		  	padding-left: 10px;
+		}
+		.insert-form {
+		  	max-width: 800px;
+		  	margin: 0 auto;
+		  	text-align: center;
+		}
+		
+		.ck.ck-editor {
+		  	max-width: 700px;
+		  	margin: 0 auto;
+		  	
+		}
+		
+		.ck-editor__editable {
+		  	height: 500px;
+		}
+		
+		.category {
+		  	margin-top: 20px;
+		  	text-align: center;
+		}
+		
+		.bamboo-input {
+			width: 140px;
+			height: 40px;
+			font-size: 14px;
+			border-radius: 7px;
+			border: 1px solid #ccc;
+			padding: 5px;
+			padding-left: 10px;
+		}
+		
+		::placeholder {
+			 color: #ccc;
+		}
+		.category-select {
+			margin-left: 15px;
+		  	width: 700px;
+		  	height: 40px;
+		  	border-radius: 7px;
+		  	border: 1px solid #ccc;
+		  	margin: 10px;
+		  	padding: 5px;
+		  	font-size: 16px;
+		}
+		
+		#talent-submit-button {
+			background-color: #198754;
+			color: white;
+			border-radius: 7px;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			margin-top: 20px;
+			margin-bottom: 50px;
+		  	width: 760px;
+		  	font-weight: bold;
+		}
+		
+		#talent-submit-button:hover {
+		  	background-color: #019F80;
+		}
+		
+		#write-check {
+		  	border : 3px solid #EAEAEA;
+		  	border-collapse: separate;
+		  	border-radius: 13px;
+		  	background-color: white;
+		  	padding: 10px;
+		}
+		
+		#side {
+		  	position: fixed;
+		  	top: 200px;
+		  	right: calc(60% + 320px);
+		}
+		
+		.write-check {
+			border: 1px solid #EAEAEA;
+			margin: 20px;
+			padding: 15px;
+			border-radius: 13px;
+			
+		}
+		.price {
+		   display: inline-block;
+		   text-align: left;
+		   margin-left: 30px;
+		}
+		
+		.talent-price-h3 {
+			margin-top: 30px;
+			margin-bottom: 10px;
+			width: 140px;
+			font-size: 17px;
+			font-weight: bold;
+			text-align: left;
+			margin-left: 7px;
+			
+		}
+		#discount-bamboo {
+			width: 70px;
+		}
+		.bamboo + p {
+		  	display: inline-block;
+		  	margin-left: 5px;
+		  	margin-bottom : 0px;
+		  	vertical-align: middle;
+			line-height: 32px;
+		}
+		
+		#main-image-preview {
+			max-width: 700px;
+			width: auto;
+			max-height: 291.666px;
+		}
+		#main-image-preview:hover {
+		  	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+		  	cursor: pointer;
+		}
+		
+		.warning-image {
+			width: 25px;
+			height: 25px;
+			text-align: left;
+			margin-left: 15px;
+	   		margin-right: 5px;
+			
+		}
+		
+		input[type="number"]::-webkit-outer-spin-button,
+    	input[type="number"]::-webkit-inner-spin-button {
+        	-webkit-appearance: none;
+        	margin: 0;
+    	}
+    	.content-summary{
+    		margin-bottom: 20px;
+    	}
+    	.ck.ck-editor__editable_inline{
+    		margin-bottom: 10px;
+    	}
+    	
+    	.essential-image {
+    		height: 20px;
+    		margin-left: 2px;
+    	}
+    	
+    	.talent-image-summary{
+    		display: flex;
+    		line-height: 25px;
+    	}
+    	
+    	.talent-summary-in-div {
+    		margin-left: 0px;
+    	}
+    	.submit-check{
+    		vertical-align: baseline;
+    	}
+		.essential{
+    		background-color: #198754;
+    		height: 18px;
+    		font-size: 10px;
+    		width: 42px;
+    		margin: 20px 0px 0px 7px;
+    	}
+    	.essential-div {
+    		display: flex;
+    	}
+	</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+	 <div id="side">
+	  	<table id="write-check">
+	    	<tr data-href="#category"><td>카테고리</td><td><img class="submit-check" id="category-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#main-image"><td>대표 이미지</td><td><img class="submit-check" id="main-image-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#title"><td>제목</td><td><img class="submit-check" id="title-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#content"><td>강의 소개</td><td><img class="submit-check" id="content-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#bamboo"><td>가격</td><td><img class="submit-check" id="price-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+		    <tr data-href="#summary"><td>요약 설명</td><td><img class="submit-check" id="summary-check" width="20" height="20" src="/image/talentImage/white.png"></td></tr>
+	  	</table>
+	</div>
+	
+	<div class="insert-form-container">
+	<form action="/talent/talent" class="insert-form" method="post" name="frm" onsubmit="return check()">
+		<h1 class="head">재능 등록</h1>
+		<hr class="talent-hr">
+		<input type="hidden" name="statusDate" id="status-date">
+		
+		<div id="category" class="category write-check">
+			<div class="essential-div">
+					<h4  class="talent-h4">카테고리</h4>
+					<span class="badge essential">필수</span>
+				</div>
+			<p class="talent-summary">강의하실 분야를 선택해 주세요.</p>
+			
+			<select id="upper-category-no" class="category-select" name="upperCategoryNo">
+				<option disabled selected>대분류 카테고리를 선택해 주세요.</option>
+			</select>
+	
+			<select id="lower-category-no" class="category-select" name="lowerCategoryNo">
+				<option disabled selected>중분류 카테고리를 선택해 주세요.</option>
+			</select>
+		
+		</div>
+		
+		<div id="main-image" class="main-img-value write-check">
+			<div class="essential-div">
+					<h4  class="talent-h4">대표 이미지</h4>
+					<span class="badge essential">필수</span>
+				</div>
+			<p class="talent-summary">메인 페이지에 보이는 썸네일 이미지이기 때문에 강의를 대표할 수 있는 이미지를 사용해 주세요 <br>비율은 4:3이 가장 좋아요.</p>
+			<div class="talent-image-summary">
+				<img class="warning-image" src="/image/talentImage/red!.png">
+				<p class="talent-summary talent-summary-in-div">논란의 여지가 있는 이미지나 저작권, 초상권, 지적 재산권을 침해하는 이미지를 사용할 시 책임지지 않습니다.</p>
+			</div>
+			<img id="main-image-preview" src="/image/talentImage/jpandaMainImageLabel.jpg" width="auto" height="250" />
+			<input type="file" id="choose-image-file" accept="image/jpeg, image/png, image/gif" style="display:none;" />
+			<input type="hidden" id="main-img-value" name="mainImg" >
+		</div>
+		
+		<div id="title" class="title write-check">
+			<div class="essential-div">
+					<h4  class="talent-h4">제목</h4>
+					<span class="badge essential">필수</span>
+				</div>
+			<p class="talent-summary">메인 페이지에 제목이기 때문에 강의를 대표할 수 있는 키워드를 사용해 제목을 입력해 주세요.</p>
+			<div class="talent-image-summary">
+				<img class="warning-image" src="/image/talentImage/orange!.png">
+				<p class="talent-summary talent-summary-in-div">제목은 15자 이상 30자 이하로  작성해주세요.</p>
+			</div>
+				<input type="text" id="title" name="title" class="title talent-input" minlength="15" maxlength="30">
+		</div>
+		
+		<div id ="content" class="content write-check">
+			<div class="essential-div">
+					<h4  class="talent-h4">강의 소개</h4>
+					<span class="badge essential">필수</span>
+				</div>
+			<p class="talent-summary content-summary">강의에 대한 소개를 작성해주세요.</p>
+			<textarea id ="content-textarea" name = "content" class="content"></textarea>
+		</div>
+		
+		<div id="price" class="bamboo write-check">
+			<div class="essential-div">
+					<h4  class="talent-h4">가격</h4>
+					<span class="badge essential">필수</span>
+				</div>
+			<p class="talent-summary">정상 가격과 판매 가격을 입력해 주세요.</p>
+			<div class="talent-image-summary">
+				<img class="warning-image" src="/image/talentImage/red!.png">
+				<p class="talent-summary talent-summary-in-div">터무니 없이 높은 할인율은 반려 대상입니다.</p>
+			</div>
+		<div class="price">
+			<h3 class="talent-price-h3">정상 가격</h3>
+			<input type="number" id="bamboo" name="bamboo" class="bamboo bamboo-input talent-input" placeholder="1000"><p class="talent-price-p">밤부</p>
+		</div>
+		<div class="price">
+			<h3 class="talent-price-h3">판매 가격</h3>
+			<input type="number" id="sale-bamboo" name="saleBamboo" class="bamboo bamboo-input talent-input" placeholder="900"><p class="talent-price-p">밤부</p>
+		</div>
+		<div class="price">
+			<h3 class="talent-price-h3">할인율</h3>
+			<input type="number" id="discount-bamboo" class="bamboo bamboo-input talent-input" placeholder="10" readonly><p class="talent-price-p">%</p>
+		</div>	
+		</div>
+		
+		<div id="summary" class="summary write-check">
+			<div class="essential-div">
+					<h4  class="talent-h4">요약 설명</h4>
+					<span class="badge essential">필수</span>
+				</div>
+			<p class="talent-summary">해당 강의에 대해 간단한 설명과 수강생들에게 왜 이 강의를 들어야 하는지 짧게 작성해주세요!</p>
+			<div class="talent-image-summary">
+				<img class="warning-image" src="/image/talentImage/orange!.png">
+				<p class="talent-summary talent-summary-in-div">요약 설명은 20자 이상 40자 이하로 작성해 주세요.</p>
+			</div>
+			<input type="text" id="summary" name="summary" class="summary talent-input" minlength="20" maxlength="40">
+		</div>
+		<input id="talent-submit-button" type="submit" value="등록하기">
+	</form>
+	</div> <!-- container -->
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<!-- CKEditor5 사용 -->
+	<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+	<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
+	<script th:inline="javascript">
+	// 사이드바
+    $('#write-check tr').on('click', function() {
+    	location.href = $(this).data('href');
+    });
+    
+    function getNow(){
+    	const now = new Date(Date.now());
+    	const year = now.getFullYear();
+    	const month = String(now.getMonth() + 1).padStart(2, '0');
+    	const day = String(now.getDate()).padStart(2, '0');
+    	const hours = String(now.getHours()).padStart(2, '0');
+    	const minutes = String(now.getMinutes()).padStart(2, '0');
+    	const seconds = String(now.getSeconds()).padStart(2, '0');
+    	
+    	const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    	
+    	return formattedDate;
+    }
+	
+    function check() {
+   		let isReadyToSubmit = true;
+   		let nullArea = '';
+   	  	$('.submit-check').each(function() {
+   	    	if($(this).attr('src') !== '/image/talentImage/check.png') {
+   	      		isReadyToSubmit = false;
+   	      		if(nullArea !== ''){
+   	      			nullArea += ', ' + $(this).parent().prev().text();
+   	      		}else {
+   	      			nullArea += $(this).parent().prev().text();
+   	      		}
+   	    	}
+   	  	});
+   	  	if (!isReadyToSubmit) {
+   	  		alert(nullArea + '을(를) 다시 확인해주세요.');
+   	  	}
+   	  	if($('#main-img-value').val() == '' || $('#main-img-value').val() == null){
+   	  		$('#main-img-value').val('/image/common/no-img.png');
+   	  	}
+   	  	$('#status-date').val(getNow());
+   	  	// status-date로 변경
+   	  	return isReadyToSubmit;
+   	}
+    
+	// 사이드바 체크
+	$('.write-check').on('input', function(){
+		const check = '#' + $(this).attr('id') + "-check";
+		let count = 0;
+		let each = 0;
+		var allFilled = false;
+	    $(this).find('input').each(function() {
+	    	each++;
+	    	if($(this).val() !== '' && $(this).val() !== null) {
+	        	if($(this).attr('id') == 'title'){
+	        		if($(this).val().length >= 15){
+			            count++;
+	        		}
+	        	}else if($(this).attr('id') == 'summary'){
+	        		if($(this).val().length >= 20){
+			            count++;
+	        		}
+	        	}else if($(this).attr('id') == 'discount-bamboo'){
+	        		if(parseInt($('#bamboo').val()) >= parseInt($('#sale-bamboo').val())){
+			            count++;
+	        		}
+	        	}else{
+	            	count++;
+        		}
+        	}else if($(this).attr('id') == 'choose-image-file'){
+            	count++;
+        	}
+	    });
+		if(count === each){
+			$(check).attr('src', '/image/talentImage/check.png');
+		}else {
+			$(check).attr('src', '/image/talentImage/white.png');
+		}
+		
+	});
+	
+	// input태그 엔터키 입력시 submit되는 것 방지
+	$(function() {
+		$("input").on("keydown", function(event) {
+			if (event.keyCode === 13) {
+				event.preventDefault();
+		    }
+		});
+	});
+	
+	// 메인이미지
+	$('#main-image-preview').on('click', function() {
+		$('#choose-image-file').click();
+	});
+	
+	$('#choose-image-file').on('change', function() {
+		let file_kind = $(this).val().lastIndexOf('.');
+		let file_name = $(this).val().substring(file_kind+1, $(this).val().length);
+		let file_type = file_name.toLowerCase();
+
+		const check_file_type = ['jpg','gif','png','jpeg','bmp', ''];
+		if(check_file_type.indexOf(file_type)==-1){
+		  	alert('이미지 파일만 선택할 수 있습니다.');
+		  	$('#main-image-check').attr('src', "/image/talentImage/white.png");
+		  	return false;
+		}
+		
+		if($(this).val() !== ''){
+			// 파일 선택 후 미리보기 기능 구현
+			let reader = new FileReader();
+		    reader.onload = function(e) {
+		    	$('#main-image-preview').attr('src', e.target.result);
+		    }
+		    if(this.files[0] != null){
+		    	reader.readAsDataURL(this.files[0]);
+		    }else {
+		    	reader.readAsDataURL($('#main-img-value').val());
+		    }
+		    
+		    // 이미지 서버 업로드 
+		    const form = new FormData();
+	        form.append( "upload", $("#choose-image-file")[0].files[0]);
+	        $.ajax({
+	            url : "/talent/image-upload",
+	         	type : "POST",
+	           	processData : false,
+	           	contentType : false,
+	           	data : form,
+	           	dataType: 'json',
+	           	success:function(data) {
+	               	$('#main-img-value').val(data.url);
+	               	$('#main-img-value').trigger('input');
+	           	},
+	           	error: function(xhr){
+	           		handleError(xhr);
+		    		alert('Image Upload Fail 다시 시도해주세요.');
+           			$('#main-image-preview').attr('src', "/image/talentImage/jpandaMainImageLabel.jpg");
+		    	}
+	       	});
+		}
+	});
+	
+	// 상세정보 이미지 저장
+	ClassicEditor
+	.create(document.querySelector('#content-textarea'), {
+		ckfinder: {
+			uploadUrl : '/talent/image-upload'
+		}
+	})
+	.then(editor => {
+		editor.model.document.on('change:data', () => {
+            if (editor.getData().trim()) {
+                $('#content-check').attr('src', '/image/talentImage/check.png');
+            } else {
+                $('#content-check').attr('src', '/image/talentImage/white.png');
+            }
+        });
+	})
+	.catch(error => {
+		console.error(error);
+	});
+	
+	// 할인율 표시
+	$('#bamboo').on("input", calculateDiscount);
+	$('#sale-bamboo').on("input", calculateDiscount);
+
+	function calculateDiscount() {
+		const bambooPrice = $('#bamboo').val();
+	    const saleBambooPrice = $('#sale-bamboo').val();
+	    
+	    let discountPercent = Math.round((bambooPrice - saleBambooPrice) / bambooPrice * 100);
+	    if (isNaN(discountPercent) || discountPercent === Infinity || discountPercent < 0) {
+	    	discountPercent = 0;
+	    }
+	    $('#discount-bamboo').val(discountPercent);
+	}
+	// 가격 입력란 숫자, backspace외 입력 불가 처리
+	$('.bamboo-input').on('keydown', function(value) {
+		  if(!((value.keyCode > 95 && value.keyCode < 106) || (value.keyCode > 47 && value.keyCode < 58) || value.keyCode == 8)) {
+			    return false;
+		  }
+	});
+	
+	// 카테고리 리스트 요청
+	let categoryList = null;
+	$(function(){
+		$.ajax({
+			url : "/talent/categorys",
+         	type : "GET",
+           	dataType: 'json',
+           	success : function(ajaxCategoryList) {
+           		categoryList = ajaxCategoryList;
+			  	categoryList.forEach(function(category) {
+			    	if(category.upperCategoryNo === null) {
+			      		$('#upper-category-no').append($("<option>").val(category.categoryNo).text(category.item));
+			    	}
+			 	});
+           	},
+           	error: function(xhr, textStatus, errorThrown){
+		    	if(xhr.status === 401){
+		    		alert('로그인이 필요합니다.');
+		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
+		    	}else {
+		    		alert('CategoryList Load Fail 다시 시도해주세요.');
+		    		console.error(xhr);
+		    	}
+           	}
+		});
+	})
+  
+	$('#upper-category-no').on("change", function() {
+		let selectedCategoryNo = parseInt(this.value);
+    	$('#lower-category-no').html('');
+    	$('#lower-category-no').append($("<option disabled selected>").text("중분류 카테고리를 선택해 주세요."));
+    	$('#category-check').attr('src', '/image/talentImage/white.png');
+    	categoryList.forEach(function(category) {
+	      	if (category.upperCategoryNo === selectedCategoryNo) {
+	        	$('#lower-category-no').append($("<option>").val(category.categoryNo).text(category.item));
+	      	}
+   		});
+  	});
+  	
+	$('#lower-category-no').on('change', function(){
+		if($(this).val() === ''){
+			$('#category-check').attr('src', '/image/talentImage/white.png');
+		}else {
+			$('#category-check').attr('src', '/image/talentImage/check.png');
+		}
+	});
+	$('#seller-id').val(memberId);
+	
+	// 등록을 하지 않고 다른 페이지 이동 시 알림창
+	$(window).on('beforeunload', function(){
+		return null;
+	});
+	
+	// 등록하기 버튼은 페이지 이동 감지x
+	$('#talent-submit-button').on('click', function() {
+		$(window).unbind('beforeunload');
+	});
+	</script>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

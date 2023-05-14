@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>결제내역</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+		
+		body {
+			margin: 0;
+			padding: 0;
+		}
+		
+		.btn-container{
+			position:relative;
+			margin: 0 auto;
+			margin-top: 30px;
+			width: 500px;
+			margin-left: 270px;
+			display: flex;
+		}
+		
+		.filter-btn{
+			background-color: rgb(129,193,71);
+			top: 23%;
+			left: 50%;
+		}
+		
+		.btn-success {
+			background-color: #198754;
+		}
+		
+		/* 결제내역 컨테이너 */
+		.charge-details-container{
+			margin: 0 auto;
+			width: 1000px;
+			height: 750px;
+			margin-top: 8%;
+			margin-bottom: 10%;
+			border-radius: 16px 16px 16px 16px;
+			border: 1px solid #EAEAEA;
+	  		box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
+			background-color: ghostwhite;
+		}
+		
+		/* 페이징 */
+		.table {
+			margin: 0 auto;
+			border-collapse: collapse;
+			width: 80%;
+		}
+		
+		th, td {
+			text-align: center;
+			padding: 8px;
+		}
+		
+		th {
+			font-size: 20px;
+		}
+		 
+		tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+		
+		td {
+			font-size: 18px;
+		}
+		
+		.charge-reg-date{
+			width: 40px;
+		}
+		
+		.charge-method{
+			width: 90px;
+		}
+		
+		.charge-bamboo{
+			width: 90px;
+		}
+		
+		.charge-money{
+			width: 90px;
+		}
+		
+		.charge-page {
+			display: inline-block;
+			border: 1px solid #EAEAEA;
+			width: 30px;
+			height: 30px;
+			cursor: pointer;
+		}
+		
+		.charge-reg-date, .charge-method, .charge-bamboo, .charge-money, .charge-page{
+			text-align: center;
+			line-height: 30px; /* 중간 높이로 해줌  */
+		}
+		
+		#pagination{
+			text-align: center;
+			margin-top: 30px;
+			margin-bottom: 30px;
+			display:flex;
+			justify-content:center;
+		}
+
+		.charge-page{
+			text-decoration: none;
+			color: black;
+		}
+		
+		.charge-page:hover {
+			background-color: #198754;
+		}
+		
+		@keyframes text-rising {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+		
+		.chargeList {
+		animation: text-rising 1s ease-out;
+		}
+
+		
+	</style>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+
+	<th:block layout:fragment="content">
+	
+	<div class="container">
+	
+		<div class="btn-container">
+			<div class="btn-group filter-btn" role="group" aria-label="Basic mixed styles example">
+				<button type="button" class="btn btn-success btn-lg" id="charge-container-btn"	value="chargeContainerBtn"	onclick="location.href='/charge';">충전하기</button>
+				<button type="button" class="btn btn-success btn-lg" id="charge-details-btn"	value="chargeDetailsBtn"	onclick="location.href='/charge-history';">결제내역</button>
+			</div>
+		</div>
+			
+		<div class="charge-details-container">
+		
+			<div style="text-align: center; margin-bottom: 5%; font-weight: bold; font-size: 30px; padding-top: 30px;">
+				<span class="fst-italic">결제내역</span>
+			</div>	
+			<div id="chargelistDiv">
+				<table id="chargeTable" class="table table-default">
+				</table>
+			</div>
+			<div style="display:flex; justify-content:flex-end; margin-top: 10px; margin-right: 100px">
+				<span class="historyIcon"><img alt="totalBamboo" src="/image/common/bamboo-icon.png" style="width: 25px; height: 25px;"></span>
+				<span th:text="'총 충전횟수 : ' + ${totalChargeCnt}" style="font-size: 17px;"></span>
+			</div>
+			<div id="pagination">
+			</div>
+		</div> <!-- /class="charge-details-container" -->
+		
+	</div>	<!-- class="container" -->
+	
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+	<script th:inline="javascript">
+	
+		function chargeChange(currentPage){
+			$.ajax({
+				url : "/charge-history/history-list",
+				type : "GET",
+				data : { currentPage : currentPage },
+				dataType: 'json',
+		        success:function(returnMap) {
+		          		
+		          	let chargeList = returnMap.chargeList;
+		          	let chargeTable = $('#chargeTable');
+	
+		            // 기존 테이블 초기화
+		    		chargeTable.empty();
+	
+		    		// 테이블 헤더 생성
+		    		let tableTbody = $('<tbody>');
+		    		let tableHeader = $('<tr>');
+		    		let headerRegDate = $('<th>').addClass('charge charge-reg-date').text('충전날짜');
+		    		let headerMethod = $('<th>').addClass('charge charge-method').text('충전방법');
+		    		let headerBamboo = $('<th>').addClass('charge charge-bamboo').text('충전밤부');
+		    		let headerMoney = $('<th>').addClass('charge charge-money').text('충전금액');
+		    		tableHeader.append(headerRegDate).append(headerMethod).append(headerBamboo).append(headerMoney);
+		    		tableTbody.append(tableHeader);
+		    		
+		    		// 받아온 데이터를 반복하며 리스트 아이템 생성
+		    		$.each(chargeList, function(index, charge) {
+		    			let tableRow = $('<tr>');
+		    			let chargeDate = $('<td>').addClass('chargeList chargeDate').text(charge.chargeDate.substring(0, 10));
+		    			let paymentMethod = $('<td>').addClass('chargeList paymentMethod').text(charge.paymentMethod);
+		    			let chargeBamboo = $('<td>').addClass('chargeList chargeBamboo').text(charge.chargeBamboo);
+		    			let paymentAmount = $('<td>').addClass('chargeList paymentAmount').text(charge.paymentAmount);
+		    				tableRow.append(chargeDate)
+		    						.append(paymentMethod)
+		    						.append(chargeBamboo)
+		    						.append(paymentAmount);
+		    				tableTbody.append(tableRow);
+		    				
+		    			});
+		    			chargeTable.append(tableTbody);
+		    			
+		    			let pagination = returnMap.pagination;
+		    			let startNum = parseInt(pagination.startNum);
+		    			let lastNum = parseInt(pagination.lastNum);
+		    			let paginationDiv = $('#pagination');
+		    			
+		                // 기존 페이지 번호 삭제
+		                paginationDiv.empty();
+		                
+		                let page = $('<a>').addClass('charge-page').text('<');
+		                paginationDiv.append(page);
+		                
+		           	  	// 페이지 번호 생성
+		                for (let i=startNum; i<=lastNum; i++) {
+		                	let page = $('<a>').addClass('charge-page').text(i);
+		    				if(pagination.currentPage == i){
+		    					page.css('background-color', '#198754');
+		    				}
+		                    paginationDiv.append(page);
+		                }
+		                paginationDiv.append($('<a>').addClass('charge-page').text('>'));
+		           	  	
+						$('.charge-page').one('click', function(){
+							if($(this).text() === '<'){
+								if(parseInt(pagination.currentPage) === 1){
+									chargeChange(pagination.currentPage);
+								} else{
+									chargeChange(parseInt(pagination.currentPage) - 1);
+								}
+							} else if($(this).text() === '>'){
+								if(parseInt(pagination.currentPage) === parseInt(pagination.totalPage)){
+									chargeChange(pagination.currentPage);
+								} else{
+									chargeChange(parseInt(pagination.currentPage) + 1);
+								}
+							} else{
+								chargeChange($(this).text());
+							}
+						});
+		          	}
+			});
+		}	// /chargeChange(currentPage)
+		
+		$(function() {
+			chargeChange(1);
+		}); 
+		
+	</script>
+	
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+
+</html>

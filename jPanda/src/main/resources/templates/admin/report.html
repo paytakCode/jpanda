@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/common/layout/admin-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>관리자 불건전 유저 제제</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+	<style>
+	* {
+		box-sizing: border-box;
+	}
+	
+	.que:first-child {
+		border-top: 1px solid black;
+	}
+	
+	.que {
+		position: relative;
+		padding: 17px 0;
+		cursor: pointer;
+		font-size: 14px;
+		border-bottom: 1px solid #dddddd;
+	}
+	
+	.que::before {
+		display: inline-block;
+		font-size: 14px;
+		color: #006633;
+		margin: 0 5px;
+	}
+	
+	.que.on>span {
+		font-weight: bold;
+		color: white;
+	}
+	
+	.anw {
+		display: none;
+		overflow: hidden;
+		font-size: 14px;
+		background-color: #FFFFF0;
+		padding: 27px 0;
+	}
+	
+	.anw::before {
+		display: inline-block;
+		font-size: 14px;
+		font-weight: bold;
+		color: #666;
+		margin: 0 5px;
+	}
+	
+	.arrow-wrap {
+		position: absolute;
+		top: 50%;
+		right: 10px;
+		transform: translate(0, -50%);
+	}
+	
+	.que .arrow-top {
+		display: none;
+	}
+	
+	.que .arrow-bottom {
+		display: block;
+	}
+	
+	.que.on .arrow-bottom {
+		display: none;
+	}
+	
+	.que.on .arrow-top {
+		display: block;
+	}
+	
+	.que.on {
+		background-color: #198754;
+		color: white;
+		border-top-color: #198754;
+	}
+	
+	.btn-report {
+		border: 1px solid #198754;
+		float: right;
+		margin: 10px 0;
+	}
+	
+	.btn-report:hover {
+		background-color: #198754;
+		color: white;
+	}
+	
+	h2{
+		clear: both;
+		margin: 29px 0 22px;
+		font-size: 1.5em;
+		line-height: 1.5;
+		color: black;
+		border-bottom: 2px solid #198754;
+		border-left: 10px solid #198754;
+		width: 100%;
+		text-align: left;
+		font-weight: bold;
+	}
+	
+	table{
+		width: 100%;
+	}
+	
+	th {
+		border-bottom: 2px double #ddd;
+	}
+	
+	tr:hover {
+		background-color: #FFFFFF;
+	}
+	
+	td {
+		padding: 10px 0;
+		border-bottom: 1px solid #ddd;
+	}
+	
+	.aco {
+		margin: 10px 0;
+	}
+
+</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+		<body>
+			<h2>불건전 유저 신고리스트</h2>
+			<div class="aco" th:each="report, i : ${reportList}" th:id="'aco' + ${i}">
+				<div class="que">
+					<span th:text="'불건전 유저 : ' + ${report.blackId}"></span>
+					<div class="arrow-wrap">
+						<span class="arrow-top">↑</span>
+						<span class="arrow-bottom">↓</span>
+					</div>
+				</div>
+				<div class="anw" th:data-blackId="${report.blackId}">
+					<span></span>
+				</div>
+			</div>
+		</body>
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	$(".que").click(function() {
+		  let blackId = $(this).next(".anw").data('blackid');
+		  let question = $(this);
+		  let answer = question.next(".anw"); 
+
+		  // 현재 선택된 .que 요소와 형제 요소들의 .que 요소에 on 클래스를 제거
+		  question.addClass('on').siblings().removeClass('on');
+		  answer.stop().slideToggle(200);
+		  $(".anw").not(answer).slideUp(200);
+
+		  // 다른 .que 요소들은 선택되지 않도록 함
+		  question.closest(".aco").siblings().find(".que").removeClass("on");
+		      	
+		  $.ajax({
+		      url : "/admin/report/reports/" + blackId,
+		      method : "GET",
+		      data : blackId,
+		      success : function(reportList) {
+		            var tableBody = $(".anw");
+		            
+		            tableBody.empty(); // 테이블 내용 초기화
+		            
+		            var table = $("<table>").appendTo(tableBody);
+		            var header = $("<thead>").appendTo(table);
+		            var row = $("<tr>").appendTo(header);
+		            $("<th>").text("신고자").appendTo(row);
+		            $("<th>").text("사유").appendTo(row);
+		            $("<th>").text("신고일").appendTo(row);
+		            
+		            var body = $("<tbody>").appendTo(table);
+		            for (var i = 0; i < reportList.length; i++) {
+		                var report = reportList[i];
+		                var row = $("<tr>");
+		                $("<td>").text(report.reportId).appendTo(row);
+		                $("<td>").text(report.issue).appendTo(row);
+		                $("<td>").text(report.reportDate.substring(0, 10)).appendTo(row);
+		                row.appendTo(body);
+		            }
+		            
+		            tableBody.append($("<input>").attr("type", "button").addClass("btn btn-report").val("제제하기"));
+
+		            
+		      },
+		      error : function(xhr, textStatus, errorThrown) {
+		          if(xhr.status === 401) {
+		        	  alert('로그인이 필요합니다');
+		        	  location.replace(JSON.parse(xhr.responseText).redirectUrl);
+		          } else {
+		        	  alert('admin report error : ' + textStatus + ',' + errorThrown);
+		          }
+		      }
+		  });
+		});
+	 
+	$(document).on("click", ".btn-report", function(){
+		 let memberId = $(this).closest(".anw").data('blackid');
+		 
+		 $.ajax({
+			 url : "/admin/report/" + memberId,
+			 method : "PATCH",
+			 data : memberId,
+			 success : function(result){
+				 if(result > 0) {
+					 alert("불건전 유저에 대한 제제가 완료되었습니다");
+					 location.href='/admin/report';
+				 } else {
+					 alert("오류가 발생했습니다");
+				 }
+			 },
+			 error : function(xhr, textStatus, errorThrown){
+				if(xhr.status === 401) {
+					alert('로그인이 필요합니다');
+					location.replace(JSON.parse(xhr.responseText).redirectUrl);
+				} else {
+					alert('admin report modify error : ' + textStatus + ',' + errorThrown);
+				}
+			 }
+		 })
+	});
+	
+	</script>
+
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

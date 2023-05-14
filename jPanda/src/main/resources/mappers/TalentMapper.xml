@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TalentMapper">
+	
+	<select id="selectTalentByPagination" parameterType="AdminPaginationDto" resultType="AdminTalentDto">
+		SELECT 	*
+		FROM (
+		    	SELECT t.*, ROW_NUMBER() OVER (ORDER BY talent_no DESC) rnum
+		    	FROM talent t
+		    	WHERE talent_status = '검토중'
+				)
+		WHERE rnum BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectTalentForTotalCount" resultType="int">
+		select 	count(*)
+		from 	talent
+		where 	talent_status = '검토중'
+	</select>
+	
+	<update id="updateTalentByTalentNos" parameterType="AdminTalentDto">
+		update 	talent
+		set 	talent_status = '게시중',
+				reg_date = #{regDate},
+				status_date = #{statusDate}
+		where	talent_no = #{talentNo}		 
+	</update>
+	
+	<select id="selectTalentByTalentNo" parameterType="Long" resultType="AdminTalentDto">
+		select	* 
+		from 	talent
+		where	talent_no = #{talentNo}
+	</select>
+	
+	<!-- 상세 페이지  -->
+	<select id="selectBoardTalentByTalentNo" parameterType="Long" resultType="DetailTalentDto">
+		SELECT t.talent_no, t.title, t.seller_id, t.main_img, t.summary, t.bamboo, t.sale_bamboo, t.content, m.name
+		FROM talent t, member m
+		WHERE t.seller_id = m.member_id
+		AND talent_no = #{talentNo}
+	</select> 
+	
+	<!-- 리뷰 리스트 셀렉트  -->
+	<select id="selectReviewListByTalentNo" parameterType="Long" resultType="DetailReviewDto">
+		SELECT reviewer_id, content, review_date, bamboo_score, review_no
+		FROM review
+		WHERE talent_no = #{talentNo}
+		ORDER BY review_date DESC
+	</select>
+	
+	<!-- 리뷰 업데이트  -->	
+	<update id="updateReview" parameterType="DetailReviewDto">
+		UPDATE review SET content = #{content}, bamboo_score = #{bambooScore}
+		WHERE review_no = #{reviewNo}
+	</update>
+	
+	<!-- 리뷰 딜리트  -->	
+	<delete id="deleteReview" parameterType="DetailReviewDto">
+		DELETE FROM review
+		WHERE review_no = #{reviewNo}
+	</delete>
+	
+	<!-- 게시글 판매종료(업데이트) -->
+	<update id="updateTalent" parameterType="Long">
+		UPDATE talent SET talent_status = '판매종료'
+		WHERE talent_no = #{talentNo}
+	</update>
+	
+	<!-- 리뷰 인서트  -->	
+	<insert id="insertReview" parameterType="DetailReviewDto">
+		INSERT INTO review (talent_no, reviewer_id, content, review_date, bamboo_score, review_no) 
+    	VALUES (#{talentNo}, #{reviewerId}, #{content}, #{reviewDate}, #{bambooScore}, REVIEW_NO_SEQ.nextval)
+	</insert>
+	
+	<!-- 리뷰 인서트 검증 -->
+	<select id="selectBambooUseByTalentNoAndBuyerId" parameterType="Map" resultType="DetailBambooUseDto">
+		SELECT buyer_id
+		FROM bamboo_use
+		WHERE talent_no = to_number(#{talentNo})
+		AND buyer_id = #{buyerId}
+	</select>
+	
+	<!-- 재능 구매자 정보 인서트  -->
+	<insert id="insertBambooUse" parameterType="DetailBambooUseDto">
+		INSERT INTO bamboo_use (buyer_id, talent_no, purchase_date, use_bamboo, purchase_no)
+		VALUES (#{buyerId}, #{talentNo}, #{purchaseDate}, #{useBamboo}, PURCHASE_NO_SEQ.nextval)
+	</insert>
+	
+	<!-- 구매 여부 확인 용도 -->
+	<select id="selectBuyCheckByBambooUse" parameterType="DetailBambooUseDto" resultType="int">
+		SELECT COUNT(*)
+		FROM bamboo_use
+		WHERE talent_no = #{talentNo} 
+		AND buyer_id = #{buyerId}
+	</select>
+	
+	<!-- 신고하기 검증용  -->
+	<select id="selectReportCheck" parameterType="DetailReportDto" resultType="int">
+		SELECT COUNT(*)
+		FROM report
+		WHERE talent_no = #{talentNo}
+		AND report_id = #{reportId}
+	</select>
+	
+	<!-- 신고하기 인서트  -->
+	<insert id="insertReport" parameterType="DetailReportDto">
+		INSERT INTO report(black_id, report_id, issue, report_date, report_no, talent_no)
+		VALUES (#{blackId}, #{reportId}, #{issue}, #{reportDate}, REPORT_NO_SEQ.nextval, #{talentNo})
+	</insert>
+	
+	<!-- 조회수 업데이트  -->
+	<update id="updateTalentToViewCount" parameterType="Long">
+		UPDATE talent 
+		SET view_count = view_count + 1 
+		WHERE talent_no = #{talentNo}
+	</update>
+	
+	<!-- 리뷰 중복 인서트 검증  -->
+	<select id="selectReviewInsertCheck" parameterType="DetailReviewDto" resultType="DetailReviewDto">
+		SELECT reviewer_id
+		FROM review
+		WHERE talent_no = #{talentNo}
+		AND reviewer_id = #{reviewerId}
+	</select>
+	
+	<insert id="insertTalent" parameterType="RegistTalentDto">
+		INSERT INTO talent 
+		VALUES(talent_no_seq.NEXTVAL, #{sellerId}, #{upperCategoryNo}, #{lowerCategoryNo}, 
+				#{mainImg}, #{title}, #{content}, #{bamboo}, #{saleBamboo}, #{summary}, '검토중', 0, NULL, #{statusDate})
+	</insert>
+	
+	<select id="selectRegistTalentBytalentNo" resultType="RegistTalentDto" parameterType="Long">
+		SELECT 	* 
+		FROM 	talent 
+		WHERE 	talent_no = #{talentNo}
+	</select>
+	
+	<update id="updateRegistTalent" parameterType="RegistTalentDto">
+		UPDATE 	talent 
+		SET 	upper_category_no = #{upperCategoryNo}, lower_category_no = #{lowerCategoryNo}, main_img = #{mainImg},
+				title = #{title}, content = #{content}, bamboo = #{bamboo}, sale_bamboo = #{saleBamboo}, summary = #{summary}
+		WHERE 	talent_no = #{talentNo}
+	</update>
+	
+	<select id="selectBestSellerTalents" resultType="RegistTalentDto">
+		SELECT 	*
+		FROM	(SELECT 	t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		         FROM      	talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+		                             INNER JOIN member m ON t.seller_id = m.member_id
+		                             LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                              FROM      review 
+		                                              GROUP BY  talent_no) r 
+		                                                          ON t.talent_no = r.talent_no
+		                             LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		         WHERE 		t.talent_status = '게시중'
+		         GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.status_date, m.name, r.review_avg_score, r.review_count, c.item
+		         ORDER BY  	COUNT(*) DESC, t.status_date DESC
+		        )
+		WHERE ROWNUM BETWEEN 1 AND 3
+	</select>
+	
+	<select id="selectTopRatedTalents" resultType="RegistTalentDto">
+		SELECT *
+		FROM   (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		        FROM     talent t INNER JOIN member m ON t.seller_id = m.member_id
+		                          INNER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                           FROM      review 
+		                                           GROUP BY  talent_no) r 
+		                                                        ON t.talent_no = r.talent_no
+		                          LEFT OUTER JOIN category c    ON t.lower_category_no = c.category_no
+		        WHERE    t.talent_status = '게시중'
+		        GROUP BY t.talent_no, t.main_img, t.title, t.summary, m.name, r.review_avg_score, r.review_count, c.item
+		        ORDER BY r.review_avg_score DESC, review_count DESC
+		       )
+		WHERE  ROWNUM BETWEEN 1 AND 3
+	</select>
+	
+	<select id="selectNewTrendTalents" resultType="RegistTalentDto">
+		SELECT   *        
+		FROM     (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		          FROM     talent t LEFT OUTER JOIN bamboo_use b ON t.talent_no = b.talent_no
+		                            INNER JOIN member m ON t.seller_id = m.member_id
+		                            LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                             FROM      review 
+		                                             GROUP BY  talent_no) r 
+		                                                         ON t.talent_no = r.talent_no
+		                            LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		          <!-- 최신 트렌드는 최근 일주일간 판매량 많은 재능을 출력하려했으나 INSERT되는 재능이 없기 떄문에 SYSDATE대신 임시값 작성 -->
+		          WHERE    b.purchase_date >= TO_DATE('2023-02-23', 'YYYY/MM/DD') - 7
+		          AND      t.talent_status = '게시중'
+		          GROUP BY t.talent_no, t.main_img, t.title, t.summary, t.status_date, m.name, r.review_avg_score, r.review_count, c.item
+		          ORDER BY COUNT(*) DESC, t.status_date DESC
+		         )
+		WHERE 	 ROWNUM BETWEEN 1 AND 3
+	</select>
+	
+	<select id="selectRandomTalents" resultType="RegistTalentDto">
+		SELECT  *
+		FROM    (SELECT   t.talent_no, t.main_img, t.title, t.summary, m.name, NVL(r.review_avg_score, 0) AS review_avg_score, NVL(r.review_count, 0) AS review_count, c.item
+		         FROM     talent t INNER JOIN member m ON t.seller_id = m.member_id
+		                           LEFT OUTER JOIN (SELECT    talent_no, ROUND(AVG(bamboo_score), 1) AS review_avg_score, COUNT(*) AS review_count
+		                                            FROM      review 
+		                                            GROUP BY  talent_no) r 
+		                                                        ON t.talent_no = r.talent_no
+		                           LEFT OUTER JOIN category c   ON t.lower_category_no = c.category_no
+		         WHERE    t.talent_status = '게시중'
+		         GROUP BY  	t.talent_no, t.main_img, t.title, t.summary, t.status_date, m.name, r.review_avg_score, r.review_count, c.item
+		         ORDER BY DBMS_RANDOM.VALUE()
+		        )
+		WHERE   ROWNUM BETWEEN 1 AND 5
+	</select>
+	<select id="selectSellerIdByTalent" resultType="String" parameterType="RegistTalentDto">
+		SELECT 	seller_id
+		FROM	talent
+		WHERE	talent_no = #{talentNo}
+	
+	</select>
+	
+</mapper>

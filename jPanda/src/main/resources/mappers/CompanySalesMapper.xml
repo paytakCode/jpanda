@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CompanySalesMapper">
+
+	<select id="selectCompanySalesByYYYYDate" parameterType="AdminCompanySalesDto" resultType="AdmincompanySalesDto">
+	<![CDATA[
+	SELECT 
+    			COALESCE(TA.bc_period, TB.ex_period) AS period,
+    			SUM(TA.count) AS bc_count,
+    			SUM(TB.count) AS ex_count
+	FROM (
+    		SELECT 
+        				SUM(bc.payment_amount) AS count,
+        				TO_CHAR(bc.charge_date, 'YYYY') AS bc_period
+    		FROM 		bamboo_charge bc
+    		WHERE 		bc.charge_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
+    		GROUP BY 	TO_CHAR(bc.charge_date, 'YYYY')
+		   ) TA
+	FULL OUTER JOIN (
+   		  SELECT 
+        				SUM(ex.total) - SUM(ex.payment_amount) AS count,
+        				TO_CHAR(ex.approve_date, 'YYYY') AS ex_period
+    	  FROM 			exchange ex
+    	  WHERE 		ex.approve_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
+    	  GROUP BY 		TO_CHAR(ex.approve_date, 'YYYY')
+	) TB 
+	ON TA.bc_period = TB.ex_period
+	GROUP BY COALESCE(TA.bc_period, TB.ex_period)
+	ORDER BY period
+	]]>
+	</select>
+	
+	<select id="selectCompanySalesByMMDate" parameterType="AdminCompanySalesDto" resultType="AdmincompanySalesDto">
+	<![CDATA[
+	SELECT 
+    			COALESCE(TA.bc_period, TB.ex_period) AS period,
+    			SUM(TA.count) AS bc_count,
+    			SUM(TB.count) AS ex_count
+	FROM (
+    		SELECT 
+        				SUM(bc.payment_amount) AS count,
+        				TO_CHAR(bc.charge_date, 'YYYYMM') AS bc_period
+    		FROM 		bamboo_charge bc
+    		WHERE 		bc.charge_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
+    		GROUP BY 	TO_CHAR(bc.charge_date, 'YYYYMM')
+		   ) TA
+	FULL OUTER JOIN (
+   		  SELECT 
+        				SUM(ex.total) - SUM(ex.payment_amount) AS count,
+        				TO_CHAR(ex.approve_date, 'YYYYMM') AS ex_period
+    	  FROM 			exchange ex
+    	  WHERE 		ex.approve_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
+    	  GROUP BY 		TO_CHAR(ex.approve_date, 'YYYYMM')
+	) TB 
+	ON TA.bc_period = TB.ex_period
+	GROUP BY COALESCE(TA.bc_period, TB.ex_period)
+	ORDER BY period
+	]]>
+	</select>
+	
+	<select id="selectCompanyByDDDate" parameterType="AdminCompanySalesDto" resultType="AdmincompanySalesDto">
+	<![CDATA[
+	SELECT 
+    			COALESCE(TA.bc_period, TB.ex_period) AS period,
+    			SUM(TA.count) AS bc_count,
+    			SUM(TB.count) AS ex_count
+	FROM (
+    		SELECT 
+        				SUM(bc.payment_amount) AS count,
+        				TO_CHAR(bc.charge_date, 'YYYYMMDD') AS bc_period
+    		FROM 		bamboo_charge bc
+    		WHERE 		bc.charge_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
+    		GROUP BY 	TO_CHAR(bc.charge_date, 'YYYYMMDD')
+		   ) TA
+	FULL OUTER JOIN (
+   		  SELECT 
+        				SUM(ex.total) - SUM(ex.payment_amount) AS count,
+        				TO_CHAR(ex.approve_date, 'YYYYMMDD') AS ex_period
+    	  FROM 			exchange ex
+    	  WHERE 		ex.approve_date BETWEEN TO_CHAR(#{startDate}, 'YYYYMMDD') AND TO_CHAR(#{endDate}, 'YYYYMMDD')
+    	  GROUP BY 		TO_CHAR(ex.approve_date, 'YYYYMMDD')
+	) TB 
+	ON TA.bc_period = TB.ex_period
+	GROUP BY COALESCE(TA.bc_period, TB.ex_period)
+	ORDER BY period
+	]]>
+	</select>
+		
+</mapper>

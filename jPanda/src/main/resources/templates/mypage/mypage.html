@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/common/layout/default-layout">
+
+<!-- 페이지 제목 입력 -->
+<th:block layout:fragment="title">
+	<title>마이 페이지</title>
+</th:block>
+
+<!-- 현재 화면에서만 사용하는 css -->
+<th:block layout:fragment="css">
+
+<style type="text/css">
+    div.left {
+        width: 30%;
+        float: left;
+        box-sizing: border-box;
+       	font-size: 30px;
+        border-radius: 10px;
+        background: rgb(196, 196, 191);
+    }
+    div.right {
+        width: 70%;
+        float: right;
+        box-sizing: border-box;
+        border-radius: 10px;
+        font-size: 20px;
+        border:solid 1px rgb(86 121 107 / 80%);
+        
+        padding:16px 17px 0;
+        background: rgb(250, 252, 252);
+    }
+
+.left,right{
+    text-align: center;
+    width: 460px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+/* ahref 밑줄없애기 */
+a {
+    text-decoration: none;
+    color:black;
+    
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.withdrawal-btn-wrap {
+  margin-top: auto;
+  margin-bottom: 10px;
+
+}
+.black-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+li span {
+  margin-right: 5px;
+  width: 100px; /* 레이블 너비 조정 */
+}
+
+li input {
+  flex: 1;
+  padding: 4px;
+}
+    table {
+        display: flex;
+        flex-direction: column;
+    }
+
+    tr {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    td {
+        display: flex;
+        align-items: center;
+    }
+
+        td input {
+            margin-left: 10px;
+        }
+
+    button {
+        align-self: flex-start;
+    }
+    td span {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+
+
+	</style>
+	<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/style/chat-css :: chatCssFragment"></th:block>
+</th:block>
+
+<div>
+	<th:block layout:fragment="content">
+   <h1 align="center">마이페이지</h1>
+        <div class="left" align="center">
+	        <img src="/image/basic.png" alt="기본사진">
+	           <ul>   
+	              <h1 th:text="${session.memberId}" font-size=10px;></h1>
+	              <a href="/trade" onclick="redirectToTrade()">거래내역</a>
+	           </ul>
+			<span class="withdrawal-btn-wrap" th:if="${session.memberId != null}">
+			  <button type="button" id="withdrawal-btn" data-bs-toggle="modal" data-bs-target="#withdrawalModal" class="black-button">회원탈퇴</button>
+			</span>	
+        </div>
+        
+        <div class="right" align="center" style="border-radius: 10;" pxth:if="${session.memberId != null}"> 
+				<form method="post" action="/updateMember">
+				<input type="hidden" name="memberId" th:value="${memberInfo.memberId}">
+				    <table>
+					    <tr>
+					        <td>이름:</td>
+					        <td><input type="text" th:value="${memberInfo.name}" name="name"></td>
+					    </tr>
+					    <tr>
+					        <td><span>이메일:</span></td>
+					        <td><input type="email" th:value="${memberInfo.email}" name="email" oninput="validateEmailInput(event)"></td>
+					    </tr>
+					    <tr>
+					        <td><span>전화번호:</span></td>
+					        <td><input type="text" maxlength="11" th:value="${memberInfo.tel}" name="tel" oninput="restrictPhoneNumberInput(event)"></td>
+					    </tr>
+					    <tr>
+					        <td><span>성별:</span></td>
+					        <td><input type="text" th:value="${memberInfo.gender}" name="gender" readonly></td>
+					    </tr>
+					    <tr>
+					        <td><span>회원등급:</span></td>
+					        <td><input type="text" th:value="${memberInfo.memberGrade}" name="memberGrade" readonly></td>
+					    </tr>
+					    <tr>
+					        <td colspan="2"><button type="submit" onclick="showSuccessAlertAndRefresh()">수정하기</button></td>
+					    </tr>
+					</table>
+    				
+				</form>
+			<div class="menu">
+				<div>
+					<a href="/trade" onclick="redirectToTrade()" >거래내역</a>
+				</div>
+			</div>
+		</div>
+		<div class="right" align="center" th:unless="${session.memberId != null}">
+    		<h1>로그인이 필요합니다.</h1>
+		</div>
+		<div class="modal fade" id="withdrawalModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+		    <div class="modal-content">
+		      <div class="modal-body">
+		        <h5 class="modal-title mb-3" id="myModalLabel">회원탈퇴</h5>
+		        <form id="withdrawal-form">
+		          <div class="form-group mb-3">
+		            <label for="password" class="form-label">비밀번호</label>
+		            <input type="password" class="form-control" id="password" name="password" required>
+			        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">취소</button>
+			        <button type="button" class="btn btn-danger btn-sm" id="withdrawal-confirm-btn">탈퇴</button>
+			      </div>
+		        </form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+		<th:block th:replace="/common/fragment/chat :: chatFragment"></th:block>
+	</th:block>
+</div>
+
+<!-- 현재 화면에서만 사용하는 js -->
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	// 로그아웃 버튼 클릭 이벤트 핸들러 등록
+
+	$('#logout-btn').click(function() {
+	  $.ajax({
+	    url: '/logout', 
+	    type: 'GET', 
+	    dataType: 'text', 
+	    success: function(result) {
+	      alert('로그아웃 되었습니다.');
+	      location.href='/login';
+	    },
+	    error: function(xhr, status, error) {
+	      alert('로그아웃 실패: ' + error);
+	    }
+	  });
+	});
+	$('#withdrawal-confirm-btn').click(function() {
+		  var password = $('#password').val();
+		  if (!password) {
+		    alert("비밀번호를 입력해주세요.");
+		    return;
+		  }
+		  $.ajax({
+		    url: '/withdrawal',
+		    type: 'post',
+		    data: { password: password },
+		    success: function(response) {
+		      $("#withdrawalModal").modal("hide");
+		      alert(response);
+		      window.location.href = "/login"; // 로그인 페이지로 이동
+		    },
+		    error: function(xhr, status, error) {
+		      alert("회원탈퇴에 실패하였습니다. 비밀번호를 확인해주세요.");
+		    }
+		  });
+		});
+
+	$('#login-btn').click(function() {
+		  $.ajax({
+		    url: '/login',
+		    type: 'GET',
+		    success: function(response) {
+				location.href='/login';
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) {
+		      console.log('Error: ' + errorThrown);
+		    }
+		  });
+		});
+	
+
+    function restrictPhoneNumberInput(event) {
+        var input = event.target;
+        input.value = input.value.replace(/\D/g, ''); // 숫자 이외의 문자 제거
+    }
+    
+    function showSuccessAlertAndRefresh() {
+        var phoneNumberInput = document.getElementsByName("tel")[0];
+        var phoneNumber = phoneNumberInput.value;
+        
+        if (phoneNumber.length !== 11) {
+            alert("전화번호는 11자리로 입력해주세요.");
+            return;
+        }
+        
+        // 수정 완료 알림창 표시
+        alert("수정되었습니다.");
+        // 페이지 새로고침
+        location.reload();
+    }
+    function validateEmailInput(event) {
+    	  const emailInput = event.target;
+    	  const email = emailInput.value;
+    	  
+    	  // 이메일 형식을 검증하는 정규식
+    	  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    	  
+    	  if (!emailRegex.test(email)) {
+    	    emailInput.setCustomValidity("유효한 이메일 형식이 아닙니다.");
+    	  } else {
+    	    emailInput.setCustomValidity("");
+    	  }
+    	}
+    function moveFocusToNameInput() {
+        document.getElementById("name").focus();
+    }
+
+	</script> 
+		<!-- 채팅 기능이 필요없는 페이지는 아래 한줄 지워주세요  -->
+	<th:block th:replace="/common/script/chat-js :: chatJsFragment"></th:block>
+</th:block>
+</html>

@@ -1,15 +1,25 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="navFragment">
-	<div class="navigation-menu">
-		<nav id="navigation">
-		  <ul>
-		    <li><a href="/sell">재능판매</a></li>
-		    <li><a href="/pruchase">재능구매</a></li>
-		    <li><a href="/trade">거래관리</a></li>
-		    <li><a href="/charge">충전/내역</a></li>
-		    <li><a href="/myPage">마이페이지</a></li>
-		  </ul>
-		</nav>
-	</div>
-</div>
+	<div th:fragment="navFragment">
+		<ul class="navbar justify-content:space-between navbar-dark bg-dark fs-5">
+			<li class="navbar-item">
+			</li>
+			<li class="navbar-item">
+				<a class="nav-link active text-light" href="/talent/write-form">재능 등록</a>
+			</li>
+			<li class="navbar-item">
+		  		<a class="nav-link active text-light" href="/board">재능 거래</a>
+			</li>
+			<li class="navbar-item">
+		  		<a class="nav-link active text-light" href="/trade">거래 관리</a>
+			</li>
+			<li class="navbar-item">
+		  		<a class="nav-link active text-light" href="/charge">충전/결제내역</a>
+			</li>
+			<li class="navbar-item">
+		  		<a class="nav-link active text-light" href="/main/notice">공지사항</a>
+			</li>
+			<li class="navbar-item">
+			</li>
+		</ul>
+	</div> <!-- navFragment -->
 </html>
