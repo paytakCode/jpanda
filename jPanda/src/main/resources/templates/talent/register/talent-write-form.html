@@ -513,7 +513,6 @@
         });
 	})
 	.catch(error => {
-		console.error(error);
 	});
 	
 	// 할인율 표시
@@ -558,7 +557,6 @@
 		    		location.replace(JSON.parse(xhr.responseText).redirectUrl);
 		    	}else {
 		    		alert('CategoryList Load Fail 다시 시도해주세요.');
-		    		console.error(xhr);
 		    	}
            	}
 		});

@@ -36,7 +36,7 @@ public class RegistTalentServiceImpl implements RegistTalentService{
 		if(insertResult > 0) {
 			return "<script> " +
 					"alert('재능 등록이 완료되었습니다.');" + 
-					"location.href = '/main';" + 
+					"location.href = '/trade';" + 
 					"</script>";
 		}else {
 			return "<script> " +
@@ -67,7 +67,7 @@ public class RegistTalentServiceImpl implements RegistTalentService{
 			if(updateResult > 0) {
 				return "<script> " +
 						"alert('재능 수정이 완료되었습니다.');" + 
-						"location.href = '/main';" + 
+						"location.href = '/trade';" + 
 						"</script>";
 			}else {
 				return "<script> " +

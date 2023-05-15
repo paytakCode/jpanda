@@ -12,7 +12,6 @@
 				location.href='/login';
 		    },
 		    error: function(jqXHR, textStatus, errorThrown) {
-		      console.log('Error: ' + errorThrown);
 		    }
 		  });
 		});
@@ -30,7 +29,6 @@
                    	
             },
             error: function(result){
-                console.log(result);
             	$("#find-id-result").text(result.responseText);
                 
                

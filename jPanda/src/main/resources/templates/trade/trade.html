@@ -355,7 +355,6 @@
 	 $(function(){
 		 let statList = [[${statList}]];
 		 $.each(statList, function(index, stat){
-			 console.log(stat);
 			 switch(stat.statType){
 			 	case 'sell' : 
 			 		$('#sidebar-submit-count').prepend(stat.submitCount);
@@ -402,30 +401,22 @@
 	let webSocket = new WebSocket("ws://localhost:8888/trade-ws");
 
 	webSocket.onopen = function(){
-		console.log("webSocket opened");
 	}
 
 	webSocket.onmessage = function(message){
-		console.log(message);
-		//추후에 구독알림식으로 변경
-		//alert("거래정보가 갱신되었습니다.");
-		
 		let tradeInfos = JSON.parse(message.data);
 		
 		updateList($('#selected-filter').val())
 			.then(function(){
 				$.each(tradeInfos, function(index, tradeInfo){
-					console.log("tradeInfo.listType : " + tradeInfo.listType);
 					updateAlarm(tradeInfo.listType, tradeInfo.talentNo, new Date().toISOString());
 				});
 			})
 			.catch(function(error){
-				console.log(error);
 			});	
 	}
 
 	webSocket.onclosed = function(){
-		console.log("server closed");
 	}
 
 	/**
@@ -450,7 +441,6 @@
 	 */
 	$(document).on("click", ".end-sell-btn", function(){
 		let talentNo = $(this).attr('id').substr(8);
-		console.log('판매종료 talentNo : ' + talentNo);
 		if(confirm("판매를 종료하시겠습니까?")){
 			$.ajax(
 					{
@@ -464,11 +454,9 @@
 							}),
 						success : function(result, textStatus, xhr){
 							if (xhr.status === 200) {
-							    console.log('Success, put : ' + result);
 							    alert('판매가 성공적으로 종료되었습니다.');
 								$(".filter-button[value='sell']").click();
 							} else if (xhr.status === 204) {
-							    console.log('Success, put : No content');
 							    alert('선택한 재능이 존재하지 않습니다. 다시 시도해주세요.');
 							}
 						},
@@ -486,7 +474,6 @@
 	 */
 	$(document).on("click", ".repost-btn", function(){
 		let talentNo = $(this).attr('id').substr(8);
-		console.log("talentNo : " + talentNo);
 		
 		if(confirm("재능을 재등록 하시겠습니까?")){
 			$.ajax({
@@ -500,11 +487,9 @@
 					dataType : 'text',
 					success : function(result, textStatus, xhr){
 						if (xhr.status === 200) {
-						    console.log('Success, put : ' + result);
 						    alert('재능이 성공적으로 재등록되었습니다.');
 							$(".filter-button[value='sell']").click();
 						} else if (xhr.status === 204) {
-						    console.log('Success, put : No content');
 						    alert('선택한 재능이 존재하지 않습니다. 다시 시도해주세요.');
 						}
 					},
@@ -521,7 +506,6 @@
 	$(document).on("click", ".exchange-btn", function(){
 		let $this = $(this);
 		let talentNo = $this.attr('id').substr(8);
-		console.log('talentNo : ' + talentNo);
 		if(confirm('환전을 신청하시겠습니까?')){
 			$.ajax(
 					{
@@ -531,11 +515,9 @@
 						dataType : 'json',
 						success : function(result, textStatus, xhr){
 							if(xhr.status === 200){
-								console.log('Success, posted : ' + result);
 								alert('환전 신청에 성공하였습니다.');
 								$(".filter-button[value='sell']").click();	
 							} else if (xhr.status === 204) {
-							    console.log('Success, posted : : No content');
 							    alert('환전 신청에 실패하였습니다. 다시 시도해주세요.');
 							}
 	
@@ -555,7 +537,6 @@
 	 $(document).on("click", ".re-exchange-btn", function(){
 		let $this = $(this);
 		let talentNo = $this.attr('id').substr(8);
-		console.log('talentNo : ' + talentNo);
 		if(confirm('환전을 재신청 하시겠습니까?')){
 			$.ajax(
 					{
@@ -563,7 +544,6 @@
 						url : "/trade/exchanges/"+ talentNo + "/status",
 						dataType : 'json',
 						success : function(result){
-							console.log('Success put : ' + result);
 							alert('환전 재신청에 성공하였습니다.');
 							$(".filter-button[value='sell']").click();	
 						},
@@ -583,7 +563,6 @@
 		// modal로 값 가져오기
 		let talentNo = $(event.relatedTarget).data('refund-talentno');
 		let saleBamboo = $(event.relatedTarget).data('refund-salebamboo');
-		console.log(talentNo + ' , ' + saleBamboo);
 		//modal 해당요소에 값 할당
 		$('#refund-modal').find('#refund-talentNo').val(talentNo);
 		$('#refund-modal').find('#refund-refundBamboo').val(saleBamboo);
@@ -624,7 +603,6 @@
 			    	  }),
 			    contentType: 'application/json',
 			    success: function(result){
-		    		console.log('Success posted : ' + result);
 		    		alert('재능 환불 신청에 성공하였습니다.');
 		    		location.reload();
 			    },
@@ -635,7 +613,6 @@
 						$('#refund-modal').modal('hide');
 						location.replace(responseText.redirectUrl);
 					} else {
-						console.log("error code : " + responseText.code + ", status : " + responseText.status);
 						alert(responseText.message);
 					}
 			        
@@ -651,7 +628,6 @@
 	 */
 	$(document).on("click", ".refund-cancle-btn", function(){
 		let refundPurchaseNo = $(this).attr('id').substr(10);
-		console.log('refundPurchaseNo : ' + refundPurchaseNo);
 		if(confirm('환불을 취소하시겠습니까?')){
 			$.ajax(
 					{
@@ -661,11 +637,9 @@
 						dataType : 'json',
 						success : function(result, textStatus, xhr){
 							if(xhr.status === 200){
-								console.log('Success, deleted : ' + result);
 								alert("환불 신청이 취소되었습니다.");
 								$(".filter-button[value='refund']").click();
 							} else if (xhr.status === 204) {
-							    console.log('Success, deleted : : No content');
 							    alert('환불 취소 신청에 실패하였습니다. 다시 시도해주세요.');
 							}
 
@@ -693,10 +667,8 @@
 						dataType : 'json',
 						success : function(result, textStatus, xhr){
 							if(xhr.status === 200){
-								console.log('Success, deleted : ' + result);
 								$(".filter-button[value='refund']").click();
 							} else if (xhr.status === 204) {
-							    console.log('Success, deleted : : No content');
 							    alert('환불 반려 확인에 실패하였습니다. 다시 시도해주세요.');
 							}
 
@@ -850,7 +822,6 @@
 				$cardImgCol.remove();
 				break;
 			default:
-				console.error(`Invalid refund status: ${item.refundStatus}`);
 				return;
 		}
 
@@ -975,8 +946,6 @@
 	function updateAlarm(listType, talentNo, time){
 		const now = new Date();
 		if(now.toISOString() <= time){
-			console.log("updateAlarm time : " + time);
-			console.log("now.toISOString() : " + now.toISOString());
 			$('.filter-button[value="' + listType + '"]').addClass('updated-button');
 			$('.filter-button[value="' + listType + '"]').children("span").removeClass('visually-hidden');
 			$('#talent-no-' + talentNo).addClass('new-cards');
