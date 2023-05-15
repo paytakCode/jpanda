@@ -1,6 +1,6 @@
 #Server Port
 server : 
-  port : 8888
+  port : 8080
 
 spring :
   #Oracle Setting
@@ -28,6 +28,11 @@ spring :
     hiddenmethod:
       filter:
         enabled: true
+
+  #resolver
+  thymeleaf:
+    prefix:
+      classpath: /templates/
 
 #myBatis
 mybatis: 
