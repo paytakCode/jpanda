@@ -259,6 +259,7 @@
 			<h1 class="head">재능 수정</h1>
 			<hr class="talent-hr">
 			<input type="hidden" name="talentNo" th:value="${talent.talentNo}">
+			<input type="hidden" name="statusDate" id="status-date">
 		
 			<div id="category" class="category write-check">
 				<div class="essential-div">
@@ -367,6 +368,20 @@
     $('#writeCheck tr').on('click', function() {
     	location.href = $(this).data('href');
     });
+	
+    function getNow(){
+    	const now = new Date(Date.now());
+    	const year = now.getFullYear();
+    	const month = String(now.getMonth() + 1).padStart(2, '0');
+    	const day = String(now.getDate()).padStart(2, '0');
+    	const hours = String(now.getHours()).padStart(2, '0');
+    	const minutes = String(now.getMinutes()).padStart(2, '0');
+    	const seconds = String(now.getSeconds()).padStart(2, '0');
+    	
+    	const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    	
+    	return formattedDate;
+    }
     
     function check() {
     	let isReadyToSubmit = true;
@@ -509,7 +524,6 @@
         });
 	})
 	.catch(error => {
-		console.error(error);
 	});
 	
 	// 가격 할인율 표시

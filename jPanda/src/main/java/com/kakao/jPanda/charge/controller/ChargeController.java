@@ -147,8 +147,4 @@ public class ChargeController {
 		return foundTotalBambooByMemberIdStr;
 	}
 	
-	
 }
-	
-
-
