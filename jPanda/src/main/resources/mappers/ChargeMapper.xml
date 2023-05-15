@@ -16,7 +16,7 @@
 		  coupon_code
 		)
 		VALUES (
-		  bamboo_charge_no_SEQ.NEXTVAL,
+		  charge_no_SEQ.NEXTVAL,
 		  #{chargerId},
 		  #{paymentMethod},
 		  #{paymentAmount},
