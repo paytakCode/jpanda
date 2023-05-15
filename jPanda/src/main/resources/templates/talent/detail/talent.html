@@ -649,7 +649,6 @@ ul, li {
     			contentType : "application/json",
     		    dataType :'json',
     		    success : function(talentUpdate){
-    		    	console.log(talentUpdate);
     		    	if(talentUpdate === 1){
     		    		alert("게시물이 판매종료 되었습니다.");
     		    		location.href= "/board";
@@ -722,8 +721,6 @@ ul, li {
 		// 기존 리뷰의 내용을 가져와서 업데이트 폼에 채워주기
 	   	$('#update-content').val($(this).data('content'));
 	   	$('#review-no').val($(this).data('reviewno'));
-	   	console.log($(this).data('content'));
-	   	console.log($(this).data('reviewno'));
 	});
 
 
