@@ -1,6 +1,6 @@
 #Server Port
 server : 
-  port : 8080
+  port : 8088
 
 spring :
   #Oracle Setting
@@ -31,8 +31,7 @@ spring :
 
   #resolver
   thymeleaf:
-    prefix:
-      classpath: /templates/
+    prefix: classpath:/templates/
 
 #myBatis
 mybatis: 
