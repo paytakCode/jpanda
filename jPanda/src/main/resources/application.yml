@@ -1,6 +1,6 @@
 #Server Port
 server : 
-  port : 8088
+  port : 8080
 
 spring :
   #Oracle Setting
