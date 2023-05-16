@@ -6,7 +6,7 @@ spring :
   #Oracle Setting
   datasource : 
     driver-class-name : oracle.jdbc.driver.OracleDriver
-    url : jdbc:oracle:thin:@JPANDA.canmygoaixjp.ap-northeast-2.rds.amazonaws.com/JPANDA
+    url : jdbc:oracle:thin:@jpanda.canmygoaixjp.ap-northeast-2.rds.amazonaws.com/ORCL
     username : admin
     password : adminadmin
 
