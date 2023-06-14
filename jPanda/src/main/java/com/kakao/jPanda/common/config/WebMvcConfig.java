@@ -37,14 +37,14 @@ public class WebMvcConfig implements WebMvcConfigurer{
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new MappingJackson2HttpMessageConverter());
     }
-    
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		int index = System.getProperty("user.dir").indexOf(File.separator + "jPanda");
-		String path = System.getProperty("user.dir").substring(0, index) + File.separator + "uploadImage" + File.separator;
-		// path = 프로젝트 상위 경로/uploadImage
-		registry.addResourceHandler("/uploadImage/**").addResourceLocations("file:" + path);
-		// /uploadImage/**로 시작하는 경로를 요청할 시 외부 디텍토리에서 찾도록 설정함
+		String projectRootPath = System.getProperty("user.dir");
+		String uploadImagePath = projectRootPath + File.separator + "uploadImage" + File.separator;
+		String resourceUrl = "file:" + uploadImagePath;
+
+		registry.addResourceHandler("/uploadImage/**")
+			.addResourceLocations(resourceUrl);
 	}
-	
 }
